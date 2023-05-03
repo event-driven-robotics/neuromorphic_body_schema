@@ -1,0 +1,3 @@
+mujoco
+cv2
+numpy
