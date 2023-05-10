@@ -27,7 +27,6 @@ def detect_contact(model, data):
 
 # model_path = 'neuromorphic_body_schema/models/icub_right_hand_position_actuators_actuate_hands_contact_sensor.xml'  # right hand only
 model_path = 'neuromorphic_body_schema/models/icub_position_actuators_actuate_hands_contact_sensors.xml'  # full iCub
-
 # Load the MuJoCo model and create a simulation
 model = mujoco.MjModel.from_xml_path(model_path)
 data = mujoco.MjData(model)
