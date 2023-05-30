@@ -1085,1354 +1085,1354 @@
 
     <!-- contact sensors chest -->
     <sensor>
-        <touch name="chest_taxel_0" site="chest_taxel_0" />
+        <touch name="TORSO__TORSO__0__0" site="chest_taxel_0" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_1" site="chest_taxel_1" />
+        <touch name="TORSO__TORSO__0__1" site="chest_taxel_1" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_2" site="chest_taxel_2" />
+        <touch name="TORSO__TORSO__0__2" site="chest_taxel_2" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_3" site="chest_taxel_3" />
+        <touch name="TORSO__TORSO__0__3" site="chest_taxel_3" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_4" site="chest_taxel_4" />
+        <touch name="TORSO__TORSO__0__4" site="chest_taxel_4" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_5" site="chest_taxel_5" />
+        <touch name="TORSO__TORSO__0__5" site="chest_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_6" site="chest_taxel_6" />
+        <touch name="TORSO__TORSO__0__6" site="chest_taxel_6" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_7" site="chest_taxel_7" />
+        <touch name="TORSO__TORSO__0__7" site="chest_taxel_7" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_8" site="chest_taxel_8" />
+        <touch name="TORSO__TORSO__0__8" site="chest_taxel_8" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_9" site="chest_taxel_9" />
+        <touch name="TORSO__TORSO__0__9" site="chest_taxel_9" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_10" site="chest_taxel_10" />
+        <touch name="TORSO__TORSO__0__10" site="chest_taxel_10" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_11" site="chest_taxel_11" />
+        <touch name="TORSO__TORSO__0__11" site="chest_taxel_11" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_12" site="chest_taxel_12" />
+        <touch name="TORSO__TORSO__1__0" site="chest_taxel_12" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_13" site="chest_taxel_13" />
+        <touch name="TORSO__TORSO__1__1" site="chest_taxel_13" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_14" site="chest_taxel_14" />
+        <touch name="TORSO__TORSO__1__2" site="chest_taxel_14" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_15" site="chest_taxel_15" />
+        <touch name="TORSO__TORSO__1__3" site="chest_taxel_15" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_16" site="chest_taxel_16" />
+        <touch name="TORSO__TORSO__1__4" site="chest_taxel_16" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_17" site="chest_taxel_17" />
+        <touch name="TORSO__TORSO__1__5" site="chest_taxel_17" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_18" site="chest_taxel_18" />
+        <touch name="TORSO__TORSO__1__6" site="chest_taxel_18" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_19" site="chest_taxel_19" />
+        <touch name="TORSO__TORSO__1__7" site="chest_taxel_19" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_20" site="chest_taxel_20" />
+        <touch name="TORSO__TORSO__1__8" site="chest_taxel_20" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_21" site="chest_taxel_21" />
+        <touch name="TORSO__TORSO__1__9" site="chest_taxel_21" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_22" site="chest_taxel_22" />
+        <touch name="TORSO__TORSO__1__10" site="chest_taxel_22" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_23" site="chest_taxel_23" />
+        <touch name="TORSO__TORSO__1__11" site="chest_taxel_23" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_24" site="chest_taxel_24" />
+        <touch name="TORSO__TORSO__2__0" site="chest_taxel_24" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_25" site="chest_taxel_25" />
+        <touch name="TORSO__TORSO__2__1" site="chest_taxel_25" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_26" site="chest_taxel_26" />
+        <touch name="TORSO__TORSO__2__2" site="chest_taxel_26" />
     </sensor>
     <sensor>
-        <touch name="chest_taxel_27" site="chest_taxel_27" />
+        <touch name="TORSO__TORSO__2__3" site="chest_taxel_27" />
     </sensor>
 
 
     <!-- contact sensors right side -->
     <sensor>
-        <touch name="r_upper_arm_taxel_0" site="r_upper_arm_taxel_0" />
+        <touch name="RIGHT_ARM__HAND__0__0" site="r_hand_index_3_taxel_0" />
     </sensor>
     <sensor>
-        <touch name="r_upper_arm_taxel_1" site="r_upper_arm_taxel_1" />
+        <touch name="RIGHT_ARM__HAND__0__1" site="r_hand_index_3_taxel_1" />
     </sensor>
     <sensor>
-        <touch name="r_upper_arm_taxel_2" site="r_upper_arm_taxel_2" />
+        <touch name="RIGHT_ARM__HAND__0__2" site="r_hand_index_3_taxel_2" />
     </sensor>
     <sensor>
-        <touch name="r_upper_arm_taxel_3" site="r_upper_arm_taxel_3" />
+        <touch name="RIGHT_ARM__HAND__0__3" site="r_hand_index_3_taxel_3" />
     </sensor>
     <sensor>
-        <touch name="r_upper_arm_taxel_4" site="r_upper_arm_taxel_4" />
+        <touch name="RIGHT_ARM__HAND__0__4" site="r_hand_index_3_taxel_4" />
     </sensor>
     <sensor>
-        <touch name="r_upper_arm_taxel_5" site="r_upper_arm_taxel_5" />
+        <touch name="RIGHT_ARM__HAND__0__5" site="r_hand_index_3_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="r_upper_arm_taxel_6" site="r_upper_arm_taxel_6" />
+        <touch name="RIGHT_ARM__HAND__0__6" site="r_hand_index_3_taxel_6" />
     </sensor>
     <sensor>
-        <touch name="r_upper_arm_taxel_7" site="r_upper_arm_taxel_7" />
+        <touch name="RIGHT_ARM__HAND__0__7" site="r_hand_index_3_taxel_7" />
     </sensor>
     <sensor>
-        <touch name="r_upper_arm_taxel_8" site="r_upper_arm_taxel_8" />
+        <touch name="RIGHT_ARM__HAND__0__8" site="r_hand_index_3_taxel_8" />
     </sensor>
     <sensor>
-        <touch name="r_upper_arm_taxel_9" site="r_upper_arm_taxel_9" />
+        <touch name="RIGHT_ARM__HAND__0__9" site="r_hand_index_3_taxel_9" />
     </sensor>
     <sensor>
-        <touch name="r_upper_arm_taxel_10" site="r_upper_arm_taxel_10" />
+        <touch name="RIGHT_ARM__HAND__0__10" site="r_hand_index_3_taxel_10" />
     </sensor>
     <sensor>
-        <touch name="r_upper_arm_taxel_11" site="r_upper_arm_taxel_11" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_arm_taxel_12" site="r_upper_arm_taxel_12" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_arm_taxel_13" site="r_upper_arm_taxel_13" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_arm_taxel_14" site="r_upper_arm_taxel_14" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_arm_taxel_15" site="r_upper_arm_taxel_15" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_arm_taxel_16" site="r_upper_arm_taxel_16" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_arm_taxel_17" site="r_upper_arm_taxel_17" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_arm_taxel_18" site="r_upper_arm_taxel_18" />
+        <touch name="RIGHT_ARM__HAND__0__11" site="r_hand_index_3_taxel_11" />
     </sensor>
 
     <sensor>
-        <touch name="r_forearm_taxel_0" site="r_forearm_taxel_0" />
+        <touch name="RIGHT_ARM__HAND__1__0" site="r_hand_middle_3_taxel_0" />
     </sensor>
     <sensor>
-        <touch name="r_forearm_taxel_1" site="r_forearm_taxel_1" />
+        <touch name="RIGHT_ARM__HAND__1__1" site="r_hand_middle_3_taxel_1" />
     </sensor>
     <sensor>
-        <touch name="r_forearm_taxel_2" site="r_forearm_taxel_2" />
+        <touch name="RIGHT_ARM__HAND__1__2" site="r_hand_middle_3_taxel_2" />
     </sensor>
     <sensor>
-        <touch name="r_forearm_taxel_3" site="r_forearm_taxel_3" />
+        <touch name="RIGHT_ARM__HAND__1__3" site="r_hand_middle_3_taxel_3" />
     </sensor>
     <sensor>
-        <touch name="r_forearm_taxel_4" site="r_forearm_taxel_4" />
+        <touch name="RIGHT_ARM__HAND__1__4" site="r_hand_middle_3_taxel_4" />
     </sensor>
     <sensor>
-        <touch name="r_forearm_taxel_5" site="r_forearm_taxel_5" />
+        <touch name="RIGHT_ARM__HAND__1__5" site="r_hand_middle_3_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="r_forearm_taxel_6" site="r_forearm_taxel_6" />
+        <touch name="RIGHT_ARM__HAND__1__6" site="r_hand_middle_3_taxel_6" />
     </sensor>
     <sensor>
-        <touch name="r_forearm_taxel_7" site="r_forearm_taxel_7" />
+        <touch name="RIGHT_ARM__HAND__1__7" site="r_hand_middle_3_taxel_7" />
     </sensor>
     <sensor>
-        <touch name="r_forearm_taxel_8" site="r_forearm_taxel_8" />
+        <touch name="RIGHT_ARM__HAND__1__8" site="r_hand_middle_3_taxel_8" />
     </sensor>
     <sensor>
-        <touch name="r_forearm_taxel_9" site="r_forearm_taxel_9" />
+        <touch name="RIGHT_ARM__HAND__1__9" site="r_hand_middle_3_taxel_9" />
     </sensor>
     <sensor>
-        <touch name="r_forearm_taxel_10" site="r_forearm_taxel_10" />
+        <touch name="RIGHT_ARM__HAND__1__10" site="r_hand_middle_3_taxel_10" />
     </sensor>
     <sensor>
-        <touch name="r_forearm_taxel_11" site="r_forearm_taxel_11" />
-    </sensor>
-    <sensor>
-        <touch name="r_forearm_taxel_12" site="r_forearm_taxel_12" />
-    </sensor>
-    <sensor>
-        <touch name="r_forearm_taxel_13" site="r_forearm_taxel_13" />
-    </sensor>
-    <sensor>
-        <touch name="r_forearm_taxel_14" site="r_forearm_taxel_14" />
-    </sensor>
-    <sensor>
-        <touch name="r_forearm_taxel_15" site="r_forearm_taxel_15" />
+        <touch name="RIGHT_ARM__HAND__1__11" site="r_hand_middle_3_taxel_11" />
     </sensor>
 
     <sensor>
-        <touch name="r_hand_palm_taxel_0" site="r_hand_palm_taxel_0" />
+        <touch name="RIGHT_ARM__HAND__2__0" site="r_hand_ring_3_taxel_0" />
     </sensor>
     <sensor>
-        <touch name="r_hand_palm_taxel_1" site="r_hand_palm_taxel_1" />
+        <touch name="RIGHT_ARM__HAND__2__1" site="r_hand_ring_3_taxel_1" />
     </sensor>
     <sensor>
-        <touch name="r_hand_palm_taxel_2" site="r_hand_palm_taxel_2" />
+        <touch name="RIGHT_ARM__HAND__2__2" site="r_hand_ring_3_taxel_2" />
     </sensor>
     <sensor>
-        <touch name="r_hand_palm_taxel_3" site="r_hand_palm_taxel_3" />
+        <touch name="RIGHT_ARM__HAND__2__3" site="r_hand_ring_3_taxel_3" />
     </sensor>
     <sensor>
-        <touch name="r_hand_palm_taxel_4" site="r_hand_palm_taxel_4" />
+        <touch name="RIGHT_ARM__HAND__2__4" site="r_hand_ring_3_taxel_4" />
     </sensor>
     <sensor>
-        <touch name="r_hand_palm_taxel_5" site="r_hand_palm_taxel_5" />
+        <touch name="RIGHT_ARM__HAND__2__5" site="r_hand_ring_3_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="r_hand_palm_taxel_6" site="r_hand_palm_taxel_6" />
+        <touch name="RIGHT_ARM__HAND__2__6" site="r_hand_ring_3_taxel_6" />
     </sensor>
     <sensor>
-        <touch name="r_hand_palm_taxel_7" site="r_hand_palm_taxel_7" />
+        <touch name="RIGHT_ARM__HAND__2__7" site="r_hand_ring_3_taxel_7" />
     </sensor>
     <sensor>
-        <touch name="r_hand_palm_taxel_8" site="r_hand_palm_taxel_8" />
+        <touch name="RIGHT_ARM__HAND__2__8" site="r_hand_ring_3_taxel_8" />
     </sensor>
     <sensor>
-        <touch name="r_hand_palm_taxel_9" site="r_hand_palm_taxel_9" />
+        <touch name="RIGHT_ARM__HAND__2__9" site="r_hand_ring_3_taxel_9" />
     </sensor>
     <sensor>
-        <touch name="r_hand_palm_taxel_10" site="r_hand_palm_taxel_10" />
+        <touch name="RIGHT_ARM__HAND__2__10" site="r_hand_ring_3_taxel_10" />
     </sensor>
     <sensor>
-        <touch name="r_hand_palm_taxel_11" site="r_hand_palm_taxel_11" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_12" site="r_hand_palm_taxel_12" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_13" site="r_hand_palm_taxel_13" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_14" site="r_hand_palm_taxel_14" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_15" site="r_hand_palm_taxel_15" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_16" site="r_hand_palm_taxel_16" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_17" site="r_hand_palm_taxel_17" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_18" site="r_hand_palm_taxel_18" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_19" site="r_hand_palm_taxel_19" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_20" site="r_hand_palm_taxel_20" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_21" site="r_hand_palm_taxel_21" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_22" site="r_hand_palm_taxel_22" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_23" site="r_hand_palm_taxel_23" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_24" site="r_hand_palm_taxel_24" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_25" site="r_hand_palm_taxel_25" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_26" site="r_hand_palm_taxel_26" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_27" site="r_hand_palm_taxel_27" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_28" site="r_hand_palm_taxel_28" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_29" site="r_hand_palm_taxel_29" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_30" site="r_hand_palm_taxel_30" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_31" site="r_hand_palm_taxel_31" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_32" site="r_hand_palm_taxel_32" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_33" site="r_hand_palm_taxel_33" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_34" site="r_hand_palm_taxel_34" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_35" site="r_hand_palm_taxel_35" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_36" site="r_hand_palm_taxel_36" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_37" site="r_hand_palm_taxel_37" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_38" site="r_hand_palm_taxel_38" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_39" site="r_hand_palm_taxel_39" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_40" site="r_hand_palm_taxel_40" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_41" site="r_hand_palm_taxel_41" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_42" site="r_hand_palm_taxel_42" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_43" site="r_hand_palm_taxel_43" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_44" site="r_hand_palm_taxel_44" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_45" site="r_hand_palm_taxel_45" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_46" site="r_hand_palm_taxel_46" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_palm_taxel_47" site="r_hand_palm_taxel_47" />
+        <touch name="RIGHT_ARM__HAND__2__11" site="r_hand_ring_3_taxel_11" />
     </sensor>
 
     <sensor>
-        <touch name="r_hand_thumb_3_taxel_0" site="r_hand_thumb_3_taxel_0" />
+        <touch name="RIGHT_ARM__HAND__3__0" site="r_hand_little_3_taxel_0" />
     </sensor>
     <sensor>
-        <touch name="r_hand_thumb_3_taxel_1" site="r_hand_thumb_3_taxel_1" />
+        <touch name="RIGHT_ARM__HAND__3__1" site="r_hand_little_3_taxel_1" />
     </sensor>
     <sensor>
-        <touch name="r_hand_thumb_3_taxel_2" site="r_hand_thumb_3_taxel_2" />
+        <touch name="RIGHT_ARM__HAND__3__2" site="r_hand_little_3_taxel_2" />
     </sensor>
     <sensor>
-        <touch name="r_hand_thumb_3_taxel_3" site="r_hand_thumb_3_taxel_3" />
+        <touch name="RIGHT_ARM__HAND__3__3" site="r_hand_little_3_taxel_3" />
     </sensor>
     <sensor>
-        <touch name="r_hand_thumb_3_taxel_4" site="r_hand_thumb_3_taxel_4" />
+        <touch name="RIGHT_ARM__HAND__3__4" site="r_hand_little_3_taxel_4" />
     </sensor>
     <sensor>
-        <touch name="r_hand_thumb_3_taxel_5" site="r_hand_thumb_3_taxel_5" />
+        <touch name="RIGHT_ARM__HAND__3__5" site="r_hand_little_3_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="r_hand_thumb_3_taxel_6" site="r_hand_thumb_3_taxel_6" />
+        <touch name="RIGHT_ARM__HAND__3__6" site="r_hand_little_3_taxel_6" />
     </sensor>
     <sensor>
-        <touch name="r_hand_thumb_3_taxel_7" site="r_hand_thumb_3_taxel_7" />
+        <touch name="RIGHT_ARM__HAND__3__7" site="r_hand_little_3_taxel_7" />
     </sensor>
     <sensor>
-        <touch name="r_hand_thumb_3_taxel_8" site="r_hand_thumb_3_taxel_8" />
+        <touch name="RIGHT_ARM__HAND__3__8" site="r_hand_little_3_taxel_8" />
     </sensor>
     <sensor>
-        <touch name="r_hand_thumb_3_taxel_9" site="r_hand_thumb_3_taxel_9" />
+        <touch name="RIGHT_ARM__HAND__3__9" site="r_hand_little_3_taxel_9" />
     </sensor>
     <sensor>
-        <touch name="r_hand_thumb_3_taxel_10" site="r_hand_thumb_3_taxel_10" />
+        <touch name="RIGHT_ARM__HAND__3__10" site="r_hand_little_3_taxel_10" />
     </sensor>
     <sensor>
-        <touch name="r_hand_thumb_3_taxel_11" site="r_hand_thumb_3_taxel_11" />
-    </sensor>
-
-    <sensor>
-        <touch name="r_hand_index_3_taxel_0" site="r_hand_index_3_taxel_0" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_index_3_taxel_1" site="r_hand_index_3_taxel_1" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_index_3_taxel_2" site="r_hand_index_3_taxel_2" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_index_3_taxel_3" site="r_hand_index_3_taxel_3" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_index_3_taxel_4" site="r_hand_index_3_taxel_4" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_index_3_taxel_5" site="r_hand_index_3_taxel_5" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_index_3_taxel_6" site="r_hand_index_3_taxel_6" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_index_3_taxel_7" site="r_hand_index_3_taxel_7" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_index_3_taxel_8" site="r_hand_index_3_taxel_8" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_index_3_taxel_9" site="r_hand_index_3_taxel_9" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_index_3_taxel_10" site="r_hand_index_3_taxel_10" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_index_3_taxel_11" site="r_hand_index_3_taxel_11" />
+        <touch name="RIGHT_ARM__HAND__3__11" site="r_hand_little_3_taxel_11" />
     </sensor>
 
     <sensor>
-        <touch name="r_hand_midddle_3_taxel_0" site="r_hand_midddle_3_taxel_0" />
+        <touch name="RIGHT_ARM__HAND__4__0" site="r_hand_thumb_3_taxel_0" />
     </sensor>
     <sensor>
-        <touch name="r_hand_midddle_3_taxel_1" site="r_hand_midddle_3_taxel_1" />
+        <touch name="RIGHT_ARM__HAND__4__1" site="r_hand_thumb_3_taxel_1" />
     </sensor>
     <sensor>
-        <touch name="r_hand_midddle_3_taxel_2" site="r_hand_midddle_3_taxel_2" />
+        <touch name="RIGHT_ARM__HAND__4__2" site="r_hand_thumb_3_taxel_2" />
     </sensor>
     <sensor>
-        <touch name="r_hand_midddle_3_taxel_3" site="r_hand_midddle_3_taxel_3" />
+        <touch name="RIGHT_ARM__HAND__4__3" site="r_hand_thumb_3_taxel_3" />
     </sensor>
     <sensor>
-        <touch name="r_hand_midddle_3_taxel_4" site="r_hand_midddle_3_taxel_4" />
+        <touch name="RIGHT_ARM__HAND__4__4" site="r_hand_thumb_3_taxel_4" />
     </sensor>
     <sensor>
-        <touch name="r_hand_midddle_3_taxel_5" site="r_hand_midddle_3_taxel_5" />
+        <touch name="RIGHT_ARM__HAND__4__5" site="r_hand_thumb_3_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="r_hand_midddle_3_taxel_6" site="r_hand_midddle_3_taxel_6" />
+        <touch name="RIGHT_ARM__HAND__4__6" site="r_hand_thumb_3_taxel_6" />
     </sensor>
     <sensor>
-        <touch name="r_hand_midddle_3_taxel_7" site="r_hand_midddle_3_taxel_7" />
+        <touch name="RIGHT_ARM__HAND__4__7" site="r_hand_thumb_3_taxel_7" />
     </sensor>
     <sensor>
-        <touch name="r_hand_midddle_3_taxel_8" site="r_hand_midddle_3_taxel_8" />
+        <touch name="RIGHT_ARM__HAND__4__8" site="r_hand_thumb_3_taxel_8" />
     </sensor>
     <sensor>
-        <touch name="r_hand_midddle_3_taxel_9" site="r_hand_midddle_3_taxel_9" />
+        <touch name="RIGHT_ARM__HAND__4__9" site="r_hand_thumb_3_taxel_9" />
     </sensor>
     <sensor>
-        <touch name="r_hand_midddle_3_taxel_10" site="r_hand_midddle_3_taxel_10" />
+        <touch name="RIGHT_ARM__HAND__4__10" site="r_hand_thumb_3_taxel_10" />
     </sensor>
     <sensor>
-        <touch name="r_hand_midddle_3_taxel_11" site="r_hand_midddle_3_taxel_11" />
-    </sensor>
-
-    <sensor>
-        <touch name="r_hand_ring_3_taxel_0" site="r_hand_ring_3_taxel_0" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_ring_3_taxel_1" site="r_hand_ring_3_taxel_1" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_ring_3_taxel_2" site="r_hand_ring_3_taxel_2" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_ring_3_taxel_3" site="r_hand_ring_3_taxel_3" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_ring_3_taxel_4" site="r_hand_ring_3_taxel_4" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_ring_3_taxel_5" site="r_hand_ring_3_taxel_5" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_ring_3_taxel_6" site="r_hand_ring_3_taxel_6" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_ring_3_taxel_7" site="r_hand_ring_3_taxel_7" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_ring_3_taxel_8" site="r_hand_ring_3_taxel_8" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_ring_3_taxel_9" site="r_hand_ring_3_taxel_9" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_ring_3_taxel_10" site="r_hand_ring_3_taxel_10" />
-    </sensor>
-    <sensor>
-        <touch name="r_hand_ring_3_taxel_11" site="r_hand_ring_3_taxel_11" />
+        <touch name="RIGHT_ARM__HAND__4__11" site="r_hand_thumb_3_taxel_11" />
     </sensor>
 
     <sensor>
-        <touch name="r_hand_little_3_taxel_0" site="r_hand_little_3_taxel_0" />
+        <touch name="RIGHT_ARM__HAND__5__0" site="r_hand_palm_taxel_0" />
     </sensor>
     <sensor>
-        <touch name="r_hand_little_3_taxel_1" site="r_hand_little_3_taxel_1" />
+        <touch name="RIGHT_ARM__HAND__5__1" site="r_hand_palm_taxel_1" />
     </sensor>
     <sensor>
-        <touch name="r_hand_little_3_taxel_2" site="r_hand_little_3_taxel_2" />
+        <touch name="RIGHT_ARM__HAND__5__2" site="r_hand_palm_taxel_2" />
     </sensor>
     <sensor>
-        <touch name="r_hand_little_3_taxel_3" site="r_hand_little_3_taxel_3" />
+        <touch name="RIGHT_ARM__HAND__5__3" site="r_hand_palm_taxel_3" />
     </sensor>
     <sensor>
-        <touch name="r_hand_little_3_taxel_4" site="r_hand_little_3_taxel_4" />
+        <touch name="RIGHT_ARM__HAND__5__4" site="r_hand_palm_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="r_hand_little_3_taxel_5" site="r_hand_little_3_taxel_5" />
+        <touch name="RIGHT_ARM__HAND__5__5" site="r_hand_palm_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="r_hand_little_3_taxel_6" site="r_hand_little_3_taxel_6" />
+        <touch name="RIGHT_ARM__HAND__5__6" site="r_hand_palm_taxel_6" />
     </sensor>
     <sensor>
-        <touch name="r_hand_little_3_taxel_7" site="r_hand_little_3_taxel_7" />
+        <touch name="RIGHT_ARM__HAND__5__7" site="r_hand_palm_taxel_7" />
     </sensor>
     <sensor>
-        <touch name="r_hand_little_3_taxel_8" site="r_hand_little_3_taxel_8" />
+        <touch name="RIGHT_ARM__HAND__5__8" site="r_hand_palm_taxel_8" />
     </sensor>
     <sensor>
-        <touch name="r_hand_little_3_taxel_9" site="r_hand_little_3_taxel_9" />
+        <touch name="RIGHT_ARM__HAND__5__9" site="r_hand_palm_taxel_9" />
     </sensor>
     <sensor>
-        <touch name="r_hand_little_3_taxel_10" site="r_hand_little_3_taxel_10" />
+        <touch name="RIGHT_ARM__HAND__5__10" site="r_hand_palm_taxel_10" />
     </sensor>
     <sensor>
-        <touch name="r_hand_little_3_taxel_11" site="r_hand_little_3_taxel_11" />
+        <touch name="RIGHT_ARM__HAND__5__11" site="r_hand_palm_taxel_11" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__12" site="r_hand_palm_taxel_12" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__13" site="r_hand_palm_taxel_13" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__14" site="r_hand_palm_taxel_14" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__15" site="r_hand_palm_taxel_15" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__16" site="r_hand_palm_taxel_16" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__17" site="r_hand_palm_taxel_17" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__18" site="r_hand_palm_taxel_18" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__19" site="r_hand_palm_taxel_19" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__20" site="r_hand_palm_taxel_20" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__21" site="r_hand_palm_taxel_21" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__22" site="r_hand_palm_taxel_22" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__23" site="r_hand_palm_taxel_23" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__24" site="r_hand_palm_taxel_24" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__25" site="r_hand_palm_taxel_25" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__26" site="r_hand_palm_taxel_26" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__27" site="r_hand_palm_taxel_27" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__28" site="r_hand_palm_taxel_28" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__29" site="r_hand_palm_taxel_29" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__30" site="r_hand_palm_taxel_30" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__31" site="r_hand_palm_taxel_31" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__32" site="r_hand_palm_taxel_32" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__33" site="r_hand_palm_taxel_33" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__34" site="r_hand_palm_taxel_34" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__35" site="r_hand_palm_taxel_35" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__36" site="r_hand_palm_taxel_36" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__37" site="r_hand_palm_taxel_37" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__38" site="r_hand_palm_taxel_38" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__39" site="r_hand_palm_taxel_39" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__40" site="r_hand_palm_taxel_40" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__41" site="r_hand_palm_taxel_41" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__42" site="r_hand_palm_taxel_42" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__43" site="r_hand_palm_taxel_43" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__44" site="r_hand_palm_taxel_44" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__45" site="r_hand_palm_taxel_45" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__46" site="r_hand_palm_taxel_46" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_ARM__HAND__5__47" site="r_hand_palm_taxel_47" />
     </sensor>
 
     <sensor>
-        <touch name="r_upper_leg_taxel_0" site="r_upper_leg_taxel_0" />
+        <touch name="RIGHT_ARM__FOREARM__0__0" site="r_forearm_taxel_0" />
     </sensor>
     <sensor>
-        <touch name="r_upper_leg_taxel_1" site="r_upper_leg_taxel_1" />
+        <touch name="RIGHT_ARM__FOREARM__0__1" site="r_forearm_taxel_1" />
     </sensor>
     <sensor>
-        <touch name="r_upper_leg_taxel_2" site="r_upper_leg_taxel_2" />
+        <touch name="RIGHT_ARM__FOREARM__0__2" site="r_forearm_taxel_2" />
     </sensor>
     <sensor>
-        <touch name="r_upper_leg_taxel_3" site="r_upper_leg_taxel_3" />
+        <touch name="RIGHT_ARM__FOREARM__0__3" site="r_forearm_taxel_3" />
     </sensor>
     <sensor>
-        <touch name="r_upper_leg_taxel_4" site="r_upper_leg_taxel_4" />
+        <touch name="RIGHT_ARM__FOREARM__0__4" site="r_forearm_taxel_4" />
     </sensor>
     <sensor>
-        <touch name="r_upper_leg_taxel_5" site="r_upper_leg_taxel_5" />
+        <touch name="RIGHT_ARM__FOREARM__0__5" site="r_forearm_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="r_upper_leg_taxel_6" site="r_upper_leg_taxel_6" />
+        <touch name="RIGHT_ARM__FOREARM__0__6" site="r_forearm_taxel_6" />
     </sensor>
     <sensor>
-        <touch name="r_upper_leg_taxel_7" site="r_upper_leg_taxel_7" />
+        <touch name="RIGHT_ARM__FOREARM__0__7" site="r_forearm_taxel_7" />
     </sensor>
     <sensor>
-        <touch name="r_upper_leg_taxel_8" site="r_upper_leg_taxel_8" />
+        <touch name="RIGHT_ARM__FOREARM__0__8" site="r_forearm_taxel_8" />
     </sensor>
     <sensor>
-        <touch name="r_upper_leg_taxel_9" site="r_upper_leg_taxel_9" />
+        <touch name="RIGHT_ARM__FOREARM__0__9" site="r_forearm_taxel_9" />
     </sensor>
     <sensor>
-        <touch name="r_upper_leg_taxel_10" site="r_upper_leg_taxel_10" />
+        <touch name="RIGHT_ARM__FOREARM__0__10" site="r_forearm_taxel_10" />
     </sensor>
     <sensor>
-        <touch name="r_upper_leg_taxel_11" site="r_upper_leg_taxel_11" />
+        <touch name="RIGHT_ARM__FOREARM__0__11" site="r_forearm_taxel_11" />
     </sensor>
     <sensor>
-        <touch name="r_upper_leg_taxel_12" site="r_upper_leg_taxel_12" />
+        <touch name="RIGHT_ARM__FOREARM__1__0" site="r_forearm_taxel_12" />
     </sensor>
     <sensor>
-        <touch name="r_upper_leg_taxel_13" site="r_upper_leg_taxel_13" />
+        <touch name="RIGHT_ARM__FOREARM__1__1" site="r_forearm_taxel_13" />
     </sensor>
     <sensor>
-        <touch name="r_upper_leg_taxel_14" site="r_upper_leg_taxel_14" />
+        <touch name="RIGHT_ARM__FOREARM__1__2" site="r_forearm_taxel_14" />
     </sensor>
     <sensor>
-        <touch name="r_upper_leg_taxel_15" site="r_upper_leg_taxel_15" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_leg_taxel_16" site="r_upper_leg_taxel_16" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_leg_taxel_17" site="r_upper_leg_taxel_17" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_leg_taxel_18" site="r_upper_leg_taxel_18" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_leg_taxel_19" site="r_upper_leg_taxel_19" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_leg_taxel_20" site="r_upper_leg_taxel_20" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_leg_taxel_21" site="r_upper_leg_taxel_21" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_leg_taxel_22" site="r_upper_leg_taxel_22" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_leg_taxel_23" site="r_upper_leg_taxel_23" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_leg_taxel_24" site="r_upper_leg_taxel_24" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_leg_taxel_25" site="r_upper_leg_taxel_25" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_leg_taxel_26" site="r_upper_leg_taxel_26" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_leg_taxel_27" site="r_upper_leg_taxel_27" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_leg_taxel_28" site="r_upper_leg_taxel_28" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_leg_taxel_29" site="r_upper_leg_taxel_29" />
-    </sensor>
-    <sensor>
-        <touch name="r_upper_leg_taxel_30" site="r_upper_leg_taxel_30" />
+        <touch name="RIGHT_ARM__FOREARM__1__3" site="r_forearm_taxel_15" />
     </sensor>
 
     <sensor>
-        <touch name="r_lower_leg_taxel_0" site="r_lower_leg_taxel_0" />
+        <touch name="RIGHT_ARM__UPPER_ARM__0__0" site="r_upper_arm_taxel_0" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_1" site="r_lower_leg_taxel_1" />
+        <touch name="RIGHT_ARM__UPPER_ARM__0__1" site="r_upper_arm_taxel_1" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_2" site="r_lower_leg_taxel_2" />
+        <touch name="RIGHT_ARM__UPPER_ARM__0__2" site="r_upper_arm_taxel_2" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_3" site="r_lower_leg_taxel_3" />
+        <touch name="RIGHT_ARM__UPPER_ARM__0__3" site="r_upper_arm_taxel_3" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_4" site="r_lower_leg_taxel_4" />
+        <touch name="RIGHT_ARM__UPPER_ARM__0__4" site="r_upper_arm_taxel_4" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_5" site="r_lower_leg_taxel_5" />
+        <touch name="RIGHT_ARM__UPPER_ARM__0__5" site="r_upper_arm_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_6" site="r_lower_leg_taxel_6" />
+        <touch name="RIGHT_ARM__UPPER_ARM__0__6" site="r_upper_arm_taxel_6" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_7" site="r_lower_leg_taxel_7" />
+        <touch name="RIGHT_ARM__UPPER_ARM__0__7" site="r_upper_arm_taxel_7" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_8" site="r_lower_leg_taxel_8" />
+        <touch name="RIGHT_ARM__UPPER_ARM__0__8" site="r_upper_arm_taxel_8" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_9" site="r_lower_leg_taxel_9" />
+        <touch name="RIGHT_ARM__UPPER_ARM__0__9" site="r_upper_arm_taxel_9" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_10" site="r_lower_leg_taxel_10" />
+        <touch name="RIGHT_ARM__UPPER_ARM__0__10" site="r_upper_arm_taxel_10" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_11" site="r_lower_leg_taxel_11" />
+        <touch name="RIGHT_ARM__UPPER_ARM__0__11" site="r_upper_arm_taxel_11" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_12" site="r_lower_leg_taxel_12" />
+        <touch name="RIGHT_ARM__UPPER_ARM__1__0" site="r_upper_arm_taxel_12" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_13" site="r_lower_leg_taxel_13" />
+        <touch name="RIGHT_ARM__UPPER_ARM__1__1" site="r_upper_arm_taxel_13" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_14" site="r_lower_leg_taxel_14" />
+        <touch name="RIGHT_ARM__UPPER_ARM__1__2" site="r_upper_arm_taxel_14" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_15" site="r_lower_leg_taxel_15" />
+        <touch name="RIGHT_ARM__UPPER_ARM__1__3" site="r_upper_arm_taxel_15" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_16" site="r_lower_leg_taxel_16" />
+        <touch name="RIGHT_ARM__UPPER_ARM__1__4" site="r_upper_arm_taxel_16" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_17" site="r_lower_leg_taxel_17" />
+        <touch name="RIGHT_ARM__UPPER_ARM__1__5" site="r_upper_arm_taxel_17" />
     </sensor>
     <sensor>
-        <touch name="r_lower_leg_taxel_18" site="r_lower_leg_taxel_18" />
-    </sensor>
-    <sensor>
-        <touch name="r_lower_leg_taxel_19" site="r_lower_leg_taxel_19" />
-    </sensor>
-    <sensor>
-        <touch name="r_lower_leg_taxel_20" site="r_lower_leg_taxel_20" />
-    </sensor>
-    <sensor>
-        <touch name="r_lower_leg_taxel_21" site="r_lower_leg_taxel_21" />
-    </sensor>
-    <sensor>
-        <touch name="r_lower_leg_taxel_22" site="r_lower_leg_taxel_22" />
-    </sensor>
-    <sensor>
-        <touch name="r_lower_leg_taxel_23" site="r_lower_leg_taxel_23" />
-    </sensor>
-    <sensor>
-        <touch name="r_lower_leg_taxel_24" site="r_lower_leg_taxel_24" />
-    </sensor>
-    <sensor>
-        <touch name="r_lower_leg_taxel_25" site="r_lower_leg_taxel_25" />
-    </sensor>
-    <sensor>
-        <touch name="r_lower_leg_taxel_26" site="r_lower_leg_taxel_26" />
-    </sensor>
-    <sensor>
-        <touch name="r_lower_leg_taxel_27" site="r_lower_leg_taxel_27" />
-    </sensor>
-    <sensor>
-        <touch name="r_lower_leg_taxel_28" site="r_lower_leg_taxel_28" />
-    </sensor>
-    <sensor>
-        <touch name="r_lower_leg_taxel_29" site="r_lower_leg_taxel_29" />
-    </sensor>
-    <sensor>
-        <touch name="r_lower_leg_taxel_30" site="r_lower_leg_taxel_30" />
-    </sensor>
-    <sensor>
-        <touch name="r_lower_leg_taxel_31" site="r_lower_leg_taxel_31" />
-    </sensor>
-    <sensor>
-        <touch name="r_lower_leg_taxel_32" site="r_lower_leg_taxel_32" />
-    </sensor>
-
-
-    <!-- contact sensors left side-->
-    <sensor>
-        <touch name="l_upper_arm_taxel_0" site="l_upper_arm_taxel_0" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_1" site="l_upper_arm_taxel_1" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_2" site="l_upper_arm_taxel_2" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_3" site="l_upper_arm_taxel_3" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_4" site="l_upper_arm_taxel_4" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_5" site="l_upper_arm_taxel_5" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_6" site="l_upper_arm_taxel_6" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_7" site="l_upper_arm_taxel_7" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_8" site="l_upper_arm_taxel_8" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_9" site="l_upper_arm_taxel_9" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_10" site="l_upper_arm_taxel_10" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_11" site="l_upper_arm_taxel_11" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_12" site="l_upper_arm_taxel_12" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_13" site="l_upper_arm_taxel_13" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_14" site="l_upper_arm_taxel_14" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_15" site="l_upper_arm_taxel_15" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_16" site="l_upper_arm_taxel_16" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_17" site="l_upper_arm_taxel_17" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_arm_taxel_18" site="l_upper_arm_taxel_18" />
+        <touch name="RIGHT_ARM__UPPER_ARM__1__6" site="r_upper_arm_taxel_18" />
     </sensor>
 
     <sensor>
-        <touch name="l_forearm_taxel_0" site="l_forearm_taxel_0" />
+        <touch name="RIGHT_LEG__UPPER_LEG__0__0" site="r_upper_leg_taxel_0" />
     </sensor>
     <sensor>
-        <touch name="l_forearm_taxel_1" site="l_forearm_taxel_1" />
+        <touch name="RIGHT_LEG__UPPER_LEG__0__1" site="r_upper_leg_taxel_1" />
     </sensor>
     <sensor>
-        <touch name="l_forearm_taxel_2" site="l_forearm_taxel_2" />
+        <touch name="RIGHT_LEG__UPPER_LEG__0__2" site="r_upper_leg_taxel_2" />
     </sensor>
     <sensor>
-        <touch name="l_forearm_taxel_3" site="l_forearm_taxel_3" />
+        <touch name="RIGHT_LEG__UPPER_LEG__0__3" site="r_upper_leg_taxel_3" />
     </sensor>
     <sensor>
-        <touch name="l_forearm_taxel_4" site="l_forearm_taxel_4" />
+        <touch name="RIGHT_LEG__UPPER_LEG__0__4" site="r_upper_leg_taxel_4" />
     </sensor>
     <sensor>
-        <touch name="l_forearm_taxel_5" site="l_forearm_taxel_5" />
+        <touch name="RIGHT_LEG__UPPER_LEG__0__5" site="r_upper_leg_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="l_forearm_taxel_6" site="l_forearm_taxel_6" />
+        <touch name="RIGHT_LEG__UPPER_LEG__0__6" site="r_upper_leg_taxel_6" />
     </sensor>
     <sensor>
-        <touch name="l_forearm_taxel_7" site="l_forearm_taxel_7" />
+        <touch name="RIGHT_LEG__UPPER_LEG__0__7" site="r_upper_leg_taxel_7" />
     </sensor>
     <sensor>
-        <touch name="l_forearm_taxel_8" site="l_forearm_taxel_8" />
+        <touch name="RIGHT_LEG__UPPER_LEG__0__8" site="r_upper_leg_taxel_8" />
     </sensor>
     <sensor>
-        <touch name="l_forearm_taxel_9" site="l_forearm_taxel_9" />
+        <touch name="RIGHT_LEG__UPPER_LEG__0__9" site="r_upper_leg_taxel_9" />
     </sensor>
     <sensor>
-        <touch name="l_forearm_taxel_10" site="l_forearm_taxel_10" />
+        <touch name="RIGHT_LEG__UPPER_LEG__0__10" site="r_upper_leg_taxel_10" />
     </sensor>
     <sensor>
-        <touch name="l_forearm_taxel_11" site="l_forearm_taxel_11" />
+        <touch name="RIGHT_LEG__UPPER_LEG__0__11" site="r_upper_leg_taxel_11" />
     </sensor>
     <sensor>
-        <touch name="l_forearm_taxel_12" site="l_forearm_taxel_12" />
+        <touch name="RIGHT_LEG__UPPER_LEG__1__0" site="r_upper_leg_taxel_12" />
     </sensor>
     <sensor>
-        <touch name="l_forearm_taxel_13" site="l_forearm_taxel_13" />
+        <touch name="RIGHT_LEG__UPPER_LEG__1__1" site="r_upper_leg_taxel_13" />
     </sensor>
     <sensor>
-        <touch name="l_forearm_taxel_14" site="l_forearm_taxel_14" />
+        <touch name="RIGHT_LEG__UPPER_LEG__1__2" site="r_upper_leg_taxel_14" />
     </sensor>
     <sensor>
-        <touch name="l_forearm_taxel_15" site="l_forearm_taxel_15" />
-    </sensor>
-
-    <sensor>
-        <touch name="l_hand_palm_taxel_0" site="l_hand_palm_taxel_0" />
+        <touch name="RIGHT_LEG__UPPER_LEG__1__3" site="r_upper_leg_taxel_15" />
     </sensor>
     <sensor>
-        <touch name="l_hand_palm_taxel_1" site="l_hand_palm_taxel_1" />
+        <touch name="RIGHT_LEG__UPPER_LEG__1__4" site="r_upper_leg_taxel_16" />
     </sensor>
     <sensor>
-        <touch name="l_hand_palm_taxel_2" site="l_hand_palm_taxel_2" />
+        <touch name="RIGHT_LEG__UPPER_LEG__1__5" site="r_upper_leg_taxel_17" />
     </sensor>
     <sensor>
-        <touch name="l_hand_palm_taxel_3" site="l_hand_palm_taxel_3" />
+        <touch name="RIGHT_LEG__UPPER_LEG__1__6" site="r_upper_leg_taxel_18" />
     </sensor>
     <sensor>
-        <touch name="l_hand_palm_taxel_4" site="l_hand_palm_taxel_4" />
+        <touch name="RIGHT_LEG__UPPER_LEG__1__7" site="r_upper_leg_taxel_19" />
     </sensor>
     <sensor>
-        <touch name="l_hand_palm_taxel_5" site="l_hand_palm_taxel_5" />
+        <touch name="RIGHT_LEG__UPPER_LEG__1__8" site="r_upper_leg_taxel_20" />
     </sensor>
     <sensor>
-        <touch name="l_hand_palm_taxel_6" site="l_hand_palm_taxel_6" />
+        <touch name="RIGHT_LEG__UPPER_LEG__1__9" site="r_upper_leg_taxel_21" />
     </sensor>
     <sensor>
-        <touch name="l_hand_palm_taxel_7" site="l_hand_palm_taxel_7" />
+        <touch name="RIGHT_LEG__UPPER_LEG__1__10" site="r_upper_leg_taxel_22" />
     </sensor>
     <sensor>
-        <touch name="l_hand_palm_taxel_8" site="l_hand_palm_taxel_8" />
+        <touch name="RIGHT_LEG__UPPER_LEG__1__11" site="r_upper_leg_taxel_23" />
     </sensor>
     <sensor>
-        <touch name="l_hand_palm_taxel_9" site="l_hand_palm_taxel_9" />
+        <touch name="RIGHT_LEG__UPPER_LEG__2__0" site="r_upper_leg_taxel_24" />
     </sensor>
     <sensor>
-        <touch name="l_hand_palm_taxel_10" site="l_hand_palm_taxel_10" />
+        <touch name="RIGHT_LEG__UPPER_LEG__2__1" site="r_upper_leg_taxel_25" />
     </sensor>
     <sensor>
-        <touch name="l_hand_palm_taxel_11" site="l_hand_palm_taxel_11" />
+        <touch name="RIGHT_LEG__UPPER_LEG__2__2" site="r_upper_leg_taxel_26" />
     </sensor>
     <sensor>
-        <touch name="l_hand_palm_taxel_12" site="l_hand_palm_taxel_12" />
+        <touch name="RIGHT_LEG__UPPER_LEG__2__3" site="r_upper_leg_taxel_27" />
     </sensor>
     <sensor>
-        <touch name="l_hand_palm_taxel_13" site="l_hand_palm_taxel_13" />
+        <touch name="RIGHT_LEG__UPPER_LEG__2__4" site="r_upper_leg_taxel_28" />
     </sensor>
     <sensor>
-        <touch name="l_hand_palm_taxel_14" site="l_hand_palm_taxel_14" />
+        <touch name="RIGHT_LEG__UPPER_LEG__2__5" site="r_upper_leg_taxel_29" />
     </sensor>
     <sensor>
-        <touch name="l_hand_palm_taxel_15" site="l_hand_palm_taxel_15" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_16" site="l_hand_palm_taxel_16" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_17" site="l_hand_palm_taxel_17" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_18" site="l_hand_palm_taxel_18" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_19" site="l_hand_palm_taxel_19" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_20" site="l_hand_palm_taxel_20" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_21" site="l_hand_palm_taxel_21" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_22" site="l_hand_palm_taxel_22" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_23" site="l_hand_palm_taxel_23" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_24" site="l_hand_palm_taxel_24" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_25" site="l_hand_palm_taxel_25" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_26" site="l_hand_palm_taxel_26" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_27" site="l_hand_palm_taxel_27" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_28" site="l_hand_palm_taxel_28" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_29" site="l_hand_palm_taxel_29" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_30" site="l_hand_palm_taxel_30" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_31" site="l_hand_palm_taxel_31" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_32" site="l_hand_palm_taxel_32" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_33" site="l_hand_palm_taxel_33" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_34" site="l_hand_palm_taxel_34" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_35" site="l_hand_palm_taxel_35" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_36" site="l_hand_palm_taxel_36" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_37" site="l_hand_palm_taxel_37" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_38" site="l_hand_palm_taxel_38" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_39" site="l_hand_palm_taxel_39" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_40" site="l_hand_palm_taxel_40" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_41" site="l_hand_palm_taxel_41" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_42" site="l_hand_palm_taxel_42" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_43" site="l_hand_palm_taxel_43" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_44" site="l_hand_palm_taxel_44" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_45" site="l_hand_palm_taxel_45" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_46" site="l_hand_palm_taxel_46" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_palm_taxel_47" site="l_hand_palm_taxel_47" />
+        <touch name="RIGHT_LEG__UPPER_LEG__2__6" site="r_upper_leg_taxel_30" />
     </sensor>
 
     <sensor>
-        <touch name="l_hand_thumb_3_taxel_0" site="l_hand_thumb_3_taxel_0" />
+        <touch name="RIGHT_LEG__LOWER_LEG__0__0" site="r_lower_leg_taxel_0" />
     </sensor>
     <sensor>
-        <touch name="l_hand_thumb_3_taxel_1" site="l_hand_thumb_3_taxel_1" />
+        <touch name="RIGHT_LEG__LOWER_LEG__0__1" site="r_lower_leg_taxel_1" />
     </sensor>
     <sensor>
-        <touch name="l_hand_thumb_3_taxel_2" site="l_hand_thumb_3_taxel_2" />
+        <touch name="RIGHT_LEG__LOWER_LEG__0__2" site="r_lower_leg_taxel_2" />
     </sensor>
     <sensor>
-        <touch name="l_hand_thumb_3_taxel_3" site="l_hand_thumb_3_taxel_3" />
+        <touch name="RIGHT_LEG__LOWER_LEG__0__3" site="r_lower_leg_taxel_3" />
     </sensor>
     <sensor>
-        <touch name="l_hand_thumb_3_taxel_4" site="l_hand_thumb_3_taxel_4" />
+        <touch name="RIGHT_LEG__LOWER_LEG__0__4" site="r_lower_leg_taxel_4" />
     </sensor>
     <sensor>
-        <touch name="l_hand_thumb_3_taxel_5" site="l_hand_thumb_3_taxel_5" />
+        <touch name="RIGHT_LEG__LOWER_LEG__0__5" site="r_lower_leg_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="l_hand_thumb_3_taxel_6" site="l_hand_thumb_3_taxel_6" />
+        <touch name="RIGHT_LEG__LOWER_LEG__0__6" site="r_lower_leg_taxel_6" />
     </sensor>
     <sensor>
-        <touch name="l_hand_thumb_3_taxel_7" site="l_hand_thumb_3_taxel_7" />
+        <touch name="RIGHT_LEG__LOWER_LEG__0__7" site="r_lower_leg_taxel_7" />
     </sensor>
     <sensor>
-        <touch name="l_hand_thumb_3_taxel_8" site="l_hand_thumb_3_taxel_8" />
+        <touch name="RIGHT_LEG__LOWER_LEG__0__8" site="r_lower_leg_taxel_8" />
     </sensor>
     <sensor>
-        <touch name="l_hand_thumb_3_taxel_9" site="l_hand_thumb_3_taxel_9" />
+        <touch name="RIGHT_LEG__LOWER_LEG__0__9" site="r_lower_leg_taxel_9" />
     </sensor>
     <sensor>
-        <touch name="l_hand_thumb_3_taxel_10" site="l_hand_thumb_3_taxel_10" />
+        <touch name="RIGHT_LEG__LOWER_LEG__0__10" site="r_lower_leg_taxel_10" />
     </sensor>
     <sensor>
-        <touch name="l_hand_thumb_3_taxel_11" site="l_hand_thumb_3_taxel_11" />
+        <touch name="RIGHT_LEG__LOWER_LEG__0__11" site="r_lower_leg_taxel_11" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__1__0" site="r_lower_leg_taxel_12" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__1__1" site="r_lower_leg_taxel_13" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__1__2" site="r_lower_leg_taxel_14" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__1__3" site="r_lower_leg_taxel_15" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__1__4" site="r_lower_leg_taxel_16" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__1__5" site="r_lower_leg_taxel_17" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__1__6" site="r_lower_leg_taxel_18" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__1__7" site="r_lower_leg_taxel_19" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__1__8" site="r_lower_leg_taxel_20" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__1__9" site="r_lower_leg_taxel_21" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__1__10" site="r_lower_leg_taxel_22" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__1__11" site="r_lower_leg_taxel_23" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__2__0" site="r_lower_leg_taxel_24" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__2__1" site="r_lower_leg_taxel_25" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__2__2" site="r_lower_leg_taxel_26" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__2__3" site="r_lower_leg_taxel_27" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__2__4" site="r_lower_leg_taxel_28" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__2__5" site="r_lower_leg_taxel_29" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__2__6" site="r_lower_leg_taxel_30" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__2__7" site="r_lower_leg_taxel_31" />
+    </sensor>
+    <sensor>
+        <touch name="RIGHT_LEG__LOWER_LEG__2__8" site="r_lower_leg_taxel_32" />
+    </sensor>
+
+
+    <!-- contact sensors left hand-->
+    <sensor>
+        <touch name="LEFT_ARM__HAND__0__0" site="l_hand_index_3_taxel_0" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__0__1" site="l_hand_index_3_taxel_1" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__0__2" site="l_hand_index_3_taxel_2" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__0__3" site="l_hand_index_3_taxel_3" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__0__4" site="l_hand_index_3_taxel_4" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__0__5" site="l_hand_index_3_taxel_5" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__0__6" site="l_hand_index_3_taxel_6" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__0__7" site="l_hand_index_3_taxel_7" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__0__8" site="l_hand_index_3_taxel_8" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__0__9" site="l_hand_index_3_taxel_9" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__0__10" site="l_hand_index_3_taxel_10" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__0__11" site="l_hand_index_3_taxel_11" />
     </sensor>
 
     <sensor>
-        <touch name="l_hand_index_3_taxel_0" site="l_hand_index_3_taxel_0" />
+        <touch name="LEFT_ARM__HAND__1__0" site="l_hand_middle_3_taxel_0" />
     </sensor>
     <sensor>
-        <touch name="l_hand_index_3_taxel_1" site="l_hand_index_3_taxel_1" />
+        <touch name="LEFT_ARM__HAND__1__1" site="l_hand_middle_3_taxel_1" />
     </sensor>
     <sensor>
-        <touch name="l_hand_index_3_taxel_2" site="l_hand_index_3_taxel_2" />
+        <touch name="LEFT_ARM__HAND__1__2" site="l_hand_middle_3_taxel_2" />
     </sensor>
     <sensor>
-        <touch name="l_hand_index_3_taxel_3" site="l_hand_index_3_taxel_3" />
+        <touch name="LEFT_ARM__HAND__1__3" site="l_hand_middle_3_taxel_3" />
     </sensor>
     <sensor>
-        <touch name="l_hand_index_3_taxel_4" site="l_hand_index_3_taxel_4" />
+        <touch name="LEFT_ARM__HAND__1__4" site="l_hand_middle_3_taxel_4" />
     </sensor>
     <sensor>
-        <touch name="l_hand_index_3_taxel_5" site="l_hand_index_3_taxel_5" />
+        <touch name="LEFT_ARM__HAND__1__5" site="l_hand_middle_3_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="l_hand_index_3_taxel_6" site="l_hand_index_3_taxel_6" />
+        <touch name="LEFT_ARM__HAND__1__6" site="l_hand_middle_3_taxel_6" />
     </sensor>
     <sensor>
-        <touch name="l_hand_index_3_taxel_7" site="l_hand_index_3_taxel_7" />
+        <touch name="LEFT_ARM__HAND__1__7" site="l_hand_middle_3_taxel_7" />
     </sensor>
     <sensor>
-        <touch name="l_hand_index_3_taxel_8" site="l_hand_index_3_taxel_8" />
+        <touch name="LEFT_ARM__HAND__1__8" site="l_hand_middle_3_taxel_8" />
     </sensor>
     <sensor>
-        <touch name="l_hand_index_3_taxel_9" site="l_hand_index_3_taxel_9" />
+        <touch name="LEFT_ARM__HAND__1__9" site="l_hand_middle_3_taxel_9" />
     </sensor>
     <sensor>
-        <touch name="l_hand_index_3_taxel_10" site="l_hand_index_3_taxel_10" />
+        <touch name="LEFT_ARM__HAND__1__10" site="l_hand_middle_3_taxel_10" />
     </sensor>
     <sensor>
-        <touch name="l_hand_index_3_taxel_11" site="l_hand_index_3_taxel_11" />
-    </sensor>
-
-    <sensor>
-        <touch name="l_hand_midddle_3_taxel_0" site="l_hand_midddle_3_taxel_0" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_midddle_3_taxel_1" site="l_hand_midddle_3_taxel_1" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_midddle_3_taxel_2" site="l_hand_midddle_3_taxel_2" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_midddle_3_taxel_3" site="l_hand_midddle_3_taxel_3" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_midddle_3_taxel_4" site="l_hand_midddle_3_taxel_4" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_midddle_3_taxel_5" site="l_hand_midddle_3_taxel_5" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_midddle_3_taxel_6" site="l_hand_midddle_3_taxel_6" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_midddle_3_taxel_7" site="l_hand_midddle_3_taxel_7" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_midddle_3_taxel_8" site="l_hand_midddle_3_taxel_8" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_midddle_3_taxel_9" site="l_hand_midddle_3_taxel_9" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_midddle_3_taxel_10" site="l_hand_midddle_3_taxel_10" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_midddle_3_taxel_11" site="l_hand_midddle_3_taxel_11" />
+        <touch name="LEFT_ARM__HAND__1__11" site="l_hand_middle_3_taxel_11" />
     </sensor>
 
     <sensor>
-        <touch name="l_hand_ring_3_taxel_0" site="l_hand_ring_3_taxel_0" />
+        <touch name="LEFT_ARM__HAND__2__0" site="l_hand_ring_3_taxel_0" />
     </sensor>
     <sensor>
-        <touch name="l_hand_ring_3_taxel_1" site="l_hand_ring_3_taxel_1" />
+        <touch name="LEFT_ARM__HAND__2__1" site="l_hand_ring_3_taxel_1" />
     </sensor>
     <sensor>
-        <touch name="l_hand_ring_3_taxel_2" site="l_hand_ring_3_taxel_2" />
+        <touch name="LEFT_ARM__HAND__2__2" site="l_hand_ring_3_taxel_2" />
     </sensor>
     <sensor>
-        <touch name="l_hand_ring_3_taxel_3" site="l_hand_ring_3_taxel_3" />
+        <touch name="LEFT_ARM__HAND__2__3" site="l_hand_ring_3_taxel_3" />
     </sensor>
     <sensor>
-        <touch name="l_hand_ring_3_taxel_4" site="l_hand_ring_3_taxel_4" />
+        <touch name="LEFT_ARM__HAND__2__4" site="l_hand_ring_3_taxel_4" />
     </sensor>
     <sensor>
-        <touch name="l_hand_ring_3_taxel_5" site="l_hand_ring_3_taxel_5" />
+        <touch name="LEFT_ARM__HAND__2__5" site="l_hand_ring_3_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="l_hand_ring_3_taxel_6" site="l_hand_ring_3_taxel_6" />
+        <touch name="LEFT_ARM__HAND__2__6" site="l_hand_ring_3_taxel_6" />
     </sensor>
     <sensor>
-        <touch name="l_hand_ring_3_taxel_7" site="l_hand_ring_3_taxel_7" />
+        <touch name="LEFT_ARM__HAND__2__7" site="l_hand_ring_3_taxel_7" />
     </sensor>
     <sensor>
-        <touch name="l_hand_ring_3_taxel_8" site="l_hand_ring_3_taxel_8" />
+        <touch name="LEFT_ARM__HAND__2__8" site="l_hand_ring_3_taxel_8" />
     </sensor>
     <sensor>
-        <touch name="l_hand_ring_3_taxel_9" site="l_hand_ring_3_taxel_9" />
+        <touch name="LEFT_ARM__HAND__2__9" site="l_hand_ring_3_taxel_9" />
     </sensor>
     <sensor>
-        <touch name="l_hand_ring_3_taxel_10" site="l_hand_ring_3_taxel_10" />
+        <touch name="LEFT_ARM__HAND__2__10" site="l_hand_ring_3_taxel_10" />
     </sensor>
     <sensor>
-        <touch name="l_hand_ring_3_taxel_11" site="l_hand_ring_3_taxel_11" />
-    </sensor>
-
-    <sensor>
-        <touch name="l_hand_little_3_taxel_0" site="l_hand_little_3_taxel_0" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_little_3_taxel_1" site="l_hand_little_3_taxel_1" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_little_3_taxel_2" site="l_hand_little_3_taxel_2" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_little_3_taxel_3" site="l_hand_little_3_taxel_3" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_little_3_taxel_4" site="l_hand_little_3_taxel_4" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_little_3_taxel_5" site="l_hand_little_3_taxel_5" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_little_3_taxel_6" site="l_hand_little_3_taxel_6" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_little_3_taxel_7" site="l_hand_little_3_taxel_7" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_little_3_taxel_8" site="l_hand_little_3_taxel_8" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_little_3_taxel_9" site="l_hand_little_3_taxel_9" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_little_3_taxel_10" site="l_hand_little_3_taxel_10" />
-    </sensor>
-    <sensor>
-        <touch name="l_hand_little_3_taxel_11" site="l_hand_little_3_taxel_11" />
+        <touch name="LEFT_ARM__HAND__2__11" site="l_hand_ring_3_taxel_11" />
     </sensor>
 
     <sensor>
-        <touch name="l_upper_leg_taxel_0" site="l_upper_leg_taxel_0" />
+        <touch name="LEFT_ARM__HAND__3__0" site="l_hand_little_3_taxel_0" />
     </sensor>
     <sensor>
-        <touch name="l_upper_leg_taxel_1" site="l_upper_leg_taxel_1" />
+        <touch name="LEFT_ARM__HAND__3__1" site="l_hand_little_3_taxel_1" />
     </sensor>
     <sensor>
-        <touch name="l_upper_leg_taxel_2" site="l_upper_leg_taxel_2" />
+        <touch name="LEFT_ARM__HAND__3__2" site="l_hand_little_3_taxel_2" />
     </sensor>
     <sensor>
-        <touch name="l_upper_leg_taxel_3" site="l_upper_leg_taxel_3" />
+        <touch name="LEFT_ARM__HAND__3__3" site="l_hand_little_3_taxel_3" />
     </sensor>
     <sensor>
-        <touch name="l_upper_leg_taxel_4" site="l_upper_leg_taxel_4" />
+        <touch name="LEFT_ARM__HAND__3__4" site="l_hand_little_3_taxel_4" />
     </sensor>
     <sensor>
-        <touch name="l_upper_leg_taxel_5" site="l_upper_leg_taxel_5" />
+        <touch name="LEFT_ARM__HAND__3__5" site="l_hand_little_3_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="l_upper_leg_taxel_6" site="l_upper_leg_taxel_6" />
+        <touch name="LEFT_ARM__HAND__3__6" site="l_hand_little_3_taxel_6" />
     </sensor>
     <sensor>
-        <touch name="l_upper_leg_taxel_7" site="l_upper_leg_taxel_7" />
+        <touch name="LEFT_ARM__HAND__3__7" site="l_hand_little_3_taxel_7" />
     </sensor>
     <sensor>
-        <touch name="l_upper_leg_taxel_8" site="l_upper_leg_taxel_8" />
+        <touch name="LEFT_ARM__HAND__3__8" site="l_hand_little_3_taxel_8" />
     </sensor>
     <sensor>
-        <touch name="l_upper_leg_taxel_9" site="l_upper_leg_taxel_9" />
+        <touch name="LEFT_ARM__HAND__3__9" site="l_hand_little_3_taxel_9" />
     </sensor>
     <sensor>
-        <touch name="l_upper_leg_taxel_10" site="l_upper_leg_taxel_10" />
+        <touch name="LEFT_ARM__HAND__3__10" site="l_hand_little_3_taxel_10" />
     </sensor>
     <sensor>
-        <touch name="l_upper_leg_taxel_11" site="l_upper_leg_taxel_11" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_12" site="l_upper_leg_taxel_12" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_13" site="l_upper_leg_taxel_13" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_14" site="l_upper_leg_taxel_14" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_15" site="l_upper_leg_taxel_15" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_16" site="l_upper_leg_taxel_16" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_17" site="l_upper_leg_taxel_17" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_18" site="l_upper_leg_taxel_18" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_19" site="l_upper_leg_taxel_19" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_20" site="l_upper_leg_taxel_20" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_21" site="l_upper_leg_taxel_21" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_22" site="l_upper_leg_taxel_22" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_23" site="l_upper_leg_taxel_23" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_24" site="l_upper_leg_taxel_24" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_25" site="l_upper_leg_taxel_25" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_26" site="l_upper_leg_taxel_26" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_27" site="l_upper_leg_taxel_27" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_28" site="l_upper_leg_taxel_28" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_29" site="l_upper_leg_taxel_29" />
-    </sensor>
-    <sensor>
-        <touch name="l_upper_leg_taxel_30" site="l_upper_leg_taxel_30" />
+        <touch name="LEFT_ARM__HAND__3__11" site="l_hand_little_3_taxel_11" />
     </sensor>
 
     <sensor>
-        <touch name="l_lower_leg_taxel_0" site="l_lower_leg_taxel_0" />
+        <touch name="LEFT_ARM__HAND__4__0" site="l_hand_thumb_3_taxel_0" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_1" site="l_lower_leg_taxel_1" />
+        <touch name="LEFT_ARM__HAND__4__1" site="l_hand_thumb_3_taxel_1" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_2" site="l_lower_leg_taxel_2" />
+        <touch name="LEFT_ARM__HAND__4__2" site="l_hand_thumb_3_taxel_2" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_3" site="l_lower_leg_taxel_3" />
+        <touch name="LEFT_ARM__HAND__4__3" site="l_hand_thumb_3_taxel_3" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_4" site="l_lower_leg_taxel_4" />
+        <touch name="LEFT_ARM__HAND__4__4" site="l_hand_thumb_3_taxel_4" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_5" site="l_lower_leg_taxel_5" />
+        <touch name="LEFT_ARM__HAND__4__5" site="l_hand_thumb_3_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_6" site="l_lower_leg_taxel_6" />
+        <touch name="LEFT_ARM__HAND__4__6" site="l_hand_thumb_3_taxel_6" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_7" site="l_lower_leg_taxel_7" />
+        <touch name="LEFT_ARM__HAND__4__7" site="l_hand_thumb_3_taxel_7" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_8" site="l_lower_leg_taxel_8" />
+        <touch name="LEFT_ARM__HAND__4__8" site="l_hand_thumb_3_taxel_8" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_9" site="l_lower_leg_taxel_9" />
+        <touch name="LEFT_ARM__HAND__4__9" site="l_hand_thumb_3_taxel_9" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_10" site="l_lower_leg_taxel_10" />
+        <touch name="LEFT_ARM__HAND__4__10" site="l_hand_thumb_3_taxel_10" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_11" site="l_lower_leg_taxel_11" />
+        <touch name="LEFT_ARM__HAND__4__11" site="l_hand_thumb_3_taxel_11" />
+    </sensor>
+
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__0" site="l_hand_palm_taxel_0" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_12" site="l_lower_leg_taxel_12" />
+        <touch name="LEFT_ARM__HAND__5__1" site="l_hand_palm_taxel_1" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_13" site="l_lower_leg_taxel_13" />
+        <touch name="LEFT_ARM__HAND__5__2" site="l_hand_palm_taxel_2" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_14" site="l_lower_leg_taxel_14" />
+        <touch name="LEFT_ARM__HAND__5__3" site="l_hand_palm_taxel_3" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_15" site="l_lower_leg_taxel_15" />
+        <touch name="LEFT_ARM__HAND__5__4" site="l_hand_palm_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_16" site="l_lower_leg_taxel_16" />
+        <touch name="LEFT_ARM__HAND__5__5" site="l_hand_palm_taxel_5" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_17" site="l_lower_leg_taxel_17" />
+        <touch name="LEFT_ARM__HAND__5__6" site="l_hand_palm_taxel_6" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_18" site="l_lower_leg_taxel_18" />
+        <touch name="LEFT_ARM__HAND__5__7" site="l_hand_palm_taxel_7" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_19" site="l_lower_leg_taxel_19" />
+        <touch name="LEFT_ARM__HAND__5__8" site="l_hand_palm_taxel_8" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_20" site="l_lower_leg_taxel_20" />
+        <touch name="LEFT_ARM__HAND__5__9" site="l_hand_palm_taxel_9" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_21" site="l_lower_leg_taxel_21" />
+        <touch name="LEFT_ARM__HAND__5__10" site="l_hand_palm_taxel_10" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_22" site="l_lower_leg_taxel_22" />
+        <touch name="LEFT_ARM__HAND__5__11" site="l_hand_palm_taxel_11" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_23" site="l_lower_leg_taxel_23" />
+        <touch name="LEFT_ARM__HAND__5__12" site="l_hand_palm_taxel_12" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_24" site="l_lower_leg_taxel_24" />
+        <touch name="LEFT_ARM__HAND__5__13" site="l_hand_palm_taxel_13" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_25" site="l_lower_leg_taxel_25" />
+        <touch name="LEFT_ARM__HAND__5__14" site="l_hand_palm_taxel_14" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_26" site="l_lower_leg_taxel_26" />
+        <touch name="LEFT_ARM__HAND__5__15" site="l_hand_palm_taxel_15" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_27" site="l_lower_leg_taxel_27" />
+        <touch name="LEFT_ARM__HAND__5__16" site="l_hand_palm_taxel_16" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_28" site="l_lower_leg_taxel_28" />
+        <touch name="LEFT_ARM__HAND__5__17" site="l_hand_palm_taxel_17" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_29" site="l_lower_leg_taxel_29" />
+        <touch name="LEFT_ARM__HAND__5__18" site="l_hand_palm_taxel_18" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_30" site="l_lower_leg_taxel_30" />
+        <touch name="LEFT_ARM__HAND__5__19" site="l_hand_palm_taxel_19" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_31" site="l_lower_leg_taxel_31" />
+        <touch name="LEFT_ARM__HAND__5__20" site="l_hand_palm_taxel_20" />
     </sensor>
     <sensor>
-        <touch name="l_lower_leg_taxel_32" site="l_lower_leg_taxel_32" />
+        <touch name="LEFT_ARM__HAND__5__21" site="l_hand_palm_taxel_21" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__22" site="l_hand_palm_taxel_22" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__23" site="l_hand_palm_taxel_23" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__24" site="l_hand_palm_taxel_24" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__25" site="l_hand_palm_taxel_25" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__26" site="l_hand_palm_taxel_26" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__27" site="l_hand_palm_taxel_27" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__28" site="l_hand_palm_taxel_28" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__29" site="l_hand_palm_taxel_29" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__30" site="l_hand_palm_taxel_30" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__31" site="l_hand_palm_taxel_31" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__32" site="l_hand_palm_taxel_32" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__33" site="l_hand_palm_taxel_33" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__34" site="l_hand_palm_taxel_34" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__35" site="l_hand_palm_taxel_35" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__36" site="l_hand_palm_taxel_36" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__37" site="l_hand_palm_taxel_37" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__38" site="l_hand_palm_taxel_38" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__39" site="l_hand_palm_taxel_39" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__40" site="l_hand_palm_taxel_40" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__41" site="l_hand_palm_taxel_41" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__42" site="l_hand_palm_taxel_42" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__43" site="l_hand_palm_taxel_43" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__44" site="l_hand_palm_taxel_44" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__45" site="l_hand_palm_taxel_45" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__46" site="l_hand_palm_taxel_46" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__HAND__5__47" site="l_hand_palm_taxel_47" />
+    </sensor>
+
+    <sensor>
+        <touch name="LEFT_ARM__FOREARM__0__0" site="l_forearm_taxel_0" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__FOREARM__0__1" site="l_forearm_taxel_1" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__FOREARM__0__2" site="l_forearm_taxel_2" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__FOREARM__0__3" site="l_forearm_taxel_3" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__FOREARM__0__4" site="l_forearm_taxel_4" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__FOREARM__0__5" site="l_forearm_taxel_5" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__FOREARM__0__6" site="l_forearm_taxel_6" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__FOREARM__0__7" site="l_forearm_taxel_7" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__FOREARM__0__8" site="l_forearm_taxel_8" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__FOREARM__0__9" site="l_forearm_taxel_9" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__FOREARM__0__10" site="l_forearm_taxel_10" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__FOREARM__0__11" site="l_forearm_taxel_11" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__FOREARM__1__0" site="l_forearm_taxel_12" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__FOREARM__1__1" site="l_forearm_taxel_13" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__FOREARM__1__2" site="l_forearm_taxel_14" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__FOREARM__1__3" site="l_forearm_taxel_15" />
+    </sensor>
+
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__0__0" site="l_upper_arm_taxel_0" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__0__1" site="l_upper_arm_taxel_1" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__0__2" site="l_upper_arm_taxel_2" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__0__3" site="l_upper_arm_taxel_3" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__0__4" site="l_upper_arm_taxel_4" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__0__5" site="l_upper_arm_taxel_5" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__0__6" site="l_upper_arm_taxel_6" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__0__7" site="l_upper_arm_taxel_7" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__0__8" site="l_upper_arm_taxel_8" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__0__9" site="l_upper_arm_taxel_9" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__0__10" site="l_upper_arm_taxel_10" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__0__11" site="l_upper_arm_taxel_11" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__1__0" site="l_upper_arm_taxel_12" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__1__1" site="l_upper_arm_taxel_13" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__1__2" site="l_upper_arm_taxel_14" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__1__3" site="l_upper_arm_taxel_15" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__1__4" site="l_upper_arm_taxel_16" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__1__5" site="l_upper_arm_taxel_17" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_ARM__UPPER_ARM__1__6" site="l_upper_arm_taxel_18" />
+    </sensor>
+
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__0__0" site="l_upper_leg_taxel_0" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__0__1" site="l_upper_leg_taxel_1" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__0__2" site="l_upper_leg_taxel_2" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__0__3" site="l_upper_leg_taxel_3" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__0__4" site="l_upper_leg_taxel_4" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__0__5" site="l_upper_leg_taxel_5" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__0__6" site="l_upper_leg_taxel_6" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__0__7" site="l_upper_leg_taxel_7" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__0__8" site="l_upper_leg_taxel_8" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__0__9" site="l_upper_leg_taxel_9" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__0__10" site="l_upper_leg_taxel_10" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__0__11" site="l_upper_leg_taxel_11" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__1__0" site="l_upper_leg_taxel_12" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__1__1" site="l_upper_leg_taxel_13" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__1__2" site="l_upper_leg_taxel_14" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__1__3" site="l_upper_leg_taxel_15" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__1__4" site="l_upper_leg_taxel_16" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__1__5" site="l_upper_leg_taxel_17" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__1__6" site="l_upper_leg_taxel_18" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__1__7" site="l_upper_leg_taxel_19" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__1__8" site="l_upper_leg_taxel_20" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__1__9" site="l_upper_leg_taxel_21" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__1__10" site="l_upper_leg_taxel_22" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__1__11" site="l_upper_leg_taxel_23" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__2__0" site="l_upper_leg_taxel_24" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__2__1" site="l_upper_leg_taxel_25" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__2__2" site="l_upper_leg_taxel_26" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__2__3" site="l_upper_leg_taxel_27" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__2__4" site="l_upper_leg_taxel_28" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__2__5" site="l_upper_leg_taxel_29" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__UPPER_LEG__2__6" site="l_upper_leg_taxel_30" />
+    </sensor>
+
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__0__0" site="l_lower_leg_taxel_0" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__0__1" site="l_lower_leg_taxel_1" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__0__2" site="l_lower_leg_taxel_2" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__0__3" site="l_lower_leg_taxel_3" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__0__4" site="l_lower_leg_taxel_4" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__0__5" site="l_lower_leg_taxel_5" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__0__6" site="l_lower_leg_taxel_6" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__0__7" site="l_lower_leg_taxel_7" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__0__8" site="l_lower_leg_taxel_8" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__0__9" site="l_lower_leg_taxel_9" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__0__10" site="l_lower_leg_taxel_10" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__0__11" site="l_lower_leg_taxel_11" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__1__0" site="l_lower_leg_taxel_12" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__1__1" site="l_lower_leg_taxel_13" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__1__2" site="l_lower_leg_taxel_14" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__1__3" site="l_lower_leg_taxel_15" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__1__4" site="l_lower_leg_taxel_16" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__1__5" site="l_lower_leg_taxel_17" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__1__6" site="l_lower_leg_taxel_18" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__1__7" site="l_lower_leg_taxel_19" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__1__8" site="l_lower_leg_taxel_20" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__1__9" site="l_lower_leg_taxel_21" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__1__10" site="l_lower_leg_taxel_22" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__1__11" site="l_lower_leg_taxel_23" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__2__0" site="l_lower_leg_taxel_24" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__2__1" site="l_lower_leg_taxel_25" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__2__2" site="l_lower_leg_taxel_26" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__2__3" site="l_lower_leg_taxel_27" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__2__4" site="l_lower_leg_taxel_28" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__2__5" site="l_lower_leg_taxel_29" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__2__6" site="l_lower_leg_taxel_30" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__2__7" site="l_lower_leg_taxel_31" />
+    </sensor>
+    <sensor>
+        <touch name="LEFT_LEG__LOWER_LEG__2__8" site="l_lower_leg_taxel_32" />
     </sensor>
 
     <contact>
