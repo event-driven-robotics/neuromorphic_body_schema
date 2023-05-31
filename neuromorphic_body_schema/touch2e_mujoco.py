@@ -21,8 +21,10 @@ def detect_contact(data, taxelDict):
         # only output info when non-zero contact detected
         if np.sum(sensordata) > 0.0:
             taxels = np.where(sensordata != 0.0)[0]  # get non-zero taxels IDs
-            taxelDict.update(
-                {data.sensor(taxel).name: sensordata[taxel] for taxel in taxels})
+            # taxelDict.update(
+            #     {data.sensor(taxel).name: sensordata[taxel] for taxel in taxels})
+            for taxel in taxels:
+                taxelDict[data.sensor(taxel).name].append(data.time, sensordata[taxel])
 
             if DEBUG:
                 print('End of contact detection for this cycle.\n\n')
@@ -36,66 +38,66 @@ if full_body:
         for taxelID in range(12):
             # taxelDict[("TORSO", "TORSO", patchID, taxelID)] = 0.0  # old
             # time and value
-            taxelDict[f"TORSO__TORSO__{patchID}__{taxelID}"] = 0.0, 0.0
+            taxelDict[f"TORSO__TORSO__{patchID}__{taxelID}"] = []
 
     # left arm (each fingertip is concidered a patch and all palm is a single patch)
     # add fingertips
     for patchID in range(5):
         for taxelID in range(12):
-            taxelDict[f"LEFT_ARM__HAND__{patchID}__{taxelID}"] = 0.0, 0.0
+            taxelDict[f"LEFT_ARM__HAND__{patchID}__{taxelID}"] = []
     # add palm
     for taxelID in range(48):
-        taxelDict[f"LEFT_ARM__HAND__{5}__{taxelID}"] = 0.0, 0.0
+        taxelDict[f"LEFT_ARM__HAND__{5}__{taxelID}"] = []
     # add forearm
     for patchID in range(2):
         for taxelID in range(12):
-            taxelDict[f"LEFT_ARM__FOREARM__{patchID}__{taxelID}"] = 0.0, 0.0
+            taxelDict[f"LEFT_ARM__FOREARM__{patchID}__{taxelID}"] = []
     # add forearm
     for patchID in range(2):
         for taxelID in range(12):
-            taxelDict[f"LEFT_ARM__UPPER_ARM_{patchID}__{taxelID}"] = 0.0, 0.0
+            taxelDict[f"LEFT_ARM__UPPER_ARM_{patchID}__{taxelID}"] = []
 
     # add left leg
     for taxelID in range(4):
-        taxelDict[f"LEFT_LEG__FOOT__{0}__{taxelID}"] = 0.0, 0.0
+        taxelDict[f"LEFT_LEG__FOOT__{0}__{taxelID}"] = []
     # add upper leg
     for patchID in range(3):
         for taxelID in range(12):
-            taxelDict[f"LEFT_LEG__UPPER_LEG__{patchID}__{taxelID}"] = 0.0, 0.0
+            taxelDict[f"LEFT_LEG__UPPER_LEG__{patchID}__{taxelID}"] = []
     # add lower leg
     for patchID in range(3):
         for taxelID in range(12):
-            taxelDict[f"LEFT_LEG__LOWER_LEG__{patchID}__{taxelID}"] = 0.0, 0.0
+            taxelDict[f"LEFT_LEG__LOWER_LEG__{patchID}__{taxelID}"] = []
 
     # add forearm
     for patchID in range(2):
         for taxelID in range(12):
-            taxelDict[f"RIGHT_ARM__FOREARM__{patchID}__{taxelID}"] = 0.0, 0.0
+            taxelDict[f"RIGHT_ARM__FOREARM__{patchID}__{taxelID}"] = []
     # add forearm
     for patchID in range(2):
         for taxelID in range(12):
-            taxelDict[f"RIGHT_ARM__UPPER_ARM_{patchID}__{taxelID}"] = 0.0, 0.0
+            taxelDict[f"RIGHT_ARM__UPPER_ARM_{patchID}__{taxelID}"] = []
 
     # add right leg
     for taxelID in range(4):
-        taxelDict[f"RIGHT_LEG__FOOT__{0}__{taxelID}"] = 0.0, 0.0
+        taxelDict[f"RIGHT_LEG__FOOT__{0}__{taxelID}"] = []
     # add upper leg
     for patchID in range(3):
         for taxelID in range(12):
-            taxelDict[f"RIGHT_LEG__UPPER_LEG__{patchID}__{taxelID}"] = 0.0, 0.0
+            taxelDict[f"RIGHT_LEG__UPPER_LEG__{patchID}__{taxelID}"] = []
     # add lower leg
     for patchID in range(3):
         for taxelID in range(12):
-            taxelDict[f"RIGHT_LEG__LOWER_LEG__{patchID}__{taxelID}"] = 0.0, 0.0
+            taxelDict[f"RIGHT_LEG__LOWER_LEG__{patchID}__{taxelID}"] = []
 
 # right arm
 # add fingertips
 for patchID in range(5):
     for taxelID in range(12):
-        taxelDict[f"RIGHT_ARM__HAND__{patchID}__{taxelID}"] = 0.0, 0.0
+        taxelDict[f"RIGHT_ARM__HAND__{patchID}__{taxelID}"] = []
 # add palm
 for taxelID in range(48):
-    taxelDict[f"RIGHT_ARM__HAND__{5}__{taxelID}"] = 0.0, 0.0
+    taxelDict[f"RIGHT_ARM__HAND__{5}__{taxelID}"] = []
 
 
 print('init done')
