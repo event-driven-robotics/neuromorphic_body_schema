@@ -102,6 +102,7 @@ class EventSimulator:
             events[np.argsort(events[:,2])]
         return events
 
+
 def make_event_frame(events, width=320, height=240):
     img = np.zeros((height, width))
     if len(events):
@@ -109,10 +110,10 @@ def make_event_frame(events, width=320, height=240):
         img[coords[:,1], coords[:,0]] = 255
     return img
 
+
 def visualize_camera(model):
     renderer = mujoco.Renderer(model)
     esim = None
-
 
     while True:
 
@@ -123,7 +124,7 @@ def visualize_camera(model):
         events_window_name = 'Events'
 
         if esim is None:
-            esim = EventSimulator(cv2.cvtColor(pixels, cv2.COLOR_RGB2GRAY), time.time_ns())
+            esim = EventSimulator(cv2.cvtColor(pixels, cv2.COLOR_RGB2GRAY), time.perf_counter_ns())
             cv2.namedWindow(events_window_name)
 
             def on_thresh_slider(val):
@@ -134,7 +135,7 @@ def visualize_camera(model):
             cv2.createTrackbar("Threshold", events_window_name, int(esim.Cm * 100), 100, on_thresh_slider)
             cv2.setTrackbarMin("Threshold", events_window_name, 1)
             continue
-        events = esim.imageCallback(cv2.cvtColor(pixels, cv2.COLOR_RGB2GRAY), time.time_ns())
+        events = esim.imageCallback(cv2.cvtColor(pixels, cv2.COLOR_RGB2GRAY), time.perf_counter_ns())
 
 
         cv2.imshow(camera_feed_window_name, pixels)
@@ -145,16 +146,16 @@ def visualize_camera(model):
 
 
 def detect_contact(data):
-    ''' Loop to monitor contact information'''
+    ''' Loop to monitor contact information.'''
     while True:
         # print("Gonna show a contact info soon my friend. Be patient!")
         # print(sensor_data)
         sensor_data = data.sensordata
-        # only output info when non-zero contact detected
+        # only output info when non-zero contact(s) detected
         if np.sum(sensor_data) > 0.0:
-            taxel = np.where(sensor_data != 0.0)[0]  # get non-zero taxels IDs
+            taxel = np.where(sensor_data != 0.0)[0]  # get IDs of non-zero taxels
             values = sensor_data[taxel]  # get non-zero taxel readings
-            sensor_data = np.column_stack((taxel, values))  # here we fuse the taxel id and sensor reading in a 2d array
+            sensor_data = np.column_stack((taxel, values))  # here we just fuse the taxel id and sensor reading in a 2d array
             print("Sensor readings:")
             print(sensor_data)
             print('\n')
