@@ -46,6 +46,7 @@ To change the placement or implement further touch sensors the file in the model
         .../...
         <site name="l_lower_leg_taxel_32" size="0.005" pos="0.0522 0 -0.15" rgba="0 1 0 0.0"/>
 ```
+To visualize the sensors set rgba="0 1 0 0.0" to rgba="0 1 0 0.5". The first three are the RGB values and the last the transparency.
 
 Finally, each sensor must be defined as sensor element at the bottom of the xml file
 ```

@@ -332,34 +332,34 @@
                         <geom pos="0 0.0928 -0.024189" type="mesh" rgba="0.5 0.1 0.75 1" mesh="chest_hull_2" contype="0" conaffinity="0"/>
                         <geom pos="0 0.0928 -0.024189" type="mesh" rgba="0.5 0.1 0.75 1" mesh="chest_hull_3" />
                             <!-- TODO implement skin on chest here (this is only a draft. NOT as on iCub) -->
-                            <site name="chest_taxel_0" size="0.005" pos="0. 0.1 0.073" rgba="0 1 0 0.5"/> <!-- left/right, up/down, front/back -->
-                            <site name="chest_taxel_1" size="0.005" pos="0. 0.095 0.075" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_2" size="0.005" pos="0. 0.09 0.076" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_3" size="0.005" pos="0. 0.085 0.077" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_4" size="0.005" pos="0. 0.08 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_5" size="0.005" pos="0. 0.075 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_6" size="0.005" pos="0. 0.07 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_7" size="0.005" pos="0. 0.065 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_8" size="0.005" pos="0. 0.06 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_9" size="0.005" pos="0. 0.055 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_10" size="0.005" pos="0. 0.05 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_11" size="0.005" pos="0. 0.045 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_12" size="0.005" pos="0. 0.04 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_13" size="0.005" pos="0. 0.035 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_14" size="0.005" pos="0. 0.03 0.0779" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_15" size="0.005" pos="0. 0.025 0.0779" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_16" size="0.005" pos="0. 0.02 0.0777" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_17" size="0.005" pos="0. 0.015 0.0775" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_18" size="0.005" pos="0. 0.01 0.0772" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_19" size="0.005" pos="0. 0.005 0.0769" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_20" size="0.005" pos="0. 0.0 0.0766" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_21" size="0.005" pos="0. -0.005 0.0763" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_22" size="0.005" pos="0. -0.01 0.0761" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_23" size="0.005" pos="0. -0.015 0.0759" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_24" size="0.005" pos="0. -0.02 0.0757" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_25" size="0.005" pos="0. -0.025 0.0755" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_26" size="0.005" pos="0. -0.03 0.0753" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_27" size="0.005" pos="0. -0.035 0.0751" rgba="0 1 0 0.5"/>
+                            <site name="chest_taxel_0" size="0.005" pos="0. 0.1 0.073" rgba="0 1 0 0.0"/> <!-- left/right, up/down, front/back -->
+                            <site name="chest_taxel_1" size="0.005" pos="0. 0.095 0.075" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_2" size="0.005" pos="0. 0.09 0.076" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_3" size="0.005" pos="0. 0.085 0.077" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_4" size="0.005" pos="0. 0.08 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_5" size="0.005" pos="0. 0.075 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_6" size="0.005" pos="0. 0.07 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_7" size="0.005" pos="0. 0.065 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_8" size="0.005" pos="0. 0.06 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_9" size="0.005" pos="0. 0.055 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_10" size="0.005" pos="0. 0.05 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_11" size="0.005" pos="0. 0.045 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_12" size="0.005" pos="0. 0.04 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_13" size="0.005" pos="0. 0.035 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_14" size="0.005" pos="0. 0.03 0.0779" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_15" size="0.005" pos="0. 0.025 0.0779" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_16" size="0.005" pos="0. 0.02 0.0777" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_17" size="0.005" pos="0. 0.015 0.0775" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_18" size="0.005" pos="0. 0.01 0.0772" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_19" size="0.005" pos="0. 0.005 0.0769" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_20" size="0.005" pos="0. 0.0 0.0766" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_21" size="0.005" pos="0. -0.005 0.0763" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_22" size="0.005" pos="0. -0.01 0.0761" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_23" size="0.005" pos="0. -0.015 0.0759" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_24" size="0.005" pos="0. -0.02 0.0757" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_25" size="0.005" pos="0. -0.025 0.0755" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_26" size="0.005" pos="0. -0.03 0.0753" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_27" size="0.005" pos="0. -0.035 0.0751" rgba="0 1 0 0.0"/>
                             <!-- end contact sensors -->
                         <body name="r_shoulder_1" pos="-0.120016 0.0928 0.0079693" quat="0 0.258819 0 0.965926">
                             <inertial pos="-0.0122656 3.2e-05 -0.00321064" quat="0.923843 -0.00544289 0.382668 0.00707733" mass="0.114862" diaginertia="0.0100036 0.01 0.00999644" />
