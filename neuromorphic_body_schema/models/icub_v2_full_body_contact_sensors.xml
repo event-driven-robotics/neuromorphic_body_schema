@@ -129,7 +129,7 @@
                         <joint name="r_hip_yaw" pos="0 0 0" axis="0 0 -1" range="-1.39626 1.39626"  />
                         <geom pos="0.043709 0.0701 0.240813" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.5 0.1 0.75 1" mesh="sim_sea_2-5_r_thigh_prt-binary" contype="0" conaffinity="0"/>
                             <!-- TODO implement skin for upper leg here (what is here is just a draft, placement NOT as on iCub) -->
-                            <!-- <site name="r_upper_leg_taxel_0" size="0.005" pos="0.063 0 0.04" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_0" size="0.005" pos="0.063 0 0.04" rgba="0 1 0 0.0"/>
                             <site name="r_upper_leg_taxel_1" size="0.005" pos="0.063 0 0.035" rgba="0 1 0 0.0"/>
                             <site name="r_upper_leg_taxel_2" size="0.005" pos="0.063 0 0.03" rgba="0 1 0 0.0"/>
                             <site name="r_upper_leg_taxel_3" size="0.005" pos="0.063 0 0.025" rgba="0 1 0 0.0"/>
@@ -159,14 +159,14 @@
                             <site name="r_upper_leg_taxel_27" size="0.005" pos="0.063 0 -0.095" rgba="0 1 0 0.0"/>
                             <site name="r_upper_leg_taxel_28" size="0.005" pos="0.063 0 -0.10" rgba="0 1 0 0.0"/>
                             <site name="r_upper_leg_taxel_29" size="0.005" pos="0.063 0 -0.105" rgba="0 1 0 0.0"/>
-                            <site name="r_upper_leg_taxel_30" size="0.005" pos="0.063 0 -0.11" rgba="0 1 0 0.0"/> -->
+                            <site name="r_upper_leg_taxel_30" size="0.005" pos="0.063 0 -0.11" rgba="0 1 0 0.0"/>
                             <!-- end contact sensors -->
                         <body name="r_lower_leg" pos="0 0 -0.145825">
                             <inertial pos="0.0012364 -0.0035131 -0.088794" quat="-0.0357732 0.992736 -0.105359 -0.045782" mass="1.472" diaginertia="0.00461204 0.00424223 0.0014802" />
                             <joint name="r_knee" pos="0 0 0" axis="0 -1 0" range="-2.16421 0.0698132"  />
                             <geom pos="0.043709 0.0701 0.386638" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.5 0.1 0.75 1" mesh="sim_sea_2-5_r_shank_prt-binary" contype="0" conaffinity="0"/>
                                 <!-- TODO implement skin for lower leg here (what is here is just a draft, placement NOT as on iCub) -->
-                                <!-- <site name="r_lower_leg_taxel_0" size="0.005" pos="0.06 0 0.01" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_0" size="0.005" pos="0.06 0 0.01" rgba="0 1 0 0.0"/>
                                 <site name="r_lower_leg_taxel_1" size="0.005" pos="0.0615 0 0.005" rgba="0 1 0 0.0"/>
                                 <site name="r_lower_leg_taxel_2" size="0.005" pos="0.0625 0 0.0" rgba="0 1 0 0.0"/>
                                 <site name="r_lower_leg_taxel_3" size="0.005" pos="0.0635 0 -0.005" rgba="0 1 0 0.0"/>
@@ -198,7 +198,7 @@
                                 <site name="r_lower_leg_taxel_29" size="0.005" pos="0.0519 0 -0.135" rgba="0 1 0 0.0"/>
                                 <site name="r_lower_leg_taxel_30" size="0.005" pos="0.0516 0 -0.14" rgba="0 1 0 0.0"/>
                                 <site name="r_lower_leg_taxel_31" size="0.005" pos="0.0519 0 -0.145" rgba="0 1 0 0.0"/>
-                                <site name="r_lower_leg_taxel_32" size="0.005" pos="0.0522 0 -0.15" rgba="0 1 0 0.0"/> -->
+                                <site name="r_lower_leg_taxel_32" size="0.005" pos="0.0522 0 -0.15" rgba="0 1 0 0.0"/>
                                 <!-- end contact sensors -->
                             <body name="r_ankle_1" pos="0 0 -0.2005">
                                 <inertial pos="0.0151436 -0.0008686 4.2e-05" quat="-0.0974686 0.706465 0.0994599 0.693913" mass="0.6803" diaginertia="0.000448682 0.000413265 0.000299541" />
@@ -230,7 +230,7 @@
                         <joint name="l_hip_yaw" pos="0 0 0" axis="0 0 1" range="-1.39626 1.39626"  />
                         <geom pos="0.0437091 -0.0701 0.240813" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.5 0.1 0.75 1" mesh="sim_sea_2-5_l_thigh_prt-binary" contype="0" conaffinity="0"/>
                             <!-- TODO implement skin for upper leg here (what is here is just a draft, placement NOT as on iCub) -->
-                            <!-- <site name="l_upper_leg_taxel_0" size="0.005" pos="0.063 0 0.04" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_0" size="0.005" pos="0.063 0 0.04" rgba="0 1 0 0.0"/>
                             <site name="l_upper_leg_taxel_1" size="0.005" pos="0.063 0 0.035" rgba="0 1 0 0.0"/>
                             <site name="l_upper_leg_taxel_2" size="0.005" pos="0.063 0 0.03" rgba="0 1 0 0.0"/>
                             <site name="l_upper_leg_taxel_3" size="0.005" pos="0.063 0 0.025" rgba="0 1 0 0.0"/>
@@ -260,14 +260,14 @@
                             <site name="l_upper_leg_taxel_27" size="0.005" pos="0.063 0 -0.095" rgba="0 1 0 0.0"/>
                             <site name="l_upper_leg_taxel_28" size="0.005" pos="0.063 0 -0.10" rgba="0 1 0 0.0"/>
                             <site name="l_upper_leg_taxel_29" size="0.005" pos="0.063 0 -0.105" rgba="0 1 0 0.0"/>
-                            <site name="l_upper_leg_taxel_30" size="0.005" pos="0.063 0 -0.11" rgba="0 1 0 0.0"/> -->
+                            <site name="l_upper_leg_taxel_30" size="0.005" pos="0.063 0 -0.11" rgba="0 1 0 0.0"/>
                             <!-- end contact sensors -->
                         <body name="l_lower_leg" pos="0 0 -0.145825">
                             <inertial pos="0.0009998 0.0034969 -0.088567" quat="0.037701 0.991172 0.120144 -0.041511" mass="1.4724" diaginertia="0.0046085 0.00423616 0.00148461" />
                             <joint name="l_knee" pos="0 0 0" axis="0 -1 0" range="-2.16421 0.0698132"  />
                             <geom pos="0.0437091 -0.0701 0.386638" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.5 0.1 0.75 1" mesh="sim_sea_2-5_l_shank_prt-binary" contype="0" conaffinity="0"/>
                                 <!-- TODO implement skin for lower leg here (what is here is just a draft, placement NOT as on iCub) -->
-                                <!-- <site name="l_lower_leg_taxel_0" size="0.005" pos="0.06 0 0.01" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_0" size="0.005" pos="0.06 0 0.01" rgba="0 1 0 0.0"/>
                                 <site name="l_lower_leg_taxel_1" size="0.005" pos="0.0615 0 0.005" rgba="0 1 0 0.0"/>
                                 <site name="l_lower_leg_taxel_2" size="0.005" pos="0.0625 0 0.0" rgba="0 1 0 0.0"/>
                                 <site name="l_lower_leg_taxel_3" size="0.005" pos="0.0635 0 -0.005" rgba="0 1 0 0.0"/>
@@ -299,7 +299,7 @@
                                 <site name="l_lower_leg_taxel_29" size="0.005" pos="0.0519 0 -0.135" rgba="0 1 0 0.0"/>
                                 <site name="l_lower_leg_taxel_30" size="0.005" pos="0.0516 0 -0.14" rgba="0 1 0 0.0"/>
                                 <site name="l_lower_leg_taxel_31" size="0.005" pos="0.0519 0 -0.145" rgba="0 1 0 0.0"/>
-                                <site name="l_lower_leg_taxel_32" size="0.005" pos="0.0522 0 -0.15" rgba="0 1 0 0.0"/> -->
+                                <site name="l_lower_leg_taxel_32" size="0.005" pos="0.0522 0 -0.15" rgba="0 1 0 0.0"/>
                                 <!-- end contact sensors -->
                             <body name="l_ankle_1" pos="0 0 -0.2005">
                                 <inertial pos="0.0151531 0.000902 4.2e-05" quat="0.0942725 0.706107 -0.103691 0.694099" mass="0.6798" diaginertia="0.000447943 0.000413255 0.000298766" />
@@ -332,34 +332,34 @@
                         <geom pos="0 0.0928 -0.024189" type="mesh" rgba="0.5 0.1 0.75 1" mesh="chest_hull_2" contype="0" conaffinity="0"/>
                         <geom pos="0 0.0928 -0.024189" type="mesh" rgba="0.5 0.1 0.75 1" mesh="chest_hull_3" />
                             <!-- TODO implement skin on chest here (this is only a draft. NOT as on iCub) -->
-                            <site name="chest_taxel_0" size="0.005" pos="0. 0.1 0.073" rgba="0 1 0 0.5"/> <!-- left/right, up/down, front/back -->
-                            <site name="chest_taxel_1" size="0.005" pos="0. 0.095 0.075" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_2" size="0.005" pos="0. 0.09 0.076" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_3" size="0.005" pos="0. 0.085 0.077" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_4" size="0.005" pos="0. 0.08 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_5" size="0.005" pos="0. 0.075 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_6" size="0.005" pos="0. 0.07 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_7" size="0.005" pos="0. 0.065 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_8" size="0.005" pos="0. 0.06 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_9" size="0.005" pos="0. 0.055 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_10" size="0.005" pos="0. 0.05 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_11" size="0.005" pos="0. 0.045 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_12" size="0.005" pos="0. 0.04 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_13" size="0.005" pos="0. 0.035 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_14" size="0.005" pos="0. 0.03 0.0779" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_15" size="0.005" pos="0. 0.025 0.0779" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_16" size="0.005" pos="0. 0.02 0.0777" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_17" size="0.005" pos="0. 0.015 0.0775" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_18" size="0.005" pos="0. 0.01 0.0772" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_19" size="0.005" pos="0. 0.005 0.0769" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_20" size="0.005" pos="0. 0.0 0.0766" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_21" size="0.005" pos="0. -0.005 0.0763" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_22" size="0.005" pos="0. -0.01 0.0761" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_23" size="0.005" pos="0. -0.015 0.0759" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_24" size="0.005" pos="0. -0.02 0.0757" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_25" size="0.005" pos="0. -0.025 0.0755" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_26" size="0.005" pos="0. -0.03 0.0753" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_27" size="0.005" pos="0. -0.035 0.0751" rgba="0 1 0 0.5"/>
+                            <site name="chest_taxel_0" size="0.005" pos="0. 0.1 0.073" rgba="0 1 0 0.0"/> <!-- left/right, up/down, front/back -->
+                            <site name="chest_taxel_1" size="0.005" pos="0. 0.095 0.075" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_2" size="0.005" pos="0. 0.09 0.076" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_3" size="0.005" pos="0. 0.085 0.077" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_4" size="0.005" pos="0. 0.08 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_5" size="0.005" pos="0. 0.075 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_6" size="0.005" pos="0. 0.07 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_7" size="0.005" pos="0. 0.065 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_8" size="0.005" pos="0. 0.06 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_9" size="0.005" pos="0. 0.055 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_10" size="0.005" pos="0. 0.05 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_11" size="0.005" pos="0. 0.045 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_12" size="0.005" pos="0. 0.04 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_13" size="0.005" pos="0. 0.035 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_14" size="0.005" pos="0. 0.03 0.0779" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_15" size="0.005" pos="0. 0.025 0.0779" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_16" size="0.005" pos="0. 0.02 0.0777" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_17" size="0.005" pos="0. 0.015 0.0775" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_18" size="0.005" pos="0. 0.01 0.0772" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_19" size="0.005" pos="0. 0.005 0.0769" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_20" size="0.005" pos="0. 0.0 0.0766" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_21" size="0.005" pos="0. -0.005 0.0763" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_22" size="0.005" pos="0. -0.01 0.0761" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_23" size="0.005" pos="0. -0.015 0.0759" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_24" size="0.005" pos="0. -0.02 0.0757" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_25" size="0.005" pos="0. -0.025 0.0755" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_26" size="0.005" pos="0. -0.03 0.0753" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_27" size="0.005" pos="0. -0.035 0.0751" rgba="0 1 0 0.0"/>
                             <!-- end contact sensors -->
                         <body name="r_shoulder_1" pos="-0.120016 0.0928 0.0079693" quat="0 0.258819 0 0.965926">
                             <inertial pos="-0.0122656 3.2e-05 -0.00321064" quat="0.923843 -0.00544289 0.382668 0.00707733" mass="0.114862" diaginertia="0.0100036 0.01 0.00999644" />
@@ -1608,7 +1608,7 @@
         <touch name="RIGHT_ARM__UPPER_ARM__1__6" site="r_upper_arm_taxel_18" />
     </sensor>
 
-    <!-- <sensor>
+    <sensor>
         <touch name="RIGHT_LEG__UPPER_LEG__0__0" site="r_upper_leg_taxel_0" />
     </sensor>
     <sensor>
@@ -1800,7 +1800,7 @@
     </sensor>
     <sensor>
         <touch name="RIGHT_LEG__LOWER_LEG__2__8" site="r_lower_leg_taxel_32" />
-    </sensor> -->
+    </sensor>
 
 
     <!-- contact sensors left hand-->
@@ -2241,7 +2241,7 @@
         <touch name="LEFT_ARM__UPPER_ARM__1__6" site="l_upper_arm_taxel_18" />
     </sensor>
 
-    <!-- <sensor>
+    <sensor>
         <touch name="LEFT_LEG__UPPER_LEG__0__0" site="l_upper_leg_taxel_0" />
     </sensor>
     <sensor>
@@ -2433,7 +2433,7 @@
     </sensor>
     <sensor>
         <touch name="LEFT_LEG__LOWER_LEG__2__8" site="l_lower_leg_taxel_32" />
-    </sensor> -->
+    </sensor>
 
     <contact>
         <exclude name="exclude_contact_body_01"       body1="neck_1"          body2="chest"/>
