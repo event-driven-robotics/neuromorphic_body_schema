@@ -129,76 +129,77 @@
                         <joint name="r_hip_yaw" pos="0 0 0" axis="0 0 -1" range="-1.39626 1.39626"  />
                         <geom pos="0.043709 0.0701 0.240813" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.5 0.1 0.75 1" mesh="sim_sea_2-5_r_thigh_prt-binary" contype="0" conaffinity="0"/>
                             <!-- TODO implement skin for upper leg here (what is here is just a draft, placement NOT as on iCub) -->
-                            <site name="r_upper_leg_taxel_0" size="0.005" pos="0.063 0 0.04" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_1" size="0.005" pos="0.063 0 0.035" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_2" size="0.005" pos="0.063 0 0.03" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_3" size="0.005" pos="0.063 0 0.025" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_4" size="0.005" pos="0.063 0 0.02" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_5" size="0.005" pos="0.063 0 0.015" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_6" size="0.005" pos="0.063 0 0.01" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_7" size="0.005" pos="0.063 0 0.005" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_8" size="0.005" pos="0.063 0 0.0" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_9" size="0.005" pos="0.063 0 -0.005" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_10" size="0.005" pos="0.063 0 -0.01" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_11" size="0.005" pos="0.063 0 -0.015" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_12" size="0.005" pos="0.063 0 -0.02" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_13" size="0.005" pos="0.063 0 -0.025" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_14" size="0.005" pos="0.063 0 -0.03" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_15" size="0.005" pos="0.063 0 -0.035" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_16" size="0.005" pos="0.063 0 -0.04" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_17" size="0.005" pos="0.063 0 -0.045" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_18" size="0.005" pos="0.063 0 -0.05" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_19" size="0.005" pos="0.063 0 -0.055" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_20" size="0.005" pos="0.063 0 -0.06" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_21" size="0.005" pos="0.063 0 -0.065" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_22" size="0.005" pos="0.063 0 -0.07" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_23" size="0.005" pos="0.063 0 -0.075" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_24" size="0.005" pos="0.063 0 -0.08" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_25" size="0.005" pos="0.063 0 -0.085" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_26" size="0.005" pos="0.063 0 -0.09" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_27" size="0.005" pos="0.063 0 -0.095" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_28" size="0.005" pos="0.063 0 -0.10" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_29" size="0.005" pos="0.063 0 -0.105" rgba="0 1 0 0.5"/>
-                            <site name="r_upper_leg_taxel_30" size="0.005" pos="0.063 0 -0.11" rgba="0 1 0 0.5"/>
+                            <site name="r_upper_leg_taxel_0" size="0.005" pos="0.063 0 0.04" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_0" size="0.005" pos="0.063 0 0.04" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_1" size="0.005" pos="0.063 0 0.035" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_2" size="0.005" pos="0.063 0 0.03" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_3" size="0.005" pos="0.063 0 0.025" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_4" size="0.005" pos="0.063 0 0.02" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_5" size="0.005" pos="0.063 0 0.015" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_6" size="0.005" pos="0.063 0 0.01" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_7" size="0.005" pos="0.063 0 0.005" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_8" size="0.005" pos="0.063 0 0.0" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_9" size="0.005" pos="0.063 0 -0.005" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_10" size="0.005" pos="0.063 0 -0.01" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_11" size="0.005" pos="0.063 0 -0.015" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_12" size="0.005" pos="0.063 0 -0.02" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_13" size="0.005" pos="0.063 0 -0.025" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_14" size="0.005" pos="0.063 0 -0.03" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_15" size="0.005" pos="0.063 0 -0.035" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_16" size="0.005" pos="0.063 0 -0.04" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_17" size="0.005" pos="0.063 0 -0.045" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_18" size="0.005" pos="0.063 0 -0.05" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_19" size="0.005" pos="0.063 0 -0.055" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_20" size="0.005" pos="0.063 0 -0.06" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_21" size="0.005" pos="0.063 0 -0.065" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_22" size="0.005" pos="0.063 0 -0.07" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_23" size="0.005" pos="0.063 0 -0.075" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_24" size="0.005" pos="0.063 0 -0.08" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_25" size="0.005" pos="0.063 0 -0.085" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_26" size="0.005" pos="0.063 0 -0.09" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_27" size="0.005" pos="0.063 0 -0.095" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_28" size="0.005" pos="0.063 0 -0.10" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_29" size="0.005" pos="0.063 0 -0.105" rgba="0 1 0 0.0"/>
+                            <site name="r_upper_leg_taxel_30" size="0.005" pos="0.063 0 -0.11" rgba="0 1 0 0.0"/>
                             <!-- end contact sensors -->
                         <body name="r_lower_leg" pos="0 0 -0.145825">
                             <inertial pos="0.0012364 -0.0035131 -0.088794" quat="-0.0357732 0.992736 -0.105359 -0.045782" mass="1.472" diaginertia="0.00461204 0.00424223 0.0014802" />
                             <joint name="r_knee" pos="0 0 0" axis="0 -1 0" range="-2.16421 0.0698132"  />
                             <geom pos="0.043709 0.0701 0.386638" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.5 0.1 0.75 1" mesh="sim_sea_2-5_r_shank_prt-binary" contype="0" conaffinity="0"/>
                                 <!-- TODO implement skin for lower leg here (what is here is just a draft, placement NOT as on iCub) -->
-                                <site name="r_lower_leg_taxel_0" size="0.005" pos="0.06 0 0.01" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_1" size="0.005" pos="0.0615 0 0.005" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_2" size="0.005" pos="0.0625 0 0.0" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_3" size="0.005" pos="0.0635 0 -0.005" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_4" size="0.005" pos="0.0645 0 -0.01" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_5" size="0.005" pos="0.0645 0 -0.015" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_6" size="0.005" pos="0.064 0 -0.02" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_7" size="0.005" pos="0.0635 0 -0.025" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_8" size="0.005" pos="0.0625 0 -0.03" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_9" size="0.005" pos="0.0615 0 -0.035" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_10" size="0.005" pos="0.061 0 -0.04" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_11" size="0.005" pos="0.06 0 -0.045" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_12" size="0.005" pos="0.059 0 -0.05" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_13" size="0.005" pos="0.0585 0 -0.055" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_14" size="0.005" pos="0.058 0 -0.06" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_15" size="0.005" pos="0.0575 0 -0.065" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_16" size="0.005" pos="0.057 0 -0.07" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_17" size="0.005" pos="0.0565 0 -0.075" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_18" size="0.005" pos="0.056 0 -0.08" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_19" size="0.005" pos="0.0555 0 -0.085" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_20" size="0.005" pos="0.055 0 -0.09" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_21" size="0.005" pos="0.0545 0 -0.095" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_22" size="0.005" pos="0.054 0 -0.10" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_23" size="0.005" pos="0.0537 0 -0.105" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_24" size="0.005" pos="0.0534 0 -0.11" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_25" size="0.005" pos="0.0531 0 -0.115" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_26" size="0.005" pos="0.0528 0 -0.12" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_27" size="0.005" pos="0.0525 0 -0.125" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_28" size="0.005" pos="0.0522 0 -0.13" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_29" size="0.005" pos="0.0519 0 -0.135" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_30" size="0.005" pos="0.0516 0 -0.14" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_31" size="0.005" pos="0.0519 0 -0.145" rgba="0 1 0 0.5"/>
-                                <site name="r_lower_leg_taxel_32" size="0.005" pos="0.0522 0 -0.15" rgba="0 1 0 0.5"/>
+                                <site name="r_lower_leg_taxel_0" size="0.005" pos="0.06 0 0.01" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_1" size="0.005" pos="0.0615 0 0.005" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_2" size="0.005" pos="0.0625 0 0.0" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_3" size="0.005" pos="0.0635 0 -0.005" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_4" size="0.005" pos="0.0645 0 -0.01" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_5" size="0.005" pos="0.0645 0 -0.015" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_6" size="0.005" pos="0.064 0 -0.02" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_7" size="0.005" pos="0.0635 0 -0.025" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_8" size="0.005" pos="0.0625 0 -0.03" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_9" size="0.005" pos="0.0615 0 -0.035" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_10" size="0.005" pos="0.061 0 -0.04" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_11" size="0.005" pos="0.06 0 -0.045" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_12" size="0.005" pos="0.059 0 -0.05" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_13" size="0.005" pos="0.0585 0 -0.055" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_14" size="0.005" pos="0.058 0 -0.06" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_15" size="0.005" pos="0.0575 0 -0.065" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_16" size="0.005" pos="0.057 0 -0.07" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_17" size="0.005" pos="0.0565 0 -0.075" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_18" size="0.005" pos="0.056 0 -0.08" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_19" size="0.005" pos="0.0555 0 -0.085" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_20" size="0.005" pos="0.055 0 -0.09" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_21" size="0.005" pos="0.0545 0 -0.095" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_22" size="0.005" pos="0.054 0 -0.10" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_23" size="0.005" pos="0.0537 0 -0.105" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_24" size="0.005" pos="0.0534 0 -0.11" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_25" size="0.005" pos="0.0531 0 -0.115" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_26" size="0.005" pos="0.0528 0 -0.12" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_27" size="0.005" pos="0.0525 0 -0.125" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_28" size="0.005" pos="0.0522 0 -0.13" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_29" size="0.005" pos="0.0519 0 -0.135" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_30" size="0.005" pos="0.0516 0 -0.14" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_31" size="0.005" pos="0.0519 0 -0.145" rgba="0 1 0 0.0"/>
+                                <site name="r_lower_leg_taxel_32" size="0.005" pos="0.0522 0 -0.15" rgba="0 1 0 0.0"/>
                                 <!-- end contact sensors -->
                             <body name="r_ankle_1" pos="0 0 -0.2005">
                                 <inertial pos="0.0151436 -0.0008686 4.2e-05" quat="-0.0974686 0.706465 0.0994599 0.693913" mass="0.6803" diaginertia="0.000448682 0.000413265 0.000299541" />
@@ -230,76 +231,76 @@
                         <joint name="l_hip_yaw" pos="0 0 0" axis="0 0 1" range="-1.39626 1.39626"  />
                         <geom pos="0.0437091 -0.0701 0.240813" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.5 0.1 0.75 1" mesh="sim_sea_2-5_l_thigh_prt-binary" contype="0" conaffinity="0"/>
                             <!-- TODO implement skin for upper leg here (what is here is just a draft, placement NOT as on iCub) -->
-                            <site name="l_upper_leg_taxel_0" size="0.005" pos="0.063 0 0.04" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_1" size="0.005" pos="0.063 0 0.035" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_2" size="0.005" pos="0.063 0 0.03" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_3" size="0.005" pos="0.063 0 0.025" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_4" size="0.005" pos="0.063 0 0.02" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_5" size="0.005" pos="0.063 0 0.015" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_6" size="0.005" pos="0.063 0 0.01" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_7" size="0.005" pos="0.063 0 0.005" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_8" size="0.005" pos="0.063 0 0.0" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_9" size="0.005" pos="0.063 0 -0.005" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_10" size="0.005" pos="0.063 0 -0.01" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_11" size="0.005" pos="0.063 0 -0.015" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_12" size="0.005" pos="0.063 0 -0.02" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_13" size="0.005" pos="0.063 0 -0.025" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_14" size="0.005" pos="0.063 0 -0.03" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_15" size="0.005" pos="0.063 0 -0.035" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_16" size="0.005" pos="0.063 0 -0.04" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_17" size="0.005" pos="0.063 0 -0.045" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_18" size="0.005" pos="0.063 0 -0.05" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_19" size="0.005" pos="0.063 0 -0.055" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_20" size="0.005" pos="0.063 0 -0.06" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_21" size="0.005" pos="0.063 0 -0.065" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_22" size="0.005" pos="0.063 0 -0.07" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_23" size="0.005" pos="0.063 0 -0.075" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_24" size="0.005" pos="0.063 0 -0.08" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_25" size="0.005" pos="0.063 0 -0.085" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_26" size="0.005" pos="0.063 0 -0.09" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_27" size="0.005" pos="0.063 0 -0.095" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_28" size="0.005" pos="0.063 0 -0.10" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_29" size="0.005" pos="0.063 0 -0.105" rgba="0 1 0 0.5"/>
-                            <site name="l_upper_leg_taxel_30" size="0.005" pos="0.063 0 -0.11" rgba="0 1 0 0.5"/>
+                            <site name="l_upper_leg_taxel_0" size="0.005" pos="0.063 0 0.04" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_1" size="0.005" pos="0.063 0 0.035" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_2" size="0.005" pos="0.063 0 0.03" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_3" size="0.005" pos="0.063 0 0.025" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_4" size="0.005" pos="0.063 0 0.02" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_5" size="0.005" pos="0.063 0 0.015" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_6" size="0.005" pos="0.063 0 0.01" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_7" size="0.005" pos="0.063 0 0.005" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_8" size="0.005" pos="0.063 0 0.0" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_9" size="0.005" pos="0.063 0 -0.005" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_10" size="0.005" pos="0.063 0 -0.01" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_11" size="0.005" pos="0.063 0 -0.015" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_12" size="0.005" pos="0.063 0 -0.02" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_13" size="0.005" pos="0.063 0 -0.025" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_14" size="0.005" pos="0.063 0 -0.03" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_15" size="0.005" pos="0.063 0 -0.035" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_16" size="0.005" pos="0.063 0 -0.04" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_17" size="0.005" pos="0.063 0 -0.045" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_18" size="0.005" pos="0.063 0 -0.05" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_19" size="0.005" pos="0.063 0 -0.055" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_20" size="0.005" pos="0.063 0 -0.06" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_21" size="0.005" pos="0.063 0 -0.065" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_22" size="0.005" pos="0.063 0 -0.07" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_23" size="0.005" pos="0.063 0 -0.075" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_24" size="0.005" pos="0.063 0 -0.08" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_25" size="0.005" pos="0.063 0 -0.085" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_26" size="0.005" pos="0.063 0 -0.09" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_27" size="0.005" pos="0.063 0 -0.095" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_28" size="0.005" pos="0.063 0 -0.10" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_29" size="0.005" pos="0.063 0 -0.105" rgba="0 1 0 0.0"/>
+                            <site name="l_upper_leg_taxel_30" size="0.005" pos="0.063 0 -0.11" rgba="0 1 0 0.0"/>
                             <!-- end contact sensors -->
                         <body name="l_lower_leg" pos="0 0 -0.145825">
                             <inertial pos="0.0009998 0.0034969 -0.088567" quat="0.037701 0.991172 0.120144 -0.041511" mass="1.4724" diaginertia="0.0046085 0.00423616 0.00148461" />
                             <joint name="l_knee" pos="0 0 0" axis="0 -1 0" range="-2.16421 0.0698132"  />
                             <geom pos="0.0437091 -0.0701 0.386638" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.5 0.1 0.75 1" mesh="sim_sea_2-5_l_shank_prt-binary" contype="0" conaffinity="0"/>
                                 <!-- TODO implement skin for lower leg here (what is here is just a draft, placement NOT as on iCub) -->
-                                <site name="l_lower_leg_taxel_0" size="0.005" pos="0.06 0 0.01" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_1" size="0.005" pos="0.0615 0 0.005" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_2" size="0.005" pos="0.0625 0 0.0" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_3" size="0.005" pos="0.0635 0 -0.005" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_4" size="0.005" pos="0.0645 0 -0.01" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_5" size="0.005" pos="0.0645 0 -0.015" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_6" size="0.005" pos="0.064 0 -0.02" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_7" size="0.005" pos="0.0635 0 -0.025" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_8" size="0.005" pos="0.0625 0 -0.03" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_9" size="0.005" pos="0.0615 0 -0.035" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_10" size="0.005" pos="0.061 0 -0.04" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_11" size="0.005" pos="0.06 0 -0.045" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_12" size="0.005" pos="0.059 0 -0.05" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_13" size="0.005" pos="0.0585 0 -0.055" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_14" size="0.005" pos="0.058 0 -0.06" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_15" size="0.005" pos="0.0575 0 -0.065" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_16" size="0.005" pos="0.057 0 -0.07" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_17" size="0.005" pos="0.0565 0 -0.075" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_18" size="0.005" pos="0.056 0 -0.08" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_19" size="0.005" pos="0.0555 0 -0.085" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_20" size="0.005" pos="0.055 0 -0.09" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_21" size="0.005" pos="0.0545 0 -0.095" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_22" size="0.005" pos="0.054 0 -0.10" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_23" size="0.005" pos="0.0537 0 -0.105" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_24" size="0.005" pos="0.0534 0 -0.11" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_25" size="0.005" pos="0.0531 0 -0.115" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_26" size="0.005" pos="0.0528 0 -0.12" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_27" size="0.005" pos="0.0525 0 -0.125" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_28" size="0.005" pos="0.0522 0 -0.13" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_29" size="0.005" pos="0.0519 0 -0.135" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_30" size="0.005" pos="0.0516 0 -0.14" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_31" size="0.005" pos="0.0519 0 -0.145" rgba="0 1 0 0.5"/>
-                                <site name="l_lower_leg_taxel_32" size="0.005" pos="0.0522 0 -0.15" rgba="0 1 0 0.5"/>
+                                <site name="l_lower_leg_taxel_0" size="0.005" pos="0.06 0 0.01" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_1" size="0.005" pos="0.0615 0 0.005" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_2" size="0.005" pos="0.0625 0 0.0" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_3" size="0.005" pos="0.0635 0 -0.005" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_4" size="0.005" pos="0.0645 0 -0.01" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_5" size="0.005" pos="0.0645 0 -0.015" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_6" size="0.005" pos="0.064 0 -0.02" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_7" size="0.005" pos="0.0635 0 -0.025" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_8" size="0.005" pos="0.0625 0 -0.03" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_9" size="0.005" pos="0.0615 0 -0.035" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_10" size="0.005" pos="0.061 0 -0.04" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_11" size="0.005" pos="0.06 0 -0.045" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_12" size="0.005" pos="0.059 0 -0.05" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_13" size="0.005" pos="0.0585 0 -0.055" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_14" size="0.005" pos="0.058 0 -0.06" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_15" size="0.005" pos="0.0575 0 -0.065" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_16" size="0.005" pos="0.057 0 -0.07" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_17" size="0.005" pos="0.0565 0 -0.075" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_18" size="0.005" pos="0.056 0 -0.08" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_19" size="0.005" pos="0.0555 0 -0.085" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_20" size="0.005" pos="0.055 0 -0.09" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_21" size="0.005" pos="0.0545 0 -0.095" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_22" size="0.005" pos="0.054 0 -0.10" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_23" size="0.005" pos="0.0537 0 -0.105" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_24" size="0.005" pos="0.0534 0 -0.11" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_25" size="0.005" pos="0.0531 0 -0.115" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_26" size="0.005" pos="0.0528 0 -0.12" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_27" size="0.005" pos="0.0525 0 -0.125" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_28" size="0.005" pos="0.0522 0 -0.13" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_29" size="0.005" pos="0.0519 0 -0.135" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_30" size="0.005" pos="0.0516 0 -0.14" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_31" size="0.005" pos="0.0519 0 -0.145" rgba="0 1 0 0.0"/>
+                                <site name="l_lower_leg_taxel_32" size="0.005" pos="0.0522 0 -0.15" rgba="0 1 0 0.0"/>
                                 <!-- end contact sensors -->
                             <body name="l_ankle_1" pos="0 0 -0.2005">
                                 <inertial pos="0.0151531 0.000902 4.2e-05" quat="0.0942725 0.706107 -0.103691 0.694099" mass="0.6798" diaginertia="0.000447943 0.000413255 0.000298766" />
@@ -332,34 +333,34 @@
                         <geom pos="0 0.0928 -0.024189" type="mesh" rgba="0.5 0.1 0.75 1" mesh="chest_hull_2" contype="0" conaffinity="0"/>
                         <geom pos="0 0.0928 -0.024189" type="mesh" rgba="0.5 0.1 0.75 1" mesh="chest_hull_3" />
                             <!-- TODO implement skin on chest here (this is only a draft. NOT as on iCub) -->
-                            <site name="chest_taxel_0" size="0.005" pos="0. 0.1 0.073" rgba="0 1 0 0.5"/> <!-- left/right, up/down, front/back -->
-                            <site name="chest_taxel_1" size="0.005" pos="0. 0.095 0.075" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_2" size="0.005" pos="0. 0.09 0.076" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_3" size="0.005" pos="0. 0.085 0.077" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_4" size="0.005" pos="0. 0.08 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_5" size="0.005" pos="0. 0.075 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_6" size="0.005" pos="0. 0.07 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_7" size="0.005" pos="0. 0.065 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_8" size="0.005" pos="0. 0.06 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_9" size="0.005" pos="0. 0.055 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_10" size="0.005" pos="0. 0.05 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_11" size="0.005" pos="0. 0.045 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_12" size="0.005" pos="0. 0.04 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_13" size="0.005" pos="0. 0.035 0.078" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_14" size="0.005" pos="0. 0.03 0.0779" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_15" size="0.005" pos="0. 0.025 0.0779" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_16" size="0.005" pos="0. 0.02 0.0777" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_17" size="0.005" pos="0. 0.015 0.0775" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_18" size="0.005" pos="0. 0.01 0.0772" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_19" size="0.005" pos="0. 0.005 0.0769" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_20" size="0.005" pos="0. 0.0 0.0766" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_21" size="0.005" pos="0. -0.005 0.0763" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_22" size="0.005" pos="0. -0.01 0.0761" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_23" size="0.005" pos="0. -0.015 0.0759" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_24" size="0.005" pos="0. -0.02 0.0757" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_25" size="0.005" pos="0. -0.025 0.0755" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_26" size="0.005" pos="0. -0.03 0.0753" rgba="0 1 0 0.5"/>
-                            <site name="chest_taxel_27" size="0.005" pos="0. -0.035 0.0751" rgba="0 1 0 0.5"/>
+                            <site name="chest_taxel_0" size="0.005" pos="0. 0.1 0.073" rgba="0 1 0 0.0"/> <!-- left/right, up/down, front/back -->
+                            <site name="chest_taxel_1" size="0.005" pos="0. 0.095 0.075" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_2" size="0.005" pos="0. 0.09 0.076" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_3" size="0.005" pos="0. 0.085 0.077" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_4" size="0.005" pos="0. 0.08 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_5" size="0.005" pos="0. 0.075 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_6" size="0.005" pos="0. 0.07 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_7" size="0.005" pos="0. 0.065 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_8" size="0.005" pos="0. 0.06 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_9" size="0.005" pos="0. 0.055 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_10" size="0.005" pos="0. 0.05 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_11" size="0.005" pos="0. 0.045 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_12" size="0.005" pos="0. 0.04 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_13" size="0.005" pos="0. 0.035 0.078" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_14" size="0.005" pos="0. 0.03 0.0779" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_15" size="0.005" pos="0. 0.025 0.0779" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_16" size="0.005" pos="0. 0.02 0.0777" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_17" size="0.005" pos="0. 0.015 0.0775" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_18" size="0.005" pos="0. 0.01 0.0772" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_19" size="0.005" pos="0. 0.005 0.0769" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_20" size="0.005" pos="0. 0.0 0.0766" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_21" size="0.005" pos="0. -0.005 0.0763" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_22" size="0.005" pos="0. -0.01 0.0761" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_23" size="0.005" pos="0. -0.015 0.0759" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_24" size="0.005" pos="0. -0.02 0.0757" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_25" size="0.005" pos="0. -0.025 0.0755" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_26" size="0.005" pos="0. -0.03 0.0753" rgba="0 1 0 0.0"/>
+                            <site name="chest_taxel_27" size="0.005" pos="0. -0.035 0.0751" rgba="0 1 0 0.0"/>
                             <!-- end contact sensors -->
                         <body name="r_shoulder_1" pos="-0.120016 0.0928 0.0079693" quat="0 0.258819 0 0.965926">
                             <inertial pos="-0.0122656 3.2e-05 -0.00321064" quat="0.923843 -0.00544289 0.382668 0.00707733" mass="0.114862" diaginertia="0.0100036 0.01 0.00999644" />
@@ -375,25 +376,25 @@
                                     <geom pos="0.131934 0 -0.0353516" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_upper_arm_prt-binary" />
                                     <geom pos="0.131934 0 -0.0353516" type="mesh" rgba="0.5 0.1 0.75 1" mesh="sim_sea_2-5_r_elbow_prt-binary" />
                                         <!-- TODO implement skin for upper arm here (this is just an example. NOT like this on iCub) -->
-                                        <site name="r_upper_arm_taxel_0" size="0.005" pos="-0.03 0.038 0.01" rgba="0 1 0 0.5"/> <!-- up/down, left/right, front/back -->
-                                        <site name="r_upper_arm_taxel_1" size="0.005" pos="-0.035 0.038 0.011" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_2" size="0.005" pos="-0.04 0.038 0.012" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_3" size="0.005" pos="-0.045 0.038 0.013" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_4" size="0.005" pos="-0.05 0.038 0.014" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_5" size="0.005" pos="-0.055 0.038 0.015" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_6" size="0.005" pos="-0.06 0.038 0.016" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_7" size="0.005" pos="-0.065 0.038 0.017" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_8" size="0.005" pos="-0.07 0.038 0.0178" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_9" size="0.005" pos="-0.075 0.038 0.019" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_10" size="0.005" pos="-0.08 0.038 0.02" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_11" size="0.005" pos="-0.085 0.038 0.021" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_12" size="0.005" pos="-0.09 0.038 0.022" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_13" size="0.005" pos="-0.095 0.038 0.023" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_14" size="0.005" pos="-0.1 0.038 0.024" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_15" size="0.005" pos="-0.105 0.038 0.025" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_16" size="0.005" pos="-0.11 0.038 0.026" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_17" size="0.005" pos="-0.115 0.038 0.027" rgba="0 1 0 0.5"/>
-                                        <site name="r_upper_arm_taxel_18" size="0.005" pos="-0.12 0.038 0.028" rgba="0 1 0 0.5"/>
+                                        <site name="r_upper_arm_taxel_0" size="0.005" pos="-0.03 0.038 0.01" rgba="0 1 0 0.0"/> <!-- up/down, left/right, front/back -->
+                                        <site name="r_upper_arm_taxel_1" size="0.005" pos="-0.035 0.038 0.011" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_2" size="0.005" pos="-0.04 0.038 0.012" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_3" size="0.005" pos="-0.045 0.038 0.013" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_4" size="0.005" pos="-0.05 0.038 0.014" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_5" size="0.005" pos="-0.055 0.038 0.015" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_6" size="0.005" pos="-0.06 0.038 0.016" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_7" size="0.005" pos="-0.065 0.038 0.017" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_8" size="0.005" pos="-0.07 0.038 0.0178" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_9" size="0.005" pos="-0.075 0.038 0.019" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_10" size="0.005" pos="-0.08 0.038 0.02" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_11" size="0.005" pos="-0.085 0.038 0.021" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_12" size="0.005" pos="-0.09 0.038 0.022" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_13" size="0.005" pos="-0.095 0.038 0.023" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_14" size="0.005" pos="-0.1 0.038 0.024" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_15" size="0.005" pos="-0.105 0.038 0.025" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_16" size="0.005" pos="-0.11 0.038 0.026" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_17" size="0.005" pos="-0.115 0.038 0.027" rgba="0 1 0 0.0"/>
+                                        <site name="r_upper_arm_taxel_18" size="0.005" pos="-0.12 0.038 0.028" rgba="0 1 0 0.0"/>
                                         <!-- end contact sensors -->
                                     <body name="r_elbow_1" pos="-0.127457 -0.0224999 0.049681">
                                         <inertial pos="-0.00673913 0.0188019 -0.00465769" quat="0.889627 0.287374 0.352074 0.0449803" mass="0.267903" diaginertia="0.0100112 0.0100037 0.00998517" />
@@ -404,22 +405,22 @@
                                             <joint name="r_wrist_prosup" pos="0 0 0" axis="0.965926 0 -0.258819" range="-1.0472 1.0472" damping="1.0" />
                                             <geom pos="0.296887 0 -0.0795506" type="mesh" rgba="0.5 0.1 0.75 1" mesh="sim_sea_2-5_r_forearm_prt-binary" />
                                                 <!-- TODO implement skin for upper arm here (this is just an example. NOT like this on iCub) -->
-                                                <site name="r_forearm_taxel_0" size="0.005" pos="0. 0.037 -0.005" rgba="0 1 0 0.5"/> <!-- up/down, left/right, front/back -->
-                                                <site name="r_forearm_taxel_1" size="0.005" pos="-0.005 0.037 -0.0035" rgba="0 1 0 0.5"/>
-                                                <site name="r_forearm_taxel_2" size="0.005" pos="-0.01 0.037 -0.001" rgba="0 1 0 0.5"/>
-                                                <site name="r_forearm_taxel_3" size="0.005" pos="-0.015 0.037 0.0015" rgba="0 1 0 0.5"/>
-                                                <site name="r_forearm_taxel_4" size="0.005" pos="-0.02 0.0365 0.003" rgba="0 1 0 0.5"/>
-                                                <site name="r_forearm_taxel_5" size="0.005" pos="-0.025 0.0355 0.0045" rgba="0 1 0 0.5"/>
-                                                <site name="r_forearm_taxel_6" size="0.005" pos="-0.03 0.0345 0.0060" rgba="0 1 0 0.5"/>
-                                                <site name="r_forearm_taxel_7" size="0.005" pos="-0.035 0.0335 0.0075" rgba="0 1 0 0.5"/>
-                                                <site name="r_forearm_taxel_8" size="0.005" pos="-0.04 0.0335 0.0090" rgba="0 1 0 0.5"/>
-                                                <site name="r_forearm_taxel_9" size="0.005" pos="-0.045 0.033 0.0105" rgba="0 1 0 0.5"/>
-                                                <site name="r_forearm_taxel_10" size="0.005" pos="-0.05 0.0325 0.0120" rgba="0 1 0 0.5"/>
-                                                <site name="r_forearm_taxel_11" size="0.005" pos="-0.055 0.032 0.0135" rgba="0 1 0 0.5"/>
-                                                <site name="r_forearm_taxel_12" size="0.005" pos="-0.06 0.0315 0.0150" rgba="0 1 0 0.5"/>
-                                                <site name="r_forearm_taxel_13" size="0.005" pos="-0.065 0.031 0.0165" rgba="0 1 0 0.5"/>
-                                                <site name="r_forearm_taxel_14" size="0.005" pos="-0.07 0.0315 0.0180" rgba="0 1 0 0.5"/>
-                                                <site name="r_forearm_taxel_15" size="0.005" pos="-0.075 0.0325 0.0195" rgba="0 1 0 0.5"/>
+                                                <site name="r_forearm_taxel_0" size="0.005" pos="0. 0.037 -0.005" rgba="0 1 0 0.0"/> <!-- up/down, left/right, front/back -->
+                                                <site name="r_forearm_taxel_1" size="0.005" pos="-0.005 0.037 -0.0035" rgba="0 1 0 0.0"/>
+                                                <site name="r_forearm_taxel_2" size="0.005" pos="-0.01 0.037 -0.001" rgba="0 1 0 0.0"/>
+                                                <site name="r_forearm_taxel_3" size="0.005" pos="-0.015 0.037 0.0015" rgba="0 1 0 0.0"/>
+                                                <site name="r_forearm_taxel_4" size="0.005" pos="-0.02 0.0365 0.003" rgba="0 1 0 0.0"/>
+                                                <site name="r_forearm_taxel_5" size="0.005" pos="-0.025 0.0355 0.0045" rgba="0 1 0 0.0"/>
+                                                <site name="r_forearm_taxel_6" size="0.005" pos="-0.03 0.0345 0.0060" rgba="0 1 0 0.0"/>
+                                                <site name="r_forearm_taxel_7" size="0.005" pos="-0.035 0.0335 0.0075" rgba="0 1 0 0.0"/>
+                                                <site name="r_forearm_taxel_8" size="0.005" pos="-0.04 0.0335 0.0090" rgba="0 1 0 0.0"/>
+                                                <site name="r_forearm_taxel_9" size="0.005" pos="-0.045 0.033 0.0105" rgba="0 1 0 0.0"/>
+                                                <site name="r_forearm_taxel_10" size="0.005" pos="-0.05 0.0325 0.0120" rgba="0 1 0 0.0"/>
+                                                <site name="r_forearm_taxel_11" size="0.005" pos="-0.055 0.032 0.0135" rgba="0 1 0 0.0"/>
+                                                <site name="r_forearm_taxel_12" size="0.005" pos="-0.06 0.0315 0.0150" rgba="0 1 0 0.0"/>
+                                                <site name="r_forearm_taxel_13" size="0.005" pos="-0.065 0.031 0.0165" rgba="0 1 0 0.0"/>
+                                                <site name="r_forearm_taxel_14" size="0.005" pos="-0.07 0.0315 0.0180" rgba="0 1 0 0.0"/>
+                                                <site name="r_forearm_taxel_15" size="0.005" pos="-0.075 0.0325 0.0195" rgba="0 1 0 0.0"/>
                                                 <!-- end contact sensors -->
                                             <body name="r_wrist_1" pos="-0.103505 7e-06 0.0251977">
                                                 <inertial pos="0.000986102 -0.001176 0.00410133" quat="0.920531 -0.046124 0.381345 0.0712175" mass="0.0362615" diaginertia="0.010001 0.01 0.00999904" />
@@ -433,54 +434,54 @@
                                                         <site name="r_hand_dh_frame_site" type="sphere" rgba="1 1 1 0.5" size="0.005"/>
                                                         <site name="r_hand_dh_frame_site_rotated" type="box" rgba="1 1 1 0.5" size="0.005 0.005 0.005" quat="0.924 0 0.383 0"/>
                                                         <!-- contact sensors (taxel) -->
-                                                        <site name="r_hand_palm_taxel_0" size="0.005" pos="-12.1e-3 6.2e-3 1e-3" rgba="0 1 0 0.5"/>  <!-- to make sensor visible: rgba="0 1 0 0.5" -->
-                                                        <site name="r_hand_palm_taxel_1" size="0.005" pos="-8.6e-3 6.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_2" size="0.005" pos="-12.1e-3 1.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_3" size="0.005" pos="-8.6e-3 -1.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_4" size="0.005" pos="-8.6e-3 11.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_5" size="0.005" pos="-9.6e-3 16.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_6" size="0.005" pos="-3.6e-3 1.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_7" size="0.005" pos="-3.6e-3 6.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_8" size="0.005" pos="-3.6e-3 11.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_9" size="0.005" pos="-3.1e-3 16.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_10" size="0.005" pos="-4.1e-3 21.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_11" size="0.005" pos="-5.6e-3 25.9e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_12" size="0.005" pos="-27.6e-3 21.7e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_13" size="0.005" pos="-23.6e-3 12.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_14" size="0.005" pos="-18.6e-3 6.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_15" size="0.005" pos="-18.6e-3 1.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_16" size="0.005" pos="-18.6e-3 11.7e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_17" size="0.005" pos="-13.1e-3 17.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_18" size="0.005" pos="-25.6e-3 16.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_19" size="0.005" pos="-19.1e-3 16.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_20" size="0.005" pos="-14.1e-3 20.7e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_21" size="0.005" pos="-17.6e-3 21.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_22" size="0.005" pos="-22.6e-3 17.7e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_23" size="0.005" pos="-29.6e-3 -4.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_24" size="0.005" pos="-13.6e-3 -11.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_25" size="0.005" pos="-9e-3 -14.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_26" size="0.005" pos="-8.6e-3 -19.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_27" size="0.005" pos="-8.6e-3 -19.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_28" size="0.005" pos="-3.6e-3 -24.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_29" size="0.005" pos="-2.1e-3 -14.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_30" size="0.005" pos="-3.6e-3 -9.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_31" size="0.005" pos="-3.6e-3 -9.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_32" size="0.005" pos="-8.6e-3 -4.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_33" size="0.005" pos="-3.6e-3 -4.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_34" size="0.005" pos="-8.6e-3 -16.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_35" size="0.005" pos="-11.6e-3 12.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_36" size="0.005" pos="-18.1e-3 17.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_37" size="0.005" pos="-15.6e-3 12.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_38" size="0.005" pos="-33.1e-3 14.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_39" size="0.005" pos="-38.1e-3 7.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_40" size="0.005" pos="-33.1e-3  9.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_41" size="0.005" pos="-38.6e-3 7.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_42" size="0.005" pos="-28.1e-3 11.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_43" size="0.005" pos="-41.1e-3 2.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_44" size="0.005" pos="-33.1e-3 2.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_45" size="0.005" pos="-28.1e-3 2.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_46" size="0.005" pos="-23.1e-3 7.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="r_hand_palm_taxel_47" size="0.005" pos="-23.1e-3 -1.2e-3 1e-3" rgba="0 1 0 0.5"/>
+                                                        <site name="r_hand_palm_taxel_0" size="0.005" pos="-12.1e-3 6.2e-3 1e-3" rgba="0 1 0 0.0"/>  <!-- to make sensor visible: rgba="0 1 0 0.0" -->
+                                                        <site name="r_hand_palm_taxel_1" size="0.005" pos="-8.6e-3 6.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_2" size="0.005" pos="-12.1e-3 1.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_3" size="0.005" pos="-8.6e-3 -1.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_4" size="0.005" pos="-8.6e-3 11.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_5" size="0.005" pos="-9.6e-3 16.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_6" size="0.005" pos="-3.6e-3 1.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_7" size="0.005" pos="-3.6e-3 6.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_8" size="0.005" pos="-3.6e-3 11.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_9" size="0.005" pos="-3.1e-3 16.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_10" size="0.005" pos="-4.1e-3 21.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_11" size="0.005" pos="-5.6e-3 25.9e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_12" size="0.005" pos="-27.6e-3 21.7e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_13" size="0.005" pos="-23.6e-3 12.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_14" size="0.005" pos="-18.6e-3 6.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_15" size="0.005" pos="-18.6e-3 1.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_16" size="0.005" pos="-18.6e-3 11.7e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_17" size="0.005" pos="-13.1e-3 17.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_18" size="0.005" pos="-25.6e-3 16.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_19" size="0.005" pos="-19.1e-3 16.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_20" size="0.005" pos="-14.1e-3 20.7e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_21" size="0.005" pos="-17.6e-3 21.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_22" size="0.005" pos="-22.6e-3 17.7e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_23" size="0.005" pos="-29.6e-3 -4.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_24" size="0.005" pos="-13.6e-3 -11.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_25" size="0.005" pos="-9e-3 -14.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_26" size="0.005" pos="-8.6e-3 -19.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_27" size="0.005" pos="-8.6e-3 -19.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_28" size="0.005" pos="-3.6e-3 -24.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_29" size="0.005" pos="-2.1e-3 -14.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_30" size="0.005" pos="-3.6e-3 -9.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_31" size="0.005" pos="-3.6e-3 -9.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_32" size="0.005" pos="-8.6e-3 -4.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_33" size="0.005" pos="-3.6e-3 -4.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_34" size="0.005" pos="-8.6e-3 -16.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_35" size="0.005" pos="-11.6e-3 12.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_36" size="0.005" pos="-18.1e-3 17.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_37" size="0.005" pos="-15.6e-3 12.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_38" size="0.005" pos="-33.1e-3 14.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_39" size="0.005" pos="-38.1e-3 7.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_40" size="0.005" pos="-33.1e-3  9.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_41" size="0.005" pos="-38.6e-3 7.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_42" size="0.005" pos="-28.1e-3 11.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_43" size="0.005" pos="-41.1e-3 2.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_44" size="0.005" pos="-33.1e-3 2.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_45" size="0.005" pos="-28.1e-3 2.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_46" size="0.005" pos="-23.1e-3 7.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="r_hand_palm_taxel_47" size="0.005" pos="-23.1e-3 -1.2e-3 1e-3" rgba="0 1 0 0.0"/>
                                                         <!-- end contact sensors -->
                                                     </body>
                                                     <body name="r_hand_thumb_0" pos="-0.0318492 -0.0040568 0.0192027" quat="0.0382606 0.614855 -0.0162249 0.787545">
@@ -500,18 +501,18 @@
                                                                     <joint name="r_hand_thumb_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3"/>
                                                                     <geom quat="0 0 0 1" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightThumb3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
                                                                     <!-- contact sensors (taxel) -->
-                                                                    <site name="r_hand_thumb_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_thumb_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_thumb_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_thumb_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_thumb_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_thumb_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_thumb_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_thumb_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_thumb_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_thumb_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_thumb_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_thumb_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.5"/>
+                                                                    <site name="r_hand_thumb_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_thumb_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_thumb_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_thumb_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_thumb_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_thumb_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_thumb_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_thumb_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_thumb_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_thumb_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_thumb_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_thumb_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.0"/>
                                                                     <!-- end contact sensors -->
                                                                 </body>
                                                             </body>
@@ -534,18 +535,18 @@
                                                                     <joint name="r_hand_index_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3"/>
                                                                     <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightIndex3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
                                                                     <!-- contact sensors (taxel) -->
-                                                                    <site name="r_hand_index_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_index_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_index_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_index_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_index_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_index_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_index_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_index_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_index_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_index_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_index_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_index_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.5"/>
+                                                                    <site name="r_hand_index_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_index_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_index_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_index_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_index_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_index_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_index_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_index_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_index_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_index_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_index_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_index_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.0"/>
                                                                     <!-- end contact sensors -->
                                                                 </body>
                                                             </body>
@@ -568,18 +569,18 @@
                                                                     <joint name="r_hand_middle_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3"/>
                                                                     <geom quat="0 0 0 1" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightMiddle3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
                                                                     <!-- contact sensors (taxel) -->
-                                                                    <site name="r_hand_middle_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_middle_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_middle_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_middle_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_middle_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_middle_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_middle_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_middle_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_middle_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_middle_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_middle_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_middle_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.5"/>
+                                                                    <site name="r_hand_middle_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_middle_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_middle_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_middle_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_middle_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_middle_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_middle_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_middle_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_middle_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_middle_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_middle_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_middle_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.0"/>
                                                                     <!-- end contact sensors -->
                                                                 </body>
                                                             </body>
@@ -602,18 +603,18 @@
                                                                     <joint name="r_hand_ring_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3" frictionloss="1"/>
                                                                     <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightRing3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1" />
                                                                     <!-- contact sensors (taxel) -->
-                                                                    <site name="r_hand_ring_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_ring_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_ring_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_ring_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_ring_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_ring_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_ring_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_ring_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_ring_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_ring_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_ring_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_ring_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.5"/>
+                                                                    <site name="r_hand_ring_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_ring_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_ring_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_ring_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_ring_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_ring_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_ring_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_ring_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_ring_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_ring_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_ring_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_ring_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.0"/>
                                                                     <!-- end contact sensors -->
                                                                 </body>
                                                             </body>
@@ -636,18 +637,18 @@
                                                                     <joint name="r_hand_little_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3" frictionloss="1"/>
                                                                     <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightLittle3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
                                                                     <!-- contact sensors (taxel) -->
-                                                                    <site name="r_hand_little_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_little_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_little_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_little_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_little_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_little_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_little_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_little_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_little_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_little_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_little_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="r_hand_little_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.5"/>
+                                                                    <site name="r_hand_little_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_little_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_little_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_little_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_little_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_little_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_little_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_little_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_little_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_little_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_little_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="r_hand_little_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.0"/>
                                                                     <!-- end contact sensors -->
                                                                 </body>
                                                             </body>
@@ -674,25 +675,25 @@
                                     <geom pos="-0.131901 0 -0.0353428" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_l_upper_arm_prt-binary" />
                                     <geom pos="-0.131901 0 -0.0353428" type="mesh" rgba="0.5 0.1 0.75 1" mesh="sim_sea_2-5_l_elbow_prt-binary" />
                                         <!-- TODO implement skin for upper arm here (this is just an example. NOT like this on iCub) -->
-                                        <site name="l_upper_arm_taxel_0" size="0.005" pos="0.03 0.038 0.01" rgba="0 1 0 0.5"/> <!-- up/down, left/right, front/back -->
-                                        <site name="l_upper_arm_taxel_1" size="0.005" pos="0.035 0.038 0.011" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_2" size="0.005" pos="0.04 0.038 0.012" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_3" size="0.005" pos="0.045 0.038 0.013" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_4" size="0.005" pos="0.05 0.038 0.014" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_5" size="0.005" pos="0.055 0.038 0.015" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_6" size="0.005" pos="0.06 0.038 0.016" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_7" size="0.005" pos="0.065 0.038 0.017" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_8" size="0.005" pos="0.07 0.038 0.0178" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_9" size="0.005" pos="0.075 0.038 0.019" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_10" size="0.005" pos="0.08 0.038 0.02" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_11" size="0.005" pos="0.085 0.038 0.021" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_12" size="0.005" pos="0.09 0.038 0.022" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_13" size="0.005" pos="0.095 0.038 0.023" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_14" size="0.005" pos="0.1 0.038 0.024" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_15" size="0.005" pos="0.105 0.038 0.025" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_16" size="0.005" pos="0.11 0.038 0.026" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_17" size="0.005" pos="0.115 0.038 0.027" rgba="0 1 0 0.5"/>
-                                        <site name="l_upper_arm_taxel_18" size="0.005" pos="0.12 0.038 0.028" rgba="0 1 0 0.5"/>
+                                        <site name="l_upper_arm_taxel_0" size="0.005" pos="0.03 0.038 0.01" rgba="0 1 0 0.0"/> <!-- up/down, left/right, front/back -->
+                                        <site name="l_upper_arm_taxel_1" size="0.005" pos="0.035 0.038 0.011" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_2" size="0.005" pos="0.04 0.038 0.012" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_3" size="0.005" pos="0.045 0.038 0.013" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_4" size="0.005" pos="0.05 0.038 0.014" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_5" size="0.005" pos="0.055 0.038 0.015" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_6" size="0.005" pos="0.06 0.038 0.016" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_7" size="0.005" pos="0.065 0.038 0.017" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_8" size="0.005" pos="0.07 0.038 0.0178" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_9" size="0.005" pos="0.075 0.038 0.019" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_10" size="0.005" pos="0.08 0.038 0.02" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_11" size="0.005" pos="0.085 0.038 0.021" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_12" size="0.005" pos="0.09 0.038 0.022" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_13" size="0.005" pos="0.095 0.038 0.023" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_14" size="0.005" pos="0.1 0.038 0.024" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_15" size="0.005" pos="0.105 0.038 0.025" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_16" size="0.005" pos="0.11 0.038 0.026" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_17" size="0.005" pos="0.115 0.038 0.027" rgba="0 1 0 0.0"/>
+                                        <site name="l_upper_arm_taxel_18" size="0.005" pos="0.12 0.038 0.028" rgba="0 1 0 0.0"/>
                                         <!-- end contact sensors -->
                                     <body name="l_elbow_1" pos="0.127489 -0.0339999 0.0496898">
                                         <inertial pos="0.00673913 0.0303019 -0.00465769" quat="-0.287465 0.889618 -0.0449192 0.35203" mass="0.267903" diaginertia="0.0100112 0.0100037 0.00998517" />
@@ -703,22 +704,22 @@
                                             <joint name="l_wrist_prosup" pos="0 0 0" axis="0.965926 0 0.258819" range="-1.0472 1.0472" damping="1.0" />
                                             <geom pos="-0.296887 0 -0.0795506" type="mesh" rgba="0.5 0.1 0.75 1" mesh="sim_sea_2-5_l_forearm_prt-binary" />
                                                 <!-- TODO implement skin for upper arm here (this is just an example. NOT like this on iCub) -->
-                                                <site name="l_forearm_taxel_0" size="0.005" pos="0. 0.037 -0.005" rgba="0 1 0 0.5"/> <!-- up/down, left/right, front/back -->
-                                                <site name="l_forearm_taxel_1" size="0.005" pos="0.005 0.037 -0.0035" rgba="0 1 0 0.5"/>
-                                                <site name="l_forearm_taxel_2" size="0.005" pos="0.01 0.037 -0.001" rgba="0 1 0 0.5"/>
-                                                <site name="l_forearm_taxel_3" size="0.005" pos="0.015 0.037 0.0015" rgba="0 1 0 0.5"/>
-                                                <site name="l_forearm_taxel_4" size="0.005" pos="0.02 0.0365 0.003" rgba="0 1 0 0.5"/>
-                                                <site name="l_forearm_taxel_5" size="0.005" pos="0.025 0.0355 0.0045" rgba="0 1 0 0.5"/>
-                                                <site name="l_forearm_taxel_6" size="0.005" pos="0.03 0.0345 0.0060" rgba="0 1 0 0.5"/>
-                                                <site name="l_forearm_taxel_7" size="0.005" pos="0.035 0.0335 0.0075" rgba="0 1 0 0.5"/>
-                                                <site name="l_forearm_taxel_8" size="0.005" pos="0.04 0.0335 0.0090" rgba="0 1 0 0.5"/>
-                                                <site name="l_forearm_taxel_9" size="0.005" pos="0.045 0.033 0.0105" rgba="0 1 0 0.5"/>
-                                                <site name="l_forearm_taxel_10" size="0.005" pos="0.05 0.0325 0.0120" rgba="0 1 0 0.5"/>
-                                                <site name="l_forearm_taxel_11" size="0.005" pos="0.055 0.032 0.0135" rgba="0 1 0 0.5"/>
-                                                <site name="l_forearm_taxel_12" size="0.005" pos="0.06 0.0315 0.0150" rgba="0 1 0 0.5"/>
-                                                <site name="l_forearm_taxel_13" size="0.005" pos="0.065 0.031 0.0165" rgba="0 1 0 0.5"/>
-                                                <site name="l_forearm_taxel_14" size="0.005" pos="0.07 0.0315 0.0180" rgba="0 1 0 0.5"/>
-                                                <site name="l_forearm_taxel_15" size="0.005" pos="0.075 0.0325 0.0195" rgba="0 1 0 0.5"/>
+                                                <site name="l_forearm_taxel_0" size="0.005" pos="0. 0.037 -0.005" rgba="0 1 0 0.0"/> <!-- up/down, left/right, front/back -->
+                                                <site name="l_forearm_taxel_1" size="0.005" pos="0.005 0.037 -0.0035" rgba="0 1 0 0.0"/>
+                                                <site name="l_forearm_taxel_2" size="0.005" pos="0.01 0.037 -0.001" rgba="0 1 0 0.0"/>
+                                                <site name="l_forearm_taxel_3" size="0.005" pos="0.015 0.037 0.0015" rgba="0 1 0 0.0"/>
+                                                <site name="l_forearm_taxel_4" size="0.005" pos="0.02 0.0365 0.003" rgba="0 1 0 0.0"/>
+                                                <site name="l_forearm_taxel_5" size="0.005" pos="0.025 0.0355 0.0045" rgba="0 1 0 0.0"/>
+                                                <site name="l_forearm_taxel_6" size="0.005" pos="0.03 0.0345 0.0060" rgba="0 1 0 0.0"/>
+                                                <site name="l_forearm_taxel_7" size="0.005" pos="0.035 0.0335 0.0075" rgba="0 1 0 0.0"/>
+                                                <site name="l_forearm_taxel_8" size="0.005" pos="0.04 0.0335 0.0090" rgba="0 1 0 0.0"/>
+                                                <site name="l_forearm_taxel_9" size="0.005" pos="0.045 0.033 0.0105" rgba="0 1 0 0.0"/>
+                                                <site name="l_forearm_taxel_10" size="0.005" pos="0.05 0.0325 0.0120" rgba="0 1 0 0.0"/>
+                                                <site name="l_forearm_taxel_11" size="0.005" pos="0.055 0.032 0.0135" rgba="0 1 0 0.0"/>
+                                                <site name="l_forearm_taxel_12" size="0.005" pos="0.06 0.0315 0.0150" rgba="0 1 0 0.0"/>
+                                                <site name="l_forearm_taxel_13" size="0.005" pos="0.065 0.031 0.0165" rgba="0 1 0 0.0"/>
+                                                <site name="l_forearm_taxel_14" size="0.005" pos="0.07 0.0315 0.0180" rgba="0 1 0 0.0"/>
+                                                <site name="l_forearm_taxel_15" size="0.005" pos="0.075 0.0325 0.0195" rgba="0 1 0 0.0"/>
                                                 <!-- end contact sensors -->
                                             <body name="l_wrist_1" pos="0.103428 7e-06 0.0254875">
                                                 <inertial pos="-0.000981314 -0.001178 0.00408346" quat="0.0459991 0.920546 -0.0710737 0.381351" mass="0.0362152" diaginertia="0.010001 0.01 0.00999904" />
@@ -732,54 +733,54 @@
                                                         <site name="l_hand_dh_frame_site" type="sphere" rgba="1 1 1 0.5" size="0.005"/>
                                                         <site name="l_hand_dh_frame_site_rotated" type="box" rgba="1 1 1 0.5" size="0.005 0.005 0.005" quat="0.924 0 -0.383 0"/>
                                                         <!-- contact sensors (taxel) -->
-                                                        <site name="l_hand_palm_taxel_0" size="0.005" pos="12.1e-3 6.2e-3 1e-3" rgba="0 1 0 0.5"/>  
-                                                        <site name="l_hand_palm_taxel_1" size="0.005" pos="8.6e-3 6.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_2" size="0.005" pos="12.1e-3 1.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_3" size="0.005" pos="8.6e-3 -1.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_4" size="0.005" pos="8.6e-3 11.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_5" size="0.005" pos="9.6e-3 16.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_6" size="0.005" pos="3.6e-3 1.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_7" size="0.005" pos="3.6e-3 6.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_8" size="0.005" pos="3.6e-3 11.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_9" size="0.005" pos="3.1e-3 16.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_10" size="0.005" pos="4.1e-3 21.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_11" size="0.005" pos="5.6e-3 25.9e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_12" size="0.005" pos="27.6e-3 21.7e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_13" size="0.005" pos="23.6e-3 12.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_14" size="0.005" pos="18.6e-3 6.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_15" size="0.005" pos="18.6e-3 1.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_16" size="0.005" pos="18.6e-3 11.7e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_17" size="0.005" pos="13.1e-3 17.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_18" size="0.005" pos="25.6e-3 16.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_19" size="0.005" pos="19.1e-3 16.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_20" size="0.005" pos="14.1e-3 20.7e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_21" size="0.005" pos="17.6e-3 21.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_22" size="0.005" pos="22.6e-3 17.7e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_23" size="0.005" pos="29.6e-3 -4.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_24" size="0.005" pos="13.6e-3 -11.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_25" size="0.005" pos="9e-3 -14.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_26" size="0.005" pos="8.6e-3 -19.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_27" size="0.005" pos="8.6e-3 -19.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_28" size="0.005" pos="3.6e-3 -24.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_29" size="0.005" pos="2.1e-3 -14.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_30" size="0.005" pos="3.6e-3 -9.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_31" size="0.005" pos="3.6e-3 -9.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_32" size="0.005" pos="8.6e-3 -4.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_33" size="0.005" pos="3.6e-3 -4.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_34" size="0.005" pos="8.6e-3 -16.3e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_35" size="0.005" pos="11.6e-3 12.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_36" size="0.005" pos="18.1e-3 17.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_37" size="0.005" pos="15.6e-3 12.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_38" size="0.005" pos="33.1e-3 14.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_39" size="0.005" pos="38.1e-3 7.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_40" size="0.005" pos="33.1e-3 9.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_41" size="0.005" pos="38.6e-3 7.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_42" size="0.005" pos="28.1e-3 11.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_43" size="0.005" pos="41.1e-3 2.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_44" size="0.005" pos="33.1e-3 2.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_45" size="0.005" pos="28.1e-3 2.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_46" size="0.005" pos="23.1e-3 7.2e-3 1e-3" rgba="0 1 0 0.5"/>
-                                                        <site name="l_hand_palm_taxel_47" size="0.005" pos="23.1e-3 -1.2e-3 1e-3" rgba="0 1 0 0.5"/>
+                                                        <site name="l_hand_palm_taxel_0" size="0.005" pos="12.1e-3 6.2e-3 1e-3" rgba="0 1 0 0.0"/>  
+                                                        <site name="l_hand_palm_taxel_1" size="0.005" pos="8.6e-3 6.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_2" size="0.005" pos="12.1e-3 1.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_3" size="0.005" pos="8.6e-3 -1.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_4" size="0.005" pos="8.6e-3 11.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_5" size="0.005" pos="9.6e-3 16.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_6" size="0.005" pos="3.6e-3 1.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_7" size="0.005" pos="3.6e-3 6.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_8" size="0.005" pos="3.6e-3 11.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_9" size="0.005" pos="3.1e-3 16.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_10" size="0.005" pos="4.1e-3 21.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_11" size="0.005" pos="5.6e-3 25.9e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_12" size="0.005" pos="27.6e-3 21.7e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_13" size="0.005" pos="23.6e-3 12.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_14" size="0.005" pos="18.6e-3 6.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_15" size="0.005" pos="18.6e-3 1.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_16" size="0.005" pos="18.6e-3 11.7e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_17" size="0.005" pos="13.1e-3 17.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_18" size="0.005" pos="25.6e-3 16.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_19" size="0.005" pos="19.1e-3 16.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_20" size="0.005" pos="14.1e-3 20.7e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_21" size="0.005" pos="17.6e-3 21.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_22" size="0.005" pos="22.6e-3 17.7e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_23" size="0.005" pos="29.6e-3 -4.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_24" size="0.005" pos="13.6e-3 -11.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_25" size="0.005" pos="9e-3 -14.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_26" size="0.005" pos="8.6e-3 -19.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_27" size="0.005" pos="8.6e-3 -19.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_28" size="0.005" pos="3.6e-3 -24.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_29" size="0.005" pos="2.1e-3 -14.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_30" size="0.005" pos="3.6e-3 -9.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_31" size="0.005" pos="3.6e-3 -9.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_32" size="0.005" pos="8.6e-3 -4.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_33" size="0.005" pos="3.6e-3 -4.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_34" size="0.005" pos="8.6e-3 -16.3e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_35" size="0.005" pos="11.6e-3 12.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_36" size="0.005" pos="18.1e-3 17.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_37" size="0.005" pos="15.6e-3 12.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_38" size="0.005" pos="33.1e-3 14.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_39" size="0.005" pos="38.1e-3 7.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_40" size="0.005" pos="33.1e-3 9.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_41" size="0.005" pos="38.6e-3 7.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_42" size="0.005" pos="28.1e-3 11.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_43" size="0.005" pos="41.1e-3 2.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_44" size="0.005" pos="33.1e-3 2.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_45" size="0.005" pos="28.1e-3 2.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_46" size="0.005" pos="23.1e-3 7.2e-3 1e-3" rgba="0 1 0 0.0"/>
+                                                        <site name="l_hand_palm_taxel_47" size="0.005" pos="23.1e-3 -1.2e-3 1e-3" rgba="0 1 0 0.0"/>
                                                         <!-- end contact sensors -->
                                                     </body>
                                                     <body name="l_hand_thumb_0" pos="0.0318492 -0.0040568 0.0192027" quat="-0.0162249 0.787545 0.0382606 0.614855">
@@ -799,18 +800,18 @@
                                                                     <joint name="l_hand_thumb_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3"/>
                                                                     <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_LeftThumb3" friction="3.5 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
                                                                     <!-- contact sensors (taxel) -->
-                                                                    <site name="l_hand_thumb_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_thumb_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_thumb_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_thumb_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_thumb_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_thumb_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_thumb_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_thumb_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_thumb_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_thumb_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_thumb_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_thumb_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.5"/>
+                                                                    <site name="l_hand_thumb_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_thumb_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_thumb_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_thumb_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_thumb_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_thumb_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_thumb_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_thumb_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_thumb_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_thumb_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_thumb_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_thumb_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.0"/>
                                                                     <!-- end contact sensors -->
                                                                 </body>
                                                             </body>
@@ -833,18 +834,18 @@
                                                                     <joint name="l_hand_index_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3"/>
                                                                     <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_LeftIndex3" friction="3.5 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
                                                                     <!-- contact sensors (taxel) -->
-                                                                    <site name="l_hand_index_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_index_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_index_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_index_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_index_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_index_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_index_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_index_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_index_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_index_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_index_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_index_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.5"/>
+                                                                    <site name="l_hand_index_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_index_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_index_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_index_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_index_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_index_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_index_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_index_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_index_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_index_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_index_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_index_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.0"/>
                                                                     <!-- end contact sensors -->
                                                                 </body>
                                                             </body>
@@ -867,18 +868,18 @@
                                                                     <joint name="l_hand_middle_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3"/>
                                                                     <geom quat="0 0 0 1" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_LeftMiddle3" friction="3.5 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
                                                                     <!-- contact sensors (taxel) -->
-                                                                    <site name="l_hand_middle_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_middle_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_middle_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_middle_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_middle_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_middle_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_middle_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_middle_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_middle_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_middle_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_middle_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_middle_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.5"/>
+                                                                    <site name="l_hand_middle_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_middle_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_middle_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_middle_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_middle_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_middle_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_middle_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_middle_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_middle_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_middle_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_middle_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_middle_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.0"/>
                                                                     <!-- end contact sensors -->
                                                                 </body>
                                                             </body>
@@ -901,18 +902,18 @@
                                                                     <joint name="l_hand_ring_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3"/>
                                                                     <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_LeftRing3" friction="3.5 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
                                                                     <!-- contact sensors (taxel) -->
-                                                                    <site name="l_hand_ring_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_ring_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_ring_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_ring_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_ring_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_ring_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_ring_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_ring_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_ring_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_ring_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_ring_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_ring_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.5"/>
+                                                                    <site name="l_hand_ring_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_ring_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_ring_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_ring_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_ring_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_ring_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_ring_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_ring_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_ring_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_ring_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_ring_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_ring_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.0"/>
                                                                     <!-- end contact sensors -->
                                                                 </body>
                                                             </body>
@@ -935,18 +936,18 @@
                                                                     <joint name="l_hand_little_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3"/>
                                                                     <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_LeftLittle3" friction="3.5 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
                                                                     <!-- contact sensors (taxel) -->
-                                                                    <site name="l_hand_little_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_little_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_little_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_little_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_little_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_little_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_little_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_little_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_little_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_little_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_little_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.5"/>
-                                                                    <site name="l_hand_little_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.5"/>
+                                                                    <site name="l_hand_little_3_taxel_0" size="0.005" pos="12e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_little_3_taxel_1" size="0.005" pos="12e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_little_3_taxel_2" size="0.005" pos="12e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_little_3_taxel_3" size="0.005" pos="13.5e-3 -1.5e-3 6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_little_3_taxel_4" size="0.005" pos="13.5e-3 -1.5e-3 -6.5e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_little_3_taxel_5" size="0.005" pos="15e-3 3.25e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_little_3_taxel_6" size="0.005" pos="15e-3 6.5e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_little_3_taxel_7" size="0.005" pos="15e-3 3.25e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_little_3_taxel_8" size="0.005" pos="19.625e-3 1.625e-3 -3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_little_3_taxel_9" size="0.005" pos="21.25e-3 3.25e-3 0.0" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_little_3_taxel_10" size="0.005" pos="19.625e-3 1.625e-3 3.25e-3" rgba="0 1 0 0.0"/>
+                                                                    <site name="l_hand_little_3_taxel_11" size="0.005" pos="24.5e-3 0.0 0.0" rgba="0 1 0 0.0"/>
                                                                     <!-- end contact sensors -->
                                                                 </body>
                                                             </body>

@@ -317,7 +317,8 @@ def visualize_skin(model, viewer_closed_event):
 if __name__ == '__main__':
     viewer_closed_event = threading.Event()
     # set model path
-    model_path = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'  # full iCub
+    # model_path = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'  # full iCub
+    model_path = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors_automated.xml'  # full iCub
     # model_path = './models/icub_v2_full_body_contact_sensors.xml'  # full iCub
     # model_path = 'neuromorphic_body_schema/models/icub_v2_right_hand_mk2_contact_sensor.xml'  # right hand only
     # DEBUG #
