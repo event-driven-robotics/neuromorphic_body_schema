@@ -6,12 +6,15 @@ from draw_pads import fingertip2L, fingertip2R, triangle_10pad
 # ini files from [...]/icub-main/app/skinGui/conf/positions/*.ini
 skin_parts = ["left_arm", "left_forearm_V2", "left_hand_V2_1", "left_leg_lower", "left_leg_upper",
               "torso", "right_arm", "right_forearm_V2", "right_hand_V2_1", "right_leg_lower", "right_leg_upper"]
-MUJOCO_MODEL = './models/icub_v2_full_body.xml'
-TAXEL_INI_PATH = "../../icub-main/app/skinGui/conf/positions"
-
-mujoco_model_out = './models/icub_v2_full_body_contact_sensors_automated.xml'
 MOJOCO_SKIN_PARTS = ["r_upper_leg", "r_lower_leg", "l_upper_leg", "l_lower_leg", "chest", "r_shoulder_3", "r_forearm", "r_hand_dh_frame", "r_hand_thumb_3", "r_hand_index_3", "r_hand_middle_3", "r_hand_ring_3",
                      "r_hand_little_3", "l_shoulder_3", "l_forearm", "l_hand_dh_frame", "l_hand_thumb_3", "l_hand_index_3", "l_hand_middle_3", "l_hand_ring_3", "l_hand_little_3"]
+
+# MUJOCO_MODEL = './models/icub_v2_full_body.xml'  # DEBUG
+# TAXEL_INI_PATH = "../../icub-main/app/skinGui/conf/positions"  # DEBUG
+# mujoco_model_out = './models/icub_v2_full_body_contact_sensors_automated.xml'  # DEBUG
+MUJOCO_MODEL = './neuromorphic_body_schema/models/icub_v2_full_body.xml'
+TAXEL_INI_PATH = "../icub-main/app/skinGui/conf/positions"
+mujoco_model_out = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors_automated.xml'
 
 # place to implement the taxels is after reading:
 # <body name=MOJOCO_SKIN_PARTS[*] pos="0 0 -0.145825"> followed by <geom [...]/>
@@ -331,7 +334,6 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
 
                 if add_taxels:
                     add_taxels = False
-
                     if add_finger_taxels:
                         while not found_spot_to_add:
                             line_counter += 1
@@ -366,6 +368,8 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                             pos, _, idx = taxel
                             taxel_ids.append(idx)
                             # add the number of whitespace to the beginning of the line
+                            if part == "r_shoulder_3":
+                                pos = [pos[0], pos[1], pos[2]]
                             lines.insert(
                                 line_counter, f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.0"/>\n')
                             line_counter += 1
@@ -417,4 +421,6 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
 
 if __name__ == "__main__":
     include_skin_to_mujoco_model(MUJOCO_MODEL, TAXEL_INI_PATH, skin_parts)
+    print("*******************")
+    print("DONE")
     pass

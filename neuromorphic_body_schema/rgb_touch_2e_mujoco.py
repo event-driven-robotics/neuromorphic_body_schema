@@ -1,4 +1,5 @@
 import logging
+import math
 import threading
 import time
 
@@ -154,6 +155,7 @@ def visualize_camera(model, viewer_closed_event):
     # close OpenCV windows
     cv2.destroyAllWindows()
 
+
 class SkinEventSimulator:
     def __init__(self, img, time, Cp=0.5, Cm=0.5, sigma_Cp=0.01, sigma_Cm=0.01, log_eps=1e-6, refractory_period_ns=100, use_log_image=True):
         self.Cp = Cp
@@ -164,7 +166,7 @@ class SkinEventSimulator:
         self.use_log_image = use_log_image
         self.refractory_period_ns = refractory_period_ns
         logging.info(
-            f"Initialized event camera simulator with sensor size: {img.shape}")
+            f"Initialized event skin simulator with sensor size: {img.shape}")
         logging.info(
             f"and contrast thresholds: C+ = {self.Cp}, C- = {self.Cm}")
 
@@ -298,27 +300,55 @@ def visualize_skin(model, viewer_closed_event):
     cv2.destroyAllWindows()
 
 
-# def detect_contact(data):
-#     ''' Loop to monitor contact information.'''
-#     while True:
-#         # print("Gonna show a contact info soon my friend. Be patient!")
-#         # print(sensor_data)
-#         sensor_data = data.sensordata
-#         # only output info when non-zero contact(s) detected
-#         if np.sum(sensor_data) > 0.0:
-#             taxel = np.where(sensor_data != 0.0)[0]  # get IDs of non-zero taxels
-#             values = sensor_data[taxel]  # get non-zero taxel readings
-#             sensor_data = np.column_stack((taxel, values))  # here we just fuse the taxel id and sensor reading in a 2d array
-#             print("Sensor readings:")
-#             print(sensor_data)
-#             print('\n')
+def control_loop(model, data, viewer_closed_event):
+    # joints = ['neck_yaw', 'neck_pitch', 'neck_roll']
+    joints = ['neck_yaw', 'neck_pitch', 'neck_roll']
+
+    # t = 1000
+    # while t < 0:
+    #     t -= 1
+
+    # Define parameters for the sine wave
+    frequencies = [0.01, 0.02, 0.04]
+    amplitudes = [1.0, 0.5, 0.25]
+    start_time = time.time()
+
+    min_max_pos = []
+    for joint in joints:
+        min_max_pos.append(model.actuator(joint).ctrlrange)
+
+    while not viewer_closed_event.is_set():
+        elapsed_time = time.time() - start_time
+        for (min_max, amplitude, frequency, joint) in zip(min_max_pos, amplitudes, frequencies, joints):
+            neck_position = amplitude(min_max[0] + (min_max[1] - min_max[0]) * (
+                0.5 * (1 + math.sin(2 * math.pi * frequency * elapsed_time))))
+            # Update joint positions
+            update_joint_positions(data, {joint: neck_position})
+
+        time.sleep(0.01)  # Update at 100 Hz
+
+
+def update_joint_positions(data, joint_positions):
+    """
+    Updates the joint positions in the MuJoCo model.
+
+    Args:
+        model: The MuJoCo model.
+        data: The MuJoCo data.
+        joint_positions: A dictionary with joint names as keys and target positions as values.
+    """
+    for joint_name, target_position in joint_positions.items():
+        joint = data.actuator(joint_name)
+        joint.ctrl[0] = target_position
 
 
 if __name__ == '__main__':
     viewer_closed_event = threading.Event()
     # set model path
     # model_path = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'  # full iCub
-    model_path = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors_automated.xml'  # full iCub
+    # model_path = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors_automated.xml'  # full iCub
+    model_path = './models/icub_v2_full_body_contact_sensors_automated.xml'  # full iCub
+
     # model_path = './models/icub_v2_full_body_contact_sensors.xml'  # full iCub
     # model_path = 'neuromorphic_body_schema/models/icub_v2_right_hand_mk2_contact_sensor.xml'  # right hand only
     # DEBUG #
@@ -331,8 +361,17 @@ if __name__ == '__main__':
     # Load the MuJoCo model and create a simulation
     model = mujoco.MjModel.from_xml_path(model_path)
     data = mujoco.MjData(model)
+    print("Model loaded")
 
-    threading.Thread(target=visualize_camera, args=(model, viewer_closed_event)).start()
-    # threading.Thread(target=visualize_skin, args=(model, )).start()
-    viewer.launch(model, data)
+    # threading.Thread(target=visualize_camera, args=(
+    #     model, viewer_closed_event)).start()
+    # time.sleep(0.01)  # give time to start
+    # threading.Thread(target=visualize_skin, args=(model, viewer_closed_event)).start()
+    # time.sleep(0.01)  # give time to start
+    # threading.Thread(target=control_loop, args=(
+    #     model, data, viewer_closed_event)).start()
+    # time.sleep(0.01)  # give time to start
+    print("Threads started")
+
+    viewer.launch(model, data, show_left_ui=False, show_right_ui=False)
     viewer_closed_event.set()
