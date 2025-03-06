@@ -9,9 +9,11 @@ skin_parts = ["left_arm", "left_forearm_V2", "left_hand_V2_1", "left_leg_lower",
 MOJOCO_SKIN_PARTS = ["r_upper_leg", "r_lower_leg", "l_upper_leg", "l_lower_leg", "chest", "r_shoulder_3", "r_forearm", "r_hand_dh_frame", "r_hand_thumb_3", "r_hand_index_3", "r_hand_middle_3", "r_hand_ring_3",
                      "r_hand_little_3", "l_shoulder_3", "l_forearm", "l_hand_dh_frame", "l_hand_thumb_3", "l_hand_index_3", "l_hand_middle_3", "l_hand_ring_3", "l_hand_little_3"]
 
+### DEBUG ###
 # MUJOCO_MODEL = './models/icub_v2_full_body.xml'  # DEBUG
 # TAXEL_INI_PATH = "../../icub-main/app/skinGui/conf/positions"  # DEBUG
 # mujoco_model_out = './models/icub_v2_full_body_contact_sensors_automated.xml'  # DEBUG
+
 MUJOCO_MODEL = './neuromorphic_body_schema/models/icub_v2_full_body.xml'
 TAXEL_INI_PATH = "../icub-main/app/skinGui/conf/positions"
 mujoco_model_out = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors_automated.xml'
@@ -26,6 +28,51 @@ mujoco_model_out = './neuromorphic_body_schema/models/icub_v2_full_body_contact_
 # <sensor>
 #     <touch name="name_to_display" site="name_of_taxel" />
 # </sensor>
+
+
+def rotate_position(pos, offsets, axis, angle_degrees):
+    """
+    Rotates a position vector around a given axis by a specified angle.
+
+    Args:
+        pos (list or np.array): The position vector to rotate.
+        axis (list of str): The axis to sequentially rotate around ('x', 'y', or 'z').
+        angle_degrees (list of float): The angle to rotate by in degrees.
+
+    Returns:
+        np.array: The rotated position vector.
+    """
+    if 'x' in axis:
+        position = axis.index('x')
+        offset = offsets[position]
+        angle_radians = np.radians(angle_degrees[position])
+        rotation_matrix = np.array([[1, 0, 0],
+                                    [0, np.cos(angle_radians), -np.sin(angle_radians)],
+                                    [0, np.sin(angle_radians), np.cos(angle_radians)]])
+        pos = np.dot(rotation_matrix, pos) + offset
+
+    if 'y' in axis:
+        position = axis.index('y')
+        offset = offsets[position]
+        angle_radians = np.radians(angle_degrees[position])
+        rotation_matrix = np.array([[np.cos(angle_radians), 0, np.sin(angle_radians)],
+                                    [0, 1, 0],
+                                    [-np.sin(angle_radians), 0, np.cos(angle_radians)]])
+        pos = np.dot(rotation_matrix, pos) + offset
+
+    if 'z' in axis:
+        position = axis.index('z')
+        offset = offsets[position]
+        angle_radians = np.radians(angle_degrees[position])
+        rotation_matrix = np.array([[np.cos(angle_radians), -np.sin(angle_radians), 0],
+                                    [np.sin(angle_radians), np.cos(angle_radians), 0],
+                                    [0, 0, 1]])
+        pos = np.dot(rotation_matrix, pos) + offset
+
+    if not 'x' in axis and not 'y' in axis and not 'z' in axis:
+        raise ValueError("Invalid axis. Choose from 'x', 'y', or 'z'.")
+    
+    return np.round(pos, 12)
 
 
 def read_calibration_data(file_path: str) -> np.array:
@@ -368,8 +415,8 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                             pos, _, idx = taxel
                             taxel_ids.append(idx)
                             # add the number of whitespace to the beginning of the line
-                            if part == "r_shoulder_3":
-                                pos = [pos[0], pos[1], pos[2]]
+                            if part == "r_upper_arm":
+                                pos = rotate_position(pos, [0, 0, 0], ['x', 'y', 'z'], [0, 90, 90])
                             lines.insert(
                                 line_counter, f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.0"/>\n')
                             line_counter += 1

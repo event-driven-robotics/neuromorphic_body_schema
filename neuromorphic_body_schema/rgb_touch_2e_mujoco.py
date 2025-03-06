@@ -320,8 +320,8 @@ def control_loop(model, data, viewer_closed_event):
     while not viewer_closed_event.is_set():
         elapsed_time = time.time() - start_time
         for (min_max, amplitude, frequency, joint) in zip(min_max_pos, amplitudes, frequencies, joints):
-            neck_position = amplitude(min_max[0] + (min_max[1] - min_max[0]) * (
-                0.5 * (1 + math.sin(2 * math.pi * frequency * elapsed_time))))
+            neck_position = min_max[0] + (min_max[1] - min_max[0]) * (
+                0.5 * (1 + math.sin(2 * math.pi * frequency * elapsed_time)))
             # Update joint positions
             update_joint_positions(data, {joint: neck_position})
 
@@ -346,8 +346,8 @@ if __name__ == '__main__':
     viewer_closed_event = threading.Event()
     # set model path
     # model_path = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'  # full iCub
-    # model_path = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors_automated.xml'  # full iCub
-    model_path = './models/icub_v2_full_body_contact_sensors_automated.xml'  # full iCub
+    model_path = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors_automated.xml'  # full iCub
+    # model_path = './models/icub_v2_full_body_contact_sensors_automated.xml'  # full iCub
 
     # model_path = './models/icub_v2_full_body_contact_sensors.xml'  # full iCub
     # model_path = 'neuromorphic_body_schema/models/icub_v2_right_hand_mk2_contact_sensor.xml'  # right hand only
@@ -362,15 +362,16 @@ if __name__ == '__main__':
     model = mujoco.MjModel.from_xml_path(model_path)
     data = mujoco.MjData(model)
     print("Model loaded")
+    time.sleep(0.02)  # give time to start
 
-    # threading.Thread(target=visualize_camera, args=(
-    #     model, viewer_closed_event)).start()
-    # time.sleep(0.01)  # give time to start
+    threading.Thread(target=visualize_camera, args=(
+        model, viewer_closed_event)).start()
+    time.sleep(0.02)  # give time to start
     # threading.Thread(target=visualize_skin, args=(model, viewer_closed_event)).start()
-    # time.sleep(0.01)  # give time to start
-    # threading.Thread(target=control_loop, args=(
-    #     model, data, viewer_closed_event)).start()
-    # time.sleep(0.01)  # give time to start
+    # time.sleep(0.02)  # give time to start
+    threading.Thread(target=control_loop, args=(
+        model, data, viewer_closed_event)).start()
+    time.sleep(0.02)  # give time to start
     print("Threads started")
 
     viewer.launch(model, data, show_left_ui=False, show_right_ui=False)
