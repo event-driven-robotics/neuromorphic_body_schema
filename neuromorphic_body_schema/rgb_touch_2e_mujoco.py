@@ -346,7 +346,7 @@ if __name__ == '__main__':
     viewer_closed_event = threading.Event()
     # set model path
     # model_path = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'  # full iCub
-    model_path = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors_automated.xml'  # full iCub
+    model_path = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'  # full iCub
     # model_path = './models/icub_v2_full_body_contact_sensors_automated.xml'  # full iCub
 
     # model_path = './models/icub_v2_full_body_contact_sensors.xml'  # full iCub
@@ -363,17 +363,17 @@ if __name__ == '__main__':
     data = mujoco.MjData(model)
     print("Model loaded")
 
-    # time.sleep(0.04)  # give time to start
-    # threading.Thread(target=visualize_camera, args=(
-    #     model, viewer_closed_event)).start()
+    time.sleep(0.04)  # give time to start
+    threading.Thread(target=visualize_camera, args=(
+        model, viewer_closed_event)).start()
 
     # time.sleep(0.04)  # give time to start
     # threading.Thread(target=visualize_skin, args=(
     #     model, viewer_closed_event)).start()
 
-    # time.sleep(0.04)  # give time to start
-    # threading.Thread(target=control_loop, args=(
-    #     model, data, viewer_closed_event)).start()
+    time.sleep(0.04)  # give time to start
+    threading.Thread(target=control_loop, args=(
+        model, data, viewer_closed_event)).start()
     
     # print("Threads started")
 
