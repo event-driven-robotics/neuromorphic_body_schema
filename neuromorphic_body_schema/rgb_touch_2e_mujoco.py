@@ -362,17 +362,20 @@ if __name__ == '__main__':
     model = mujoco.MjModel.from_xml_path(model_path)
     data = mujoco.MjData(model)
     print("Model loaded")
-    time.sleep(0.02)  # give time to start
 
-    threading.Thread(target=visualize_camera, args=(
-        model, viewer_closed_event)).start()
-    time.sleep(0.02)  # give time to start
-    # threading.Thread(target=visualize_skin, args=(model, viewer_closed_event)).start()
-    # time.sleep(0.02)  # give time to start
-    threading.Thread(target=control_loop, args=(
-        model, data, viewer_closed_event)).start()
-    time.sleep(0.02)  # give time to start
-    print("Threads started")
+    # time.sleep(0.04)  # give time to start
+    # threading.Thread(target=visualize_camera, args=(
+    #     model, viewer_closed_event)).start()
 
-    viewer.launch(model, data, show_left_ui=False, show_right_ui=False)
+    # time.sleep(0.04)  # give time to start
+    # threading.Thread(target=visualize_skin, args=(
+    #     model, viewer_closed_event)).start()
+
+    # time.sleep(0.04)  # give time to start
+    # threading.Thread(target=control_loop, args=(
+    #     model, data, viewer_closed_event)).start()
+    
+    # print("Threads started")
+
+    viewer.launch(model, data, show_left_ui=False, show_right_ui=True)
     viewer_closed_event.set()

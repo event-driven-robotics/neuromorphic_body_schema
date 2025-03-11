@@ -1,3 +1,2 @@
-mujoco
+mujoco==3.1.6
 opencv-python
-numpy

@@ -6,8 +6,8 @@ from draw_pads import fingertip2L, fingertip2R, triangle_10pad
 # ini files from [...]/icub-main/app/skinGui/conf/positions/*.ini
 skin_parts = ["left_arm", "left_forearm_V2", "left_hand_V2_1", "left_leg_lower", "left_leg_upper",
               "torso", "right_arm", "right_forearm_V2", "right_hand_V2_1", "right_leg_lower", "right_leg_upper"]
-MOJOCO_SKIN_PARTS = ["r_upper_leg", "r_lower_leg", "l_upper_leg", "l_lower_leg", "chest", "r_shoulder_3", "r_forearm", "r_hand_dh_frame", "r_hand_thumb_3", "r_hand_index_3", "r_hand_middle_3", "r_hand_ring_3",
-                     "r_hand_little_3", "l_shoulder_3", "l_forearm", "l_hand_dh_frame", "l_hand_thumb_3", "l_hand_index_3", "l_hand_middle_3", "l_hand_ring_3", "l_hand_little_3"]
+MOJOCO_SKIN_PARTS = ["r_upper_leg", "r_lower_leg", "l_upper_leg", "l_lower_leg", "chest", "r_shoulder_3", "r_forearm", "r_hand", "r_hand_thumb_3", "r_hand_index_3", "r_hand_middle_3", "r_hand_ring_3",
+                     "r_hand_little_3", "l_shoulder_3", "l_forearm", "l_hand", "l_hand_thumb_3", "l_hand_index_3", "l_hand_middle_3", "l_hand_ring_3", "l_hand_little_3"]
 
 ### DEBUG ###
 # MUJOCO_MODEL = './models/icub_v2_full_body.xml'  # DEBUG
@@ -16,7 +16,7 @@ MOJOCO_SKIN_PARTS = ["r_upper_leg", "r_lower_leg", "l_upper_leg", "l_lower_leg",
 
 MUJOCO_MODEL = './neuromorphic_body_schema/models/icub_v2_full_body.xml'
 TAXEL_INI_PATH = "../icub-main/app/skinGui/conf/positions"
-mujoco_model_out = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors_automated.xml'
+mujoco_model_out = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'
 
 # place to implement the taxels is after reading:
 # <body name=MOJOCO_SKIN_PARTS[*] pos="0 0 -0.145825"> followed by <geom [...]/>
@@ -30,7 +30,43 @@ mujoco_model_out = './neuromorphic_body_schema/models/icub_v2_full_body_contact_
 # </sensor>
 
 
-def rotate_position(pos, offsets, axis, angle_degrees):
+def rebase_coordinate_system(taxel_pos):
+    """
+    Rebase the coordinate system of the taxels to the center of the taxel array and rotate the taxels to the new coordinate system.
+
+    Args:
+        taxel_pos (list): A list of tuples, each containing the position, normal, and index of a valid taxel.
+
+    Returns:
+        list: A list of tuples, each containing the position, normal, and index of a valid taxel.
+    """
+    # first we want to find the center of the taxel array
+    taxel_pos_excluded = taxel_pos[0][0]
+    for i in range(1, len(taxel_pos)):
+        taxel_pos_excluded = np.vstack((taxel_pos_excluded, taxel_pos[i][0]))
+    center = np.mean(taxel_pos_excluded, axis=0)
+
+    # now we can rebase the coordinate system
+    taxel_pos_excluded[:, 0] -= center[0]
+    taxel_pos_excluded[:, 1] -= center[1]
+    taxel_pos_excluded[:, 2] -= center[2]
+
+    # now we want to define the new axis system by using PCA to find the axis with the largest variance
+    cov = np.cov(taxel_pos_excluded.T)
+    _, eigenvectors = np.linalg.eig(cov)
+    # now we want to rotate the taxels to the new coordinate system
+    taxel_pos_excluded = np.dot(eigenvectors.T, taxel_pos_excluded.T).T
+    
+    # now we can update the taxel_pos array
+    for i in range(len(taxel_pos)):
+        taxel_pos[i][0][0] = taxel_pos_excluded[i][0]
+        taxel_pos[i][0][1] = taxel_pos_excluded[i][1]
+        taxel_pos[i][0][2] = taxel_pos_excluded[i][2]
+
+    return taxel_pos
+
+
+def rotate_position(pos, offsets, angle_degrees):
     """
     Rotates a position vector around a given axis by a specified angle.
 
@@ -42,35 +78,32 @@ def rotate_position(pos, offsets, axis, angle_degrees):
     Returns:
         np.array: The rotated position vector.
     """
-    if 'x' in axis:
-        position = axis.index('x')
-        offset = offsets[position]
-        angle_radians = np.radians(angle_degrees[position])
-        rotation_matrix = np.array([[1, 0, 0],
-                                    [0, np.cos(angle_radians), -np.sin(angle_radians)],
-                                    [0, np.sin(angle_radians), np.cos(angle_radians)]])
-        pos = np.dot(rotation_matrix, pos) + offset
 
-    if 'y' in axis:
-        position = axis.index('y')
-        offset = offsets[position]
-        angle_radians = np.radians(angle_degrees[position])
-        rotation_matrix = np.array([[np.cos(angle_radians), 0, np.sin(angle_radians)],
-                                    [0, 1, 0],
-                                    [-np.sin(angle_radians), 0, np.cos(angle_radians)]])
-        pos = np.dot(rotation_matrix, pos) + offset
+    # offset the point
+    pos[0] += offsets[0]
+    pos[1] += offsets[1]
+    pos[2] += offsets[2]
+    
+    # rotate the point around x axis
+    angle_radians = np.radians(angle_degrees[0])
+    rotation_matrix = np.array([[1, 0, 0],
+                                [0, np.cos(angle_radians), -np.sin(angle_radians)],
+                                [0, np.sin(angle_radians), np.cos(angle_radians)]])
+    pos = np.dot(rotation_matrix, pos)
 
-    if 'z' in axis:
-        position = axis.index('z')
-        offset = offsets[position]
-        angle_radians = np.radians(angle_degrees[position])
-        rotation_matrix = np.array([[np.cos(angle_radians), -np.sin(angle_radians), 0],
-                                    [np.sin(angle_radians), np.cos(angle_radians), 0],
-                                    [0, 0, 1]])
-        pos = np.dot(rotation_matrix, pos) + offset
+    # rotate the point around y axis
+    angle_radians = np.radians(angle_degrees[1])
+    rotation_matrix = np.array([[np.cos(angle_radians), 0, np.sin(angle_radians)],
+                                [0, 1, 0],
+                                [-np.sin(angle_radians), 0, np.cos(angle_radians)]])
+    pos = np.dot(rotation_matrix, pos)
 
-    if not 'x' in axis and not 'y' in axis and not 'z' in axis:
-        raise ValueError("Invalid axis. Choose from 'x', 'y', or 'z'.")
+    # rotate the point around z axis
+    angle_radians = np.radians(angle_degrees[2])
+    rotation_matrix = np.array([[np.cos(angle_radians), -np.sin(angle_radians), 0],
+                                [np.sin(angle_radians), np.cos(angle_radians), 0],
+                                [0, 0, 1]])
+    pos = np.dot(rotation_matrix, pos)
     
     return np.round(pos, 12)
 
@@ -242,7 +275,6 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
 
                 elif part == "r_shoulder_3":
                     # find the corresponding taxels
-                    # TODO rotate by 90deg around z axis
                     part = "r_upper_arm"
                     pos_of_taxels = ini_files_taxels.index("right_arm.txt")
                     taxels_to_add = all_taxels[pos_of_taxels]
@@ -252,7 +284,6 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
 
                 elif part == "r_forearm":
                     # find the corresponding taxels
-                    # TODO rotate by 90deg around z axis and possibly 180deg around x axis?
                     pos_of_taxels = ini_files_taxels.index(
                         "right_forearm_V2.txt")
                     taxels_to_add = all_taxels[pos_of_taxels]
@@ -260,9 +291,8 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     add_taxels = True
                     parts_to_add.append(part)
 
-                elif part == "r_hand_dh_frame":
+                elif part == "r_hand":
                     # find the corresponding taxels
-                    # TODO rotate by 90deg around z axis
                     part = "r_palm"
                     pos_of_taxels = ini_files_taxels.index(
                         "right_hand_V2_1.txt")
@@ -329,7 +359,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     add_taxels = True
                     parts_to_add.append(part)
 
-                elif part == "l_hand_dh_frame":
+                elif part == "l_hand":
                     # find the corresponding taxels
                     part = "l_palm"
                     pos_of_taxels = ini_files_taxels.index(
@@ -410,13 +440,52 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                                     lines[line_counter].split('<')[0]) + 4
                                 found_spot_to_add = True
                                 taxel_ids = []
+                        # rebase the coordinate system
+                        if part == "r_upper_arm" or part == "r_forearm" or part == "l_upper_arm" or part == "l_forearm" or part == "torso":
+                            taxels_to_add = rebase_coordinate_system(taxels_to_add)
                         for taxel in taxels_to_add:
                             # line_counter -= 1  # we want to add the taxels before the next body
                             pos, _, idx = taxel
                             taxel_ids.append(idx)
                             # add the number of whitespace to the beginning of the line
                             if part == "r_upper_arm":
-                                pos = rotate_position(pos, [0, 0, 0], ['x', 'y', 'z'], [0, 90, 90])
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, -32, 0])
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2])
+                                # pos, up-down, left-right, front-back (looking from the front)
+                                pos = rotate_position(pos=pos, offsets=[-0.08, 0.0015, 0.012], angle_degrees=[0, 0, 0])
+                            if part == "r_forearm":
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, 90])
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 78, 0])
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2])
+                                # pos, up-down, left-right, front-back (looking from the front)
+                                pos = rotate_position(pos=pos, offsets=[-0.05, 0, -0.0015], angle_degrees=[0, 0, 0])
+                            if part == "l_upper_arm":
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[-270, 0, 0])
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, -148, 0])
+                                # pos, up-down, left-right, front-back (looking from the front)
+                                pos = rotate_position(pos=pos, offsets=[0.08, 0.0015, 0.012], angle_degrees=[0, 0, 0])
+                            if part == "l_forearm":
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -90])
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 102, 0])
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2])
+                                # pos, up-down, left-right, front-back (looking from the front)
+                                pos = rotate_position(pos=pos, offsets=[0.05, -0.001, 0], angle_degrees=[0, 0, 0])
+                            if part == "torso":
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 90, 0])
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[-4, 0, 0])
+                                pos = rotate_position(pos=pos, offsets=[0, 0.06, 0.068], angle_degrees=[0, 0, 0])
+                            if part == "r_palm":
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, 180])
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[90, 0, 0])
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 15, 0])
+                                # pos, up-down, left-right, front-back (looking from the front)
+                                pos = rotate_position(pos=pos, offsets=[-0.055, -0.005, 0.02], angle_degrees=[0, 0, 0])
+                            if part == "l_palm":
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[-90, 0, 0])
+                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, -15, 0])
+                                # pos, up-down, left-right, front-back (looking from the front)
+                                pos = rotate_position(pos=pos, offsets=[0.055, -0.005, 0.02], angle_degrees=[0, 0, 0])
+
                             lines.insert(
                                 line_counter, f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.0"/>\n')
                             line_counter += 1

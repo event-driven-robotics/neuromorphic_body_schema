@@ -224,10 +224,6 @@
                                                     <inertial pos="-0.0646682 0.0056002 0.0226813" quat="-0.112385 0.892031 0.231018 0.37186" mass="0.248289" diaginertia="0.0100407 0.010002 0.00995729" />
                                                     <joint name="r_wrist_yaw" pos="0 0 0" axis="0 -1 0" range="-0.2617993877991494 0.6108652381980153" damping="1.0" />
                                                     <geom pos="0.00271607 -0.0015568 -0.00248235" quat="0.701057 -0.701057 0.0922959 0.0922959" type="mesh" rgba="0 0 0 1" mesh="col_RightHandPalm" />
-                                                    <body name="r_hand_dh_frame" pos="-0.05765429784284365 -0.005556799999999987 0.013693832308330513" quat="0.09229593181512326 0.09229593181512327 -0.7010573877867474 0.7010573877867475">
-                                                        <site name="r_hand_dh_frame_site" type="sphere" rgba="0 0 0 0" size="0.005"/>
-                                                        <site name="r_hand_dh_frame_site_rotated" type="box" rgba="0 0 0 0" size="0.005 0.005 0.005" quat="0.924 0 0.383 0"/>
-                                                    </body>
                                                     <body name="r_hand_thumb_0" pos="-0.0318492 -0.0040568 0.0192027" quat="0.0382606 0.614855 -0.0162249 0.787545">
                                                         <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001" />
                                                         <joint name="r_hand_thumb_0_joint" pos="0 0 0" axis="0 0 1" range="0.0 1.5707963267948966" />
