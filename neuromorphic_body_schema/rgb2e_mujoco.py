@@ -144,7 +144,7 @@ def visualize_camera(model):
             break
 
 
-model_path = 'models/icub_position_actuators_actuate_hands.xml'
+model_path = './models/icub_mk2_right_hand_only_contact_sensor.xml'
 camera_name = 'head_cam'
 camera_window_name = 'Camera Feed'
 
