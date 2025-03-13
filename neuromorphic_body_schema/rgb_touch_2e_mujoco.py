@@ -6,11 +6,15 @@ import time
 import cv2
 import mujoco
 import numpy as np
+from draw_pads import fingertip3L, fingertip3R, palmL, palmR, triangle_10pad
 from mujoco import viewer
 
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
+VISUALIZE_CAMERA_FEED = False
+VISUALIZE_ED_CAMERA_FEED = False
+VISUALIZE_SKIN = True
 
 class CameraEventSimulator:
     def __init__(self, img, time, Cp=0.5, Cm=0.5, sigma_Cp=0.01, sigma_Cm=0.01, log_eps=1e-6, refractory_period_ns=100, use_log_image=True):
@@ -117,12 +121,12 @@ def make_camera_event_frame(events, width=320, height=240):
     return img
 
 
-def visualize_camera(model, viewer_closed_event):
+def visualize_camera(model, viewer_closed_event, show_raw_feed=True, show_ed_feed=True):
+    time.sleep(1.0)  # TODO find a elegant way to make sure the renderer starts up!
     renderer = mujoco.Renderer(model)
     esim = None
 
     while not viewer_closed_event.is_set():
-
         renderer.update_scene(data, camera=camera_name)
         pixels = renderer.render()
         pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)  # convert BRG to RGB
@@ -132,28 +136,32 @@ def visualize_camera(model, viewer_closed_event):
         if esim is None:
             esim = CameraEventSimulator(cv2.cvtColor(
                 pixels, cv2.COLOR_RGB2GRAY), time.perf_counter_ns())
-            cv2.namedWindow(events_window_name)
+            if show_ed_feed:
+                cv2.namedWindow(events_window_name)
 
-            def on_thresh_slider(val):
-                val /= 100
-                esim.Cm = val
-                esim.Cp = val
+                def on_thresh_slider(val):
+                    val /= 100
+                    esim.Cm = val
+                    esim.Cp = val
 
-            cv2.createTrackbar("Threshold", events_window_name, int(
-                esim.Cm * 100), 100, on_thresh_slider)
-            cv2.setTrackbarMin("Threshold", events_window_name, 1)
+                cv2.createTrackbar("Threshold", events_window_name, int(
+                    esim.Cm * 100), 100, on_thresh_slider)
+                cv2.setTrackbarMin("Threshold", events_window_name, 1)
             continue
         events = esim.imageCallback(cv2.cvtColor(
             pixels, cv2.COLOR_RGB2GRAY), time.perf_counter_ns())
 
-        cv2.imshow(camera_feed_window_name, pixels)
-        cv2.imshow(events_window_name, make_camera_event_frame(events))
+        if show_raw_feed:
+            cv2.imshow(camera_feed_window_name, pixels)
+        if show_ed_feed:
+            cv2.imshow(events_window_name, make_camera_event_frame(events))
         # Exit the loop if the ESC key is pressed
         if cv2.waitKey(1) & 0xFF == 27:
             break
 
     # close OpenCV windows
-    cv2.destroyAllWindows()
+    if show_raw_feed or show_ed_feed:
+        cv2.destroyAllWindows()
 
 
 class SkinEventSimulator:
@@ -261,7 +269,8 @@ def make_skin_event_frame(events, width=320, height=240):
     return img
 
 
-def visualize_skin(model, viewer_closed_event):
+def visualize_skin(model, viewer_closed_event, show_skin=True):
+    time.sleep(1.0)
     renderer = mujoco.Renderer(model)
     esim = None
 
@@ -301,6 +310,8 @@ def visualize_skin(model, viewer_closed_event):
 
 
 def control_loop(model, data, viewer_closed_event):
+    time.sleep(1.0)
+
     # joints = ['neck_yaw', 'neck_pitch', 'neck_roll']
     joints = ['neck_yaw', 'neck_pitch', 'neck_roll']
 
@@ -363,18 +374,16 @@ if __name__ == '__main__':
     data = mujoco.MjData(model)
     print("Model loaded")
 
-    time.sleep(0.04)  # give time to start
-    threading.Thread(target=visualize_camera, args=(
-        model, viewer_closed_event)).start()
-
-    # time.sleep(0.04)  # give time to start
-    # threading.Thread(target=visualize_skin, args=(
-    #     model, viewer_closed_event)).start()
-
-    time.sleep(0.04)  # give time to start
+    
     threading.Thread(target=control_loop, args=(
         model, data, viewer_closed_event)).start()
-    
+
+    threading.Thread(target=visualize_camera, args=(
+        model, viewer_closed_event, VISUALIZE_CAMERA_FEED, VISUALIZE_ED_CAMERA_FEED)).start()
+
+    threading.Thread(target=visualize_skin, args=(
+        model, viewer_closed_event, VISUALIZE_SKIN)).start()
+
     # print("Threads started")
 
     viewer.launch(model, data, show_left_ui=False, show_right_ui=True)

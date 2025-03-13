@@ -1,7 +1,24 @@
+"""
+include_skin_to_mujoco_model.py
+
+This script integrates skin sensors (taxels) into a MuJoCo model of the iCub robot. It reads taxel positions from 
+configuration files, processes these positions, and inserts them into the MuJoCo XML model file. The main functionalities include:
+
+1. Reading and Validating Taxel Data: Functions to read calibration data from .ini files and validate the taxel data.
+2. Coordinate System Transformation: Functions to rebase and rotate the coordinate system of the taxels.
+3. Integrating Taxels into MuJoCo Model: The main function `include_skin_to_mujoco_model` reads the MuJoCo model file, 
+   inserts the taxel positions, and defines them as touch sensors in the model.
+
+The script is structured to handle different parts of the robot, ensuring that the taxels are correctly positioned and 
+oriented according to the robot's body parts. The final output is a modified MuJoCo XML model file with the integrated skin sensors.
+
+Author: Simon F. Muller-Cleve
+Date: March 13, 2025
+"""
+
 import os
 
 import numpy as np
-from draw_pads import fingertip2L, fingertip2R, triangle_10pad
 
 # ini files from [...]/icub-main/app/skinGui/conf/positions/*.ini
 skin_parts = ["left_arm", "left_forearm_V2", "left_hand_V2_1", "left_leg_lower", "left_leg_upper",

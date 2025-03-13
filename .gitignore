@@ -2,3 +2,5 @@ MUJOCO_LOG.TXT
 .vscode/
 MJDATA.TXT
 MJMODEL.TXT
+*.pdf
+__pycache__/

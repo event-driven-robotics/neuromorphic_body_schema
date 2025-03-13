@@ -25,6 +25,7 @@ pip install -r requirements.txt
 Install git-lfs with:
 ```
 sudo apt install git-lfs
+sudo apt install libosmesa6-dev libglfw3
 ```
 ### Event Camera Simulation
 The script `rgb2e_mujoco.py` starts a simulated environment with the iCub humanoid robot, converting the simulated camera feed into an event stream. To run it go in the `neuromorphic_body_schema` and run 
