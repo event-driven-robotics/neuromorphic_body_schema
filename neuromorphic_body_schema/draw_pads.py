@@ -1,3 +1,6 @@
+"""
+Implementetation is based on the code written in */icub-main/src/tools/iCubSkinGui/plugin/include/*
+"""
 import math
 
 
@@ -81,7 +84,7 @@ def triangle(cx, cy, th, lr_mirror=0):
     dXc = cx
     dYc = cy
 
-    return dX, dY, dXv, dYv, dXmin, dYmin, dXmax, dYmax, dXc, dYc
+    return dX, dY, dXv, dYv
 
 
 def triangle_10pad(cx, cy, th, lr_mirror=0):
@@ -127,15 +130,7 @@ def triangle_10pad(cx, cy, th, lr_mirror=0):
         dXv[i] = cx + CST * x - SNT * y
         dYv[i] = cy + SNT * x + CST * y
 
-    dXmin = min(dXv)
-    dXmax = max(dXv)
-    dYmin = min(dYv)
-    dYmax = max(dYv)
-
-    dXc = cx
-    dYc = cy
-
-    return dX, dY, dXv, dYv, dXmin, dYmin, dXmax, dYmax, dXc, dYc
+    return dX, dY, dXv, dYv
 
 
 def fingertip2L(cx, cy, th, lr_mirror=0):
@@ -182,15 +177,7 @@ def fingertip2L(cx, cy, th, lr_mirror=0):
         dXv[i] = cx + CST * x - SNT * y
         dYv[i] = cy + SNT * x + CST * y
 
-    dXmin = min(dXv)
-    dXmax = max(dXv)
-    dYmin = min(dYv)
-    dYmax = max(dYv)
-
-    dXc = cx
-    dYc = cy
-
-    return dX, dY, dXv, dYv, dXmin, dYmin, dXmax, dYmax, dXc, dYc
+    return dX, dY, dXv, dYv
 
 
 def fingertip2R(cx, cy, th, lr_mirror=0):
@@ -237,15 +224,7 @@ def fingertip2R(cx, cy, th, lr_mirror=0):
         dXv[i] = cx + CST * x - SNT * y
         dYv[i] = cy + SNT * x + CST * y
 
-    dXmin = min(dXv)
-    dXmax = max(dXv)
-    dYmin = min(dYv)
-    dYmax = max(dYv)
-
-    dXc = cx
-    dYc = cy
-
-    return dX, dY, dXv, dYv, dXmin, dYmin, dXmax, dYmax, dXc, dYc
+    return dX, dY, dXv, dYv
 
 
 def fingertip3L(cx, cy, th, lr_mirror=0):
@@ -292,15 +271,7 @@ def fingertip3L(cx, cy, th, lr_mirror=0):
         dXv[i] = 0
         dYv[i] = 0
 
-    dXmin = min(dXv)
-    dXmax = max(dXv)
-    dYmin = min(dYv)
-    dYmax = max(dYv)
-
-    dXc = cx
-    dYc = cy
-
-    return dX, dY, dXv, dYv, dXmin, dYmin, dXmax, dYmax, dXc, dYc
+    return dX, dY, dXv, dYv
 
 
 def fingertip3R(cx, cy, th, lr_mirror=0):
@@ -347,15 +318,7 @@ def fingertip3R(cx, cy, th, lr_mirror=0):
         dXv[i] = 0
         dYv[i] = 0
 
-    dXmin = min(dXv)
-    dXmax = max(dXv)
-    dYmin = min(dYv)
-    dYmax = max(dYv)
-
-    dXc = cx
-    dYc = cy
-
-    return dX, dY, dXv, dYv, dXmin, dYmin, dXmax, dYmax, dXc, dYc
+    return dX, dY, dXv, dYv
 
 
 def palmR(cx, cy, th, lr_mirror=0):
@@ -443,15 +406,7 @@ def palmR(cx, cy, th, lr_mirror=0):
         dXv[i] = cx + CST * x - SNT * y
         dYv[i] = cy + SNT * x + CST * y
 
-    dXmin = min(dXv)
-    dXmax = max(dXv)
-    dYmin = min(dYv)
-    dYmax = max(dYv)
-
-    dXc = cx
-    dYc = cy
-
-    return dX, dY, dXv, dYv, dXmin, dYmin, dXmax, dYmax, dXc, dYc
+    return dX, dY, dXv, dYv
 
 
 def palmL(cx, cy, th, lr_mirror=0):
@@ -543,12 +498,4 @@ def palmL(cx, cy, th, lr_mirror=0):
         dXv[i] = cx + CST * x - SNT * y
         dYv[i] = cy + SNT * x + CST * y
 
-    dXmin = min(dXv)
-    dXmax = max(dXv)
-    dYmin = min(dYv)
-    dYmax = max(dYv)
-
-    dXc = cx
-    dYc = cy
-
-    return dX, dY, dXv, dYv, dXmin, dYmin, dXmax, dYmax, dXc, dYc
+    return dX, dY, dXv, dYv

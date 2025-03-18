@@ -82,8 +82,8 @@ def read_triangle_data(file_path: str) -> np.array:
                 read_header = False
                 continue
             if "[SENSORS]" in line:
-                # for the hand files the header comes before the [SENSORS] line, for now I change the ini files locally. Find a better solution later.
-                # also in torso.ini removes #leftlower
+                # TODO for the hand files the header comes before the [SENSORS] line, for now I change the ini files locally. Find a better solution later.
+                # TODO also in torso.ini removes #leftlower
                 start_found = True
                 read_header = True
     return config_type, triangles
