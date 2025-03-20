@@ -1,0 +1,22 @@
+Part name: Nb of taxels
+r_upper_leg: 679
+r_lower_leg: 379
+l_upper_leg: 679
+l_lower_leg: 379
+torso: 528
+r_upper_arm: 350
+r_forearm: 239
+r_palm: 48
+r_hand_thumb: 12
+r_hand_index: 12
+r_hand_middle: 12
+r_hand_ring: 12
+r_hand_little: 12
+l_upper_arm: 350
+l_forearm: 239
+l_palm: 48
+l_hand_thumb: 12
+l_hand_index: 12
+l_hand_middle: 12
+l_hand_ring: 12
+l_hand_little: 12

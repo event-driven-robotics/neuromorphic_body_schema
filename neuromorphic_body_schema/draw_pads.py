@@ -15,7 +15,6 @@ def triangle(cx, cy, th, lr_mirror=0):
 
     nVerts = 3
     nTaxels = 12
-    m_RadiusOrig = 2.0
 
     dX = [0] * 12
     dY = [0] * 12
@@ -81,9 +80,6 @@ def triangle(cx, cy, th, lr_mirror=0):
         if dYv[i] > dYmax:
             dYmax = dYv[i]
 
-    dXc = cx
-    dYc = cy
-
     return dX, dY, dXv, dYv
 
 
@@ -94,11 +90,9 @@ def triangle_10pad(cx, cy, th, lr_mirror=0):
     SNT = math.sin(DEG2RAD * (th + 0))
 
     H = math.sin(DEG2RAD * 60.0)
-    L = 2.0 * H / 9.0
     scale = 1 / 40.0
     nVerts = 3
     nTaxels = 12
-    m_RadiusOrig = 2.2
 
     dX = [-128.62, 0, 0, 128.62, 257.2, -256.3,
           385.83, 128.62, 0.0, -128.62, -385.83, -257.2]
@@ -153,8 +147,6 @@ def fingertip2L(cx, cy, th, lr_mirror=0):
         dXv[i] *= scale
         dYv[i] *= scale
 
-    m_RadiusOrig = 1.8
-
     DEG2RAD = math.pi / 180.0
     CST = math.cos(DEG2RAD * th)
     SNT = math.sin(DEG2RAD * th)
@@ -199,8 +191,6 @@ def fingertip2R(cx, cy, th, lr_mirror=0):
     for i in range(nVerts):
         dXv[i] *= scale
         dYv[i] *= scale
-
-    m_RadiusOrig = 1.8
 
     DEG2RAD = math.pi / 180.0
     CST = math.cos(DEG2RAD * th)
@@ -247,8 +237,6 @@ def fingertip3L(cx, cy, th, lr_mirror=0):
         dXv[i] *= scale
         dYv[i] *= scale
 
-    m_RadiusOrig = 1.8
-
     DEG2RAD = math.pi / 180.0
     CST = math.cos(DEG2RAD * th)
     SNT = math.sin(DEG2RAD * th)
@@ -294,8 +282,6 @@ def fingertip3R(cx, cy, th, lr_mirror=0):
         dXv[i] *= scale
         dYv[i] *= scale
 
-    m_RadiusOrig = 1.8
-
     DEG2RAD = math.pi / 180.0
     CST = math.cos(DEG2RAD * th)
     SNT = math.sin(DEG2RAD * th)
@@ -315,6 +301,7 @@ def fingertip3R(cx, cy, th, lr_mirror=0):
         if lr_mirror == 1:
             x = -x
 
+        # TODO fill this with numbers if triangles wanted
         dXv[i] = 0
         dYv[i] = 0
 

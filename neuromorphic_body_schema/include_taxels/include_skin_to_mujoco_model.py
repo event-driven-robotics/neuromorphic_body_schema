@@ -27,13 +27,13 @@ MOJOCO_SKIN_PARTS = ["r_upper_leg", "r_lower_leg", "l_upper_leg", "l_lower_leg",
                      "r_hand_little_3", "l_shoulder_3", "l_forearm", "l_hand", "l_hand_thumb_3", "l_hand_index_3", "l_hand_middle_3", "l_hand_ring_3", "l_hand_little_3"]
 
 ### DEBUG ###
-# MUJOCO_MODEL = './models/icub_v2_full_body.xml'  # DEBUG
-# TAXEL_INI_PATH = "../../icub-main/app/skinGui/conf/positions"  # DEBUG
-# mujoco_model_out = './models/icub_v2_full_body_contact_sensors_automated.xml'  # DEBUG
+MUJOCO_MODEL = './models/icub_v2_full_body.xml'  # DEBUG
+TAXEL_INI_PATH = "../../icub-main/app/skinGui/conf/positions"  # DEBUG
+mujoco_model_out = './models/icub_v2_full_body_contact_sensors.xml'  # DEBUG
 
-MUJOCO_MODEL = './neuromorphic_body_schema/models/icub_v2_full_body.xml'
-TAXEL_INI_PATH = "../icub-main/app/skinGui/conf/positions"
-mujoco_model_out = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'
+# MUJOCO_MODEL = './neuromorphic_body_schema/models/icub_v2_full_body.xml'
+# TAXEL_INI_PATH = "../icub-main/app/skinGui/conf/positions"
+# mujoco_model_out = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'
 
 # place to implement the taxels is after reading:
 # <body name=MOJOCO_SKIN_PARTS[*] pos="0 0 -0.145825"> followed by <geom [...]/>
@@ -218,6 +218,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
     with open(mujoco_model, 'r') as file:
         lines = file.readlines()
 
+    # TODO ensure the right order!
     finger_taxels = [
         [12e-3, 3.25e-3, -3.25e-3],
         [12e-3, 6.5e-3, 0.0],
@@ -550,6 +551,13 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
     with open(mujoco_model_out, 'w') as file:
         file.writelines(lines)
     pass
+
+    # write report to txt file
+    with open(f'./report_including_taxels.txt', 'w') as file:
+        file.write(f'Part name: Nb of taxels\n')
+        for part_to_add, taxels_to_add in zip(parts_to_add, taxel_ids_to_add):
+            file.write(f'{part_to_add}: {len(taxels_to_add)}\n')
+
 
 
 if __name__ == "__main__":

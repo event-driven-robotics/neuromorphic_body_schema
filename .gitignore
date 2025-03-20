@@ -3,4 +3,4 @@ MUJOCO_LOG.TXT
 MJDATA.TXT
 MJMODEL.TXT
 *.pdf
-__pycache__/
+*__pycache__*
