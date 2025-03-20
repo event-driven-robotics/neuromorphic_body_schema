@@ -26,14 +26,14 @@ skin_parts = ["left_arm", "left_forearm_V2", "left_hand_V2_1", "left_leg_lower",
 MOJOCO_SKIN_PARTS = ["r_upper_leg", "r_lower_leg", "l_upper_leg", "l_lower_leg", "chest", "r_shoulder_3", "r_forearm", "r_hand", "r_hand_thumb_3", "r_hand_index_3", "r_hand_middle_3", "r_hand_ring_3",
                      "r_hand_little_3", "l_shoulder_3", "l_forearm", "l_hand", "l_hand_thumb_3", "l_hand_index_3", "l_hand_middle_3", "l_hand_ring_3", "l_hand_little_3"]
 
-### DEBUG ###
-MUJOCO_MODEL = './models/icub_v2_full_body.xml'  # DEBUG
-TAXEL_INI_PATH = "../../icub-main/app/skinGui/conf/positions"  # DEBUG
-mujoco_model_out = './models/icub_v2_full_body_contact_sensors.xml'  # DEBUG
+MUJOCO_MODEL = './neuromorphic_body_schema/models/icub_v2_full_body.xml'
+TAXEL_INI_PATH = "../icub-main/app/skinGui/conf/positions"
+mujoco_model_out = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'
 
-# MUJOCO_MODEL = './neuromorphic_body_schema/models/icub_v2_full_body.xml'
-# TAXEL_INI_PATH = "../icub-main/app/skinGui/conf/positions"
-# mujoco_model_out = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'
+### DEBUG ###
+# MUJOCO_MODEL = './models/icub_v2_full_body.xml'  # DEBUG
+# TAXEL_INI_PATH = "../../icub-main/app/skinGui/conf/positions"  # DEBUG
+# mujoco_model_out = './models/icub_v2_full_body_contact_sensors.xml'  # DEBUG
 
 # place to implement the taxels is after reading:
 # <body name=MOJOCO_SKIN_PARTS[*] pos="0 0 -0.145825"> followed by <geom [...]/>

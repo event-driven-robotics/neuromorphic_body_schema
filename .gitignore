@@ -4,3 +4,4 @@ MJDATA.TXT
 MJMODEL.TXT
 *.pdf
 *__pycache__*
+*report_including_taxels.txt
