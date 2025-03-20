@@ -9,7 +9,10 @@ import time
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-model_path = './neuromorphic_body_schema/neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'  # full iCub
+model_path = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'  # full iCub
+
+# DEBUG
+# model_path = './neuromorphic_body_schema/neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'  # full iCub
 
 # Load the MuJoCo model and create a simulation
 model = mujoco.MjModel.from_xml_path(model_path)
