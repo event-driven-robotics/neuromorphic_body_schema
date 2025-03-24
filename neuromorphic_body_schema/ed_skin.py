@@ -76,7 +76,7 @@ class SkinEventSimulator:
                             self.last_event_timestamp[taxel_ID] = t
                         else:
                             logging.info(
-                                f"Dropping event because time since last event ({dt} ns) < refractory period ({self.refractory_period_ns} ns).")
+                                f"Dropping skin event because time since last event ({dt} ns) < refractory period ({self.refractory_period_ns} ns).")
                         self.ref_values[taxel_ID] = curr_cross
                     else:
                         all_crossings = True
@@ -320,7 +320,7 @@ def make_skin_event_frame(img, events, locations):
     return img
 
 
-class SkinClass:
+class ICubSkin:
     def __init__(self, time, grouped_sensors, show_skin=True, DEBUG=False):
         self.esim = []
         self.taxel_locs = {}
@@ -334,13 +334,13 @@ class SkinClass:
                 # TODO double check the order of the taxels!
                 taxel_data = []
                 for key in KEY_MAPPING["r_hand"]:
-                    taxel_data.extend(grouped_sensors[key])
+                    taxel_data.extend(self.grouped_sensors[key])
             elif "left_hand" in triangle_ini:
                 taxel_data = []
                 for key in KEY_MAPPING["l_hand"]:
-                    taxel_data.extend(grouped_sensors[key])
+                    taxel_data.extend(self.grouped_sensors[key])
             else:
-                taxel_data = grouped_sensors[KEY_MAPPING[triangle_ini]]
+                taxel_data = self.grouped_sensors[KEY_MAPPING[triangle_ini]]
             self.esim.append(SkinEventSimulator(
                 np.array(taxel_data), time))
             if show_skin:

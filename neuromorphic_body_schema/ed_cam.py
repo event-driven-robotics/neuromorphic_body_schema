@@ -83,7 +83,7 @@ class CameraEventSimulator:
                                 self.last_event_timestamp[y, x] = t
                             else:
                                 logging.info(
-                                    f"Dropping event because time since last event ({dt} ns) < refractory period ({self.refractory_period_ns} ns).")
+                                    f"Dropping camera event because time since last event ({dt} ns) < refractory period ({self.refractory_period_ns} ns).")
                             self.ref_values[y, x] = curr_cross
                         else:
                             all_crossings = True
@@ -110,7 +110,7 @@ def make_camera_event_frame(events, width=320, height=240):
     return img
 
 
-class CameraClass:
+class ICubEyes:
     def __init__(self, time, model, data, camera_name, show_raw_feed=True, show_ed_feed=True, DEBUG=False):
         self.camera_name = camera_name
         self.model = model

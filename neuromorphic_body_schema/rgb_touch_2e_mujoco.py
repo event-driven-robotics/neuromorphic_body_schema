@@ -6,13 +6,13 @@ from collections import defaultdict
 
 import mujoco
 import numpy as np
-from ed_cam import CameraClass
-from ed_skin import SkinClass
+from ed_cam import ICubEyes
+from ed_skin import ICubSkin
 from helpers import MODEL_PATH, DynamicGroupedSensors, init_POV
 from mujoco import viewer
 from robot_controller import update_joint_positions
 
-DEBUG = True  # use to visualize the triangles
+DEBUG = False  # use to visualize the triangles
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
@@ -68,7 +68,8 @@ if __name__ == '__main__':
     for i, joint in enumerate(joints):
         min_max_pos[i] = model.actuator(joint).ctrlrange
         # to ensure we move close to the contact position
-        min_max_pos[i][0] = min_max_pos[i][1]*0.9
+        if 'pinky' in joint:
+            min_max_pos[i][0] = min_max_pos[i][1]*0.9
 
     # skin_initialized = False
     esim_cam = None
@@ -83,8 +84,8 @@ if __name__ == '__main__':
 
         sim_time = 0
 
-        skin_object = SkinClass(sim_time, grouped_sensors, show_skin=VISUALIZE_SKIN, DEBUG=DEBUG)
-        camera_object = CameraClass(sim_time, model, data, camera_name, show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
+        skin_object = ICubSkin(sim_time, dynamic_grouped_sensors, show_skin=VISUALIZE_SKIN, DEBUG=DEBUG)
+        camera_object = ICubEyes(sim_time, model, data, camera_name, show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
 
         while viewer.is_running():            
             mujoco.mj_step(model, data)  # Step the simulation
@@ -103,6 +104,6 @@ if __name__ == '__main__':
 
             cam_events = camera_object.update_camera(sim_time)
 
-            skin_events = skin_object.update_skin(sim_time, grouped_sensors)
+            skin_events = skin_object.update_skin(sim_time)
 
         # cv2.destroyAllWindows()
