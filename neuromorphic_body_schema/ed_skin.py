@@ -183,7 +183,7 @@ def visualize_skin_patches(path_to_triangles, triangles_ini, DEBUG=False):
                         linewidth=0.2, color='black')  # Close the triangle
         ax.set_aspect('equal', 'box')
         fig.tight_layout()
-        fig.savefig(f"../figures/{triangles_ini}.pdf", bbox_inches='tight')
+        fig.savefig(f"./neuromorphic_body_schema/figures/{triangles_ini}.pdf", bbox_inches='tight')
         plt.close(fig)
 
     # scale
@@ -242,7 +242,7 @@ def visualize_skin_patches(path_to_triangles, triangles_ini, DEBUG=False):
         ax.set_aspect('equal', 'box')
         fig.tight_layout()
         fig.savefig(
-            f"../figures/{triangles_ini}_processed.pdf", bbox_inches='tight')
+            f"./neuromorphic_body_schema/figures/{triangles_ini}_processed.pdf", bbox_inches='tight')
         plt.close(fig)
 
     # Create a blank image
@@ -320,11 +320,14 @@ def make_skin_event_frame(img, events, locations):
     return img
 
 
-def visualize_skin(time, grouped_sensors, initialized=False, esim=None, taxel_locs=None, imgs=None, show_skin=True, DEBUG=False):
-    if not initialized:
-        esim = []
-        taxel_locs = {}
-        imgs = {}
+class SkinClass:
+    def __init__(self, time, grouped_sensors, show_skin=True, DEBUG=False):
+        self.esim = []
+        self.taxel_locs = {}
+        self.imgs = {}
+        self.grouped_sensors = grouped_sensors
+        self.show_skin = show_skin
+        self.DEBUG = DEBUG
         for triangle_ini in TRIANGLE_FILES:
             # TODO make sure we hand over the right data here
             if "right_hand" in triangle_ini:
@@ -338,55 +341,55 @@ def visualize_skin(time, grouped_sensors, initialized=False, esim=None, taxel_lo
                     taxel_data.extend(grouped_sensors[key])
             else:
                 taxel_data = grouped_sensors[KEY_MAPPING[triangle_ini]]
-            esim.append(SkinEventSimulator(
+            self.esim.append(SkinEventSimulator(
                 np.array(taxel_data), time))
             if show_skin:
                 img, x, y = visualize_skin_patches(path_to_triangles=TRIANGLE_INI_PATH,
                                                     triangles_ini=triangle_ini, DEBUG=DEBUG)
-                taxel_locs[triangle_ini] = [x, y]
-                imgs[triangle_ini] = img
+                self.taxel_locs[triangle_ini] = [x, y]
+                self.imgs[triangle_ini] = img
                 cv2.namedWindow(triangle_ini, cv2.WINDOW_NORMAL)
                 cv2.imshow(triangle_ini, img)
 
                 def on_thresh_slider(val):
                     val /= 100
-                    esim[-1].Cm = val
-                    esim[-1].Cp = val
+                    self.esim[-1].Cm = val
+                    self.esim[-1].Cp = val
 
                 cv2.createTrackbar("Threshold", triangle_ini, int(
-                    esim[-1].Cm * 100), 100, on_thresh_slider)
+                    self.esim[-1].Cm * 100), 100, on_thresh_slider)
                 cv2.setTrackbarMin("Threshold", triangle_ini, 1)
         cv2.waitKey(50)
         if DEBUG:
             logging.info("All panels initialized.")
-        return esim, taxel_locs, imgs
+        # return esim, taxel_locs, imgs
 
-    else:
+    def update_skin(self, time):
         all_events = []
-        for triangle_ini, esim_single in zip(TRIANGLE_FILES, esim):
+        for triangle_ini, esim_single in zip(TRIANGLE_FILES, self.esim):
             # TODO make sure we hand over the right data here
             if "right_hand" in triangle_ini:
                 # TODO double check the order of the taxels!
                 taxel_data = []
                 for key in KEY_MAPPING["r_hand"]:
-                    taxel_data.extend(grouped_sensors[key])
+                    taxel_data.extend(self.grouped_sensors[key])
             elif "left_hand" in triangle_ini:
                 taxel_data = []
                 for key in KEY_MAPPING["l_hand"]:
-                    taxel_data.extend(grouped_sensors[key])
+                    taxel_data.extend(self.grouped_sensors[key])
             else:
-                taxel_data = grouped_sensors[KEY_MAPPING[triangle_ini]]
+                taxel_data = self.grouped_sensors[KEY_MAPPING[triangle_ini]]
 
             events = esim_single.skinCallback(
                 taxel_data, time)
-            if DEBUG:
+            if self.DEBUG:
                 if len(events):
                     logging.info(f"{len(events)} events detected at {triangle_ini}.")
             all_events.append(events)
 
-            if show_skin:
+            if self.show_skin:
                 cv2.imshow(triangle_ini, make_skin_event_frame(
-                    img=imgs[triangle_ini], events=events, locations=taxel_locs[triangle_ini]))
+                    img=self.imgs[triangle_ini], events=events, locations=self.taxel_locs[triangle_ini]))
                 cv2.waitKey(1)
                 
         return all_events

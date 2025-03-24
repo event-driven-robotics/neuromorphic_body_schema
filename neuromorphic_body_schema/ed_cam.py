@@ -110,42 +110,53 @@ def make_camera_event_frame(events, width=320, height=240):
     return img
 
 
-def visualize_camera(time, model, data, camera_name, esim=None, show_raw_feed=True, show_ed_feed=True, DEBUG=False):
-    renderer = mujoco.Renderer(model)
+class CameraClass:
+    def __init__(self, time, model, data, camera_name, show_raw_feed=True, show_ed_feed=True, DEBUG=False):
+        self.camera_name = camera_name
+        self.model = model
+        self.data = data
+        self.show_raw_feed = show_raw_feed
+        self.show_ed_feed = show_ed_feed
+        self.DEBUG = DEBUG
+        
+        self.renderer = mujoco.Renderer(model)
 
-    camera_feed_window_name = 'Camera Feed'
-    events_window_name = 'Events'
+        self.camera_feed_window_name = 'Camera Feed'
+        self.events_window_name = 'Events'
 
-    renderer.update_scene(data, camera=camera_name)
-    pixels = renderer.render()
-    pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)  # convert BRG to RGB
+        self.renderer.update_scene(self.data, camera=self.camera_name)
+        pixels = self.renderer.render()
+        pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)  # convert BRG to RGB
 
-    if esim is None:
-        esim = CameraEventSimulator(cv2.cvtColor(
+        self.esim = CameraEventSimulator(cv2.cvtColor(
             pixels, cv2.COLOR_RGB2GRAY), time)
         if show_ed_feed:
-            cv2.namedWindow(events_window_name)
+            cv2.namedWindow(self.events_window_name)
 
             def on_thresh_slider(val):
                 val /= 100
-                esim.Cm = val
-                esim.Cp = val
+                self.esim.Cm = val
+                self.esim.Cp = val
 
-            cv2.createTrackbar("Threshold", events_window_name, int(
-                esim.Cm * 100), 100, on_thresh_slider)
-            cv2.setTrackbarMin("Threshold", events_window_name, 1)
-        return esim
-    else:
-        events = esim.imageCallback(cv2.cvtColor(
+            cv2.createTrackbar("Threshold", self.events_window_name, int(
+                self.esim.Cm * 100), 100, on_thresh_slider)
+            cv2.setTrackbarMin("Threshold", self.events_window_name, 1)
+    
+    def update_camera(self, time):
+        self.renderer.update_scene(self.data, camera=self.camera_name)
+        pixels = self.renderer.render()
+        pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)  # convert BRG to RGB
+        events = self.esim.imageCallback(cv2.cvtColor(
             pixels, cv2.COLOR_RGB2GRAY), time)
-        if DEBUG:
+        
+        if self.DEBUG:
             if len(events):
                 logging.info(f"Generated {len(events)} camera events.")
 
-        if show_raw_feed:
-            cv2.imshow(camera_feed_window_name, pixels)
+        if self.show_raw_feed:
+            cv2.imshow(self.camera_feed_window_name, pixels)
             cv2.waitKey(1)
-        if show_ed_feed:
-            cv2.imshow(events_window_name, make_camera_event_frame(events))
+        if self.show_ed_feed:
+            cv2.imshow(self.events_window_name, make_camera_event_frame(events))
             cv2.waitKey(1)
         return events

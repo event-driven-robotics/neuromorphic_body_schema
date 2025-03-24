@@ -6,8 +6,8 @@ from collections import defaultdict
 
 import mujoco
 import numpy as np
-from ed_cam import visualize_camera
-from ed_skin import visualize_skin
+from ed_cam import CameraClass
+from ed_skin import SkinClass
 from helpers import MODEL_PATH, DynamicGroupedSensors, init_POV
 from mujoco import viewer
 from robot_controller import update_joint_positions
@@ -60,17 +60,17 @@ if __name__ == '__main__':
 
     # init example motion
     # joints = ['r_index_proximal', 'r_index_distal', 'r_middle_proximal', 'r_middle_distal']
-    joints = ['r_pinky', 'l_pinky']
+    joints = ['neck_roll', 'r_pinky', 'l_pinky']
 
     # Define parameters for the sine wave
-    frequencies = [0.001, 0.001]
+    frequencies = [0.001, 0.001, 0.001]
     min_max_pos = np.zeros((len(joints), 2))
     for i, joint in enumerate(joints):
         min_max_pos[i] = model.actuator(joint).ctrlrange
         # to ensure we move close to the contact position
         min_max_pos[i][0] = min_max_pos[i][1]*0.9
 
-    skin_initialized = False
+    # skin_initialized = False
     esim_cam = None
 
     ############################
@@ -83,8 +83,14 @@ if __name__ == '__main__':
 
         sim_time = 0
 
-        while viewer.is_running():
-            print(sim_time)
+        skin_object = SkinClass(sim_time, grouped_sensors, show_skin=VISUALIZE_SKIN, DEBUG=DEBUG)
+        camera_object = CameraClass(sim_time, model, data, camera_name, show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
+
+        while viewer.is_running():            
+            mujoco.mj_step(model, data)  # Step the simulation
+            viewer.sync()
+
+            sim_time += 1000  # 1 ms
 
             for (min_max, frequency, joint) in zip(min_max_pos, frequencies, joints):
                 scaled_time = sim_time / 1000
@@ -94,24 +100,9 @@ if __name__ == '__main__':
                     print(joint, joint_position)
                 update_joint_positions(data, {joint: joint_position})
 
-            if not esim_cam:
-                esim_cam = visualize_camera(time=sim_time, model=model, data=data, camera_name=camera_name,
-                                            show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
-            else:
-                cam_events = visualize_camera(time=sim_time, model=model, data=data, camera_name=camera_name,
-                                              esim=esim_cam, show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
 
-            if not skin_initialized:
-                esim_skin, taxel_locs, imgs = visualize_skin(
-                    time=sim_time, grouped_sensors=dynamic_grouped_sensors, show_skin=VISUALIZE_SKIN)
-                skin_initialized = True
-            else:
-                skin_events = visualize_skin(time=sim_time, grouped_sensors=dynamic_grouped_sensors,
-                                             initialized=skin_initialized, esim=esim_skin, taxel_locs=taxel_locs, imgs=imgs, show_skin=VISUALIZE_SKIN, DEBUG=DEBUG)
+            cam_events = camera_object.update_camera(sim_time)
 
-            mujoco.mj_step(model, data)  # Step the simulation
-            viewer.sync()
-
-            sim_time += 1000  # 1 ms
+            skin_events = skin_object.update_skin(sim_time, grouped_sensors)
 
         # cv2.destroyAllWindows()
