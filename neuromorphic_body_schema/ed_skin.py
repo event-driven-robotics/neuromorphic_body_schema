@@ -382,10 +382,10 @@ class ICubSkin:
 
             events = esim_single.skinCallback(
                 taxel_data, time)
+            all_events.append(events)
             if self.DEBUG:
                 if len(events):
                     logging.info(f"{len(events)} events detected at {triangle_ini}.")
-            all_events.append(events)
 
             if self.show_skin:
                 cv2.imshow(triangle_ini, make_skin_event_frame(

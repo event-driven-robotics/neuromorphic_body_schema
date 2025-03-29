@@ -50,7 +50,7 @@ if __name__ == '__main__':
             print(key, len(value))
 
     dynamic_grouped_sensors = DynamicGroupedSensors(data, grouped_sensors)
-    
+
     # set robot to any wanted start position
     init_position = {
         'r_shoulder_roll': 0.5,
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     joints = ['neck_roll', 'r_pinky', 'l_pinky']
 
     # Define parameters for the sine wave
-    frequencies = [0.001, 0.001, 0.001]
+    frequencies = [0.002, 0.001, 0.001]
     min_max_pos = np.zeros((len(joints), 2))
     for i, joint in enumerate(joints):
         min_max_pos[i] = model.actuator(joint).ctrlrange
@@ -84,10 +84,12 @@ if __name__ == '__main__':
 
         sim_time = 0
 
-        skin_object = ICubSkin(sim_time, dynamic_grouped_sensors, show_skin=VISUALIZE_SKIN, DEBUG=DEBUG)
-        camera_object = ICubEyes(sim_time, model, data, camera_name, show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
+        skin_object = ICubSkin(
+            sim_time, dynamic_grouped_sensors, show_skin=VISUALIZE_SKIN, DEBUG=DEBUG)
+        camera_object = ICubEyes(sim_time, model, data, camera_name,
+                                 show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
 
-        while viewer.is_running():            
+        while viewer.is_running():
             mujoco.mj_step(model, data)  # Step the simulation
             viewer.sync()
 
@@ -95,15 +97,13 @@ if __name__ == '__main__':
 
             for (min_max, frequency, joint) in zip(min_max_pos, frequencies, joints):
                 scaled_time = sim_time / 1000
-                joint_position = min_max[0] + (min_max[1] - min_max[0]) * 0.5 * (1 + math.sin(2 * math.pi * frequency * scaled_time))
+                joint_position = min_max[0] + (min_max[1] - min_max[0]) * 0.5 * (
+                    1 + math.sin(2 * math.pi * frequency * scaled_time))
                 # Update joint positions
                 if DEBUG:
                     print(joint, joint_position)
                 update_joint_positions(data, {joint: joint_position})
 
-
             cam_events = camera_object.update_camera(sim_time)
 
             skin_events = skin_object.update_skin(sim_time)
-
-        # cv2.destroyAllWindows()
