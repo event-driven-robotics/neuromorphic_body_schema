@@ -1,6 +1,5 @@
 import numpy as np
 
-
 # set model path
 MODEL_PATH = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'  # full iCub
 TRIANGLE_INI_PATH = "../icub-main/app/skinGui/conf/skinGui"
@@ -11,6 +10,7 @@ FIG_PATH = "./figures"
 # TRIANGLE_INI_PATH = "../../icub-main/app/skinGui/conf/skinGui"
 # FIG_PATH = "../figures"
 
+### SKIN ###
 SKIN_PARTS = ["r_hand", "r_forearm", "r_upper_arm",
               "torso",
               "l_hand", "l_forearm", "l_upper_arm",
@@ -48,8 +48,9 @@ class DynamicGroupedSensors:
     def __getitem__(self, key):
         adrs = self.grouped_sensors[key]
         return self.data.sensordata[adrs]
-    
 
+
+### VIEWER ###
 def init_POV(viewer):
     """
     Use:
@@ -62,3 +63,11 @@ def init_POV(viewer):
     viewer.cam.lookat = np.array([0, -0.25, 1])
 
     return viewer
+
+
+### PROPRIOCEPTION ###
+TIME_WINDOW = 50000  # TODO make a global variable
+TICK_HEIGHT = 20
+MARGIN = 5
+HEIGHT = 8 * (TICK_HEIGHT + MARGIN)
+WIDTH = 500

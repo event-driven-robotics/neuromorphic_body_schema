@@ -7,6 +7,7 @@ from collections import defaultdict
 import mujoco
 import numpy as np
 from ed_cam import ICubEyes
+from ed_prop import ICubProprioception
 from ed_skin import ICubSkin
 from helpers import MODEL_PATH, DynamicGroupedSensors, init_POV
 from mujoco import viewer
@@ -16,9 +17,10 @@ DEBUG = False  # use to visualize the triangles
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-VISUALIZE_CAMERA_FEED = True
-VISUALIZE_ED_CAMERA_FEED = True
-VISUALIZE_SKIN = True
+VISUALIZE_CAMERA_FEED = False
+VISUALIZE_ED_CAMERA_FEED = False
+VISUALIZE_SKIN = False
+VISUALIZE_PROPRIOCEPTION_FEED = True
 
 
 if __name__ == '__main__':
@@ -60,19 +62,30 @@ if __name__ == '__main__':
 
     # init example motion
     # joints = ['r_index_proximal', 'r_index_distal', 'r_middle_proximal', 'r_middle_distal']
-    joints = ['neck_roll', 'r_pinky', 'l_pinky']
+    joints = ['r_shoulder_roll', 'l_shoulder_roll']
+    joint_dict_prop = {
+        'r_shoulder_roll': {
+            'position_max_freq': 0.001,
+            'velocity_max_freq': 0.001,
+            'load_max_freq': 0.001,
+            'limits_max_freq': 0.001,
+        },
+        'l_shoulder_roll': {
+            'position_max_freq': 0.001,
+            'velocity_max_freq': 0.001,
+            'load_max_freq': 0.001,
+            'limits_max_freq': 0.001,
+        },
+    }
 
     # Define parameters for the sine wave
-    frequencies = [0.002, 0.001, 0.001]
+    frequencies = [0.005, 0.001]
     min_max_pos = np.zeros((len(joints), 2))
     for i, joint in enumerate(joints):
         min_max_pos[i] = model.actuator(joint).ctrlrange
         # to ensure we move close to the contact position
         if 'pinky' in joint:
-            min_max_pos[i][0] = min_max_pos[i][1]*0.9
-
-    # skin_initialized = False
-    esim_cam = None
+            min_max_pos[i][0] = min_max_pos[i][1]
 
     ############################
     ### Start the simulation ###
@@ -88,11 +101,13 @@ if __name__ == '__main__':
             sim_time, dynamic_grouped_sensors, show_skin=VISUALIZE_SKIN, DEBUG=DEBUG)
         camera_object = ICubEyes(sim_time, model, data, camera_name,
                                  show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
+        proprioception_object = ICubProprioception(
+            model, joint_dict_prop, show_proprioception=VISUALIZE_PROPRIOCEPTION_FEED, DEBUG=DEBUG)
 
         while viewer.is_running():
+            # print(sim_time)
             mujoco.mj_step(model, data)  # Step the simulation
             viewer.sync()
-
             sim_time += 1000  # 1 ms
 
             for (min_max, frequency, joint) in zip(min_max_pos, frequencies, joints):
@@ -107,3 +122,10 @@ if __name__ == '__main__':
             cam_events = camera_object.update_camera(sim_time)
 
             skin_events = skin_object.update_skin(sim_time)
+
+            proprioception_events = proprioception_object.update_proprioception(
+                time=sim_time, data=data)
+
+            pass
+
+        # cv2.destroyAllWindows()

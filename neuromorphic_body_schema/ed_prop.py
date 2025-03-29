@@ -2,9 +2,7 @@ import logging
 
 import cv2
 import numpy as np
-
-TIME_WINDOW = 50000  # TODO make a global variable
-
+from helpers import HEIGHT, WIDTH, TICK_HEIGHT, MARGIN, TIME_WINDOW
 
 def generalized_sigmoid(x: np.array,  x_min: np.array, x_max: np.array, y_min: np.array, y_max: np.array, B=np.array) -> np.array:
     """
@@ -119,7 +117,7 @@ class ProprioceptionEventSimulator():
         #     plt.title("Position")
         #     plt.show()
 
-        return (max(y1, 0.0), max(y1, 0.0))
+        return (max(y1, 0.0), max(y2, 0.0))
 
     def velocity(self, v):
         """
@@ -193,7 +191,7 @@ class ProprioceptionEventSimulator():
 
         It is independent from which limit, this info can be derived from self.pos
         """
-
+        # TODO we want this neurons only to be active when CLOSE to the limits! Because each joint can have different ranges this should be 10% of max range!
         if (limit - self.position_limit_min).any() < 0:
             print("WARNING: joint value outside scope")
         if (-limit + self.position_limit_max).any() < 0:
@@ -250,8 +248,9 @@ class ProprioceptionEventSimulator():
 
         # estimate of the delta time before we should have another spike
         time_to_spike = np.zeros(self.nb_neurons)
-        time_to_spike[0] = invert_tuple(pos[0]) 
-        time_to_spike[1] = invert_tuple(pos[1])  # TODO when we have a negative joint value this returns negative times and the simulation crashes!
+        time_to_spike[0] = invert_tuple(pos[0])
+        # TODO when we have a negative joint value this returns negative times and the simulation crashes!
+        time_to_spike[1] = invert_tuple(pos[1])
         time_to_spike[2] = invert_tuple(v[0])
         time_to_spike[3] = invert_tuple(v[1])
         time_to_spike[4] = invert_tuple(l[0])
@@ -279,31 +278,32 @@ class ProprioceptionEventSimulator():
         return events
 
 
-def make_prop_event_frame(img, width, time, time_window, events):
+def make_prop_event_frame(img, time, events):
     # here we take the old image, move it's content to the left and add the new events
     # remove old events
-    if len(events):
-        # TODO : nothing is being discarded cause I do not append them here
+    if len(events) and events[-1, 1] < time - TIME_WINDOW:
+        # TODO improve the if case to only be active if needed (last event < time - TIME_WINDOW)
         # and events is just the output of update
-        events_array = np.array(events)
-        while events_array[0, 2] < time - TIME_WINDOW:
-            events_array = np.delete(events_array, 0, axis=0)
-        events = list(events_array)
+        while len(events) and events[0, 1] < time - TIME_WINDOW:
+            events = np.delete(events, 0, axis=0)
+        # events = list(events)
 
     # TODO do I need esim?
-    tick_height = 20
-    margin = 5
-    height = 8 * (tick_height + margin)
-    current_img = np.zeros((height, width, 3))
+    # tick_height = 20
+    # margin = 5
+    # height = 8 * (tick_height + margin)
+    # current_img = np.zeros((height, width, 3))
 
-    t_left = time-time_window
-    scale = width/time_window
-
+    t_left = time-TIME_WINDOW
+    scale = img.shape[1]/TIME_WINDOW
+    # TODO find out how many pixel along x is 'one event frame'
+    # we override the first 'event column' with empty entries and apply np.roll to move them to the end
+    img = np.roll(img, -1, axis=1)
+    img[:, -1, :] = np.zeros((img.shape[0], 3))  # , dtype=np.float64
     if len(events):
         for single_event in events:
-            # TODO controlla that this is still not a problem of the idx 0 overriding the info in the event representation
-            y_val = single_event[0]*tick_height
-            x_val = int((single_event[2]-t_left)*scale)
+            y_val = int(single_event[0]*(TICK_HEIGHT + MARGIN/2))
+            x_val = int((single_event[1]-t_left)*scale)
             neuron_idx = single_event[0]
 
             color_index = int((neuron_idx * 255 / 8))
@@ -311,10 +311,9 @@ def make_prop_event_frame(img, width, time, time_window, events):
                 np.array([[color_index]], dtype=np.uint8), cv2.COLORMAP_HSV)[0][0]
             color = color/255
 
-            cv2.line(current_img, (x_val, int(y_val)+margin),
-                     (x_val, int(y_val)+tick_height), color, 1)
+            cv2.line(img, (x_val, y_val), (x_val, y_val+TICK_HEIGHT), color, 1)
 
-    return current_img
+    return img
 
 
 class ICubProprioception:
@@ -322,7 +321,6 @@ class ICubProprioception:
         # nb_joints = len(joint_dict.keys())
         # TODO take arguments for the event encoding!
         # max_max_freq = 1e-4
-        self.events_window_names = []
         self.esim = []
         self.joint_dict = joint_dict
         self.imgs = []
@@ -335,34 +333,19 @@ class ICubProprioception:
             velocity_max_freq = joint_dict[joint_name]['velocity_max_freq']
             load_max_freq = joint_dict[joint_name]['load_max_freq']
             limits_max_freq = joint_dict[joint_name]['limits_max_freq']
-            # joint_pos[i] = data.joint(joint_list[i]).qpos # example for single joint
-            # joint_vel[i] = data.joint(joint_list[i]).qvel
-            # joint_load[i] = data.joint(joint_list[i]).qacc
-            self.events_window_names.append(
-                f'{joint_name} proprioception events')
-            self.imgs.append(np.zeros((8, 500, 3), dtype=np.uint8))
+            self.imgs.append(np.zeros((HEIGHT, WIDTH, 3)))  # , dtype=np.uint8
             self.esim.append(ProprioceptionEventSimulator(position_limits=model.actuator(joint_name).ctrlrange,
                                                           velocity_limit=20.0, load_limit=10000000.0, position_max_freq=position_max_freq, velocity_max_freq=velocity_max_freq,
                                                           load_max_freq=load_max_freq, limits_max_freq=limits_max_freq, DEBUG=DEBUG))
 
-        # The values used for the next object are absolutely arbitrary, they will be changed in a later stage
-        # also based on the platform the code is going to be used on
-        # max freq is 0.1 cause time is in ns
+            # The values used for the next object are absolutely arbitrary, they will be changed in a later stage
+            # also based on the platform the code is going to be used on
+            # max freq is 0.1 cause time is in ns
 
-        if show_proprioception:
+            if show_proprioception:
 
-            # def on_thresh_slider(val):
-            #     # adds slider to change online parameters of the class
-            #     # TODO check values in slider
-            #     val /= 100
-            #     esim.position_max_freq = val
-            #     esim.velocity_max_freq = val
-            #     esim.load_max_freq = val
-            #     esim.limits_max_freq = val
-
-            for events_window_name in self.events_window_names:
                 # events_window_name = events_window_names[i]
-                cv2.namedWindow(events_window_name)
+                cv2.namedWindow(joint_name)
 
                 # cv2.createTrackbar("Threshold", events_window_name, int(
                 #     esim.position_max_freq * 100), 100, on_thresh_slider)
@@ -370,10 +353,11 @@ class ICubProprioception:
 
     def update_proprioception(self, time, data):
         all_events = []
-        for esim_single, joint_name, img in zip(self.esim, list(self.joint_dict.keys()), self.imgs):
+        for i, esim_single, joint_name in zip(range(len(self.esim)), self.esim, list(self.joint_dict.keys())):
             joint_pos = data.joint(joint_name).qpos  # example for single joint
             joint_vel = data.joint(joint_name).qvel
-            joint_load = data.joint(joint_name).qacc  # TODO access load here, not acceleration!
+            # TODO access load here, not acceleration!
+            joint_load = data.joint(joint_name).qacc
             events = esim_single.proprioceptionCallback(
                 x=joint_pos, v=joint_vel, load=joint_load, time_stamp=time)
             all_events.append(events)
@@ -384,16 +368,12 @@ class ICubProprioception:
                         f"Generated {len(events)} proprioception events.")
 
             if self.show_proprioception:
-                if len(events):
-                    # width is 1000, literally just window size
-                    for events_window_name in self.events_window_names:
-                        width = 500
-                        events_array = np.array(events)
-                        cv2.imshow(events_window_name, make_prop_event_frame(img=img,
-                                                                             width=width, time=time, time_window=TIME_WINDOW,  events=events_array))
+                events_array = np.array(events)
+                # TODO check why pos enc is similar for both neurons!
+                # TODO some events seem to pop up out of nowhere!
+                self.imgs[i] = make_prop_event_frame(
+                    self.imgs[i], time, events_array)
+                cv2.imshow(joint_name, self.imgs[i])
+                cv2.waitKey(1)
 
-                    cv2.waitKey(1)
-
-        # only returns the event of the current timestamp, much like camera and skin.
-        #
         return all_events
