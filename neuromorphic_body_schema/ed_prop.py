@@ -64,10 +64,11 @@ class ProprioceptionEventSimulator():
         Velocity_limit and load_limit are thought to be scalar and positive. See explanation in the function self.velocity + notes from 19/02/2025
         """
 
-        self.pos = np.zeros(2)  # position
-        self.v = np.zeros(2)  # velocity
-        self.l = np.zeros(2)  # load
-        self.lim = np.zeros(2)  # closeness to limits
+        # self.pos = np.zeros(2)  # position
+        # self.v = np.zeros(2)  # velocity
+        # self.l = np.zeros(2)  # load
+        # self.lim = np.zeros(2)  # closeness to limits
+        self.nb_neurons = 8  # 2 for pos, 2 for vel, 2 for load, 2 for limits
 
         # measuring unity is in Hz. 1000Hz means we expect 1000 events per second (circa 1 per ms).
         self.position_max_freq = position_max_freq
@@ -76,15 +77,14 @@ class ProprioceptionEventSimulator():
         self.limits_max_freq = limits_max_freq
 
         # parameters of the system
-        self.position_limit_min = np.array(
-            position_limits[0])  # limits of the joint positions
-        self.position_limit_max = np.array(
-            position_limits[1])  # limits of the joint positions
+        # limits of the joint positions
+        self.position_limit_min = position_limits[0]
+        # limits of the joint positions
+        self.position_limit_max = position_limits[1]
         self.velocity_limit = velocity_limit
         self.load_limit = load_limit
 
         self.time_of_last_spike = np.zeros((8))
-        self.previous_timestamp = 0.0
 
         self.DEBUG = DEBUG
 
@@ -233,8 +233,6 @@ class ProprioceptionEventSimulator():
         l = self.load(load)
         lim = self.limit(limit=x, B=B_lim, delta_x=delta_x)
 
-        events = []
-
         def invert_tuple(frequ):
             # Check if the current element is a tuple
             if isinstance(frequ, tuple):
@@ -251,27 +249,30 @@ class ProprioceptionEventSimulator():
         # Develop the events according to the AER protocol
 
         # estimate of the delta time before we should have another spike
-        is_it_time_to_spike = np.zeros(8)
-        is_it_time_to_spike[0] = invert_tuple(pos[0])
-        is_it_time_to_spike[1] = invert_tuple(pos[1])
-        is_it_time_to_spike[2] = invert_tuple(v[0])
-        is_it_time_to_spike[3] = invert_tuple(v[1])
-        is_it_time_to_spike[4] = invert_tuple(l[0])
-        is_it_time_to_spike[5] = invert_tuple(l[1])
-        is_it_time_to_spike[6] = invert_tuple(lim[0])
-        is_it_time_to_spike[7] = invert_tuple(lim[1])
+        time_to_spike = np.zeros(self.nb_neurons)
+        time_to_spike[0] = invert_tuple(pos[0]) 
+        time_to_spike[1] = invert_tuple(pos[1])  # TODO when we have a negative joint value this returns negative times and the simulation crashes!
+        time_to_spike[2] = invert_tuple(v[0])
+        time_to_spike[3] = invert_tuple(v[1])
+        time_to_spike[4] = invert_tuple(l[0])
+        time_to_spike[5] = invert_tuple(l[1])
+        time_to_spike[6] = invert_tuple(lim[0])
+        time_to_spike[7] = invert_tuple(lim[1])
+        pass
 
         # if not working look for np.hstack or np.vstack
-        # is_it_time_to_spike = place_holder
+        # time_to_spike = place_holder
 
-        for proprioc_output in range(8):
-            while self.time_of_last_spike[proprioc_output] + is_it_time_to_spike[proprioc_output] < time_stamp:
-                self.time_of_last_spike[proprioc_output] = self.time_of_last_spike[
-                    proprioc_output] + is_it_time_to_spike[proprioc_output]
+        events = []
+        # loop over neuron types
+        for i, single_time_to_spike in enumerate(time_to_spike):
+            while self.time_of_last_spike[i] + single_time_to_spike < time_stamp:
+                self.time_of_last_spike[i] = self.time_of_last_spike[
+                    i] + single_time_to_spike
                 events.append(
-                    (proprioc_output, self.time_of_last_spike[proprioc_output], 0))
+                    (i, self.time_of_last_spike[i], 0))
 
-        if len(events):
+        if len(events) > 1:
             events = np.array(events)
             events = events[np.argsort(events[:, 2])]
 
@@ -372,7 +373,7 @@ class ICubProprioception:
         for esim_single, joint_name, img in zip(self.esim, list(self.joint_dict.keys()), self.imgs):
             joint_pos = data.joint(joint_name).qpos  # example for single joint
             joint_vel = data.joint(joint_name).qvel
-            joint_load = data.joint(joint_name).qacc
+            joint_load = data.joint(joint_name).qacc  # TODO access load here, not acceleration!
             events = esim_single.proprioceptionCallback(
                 x=joint_pos, v=joint_vel, load=joint_load, time_stamp=time)
             all_events.append(events)
