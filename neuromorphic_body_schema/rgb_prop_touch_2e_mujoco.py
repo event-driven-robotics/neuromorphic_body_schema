@@ -87,14 +87,10 @@ if __name__ == '__main__':
     frequencies = [0.005, 0.001]
     min_max_pos = np.zeros((len(joints), 2))
     for i, joint in enumerate(joints):
-        min_max_pos[i] = model.actuator(joint).ctrlrange*0.8
+        min_max_pos[i] = model.actuator(joint).ctrlrange
         # to ensure we move close to the contact position
         if 'pinky' in joint:
             min_max_pos[i][0] = min_max_pos[i][1]
-
-    skin_initialized = False
-    esim_cam = None
-    proprioception_initialized = False
 
     ############################
     ### Start the simulation ###
@@ -105,7 +101,6 @@ if __name__ == '__main__':
         init_POV(viewer)
 
         sim_time = 0
-        timestep = 0
         
         skin_object = ICubSkin(sim_time, dynamic_grouped_sensors, show_skin=VISUALIZE_SKIN, DEBUG=DEBUG)
         camera_object = ICubEyes(sim_time, model, data, camera_name, show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
@@ -116,10 +111,6 @@ if __name__ == '__main__':
             mujoco.mj_step(model, data)  # Step the simulation
             viewer.sync()
             sim_time += 1000  # 1 ms
-            timestep += 1
-            if timestep == 53:
-                pass
-            print('timestep', timestep)
 
             for (min_max, frequency, joint) in zip(min_max_pos, frequencies, joints):
                 scaled_time = sim_time / 1000

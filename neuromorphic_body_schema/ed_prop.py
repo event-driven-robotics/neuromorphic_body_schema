@@ -119,7 +119,7 @@ class ProprioceptionEventSimulator():
         #     plt.title("Position")
         #     plt.show()
 
-        return (y1, y2)
+        return (max(y1, 0.0), max(y1, 0.0))
 
     def velocity(self, v):
         """
