@@ -17,9 +17,9 @@ DEBUG = False  # use to visualize the triangles
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-VISUALIZE_CAMERA_FEED = False
-VISUALIZE_ED_CAMERA_FEED = False
-VISUALIZE_SKIN = False
+VISUALIZE_CAMERA_FEED = True
+VISUALIZE_ED_CAMERA_FEED = True
+VISUALIZE_SKIN = True
 VISUALIZE_PROPRIOCEPTION_FEED = True
 
 
@@ -95,7 +95,7 @@ if __name__ == '__main__':
 
         init_POV(viewer)
 
-        sim_time = 0
+        sim_time = data.time
 
         skin_object = ICubSkin(
             sim_time, dynamic_grouped_sensors, show_skin=VISUALIZE_SKIN, DEBUG=DEBUG)
@@ -108,7 +108,7 @@ if __name__ == '__main__':
             # print(sim_time)
             mujoco.mj_step(model, data)  # Step the simulation
             viewer.sync()
-            sim_time += 1000  # 1 ms
+            sim_time = data.time*1E6  # us
 
             for (min_max, frequency, joint) in zip(min_max_pos, frequencies, joints):
                 scaled_time = sim_time / 1000

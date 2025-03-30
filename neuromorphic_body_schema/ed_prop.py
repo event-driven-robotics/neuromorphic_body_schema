@@ -257,7 +257,6 @@ class ProprioceptionEventSimulator():
         time_to_spike[5] = invert_tuple(l[1])
         time_to_spike[6] = invert_tuple(lim[0])
         time_to_spike[7] = invert_tuple(lim[1])
-        pass
 
         # if not working look for np.hstack or np.vstack
         # time_to_spike = place_holder
@@ -278,7 +277,7 @@ class ProprioceptionEventSimulator():
         return events
 
 
-def make_prop_event_frame(img, time, events):
+def make_proprioception_event_frame(img, time, events):
     # here we take the old image, move it's content to the left and add the new events
     # remove old events
     if len(events) and events[-1, 1] < time - TIME_WINDOW:
@@ -371,7 +370,7 @@ class ICubProprioception:
                 events_array = np.array(events)
                 # TODO check why pos enc is similar for both neurons!
                 # TODO some events seem to pop up out of nowhere!
-                self.imgs[i] = make_prop_event_frame(
+                self.imgs[i] = make_proprioception_event_frame(
                     self.imgs[i], time, events_array)
                 cv2.imshow(joint_name, self.imgs[i])
                 cv2.waitKey(1)

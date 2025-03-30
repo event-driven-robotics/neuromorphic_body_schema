@@ -105,7 +105,7 @@ class CameraEventSimulator:
 def make_camera_event_frame(events, width=320, height=240):
     img = np.zeros((height, width))
     if len(events):
-        coords = events[:, :2]
+        coords = events[:, :2].astype(int)
         img[coords[:, 1], coords[:, 0]] = 255
     return img
 
