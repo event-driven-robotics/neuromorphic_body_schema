@@ -155,8 +155,8 @@ class ICubEyes:
 
         if self.show_raw_feed:
             cv2.imshow(self.camera_feed_window_name, pixels)
-            cv2.waitKey(1)
         if self.show_ed_feed:
             cv2.imshow(self.events_window_name, make_camera_event_frame(events))
+        if self.show_ed_feed or self.show_raw_feed:
             cv2.waitKey(1)
         return events

@@ -19,7 +19,7 @@ logging.basicConfig(
 
 VISUALIZE_CAMERA_FEED = True
 VISUALIZE_ED_CAMERA_FEED = True
-VISUALIZE_SKIN = True
+VISUALIZE_SKIN = False
 VISUALIZE_PROPRIOCEPTION_FEED = True
 
 
@@ -36,6 +36,9 @@ if __name__ == '__main__':
     model = mujoco.MjModel.from_xml_path(MODEL_PATH)
     data = mujoco.MjData(model)
     print("Model loaded")
+
+    # Set the time step duration to 0.001 seconds (1 milliseconds)
+    model.opt.timestep = 0.001  # sec
 
     # prepare the mapping from skin to body parts
     names_list = model.names.decode('utf-8').split('\x00')
@@ -65,27 +68,27 @@ if __name__ == '__main__':
     joints = ['r_shoulder_roll', 'l_shoulder_roll']
     joint_dict_prop = {
         'r_shoulder_roll': {
-            'position_max_freq': 0.001,
-            'velocity_max_freq': 0.001,
-            'load_max_freq': 0.001,
-            'limits_max_freq': 0.001,
+            'position_max_freq': 1000,  # Hz
+            'velocity_max_freq': 1000,
+            'load_max_freq': 1000,
+            'limits_max_freq': 1000,
         },
         'l_shoulder_roll': {
-            'position_max_freq': 0.001,
-            'velocity_max_freq': 0.001,
-            'load_max_freq': 0.001,
-            'limits_max_freq': 0.001,
+            'position_max_freq': 1000,
+            'velocity_max_freq': 1000,
+            'load_max_freq': 1000,
+            'limits_max_freq': 1000,
         },
     }
 
     # Define parameters for the sine wave
-    frequencies = [0.005, 0.001]
+    frequencies = [0.05, 0.01]
     min_max_pos = np.zeros((len(joints), 2))
     for i, joint in enumerate(joints):
         min_max_pos[i] = model.actuator(joint).ctrlrange
         # to ensure we move close to the contact position
         if 'pinky' in joint:
-            min_max_pos[i][0] = min_max_pos[i][1]
+            min_max_pos[i][0] = min_max_pos[i][1]*0.98
 
     ############################
     ### Start the simulation ###
@@ -108,23 +111,22 @@ if __name__ == '__main__':
             # print(sim_time)
             mujoco.mj_step(model, data)  # Step the simulation
             viewer.sync()
-            sim_time = data.time*1E6  # us
+            # sim_time_ns = data.time*1E9  # ns
 
             for (min_max, frequency, joint) in zip(min_max_pos, frequencies, joints):
-                scaled_time = sim_time / 1000
                 joint_position = min_max[0] + (min_max[1] - min_max[0]) * 0.5 * (
-                    1 + math.sin(2 * math.pi * frequency * scaled_time))
+                    1 + math.sin(2 * math.pi * frequency * data.time))
                 # Update joint positions
                 if DEBUG:
                     print(joint, joint_position)
                 update_joint_positions(data, {joint: joint_position})
 
-            cam_events = camera_object.update_camera(sim_time)
+            cam_events = camera_object.update_camera(data.time*1E9)  # expects ns
 
-            skin_events = skin_object.update_skin(sim_time)
+            skin_events = skin_object.update_skin(data.time*1E9)  # expects ns
 
             proprioception_events = proprioception_object.update_proprioception(
-                time=sim_time, data=data)
+                time=data.time, data=data)  # expects seconds
 
             pass
 

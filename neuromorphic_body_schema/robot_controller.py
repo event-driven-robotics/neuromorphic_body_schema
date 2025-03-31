@@ -1,5 +1,3 @@
-import math
-
 
 def update_joint_positions(data, joint_positions):
     """

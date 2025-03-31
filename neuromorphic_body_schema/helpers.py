@@ -66,8 +66,8 @@ def init_POV(viewer):
 
 
 ### PROPRIOCEPTION ###
-TIME_WINDOW = 50000  # TODO make a global variable
-TICK_HEIGHT = 20
-MARGIN = 5
+TIME_WINDOW = 10  # seconds
+TICK_HEIGHT = 20  # pixels
+MARGIN = 5  # pixels
 HEIGHT = 8 * (TICK_HEIGHT + MARGIN)
-WIDTH = 500
+WIDTH = 500  # pixels
