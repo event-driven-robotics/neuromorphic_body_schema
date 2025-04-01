@@ -6,21 +6,23 @@ from collections import defaultdict
 
 import mujoco
 import numpy as np
-from ed_cam import ICubEyes
-from ed_prop import ICubProprioception
-from ed_skin import ICubSkin
-from helpers import MODEL_PATH, DynamicGroupedSensors, init_POV
+from helpers.ed_cam import ICubEyes
+from helpers.ed_prop import ICubProprioception
+from helpers.ed_skin import ICubSkin
+from helpers.helpers import MODEL_PATH, DynamicGroupedSensors, init_POV
 from mujoco import viewer
-from robot_controller import update_joint_positions
+
+from neuromorphic_body_schema.helpers.robot_controller import \
+    update_joint_positions
 
 DEBUG = False  # use to visualize the triangles
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-VISUALIZE_CAMERA_FEED = True
-VISUALIZE_ED_CAMERA_FEED = True
+VISUALIZE_CAMERA_FEED = False
+VISUALIZE_ED_CAMERA_FEED = False
 VISUALIZE_SKIN = False
-VISUALIZE_PROPRIOCEPTION_FEED = True
+VISUALIZE_PROPRIOCEPTION_FEED = False
 
 
 if __name__ == '__main__':
@@ -65,7 +67,7 @@ if __name__ == '__main__':
 
     # init example motion
     # joints = ['r_index_proximal', 'r_index_distal', 'r_middle_proximal', 'r_middle_distal']
-    joints = ['r_shoulder_roll', 'l_shoulder_roll']
+    joints = ['r_shoulder_roll', 'l_shoulder_roll']  # , 'r_pinky', 'l_pinky'
     joint_dict_prop = {
         'r_shoulder_roll': {
             'position_max_freq': 1000,  # Hz
@@ -79,6 +81,18 @@ if __name__ == '__main__':
             'load_max_freq': 1000,
             'limits_max_freq': 1000,
         },
+        # 'r_pinky': {
+        #     'position_max_freq': 1000,  # Hz
+        #     'velocity_max_freq': 1000,
+        #     'load_max_freq': 1000,
+        #     'limits_max_freq': 1000,
+        # },
+        # 'l_pinky': {
+        #     'position_max_freq': 1000,
+        #     'velocity_max_freq': 1000,
+        #     'load_max_freq': 1000,
+        #     'limits_max_freq': 1000,
+        # },
     }
 
     # Define parameters for the sine wave
@@ -95,6 +109,9 @@ if __name__ == '__main__':
     ############################
 
     with mujoco.viewer.launch_passive(model, data) as viewer:
+            # Disable the left and right panels
+        # viewer.options.gui_left = False
+        # viewer.options.gui_right = False
 
         init_POV(viewer)
 
@@ -113,21 +130,18 @@ if __name__ == '__main__':
             viewer.sync()
             # sim_time_ns = data.time*1E9  # ns
 
-            for (min_max, frequency, joint) in zip(min_max_pos, frequencies, joints):
-                joint_position = min_max[0] + (min_max[1] - min_max[0]) * 0.5 * (
-                    1 + math.sin(2 * math.pi * frequency * data.time))
-                # Update joint positions
-                if DEBUG:
-                    print(joint, joint_position)
-                update_joint_positions(data, {joint: joint_position})
+            # for (min_max, frequency, joint) in zip(min_max_pos, frequencies, joints):
+            #     joint_position = min_max[0] + (min_max[1] - min_max[0]) * 0.5 * (
+            #         1 + math.sin(2 * math.pi * frequency * data.time))
+            #     # Update joint positions
+            #     if DEBUG:
+            #         print(joint, joint_position)
+            #     update_joint_positions(data, {joint: joint_position})
 
-            cam_events = camera_object.update_camera(data.time*1E9)  # expects ns
+            cam_events = camera_object.update_camera(
+                data.time*1E9)  # expects ns
 
             skin_events = skin_object.update_skin(data.time*1E9)  # expects ns
 
             proprioception_events = proprioception_object.update_proprioception(
                 time=data.time, data=data)  # expects seconds
-
-            pass
-
-        # cv2.destroyAllWindows()

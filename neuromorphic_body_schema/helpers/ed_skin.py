@@ -1,10 +1,15 @@
+"""
+
+Author: Simon F. Muller-Cleve
+"""
+
 import logging
 
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-from draw_pads import fingertip3L, fingertip3R, palmL, palmR, triangle_10pad
-from helpers import KEY_MAPPING, TRIANGLE_FILES, TRIANGLE_INI_PATH
+from helpers.draw_pads import fingertip3L, fingertip3R, palmL, palmR, triangle_10pad
+from helpers.helpers import KEY_MAPPING, TRIANGLE_FILES, TRIANGLE_INI_PATH
 
 
 class SkinEventSimulator:
@@ -183,7 +188,8 @@ def visualize_skin_patches(path_to_triangles, triangles_ini, DEBUG=False):
                         linewidth=0.2, color='black')  # Close the triangle
         ax.set_aspect('equal', 'box')
         fig.tight_layout()
-        fig.savefig(f"./neuromorphic_body_schema/figures/{triangles_ini}.pdf", bbox_inches='tight')
+        fig.savefig(
+            f"./neuromorphic_body_schema/figures/{triangles_ini}.pdf", bbox_inches='tight')
         plt.close(fig)
 
     # scale
@@ -345,7 +351,7 @@ class ICubSkin:
                 np.array(taxel_data), time))
             if show_skin:
                 img, x, y = visualize_skin_patches(path_to_triangles=TRIANGLE_INI_PATH,
-                                                    triangles_ini=triangle_ini, DEBUG=DEBUG)
+                                                   triangles_ini=triangle_ini, DEBUG=DEBUG)
                 self.taxel_locs[triangle_ini] = [x, y]
                 self.imgs[triangle_ini] = img
                 cv2.namedWindow(triangle_ini, cv2.WINDOW_NORMAL)
@@ -385,11 +391,12 @@ class ICubSkin:
             all_events.append(events)
             if self.DEBUG:
                 if len(events):
-                    logging.info(f"{len(events)} events detected at {triangle_ini}.")
+                    logging.info(
+                        f"{len(events)} events detected at {triangle_ini}.")
 
             if self.show_skin:
                 cv2.imshow(triangle_ini, make_skin_event_frame(
                     img=self.imgs[triangle_ini], events=events, locations=self.taxel_locs[triangle_ini]))
                 cv2.waitKey(1)
-                
+
         return all_events

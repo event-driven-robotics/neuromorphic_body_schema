@@ -617,18 +617,18 @@
     <!-- TODO organize actuators similar to appearance above -->
     <actuator>
         <!-- START setting ranges. Set the correct kp. Ctrl ranges updates according to iCubGazeboV3_visuomanip.urdf -->
-        <position name="r_hip_pitch"            kp="470.0"      joint="r_hip_pitch"                     ctrlrange="-0.7853981633974483 2.007128639793479" />
-        <position name="r_hip_roll"             kp="470.0"      joint="r_hip_roll"                      ctrlrange="-0.17453292519943295 1.9547687622336491" />
-        <position name="r_hip_yaw"              kp="470.0"      joint="r_hip_yaw"                       ctrlrange="-1.3962634015954636 1.3962634015954636" />
-        <position name="r_knee"                 kp="470.0"      joint="r_knee"                          ctrlrange="-1.2217304763960306 0.08726646259971647" />
-        <position name="r_ankle_pitch"          kp="470.0"      joint="r_ankle_pitch"                   ctrlrange="-0.7853981633974483 0.7853981633974483" />
-        <position name="r_ankle_roll"           kp="470.0"      joint="r_ankle_roll"                    ctrlrange="-0.4363323129985824 0.4363323129985824" />
-        <position name="l_hip_pitch"            kp="470.0"      joint="l_hip_pitch"                     ctrlrange="-0.7853981633974483 2.007128639793479" />
-        <position name="l_hip_roll"             kp="470.0"      joint="l_hip_roll"                      ctrlrange="-0.17453292519943295 1.9547687622336491" />
-        <position name="l_hip_yaw"              kp="470.0"      joint="l_hip_yaw"                       ctrlrange="-1.3962634015954636 1.3962634015954636" />
-        <position name="l_knee"                 kp="470.0"      joint="l_knee"                          ctrlrange="-1.2217304763960306 0.08726646259971647" />
-        <position name="l_ankle_pitch"          kp="470.0"      joint="l_ankle_pitch"                   ctrlrange="-0.7853981633974483 0.7853981633974483" />
-        <position name="l_ankle_roll"           kp="470.0"      joint="l_ankle_roll"                    ctrlrange="-0.4363323129985824 0.4363323129985824" />
+        <position name="r_hip_pitch"            kp="47.0"      joint="r_hip_pitch"                     ctrlrange="-0.7853981633974483 2.007128639793479" />
+        <position name="r_hip_roll"             kp="47.0"      joint="r_hip_roll"                      ctrlrange="-0.17453292519943295 1.9547687622336491" />
+        <position name="r_hip_yaw"              kp="47.0"      joint="r_hip_yaw"                       ctrlrange="-1.3962634015954636 1.3962634015954636" />
+        <position name="r_knee"                 kp="47.0"      joint="r_knee"                          ctrlrange="-1.2217304763960306 0.08726646259971647" />
+        <position name="r_ankle_pitch"          kp="47.0"      joint="r_ankle_pitch"                   ctrlrange="-0.7853981633974483 0.7853981633974483" />
+        <position name="r_ankle_roll"           kp="47.0"      joint="r_ankle_roll"                    ctrlrange="-0.4363323129985824 0.4363323129985824" />
+        <position name="l_hip_pitch"            kp="47.0"      joint="l_hip_pitch"                     ctrlrange="-0.7853981633974483 2.007128639793479" />
+        <position name="l_hip_roll"             kp="47.0"      joint="l_hip_roll"                      ctrlrange="-0.17453292519943295 1.9547687622336491" />
+        <position name="l_hip_yaw"              kp="47.0"      joint="l_hip_yaw"                       ctrlrange="-1.3962634015954636 1.3962634015954636" />
+        <position name="l_knee"                 kp="47.0"      joint="l_knee"                          ctrlrange="-1.2217304763960306 0.08726646259971647" />
+        <position name="l_ankle_pitch"          kp="47.0"      joint="l_ankle_pitch"                   ctrlrange="-0.7853981633974483 0.7853981633974483" />
+        <position name="l_ankle_roll"           kp="47.0"      joint="l_ankle_roll"                    ctrlrange="-0.4363323129985824 0.4363323129985824" />
         <!-- END setting ranges -->
         <position name="torso_pitch"            kp="470.0"      joint="torso_pitch"                     ctrlrange="-0.3141592653589793 0.7853981633974483" />
         <position name="torso_roll"             kp="990.0"      joint="torso_roll"                      ctrlrange="-0.4014257279586958 0.4014257279586958"/>
