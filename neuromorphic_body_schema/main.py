@@ -12,8 +12,7 @@ from helpers.ed_skin import ICubSkin
 from helpers.helpers import MODEL_PATH, DynamicGroupedSensors, init_POV
 from mujoco import viewer
 
-from neuromorphic_body_schema.helpers.robot_controller import \
-    update_joint_positions
+from helpers.robot_controller import update_joint_positions
 
 DEBUG = False  # use to visualize the triangles
 logging.basicConfig(
