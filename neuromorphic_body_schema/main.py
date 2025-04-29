@@ -1,5 +1,31 @@
+"""
+main.py
+
+Author: Simon F. Muller-Cleve
+Affiliation: Istituto Italiano di Tecnologia (IIT)
+Department: Event-Driven Perception for Robotics (EDPR)
+Date: 29.04.2025
+
+Description: 
+This script initializes and runs a neuromorphic simulation of the iCub robot using MuJoCo. 
+It integrates event-based camera, proprioception, and skin sensors, and provides visualization 
+options for each sensory modality.
+
+Modules:
+- ICubEyes: Simulates event-based camera functionality.
+- ICubProprioception: Simulates proprioceptive spiking events.
+- ICubSkin: Simulates tactile skin events.
+- DynamicGroupedSensors: Provides dynamic access to grouped sensor data.
+- update_joint_positions: Updates joint positions in the MuJoCo model.
+- init_POV: Configures the viewer's point of view.
+
+Usage:
+Run this script to start the simulation and visualize the sensory data.
+
+"""
+
+
 import logging
-import math
 import re
 import threading
 from collections import defaultdict
@@ -10,9 +36,8 @@ from helpers.ed_cam import ICubEyes
 from helpers.ed_prop import ICubProprioception
 from helpers.ed_skin import ICubSkin
 from helpers.helpers import MODEL_PATH, DynamicGroupedSensors, init_POV
-from mujoco import viewer
-
 from helpers.robot_controller import update_joint_positions
+from mujoco import viewer
 
 DEBUG = False  # use to visualize the triangles
 logging.basicConfig(
@@ -20,8 +45,8 @@ logging.basicConfig(
 
 VISUALIZE_CAMERA_FEED = False
 VISUALIZE_ED_CAMERA_FEED = False
-VISUALIZE_SKIN = True
-VISUALIZE_PROPRIOCEPTION_FEED = False
+VISUALIZE_SKIN = False
+VISUALIZE_PROPRIOCEPTION_FEED = True
 
 
 if __name__ == '__main__':
@@ -108,7 +133,7 @@ if __name__ == '__main__':
     ############################
 
     with mujoco.viewer.launch_passive(model, data) as viewer:
-            # Disable the left and right panels
+        # Disable the left and right panels
         # viewer.options.gui_left = False
         # viewer.options.gui_right = False
 

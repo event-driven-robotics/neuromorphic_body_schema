@@ -1,10 +1,53 @@
 """
+draw_pads.py
+
+Author: Simon F. Muller-Cleve
+Affiliation: Istituto Italiano di Tecnologia (IIT)
+Department: Event-Driven Perception for Robotics (EDPR)
+Date: 29.04.2025
+
+Description:
+This module provides functions to compute the positions of taxels and vertices for various tactile sensor layouts. 
+The layouts include triangular, fingertip, and palm configurations, with options for mirroring and orientation adjustments.
 Implementetation is based on the code written in */icub-main/src/tools/iCubSkinGui/plugin/include/*
+
+Functions:
+- triangle: Computes positions for a triangular tactile sensor layout.
+- triangle_10pad: Computes positions for a 10-pad triangular tactile sensor layout.
+- fingertip2L: Computes positions for a left fingertip tactile sensor layout.
+- fingertip2R: Computes positions for a right fingertip tactile sensor layout.
+- fingertip3L: Computes positions for a left fingertip tactile sensor layout.
+- fingertip3R: Computes positions for a right fingertip tactile sensor layout.
+- palmR: Computes positions for a right palm tactile sensor layout.
+- palmL: Computes positions for a left palm tactile sensor layout.
+
 """
+
+
 import math
 
 
 def triangle(cx, cy, th, lr_mirror=0):
+    """
+    Computes the positions of taxels and vertices for a triangular tactile sensor layout.
+
+    This function calculates the coordinates of taxels and vertices for a triangle-shaped tactile sensor, 
+    applying transformations based on the triangle's center, orientation, and optional mirroring.
+
+    Args:
+        cx (float): X-coordinate of the triangle's center.
+        cy (float): Y-coordinate of the triangle's center.
+        th (float): Orientation of the triangle in degrees.
+        lr_mirror (int): Whether to mirror the triangle layout (1 for mirroring, 0 for no mirroring). Default is 0.
+
+    Returns:
+        tuple: A tuple containing:
+            - dX (list): X-coordinates of the taxels.
+            - dY (list): Y-coordinates of the taxels.
+            - dXv (list): X-coordinates of the triangle's vertices.
+            - dYv (list): Y-coordinates of the triangle's vertices.
+    """
+
     DEG2RAD = math.pi / 180.0
 
     CST = math.cos(DEG2RAD * th)
@@ -84,6 +127,27 @@ def triangle(cx, cy, th, lr_mirror=0):
 
 
 def triangle_10pad(cx, cy, th, lr_mirror=0):
+    """
+    Computes the positions of taxels and vertices for a 10-pad triangular tactile sensor layout.
+
+    This function calculates the coordinates of taxels and vertices for a triangle-shaped tactile sensor 
+    with a 10-pad configuration, applying transformations based on the triangle's center, orientation, 
+    and optional mirroring.
+
+    Args:
+        cx (float): X-coordinate of the triangle's center.
+        cy (float): Y-coordinate of the triangle's center.
+        th (float): Orientation of the triangle in degrees.
+        lr_mirror (int): Whether to mirror the triangle layout (1 for mirroring, 0 for no mirroring). Default is 0.
+
+    Returns:
+        tuple: A tuple containing:
+            - dX (list): X-coordinates of the taxels.
+            - dY (list): Y-coordinates of the taxels.
+            - dXv (list): X-coordinates of the triangle's vertices.
+            - dYv (list): Y-coordinates of the triangle's vertices.
+    """
+
     DEG2RAD = math.pi / 180.0
     th = th
     CST = math.cos(DEG2RAD * (th + 0))
@@ -128,6 +192,26 @@ def triangle_10pad(cx, cy, th, lr_mirror=0):
 
 
 def fingertip2L(cx, cy, th, lr_mirror=0):
+    """
+    Computes the positions of taxels and vertices for a left fingertip tactile sensor layout.
+
+    This function calculates the coordinates of taxels and vertices for a left fingertip tactile sensor, 
+    applying transformations based on the fingertip's center, orientation, and optional mirroring.
+
+    Args:
+        cx (float): X-coordinate of the fingertip's center.
+        cy (float): Y-coordinate of the fingertip's center.
+        th (float): Orientation of the fingertip in degrees.
+        lr_mirror (int): Whether to mirror the fingertip layout (1 for mirroring, 0 for no mirroring). Default is 0.
+
+    Returns:
+        tuple: A tuple containing:
+            - dX (list): X-coordinates of the taxels.
+            - dY (list): Y-coordinates of the taxels.
+            - dXv (list): X-coordinates of the fingertip's vertices.
+            - dYv (list): Y-coordinates of the fingertip's vertices.
+    """
+
     nVerts = 7
     nTaxels = 12
 
@@ -173,6 +257,26 @@ def fingertip2L(cx, cy, th, lr_mirror=0):
 
 
 def fingertip2R(cx, cy, th, lr_mirror=0):
+    """
+    Computes the positions of taxels and vertices for a right fingertip tactile sensor layout.
+
+    This function calculates the coordinates of taxels and vertices for a right fingertip tactile sensor, 
+    applying transformations based on the fingertip's center, orientation, and optional mirroring.
+
+    Args:
+        cx (float): X-coordinate of the fingertip's center.
+        cy (float): Y-coordinate of the fingertip's center.
+        th (float): Orientation of the fingertip in degrees.
+        lr_mirror (int): Whether to mirror the fingertip layout (1 for mirroring, 0 for no mirroring). Default is 0.
+
+    Returns:
+        tuple: A tuple containing:
+            - dX (list): X-coordinates of the taxels.
+            - dY (list): Y-coordinates of the taxels.
+            - dXv (list): X-coordinates of the fingertip's vertices.
+            - dYv (list): Y-coordinates of the fingertip's vertices.
+    """
+
     nVerts = 7
     nTaxels = 12
 
@@ -218,6 +322,27 @@ def fingertip2R(cx, cy, th, lr_mirror=0):
 
 
 def fingertip3L(cx, cy, th, lr_mirror=0):
+    """
+    Computes the positions of taxels and vertices for a left fingertip tactile sensor layout (3-pad configuration).
+
+    This function calculates the coordinates of taxels and vertices for a left fingertip tactile sensor 
+    with a 3-pad configuration, applying transformations based on the fingertip's center, orientation, 
+    and optional mirroring.
+
+    Args:
+        cx (float): X-coordinate of the fingertip's center.
+        cy (float): Y-coordinate of the fingertip's center.
+        th (float): Orientation of the fingertip in degrees.
+        lr_mirror (int): Whether to mirror the fingertip layout (1 for mirroring, 0 for no mirroring). Default is 0.
+
+    Returns:
+        tuple: A tuple containing:
+            - dX (list): X-coordinates of the taxels.
+            - dY (list): Y-coordinates of the taxels.
+            - dXv (list): X-coordinates of the fingertip's vertices.
+            - dYv (list): Y-coordinates of the fingertip's vertices.
+    """
+
     nVerts = 7
     nTaxels = 12
 
@@ -263,6 +388,27 @@ def fingertip3L(cx, cy, th, lr_mirror=0):
 
 
 def fingertip3R(cx, cy, th, lr_mirror=0):
+    """
+    Computes the positions of taxels and vertices for a right fingertip tactile sensor layout (3-pad configuration).
+
+    This function calculates the coordinates of taxels and vertices for a right fingertip tactile sensor 
+    with a 3-pad configuration, applying transformations based on the fingertip's center, orientation, 
+    and optional mirroring.
+
+    Args:
+        cx (float): X-coordinate of the fingertip's center.
+        cy (float): Y-coordinate of the fingertip's center.
+        th (float): Orientation of the fingertip in degrees.
+        lr_mirror (int): Whether to mirror the fingertip layout (1 for mirroring, 0 for no mirroring). Default is 0.
+
+    Returns:
+        tuple: A tuple containing:
+            - dX (list): X-coordinates of the taxels.
+            - dY (list): Y-coordinates of the taxels.
+            - dXv (list): X-coordinates of the fingertip's vertices.
+            - dYv (list): Y-coordinates of the fingertip's vertices.
+    """
+
     nVerts = 7
     nTaxels = 12
 
@@ -309,6 +455,26 @@ def fingertip3R(cx, cy, th, lr_mirror=0):
 
 
 def palmR(cx, cy, th, lr_mirror=0):
+    """
+    Computes the positions of taxels and vertices for a right palm tactile sensor layout.
+
+    This function calculates the coordinates of taxels and vertices for a right palm tactile sensor, 
+    applying transformations based on the palm's center, orientation, and optional mirroring.
+
+    Args:
+        cx (float): X-coordinate of the palm's center.
+        cy (float): Y-coordinate of the palm's center.
+        th (float): Orientation of the palm in degrees.
+        lr_mirror (int): Whether to mirror the palm layout (1 for mirroring, 0 for no mirroring). Default is 0.
+
+    Returns:
+        tuple: A tuple containing:
+            - dX (list): X-coordinates of the taxels.
+            - dY (list): Y-coordinates of the taxels.
+            - dXv (list): X-coordinates of the palm's vertices.
+            - dYv (list): Y-coordinates of the palm's vertices.
+    """
+
     DEG2RAD = math.pi / 180.0
 
     CST = math.cos(DEG2RAD * th)
@@ -397,6 +563,26 @@ def palmR(cx, cy, th, lr_mirror=0):
 
 
 def palmL(cx, cy, th, lr_mirror=0):
+    """
+    Computes the positions of taxels and vertices for a left palm tactile sensor layout.
+
+    This function calculates the coordinates of taxels and vertices for a left palm tactile sensor, 
+    applying transformations based on the palm's center, orientation, and optional mirroring.
+
+    Args:
+        cx (float): X-coordinate of the palm's center.
+        cy (float): Y-coordinate of the palm's center.
+        th (float): Orientation of the palm in degrees.
+        lr_mirror (int): Whether to mirror the palm layout (1 for mirroring, 0 for no mirroring). Default is 0.
+
+    Returns:
+        tuple: A tuple containing:
+            - dX (list): X-coordinates of the taxels.
+            - dY (list): Y-coordinates of the taxels.
+            - dXv (list): X-coordinates of the palm's vertices.
+            - dYv (list): Y-coordinates of the palm's vertices.
+    """
+
     DEG2RAD = math.pi / 180.0
 
     CST = math.cos(DEG2RAD * th)

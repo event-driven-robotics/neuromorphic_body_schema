@@ -1,3 +1,28 @@
+"""
+ed_prop.py
+
+Author: Simon F. Muller-Cleve, Miriam Barborini
+Affiliation: Istituto Italiano di Tecnologia (IIT)
+Department: Event-Driven Perception for Robotics (EDPR)
+Date: 29.04.2025
+
+Description:
+This module provides functionality for simulating event-based proprioception in the iCub robot. 
+It includes classes and functions for generating spiking events based on joint positions, velocities, 
+and loads, as well as visualizing proprioception data.
+
+Classes:
+- ProprioceptionEventSimulator: Simulates spiking representations of proprioceptive inputs.
+- ICubProprioception: Represents the iCub robot's proprioception system, integrating joint data with event-based spiking representations.
+
+Functions:
+- generalized_sigmoid: Computes a generalized sigmoid function for scaling input values.
+- linear: Computes a linear function value for the given input.
+- make_proprioception_event_frame: Updates a visual representation of proprioception events over time.
+
+"""
+
+
 import logging
 
 import cv2
@@ -8,9 +33,21 @@ from helpers.helpers import HEIGHT, MARGIN, TICK_HEIGHT, TIME_WINDOW, WIDTH
 
 def generalized_sigmoid(x: np.array,  x_min: np.array, x_max: np.array, y_min: np.array, y_max: np.array, B=np.array) -> np.array:
     """
-    x = where to calculate the sigmoid
+    Computes a generalized sigmoid function value for the given input.
 
-    Upon further consideration we will get rid of everything except for the parameters K (ymax) and B, and we will add the limits of the sigmoid
+    This function normalizes the input `x` to a range defined by `x_min` and `x_max`, applies a sigmoid 
+    transformation, and scales the output to the range defined by `y_min` and `y_max`.
+
+    Args:
+        x (np.array): Input value(s) where the sigmoid function is evaluated.
+        x_min (np.array): Minimum value(s) for input normalization.
+        x_max (np.array): Maximum value(s) for input normalization.
+        y_min (np.array): Minimum value(s) for output scaling.
+        y_max (np.array): Maximum value(s) for output scaling.
+        B (np.array): Steepness parameter(s) of the sigmoid function.
+
+    Returns:
+        np.array: The computed generalized sigmoid function value(s), scaled to the range [y_min, y_max].
     """
 
     x_norm = (x - x_min) / (x_max - x_min)
@@ -35,33 +72,52 @@ def generalized_sigmoid(x: np.array,  x_min: np.array, x_max: np.array, y_min: n
 
 def linear(x, m=1, q=0):
     """
-    x = where to calculate the linear value
-    m = slope
-    q = offset
+    Computes a linear function value for the given input.
+
+    Args:
+        x (float or np.array): Input value(s) where the linear function is evaluated.
+        m (float): Slope of the linear function. Default is 1.
+        q (float): Offset (y-intercept) of the linear function. Default is 0.
+
+    Returns:
+        float or np.array: The computed linear function value(s).
     """
 
     return m*x + q
 
 
 class ProprioceptionEventSimulator():
+    """
+    Simulates spiking representations of proprioceptive inputs, such as joint positions, velocities, and loads.
+    Inputs can come from fictitious data, MuJoCo simulations, or iCub's YARP values.
 
-    """"
-    This class defines the spiking representation of proprioceptive inputs.
-    Inputs are idealized to be from either fictious data, MuJoCo simulations, or iCub's own values from YARP.
-    time_stamp is independent from the proprioception class and depends on the timestamps of the external inputs simulator.
-
+    Attributes:
+        position_limit_min (np.array): Minimum joint position limits.
+        position_limit_max (np.array): Maximum joint position limits.
+        velocity_limit (float): Maximum joint velocity limit.
+        load_limit (float): Maximum joint load limit.
+        position_max_freq (np.array): Maximum firing frequency for position neurons.
+        velocity_max_freq (np.array): Maximum firing frequency for velocity neurons.
+        load_max_freq (np.array): Maximum firing frequency for load neurons.
+        limits_max_freq (np.array): Maximum firing frequency for limit neurons.
+        time_of_last_spike (np.array): Timestamps of the last spike for each neuron.
+        nb_neurons (int): Number of neurons (e.g., for position, velocity, load, and limits).
+        DEBUG (bool): Whether to enable debug logging.
     """
 
     def __init__(self, position_limits, velocity_limit, load_limit,  position_max_freq=np.array(1000.), velocity_max_freq=np.array(1000.), load_max_freq=np.array(1000.), limits_max_freq=np.array(1000.), DEBUG=False):
         """
-        Function to initialize the values of the proprioceptive output
-        We start by setting all the proprioceptive values to zero.
-        We then set up the constants used for the model. These can be modified in the future as we see fit.
+        Initializes the ProprioceptionEventSimulator with joint limits, firing frequencies, and debug options.
 
-        Position_limits in input is thought to be as follows: [[minimum limits per joint],
-                                             [maximum limits per joint] ]
-
-        Velocity_limit and load_limit are thought to be scalar and positive. See explanation in the function self.velocity + notes from 19/02/2025
+        Args:
+            position_limits (list): A list containing minimum and maximum joint position limits as [[min_limits], [max_limits]].
+            velocity_limit (float): Maximum joint velocity limit.
+            load_limit (float): Maximum joint load limit.
+            position_max_freq (np.array): Maximum firing frequency for position neurons. Default is 1000 Hz.
+            velocity_max_freq (np.array): Maximum firing frequency for velocity neurons. Default is 1000 Hz.
+            load_max_freq (np.array): Maximum firing frequency for load neurons. Default is 1000 Hz.
+            limits_max_freq (np.array): Maximum firing frequency for limit neurons. Default is 1000 Hz.
+            DEBUG (bool): Whether to enable debug logging. Default is False.
         """
 
         # self.pos = np.zeros(2)  # position
@@ -90,13 +146,14 @@ class ProprioceptionEventSimulator():
 
     def position(self, x: float, B):
         """
-        Here we set up the neuron model to translate the value of the joint angles (positions, x as input)
-        into an output frequency.
+        Converts joint position values into spiking frequencies for agonistic-antagonistic neurons.
 
-        Since from a single value of position (aka joint angle) we want the spikes of the agonistic-antagonistic system
-        the output will be the two frequencies of the two neurons representing the two muscles
+        Args:
+            x (float): Joint position value.
+            B (float): Sigmoid steepness parameter.
 
-        M has been derived as the approximator for the tails of the distribution. It helps modulating B as a function of the limits. See notes from 19/02/2025 for more details
+        Returns:
+            tuple: Firing frequencies for agonistic and antagonistic neurons.
         """
 
         if (x - self.position_limit_min).any() < 0:
@@ -123,17 +180,13 @@ class ProprioceptionEventSimulator():
 
     def velocity(self, v):
         """
-        Here we set up the neuron model to translate the value of the joint angle velocity (velocity, v as input)
-        into an output frequency.
+        Converts joint velocity values into spiking frequencies for agonistic-antagonistic neurons.
 
-        Since from a single value of velocity (aka joint angle velocity) we want the spikes of the agonistic-antagonistic system
-        the output will be the two information of the two neurons representing:
-        - the module of the frequency 
-        - clockwise or anticlockwise movement (respectively 0 or 1). 
+        Args:
+            v (float): Joint velocity value.
 
-
-        We assume that there is only one v_max for all the joints, resulting in a modulation of the output with respect of this velocity. 
-        This is a choice we made and that, if needed, can be changed in the future. See notes from 19/02/2025
+        Returns:
+            tuple: Firing frequencies for agonistic and antagonistic neurons.
         """
 
         if np.min(v) < - self.velocity_limit:
@@ -155,16 +208,13 @@ class ProprioceptionEventSimulator():
 
     def load(self, load):
         """
-        Here we set up the neuron model to translate the value of the joint angle load (load as input)
-        into an output frequency.
+        Converts joint load values into spiking frequencies for agonistic-antagonistic neurons.
 
-        Since from a single value of load (aka joint angle load) we want the spikes of the agonistic-antagonistic system
-        the output will be the two information of the two neurons representing:
-        - the module of the frequency 
-        - clockwise or anticlockwise movement (respectively 0 or 1). 
+        Args:
+            load (float): Joint load value.
 
-        We assume that there is only one load_max for all the joints, resulting in a modulation of the output with respect of this load. 
-        This is a choice we made and that, if needed, can be changed in the future. See notes from 19/02/2025
+        Returns:
+            tuple: Firing frequencies for agonistic and antagonistic neurons.
         """
 
         if np.min(load) < - self.load_limit:
@@ -185,14 +235,17 @@ class ProprioceptionEventSimulator():
 
     def limit(self, limit, B, delta_x):
         """
-        Here we set up the neuron model to translate the value of the joint angle limits (limit as input)
-        into an output frequency.
+        Converts joint position proximity to limits into spiking frequencies for neurons.
 
-        Since from a single value of limit (aka joint angle limits) we want the spikes of the agonistic-antagonistic system
-        the output will be the two information of one neuron representing how close we are to the joint limits. 
+        Args:
+            limit (float): Joint position value.
+            B (float): Sigmoid steepness parameter.
+            delta_x (float): Range around the joint limits to activate neurons.
 
-        It is independent from which limit, this info can be derived from self.pos
+        Returns:
+            tuple: Firing frequencies for neurons representing proximity to lower and upper limits.
         """
+
         # TODO we want this neurons only to be active when CLOSE to the limits! Because each joint can have different ranges this should be 10% of max range!
         if (limit - self.position_limit_min).any() < 0:
             print("WARNING: joint value outside scope")
@@ -227,6 +280,22 @@ class ProprioceptionEventSimulator():
         return (y1, y2)
 
     def proprioceptionCallback(self, x, v, load, time_stamp, B_pos=5.0, B_lim=20.0, delta_x=1.0):
+        """
+        Processes joint position, velocity, and load values to generate spiking events.
+
+        Args:
+            x (float): Joint position value.
+            v (float): Joint velocity value.
+            load (float): Joint load value.
+            time_stamp (int): Current simulation timestamp.
+            B_pos (float): Sigmoid steepness parameter for position. Default is 5.0.
+            B_lim (float): Sigmoid steepness parameter for limits. Default is 20.0.
+            delta_x (float): Range around the joint limits to activate neurons. Default is 1.0.
+
+        Returns:
+            list: A list of events, where each event is a tuple (neuron_id, timestamp, polarity).
+        """
+
         # update the joint positions values
         pos = self.position(x, B=B_pos)
         v = self.velocity(v)
@@ -280,6 +349,24 @@ class ProprioceptionEventSimulator():
 
 
 def make_proprioception_event_frame(img, time, events):
+    """
+    Updates a visual representation of proprioception events over time.
+
+    This function takes an existing image, shifts its content to the left to simulate a time window, 
+    and overlays new proprioception events as colored lines based on their neuron index and timestamp.
+
+    Args:
+        img (np.array): A 2D or 3D numpy array representing the current event frame.
+        time (int): Current simulation timestamp in nanoseconds.
+        events (np.array): A numpy array of shape (N, 3), where each row represents an event with:
+                           - neuron_id (int): Index of the neuron that generated the event.
+                           - timestamp (int): Timestamp of the event in nanoseconds.
+                           - polarity (int): Polarity of the event (not used in visualization).
+
+    Returns:
+        np.array: An updated numpy array representing the event frame, with new events added.
+    """
+
     # here we take the old image, move it's content to the left and add the new events
     # remove old events
     if len(events) and events[-1, 1] < time - TIME_WINDOW:
@@ -318,7 +405,33 @@ def make_proprioception_event_frame(img, time, events):
 
 
 class ICubProprioception:
+    """
+    Represents the iCub robot's proprioception system, integrating joint position, velocity, and load data 
+    with event-based spiking representations.
+
+    Attributes:
+        esim (list): A list of ProprioceptionEventSimulator instances for each joint.
+        joint_dict (dict): A dictionary containing joint-specific parameters (e.g., max frequencies).
+        imgs (list): A list of images for visualizing proprioception events for each joint.
+        show_proprioception (bool): Whether to display proprioception event visualizations.
+        DEBUG (bool): Whether to enable debug logging.
+    """
+
     def __init__(self, model, joint_dict, show_proprioception=False, DEBUG=False):
+        """
+        Initializes the ICubProprioception class with joint-specific simulators and visualization options.
+
+        Args:
+            model (mujoco.MjModel): The MuJoCo model of the robot.
+            joint_dict (dict): A dictionary containing joint-specific parameters, such as:
+                               - position_max_freq (float): Maximum firing frequency for position neurons.
+                               - velocity_max_freq (float): Maximum firing frequency for velocity neurons.
+                               - load_max_freq (float): Maximum firing frequency for load neurons.
+                               - limits_max_freq (float): Maximum firing frequency for limit neurons.
+            show_proprioception (bool): Whether to display proprioception event visualizations. Default is False.
+            DEBUG (bool): Whether to enable debug logging. Default is False.
+        """
+
         # nb_joints = len(joint_dict.keys())
         # TODO take arguments for the event encoding!
         # max_max_freq = 1e-4
@@ -353,6 +466,17 @@ class ICubProprioception:
                 # cv2.setTrackbarMin("Threshold", events_window_name, 1)
 
     def update_proprioception(self, time, data):
+        """
+        Updates the proprioception system by processing joint position, velocity, and load data to generate events.
+
+        Args:
+            time (int): Current simulation timestamp in nanoseconds.
+            data (mujoco.MjData): The MuJoCo data object containing joint states.
+
+        Returns:
+            list: A list of events for all joints, where each event is a tuple (neuron_id, timestamp, polarity).
+        """
+
         all_events = []
         for i, esim_single, joint_name in zip(range(len(self.esim)), self.esim, list(self.joint_dict.keys())):
             joint_pos = data.joint(joint_name).qpos  # example for single joint

@@ -1,3 +1,26 @@
+"""
+ed_cam.py
+
+Author: Simon F. Muller-Cleve, Massimiliano Iocano
+Affiliation: Istituto Italiano di Tecnologia (IIT)
+Department: Event-Driven Perception for Robotics (EDPR)
+Date: 29.04.2025
+
+Description:
+This module provides functionality for simulating an event-based camera and integrating it with the iCub robot's 
+visual system. It includes classes and functions for generating events based on pixel intensity changes, 
+visualizing event data, and managing the camera feed.
+
+Classes:
+- CameraEventSimulator: Simulates an event-based camera by generating events based on pixel intensity changes.
+- ICubEyes: Represents the iCub robot's eyes, integrating a renderer and an event-based camera simulator.
+
+Functions:
+- make_camera_event_frame: Generates a visual representation of event-based camera data as a 2D image.
+
+"""
+
+
 import logging
 
 import cv2
@@ -6,7 +29,40 @@ import numpy as np
 
 
 class CameraEventSimulator:
+    """
+    Simulates an event-based camera by generating events based on changes in pixel intensity.
+
+    Attributes:
+        Cp (float): Positive contrast threshold.
+        Cm (float): Negative contrast threshold.
+        sigma_Cp (float): Standard deviation for noise in the positive contrast threshold.
+        sigma_Cm (float): Standard deviation for noise in the negative contrast threshold.
+        log_eps (float): Small constant added to avoid log(0) when using logarithmic images.
+        refractory_period_ns (int): Minimum time (in nanoseconds) between consecutive events for the same pixel.
+        use_log_image (bool): Whether to use logarithmic transformation of the input image.
+        last_img (np.array): The last processed image.
+        ref_values (np.array): Reference values for contrast threshold crossings.
+        last_event_timestamp (np.array): Timestamps of the last event for each pixel.
+        current_time (int): Current simulation time.
+        size (tuple): Size of the input image (height, width).
+    """
+
     def __init__(self, img, time, Cp=0.5, Cm=0.5, sigma_Cp=0.01, sigma_Cm=0.01, log_eps=1e-6, refractory_period_ns=100, use_log_image=True):
+        """
+        Initializes the CameraEventSimulator.
+
+        Args:
+            img (np.array): Initial image to initialize the simulator.
+            time (int): Initial simulation time in nanoseconds.
+            Cp (float): Positive contrast threshold. Default is 0.5.
+            Cm (float): Negative contrast threshold. Default is 0.5.
+            sigma_Cp (float): Noise standard deviation for Cp. Default is 0.01.
+            sigma_Cm (float): Noise standard deviation for Cm. Default is 0.01.
+            log_eps (float): Small constant for logarithmic transformation. Default is 1e-6.
+            refractory_period_ns (int): Refractory period in nanoseconds. Default is 100.
+            use_log_image (bool): Whether to use logarithmic transformation. Default is True.
+        """
+
         self.Cp = Cp
         self.Cm = Cm
         self.sigma_Cp = sigma_Cp
@@ -30,6 +86,20 @@ class CameraEventSimulator:
         self.size = img.shape[:2]
 
     def imageCallback(self, img, time):
+        """
+        Processes a new image and generates events based on pixel intensity changes.
+
+        Args:
+            img (np.array): The new image to process.
+            time (int): The current simulation time in nanoseconds.
+
+        Returns:
+            np.array: A list of events, where each event is a tuple (x, y, t, polarity).
+                      - x, y: Pixel coordinates.
+                      - t: Timestamp of the event.
+                      - polarity: True for positive events, False for negative events.
+        """
+
         assert time >= 0
 
         if self.use_log_image:
@@ -103,6 +173,23 @@ class CameraEventSimulator:
 
 
 def make_camera_event_frame(events, width=320, height=240):
+    """
+    Generates a visual representation of event-based camera data as a 2D image.
+
+    Args:
+        events (np.array): A numpy array of shape (N, 4), where each row represents an event with:
+                           - x (int): X-coordinate of the event.
+                           - y (int): Y-coordinate of the event.
+                           - t (int): Timestamp of the event (not used in visualization).
+                           - polarity (bool): Polarity of the event (not used in visualization).
+        width (int): Width of the output image. Default is 320.
+        height (int): Height of the output image. Default is 240.
+
+    Returns:
+        np.array: A 2D numpy array of shape (height, width) representing the event frame, 
+                  where pixel values are set to 255 for event locations and 0 elsewhere.
+    """
+
     img = np.zeros((height, width))
     if len(events):
         coords = events[:, :2].astype(int)
@@ -111,7 +198,36 @@ def make_camera_event_frame(events, width=320, height=240):
 
 
 class ICubEyes:
+    """
+    Represents the iCub robot's eyes, integrating a renderer and an event-based camera simulator.
+
+    Attributes:
+        camera_name (str): Name of the camera to use in the MuJoCo model.
+        model (mujoco.MjModel): The MuJoCo model of the robot.
+        data (mujoco.MjData): The MuJoCo data object for simulation.
+        show_raw_feed (bool): Whether to display the raw camera feed.
+        show_ed_feed (bool): Whether to display the event-based camera feed.
+        DEBUG (bool): Whether to enable debug logging.
+        renderer (mujoco.Renderer): Renderer for the MuJoCo simulation.
+        camera_feed_window_name (str): Name of the window displaying the raw camera feed.
+        events_window_name (str): Name of the window displaying the event-based camera feed.
+        esim (CameraEventSimulator): Event-based camera simulator.
+    """
+
     def __init__(self, time, model, data, camera_name, show_raw_feed=True, show_ed_feed=True, DEBUG=False):
+        """
+        Initializes the ICubEyes class with a renderer and an event-based camera simulator.
+
+        Args:
+            time (int): Initial simulation time in nanoseconds.
+            model (mujoco.MjModel): The MuJoCo model of the robot.
+            data (mujoco.MjData): The MuJoCo data object for simulation.
+            camera_name (str): Name of the camera to use in the MuJoCo model.
+            show_raw_feed (bool): Whether to display the raw camera feed. Default is True.
+            show_ed_feed (bool): Whether to display the event-based camera feed. Default is True.
+            DEBUG (bool): Whether to enable debug logging. Default is False.
+        """
+
         self.camera_name = camera_name
         self.model = model
         self.data = data
@@ -122,11 +238,11 @@ class ICubEyes:
         self.renderer = mujoco.Renderer(model)
 
         self.camera_feed_window_name = 'Camera Feed'
-        self.events_window_name = 'Events'
+        self.events_window_name = 'Events Feed'
 
         self.renderer.update_scene(self.data, camera=self.camera_name)
         pixels = self.renderer.render()
-        pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)  # convert BRG to RGB
+        pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)  # convert BGR to RGB
 
         self.esim = CameraEventSimulator(cv2.cvtColor(
             pixels, cv2.COLOR_RGB2GRAY), time)
@@ -143,6 +259,20 @@ class ICubEyes:
             cv2.setTrackbarMin("Threshold", self.events_window_name, 1)
 
     def update_camera(self, time):
+        """
+        Updates the camera feed and processes events using the event-based camera simulator.
+
+        Args:
+            time (int): Current simulation time in nanoseconds.
+
+        Returns:
+            np.array: A list of events generated by the event-based camera simulator.
+                      Each event is a tuple (x, y, t, polarity):
+                      - x, y: Pixel coordinates.
+                      - t: Timestamp of the event.
+                      - polarity: True for positive events, False for negative events.
+        """
+
         self.renderer.update_scene(self.data, camera=self.camera_name)
         pixels = self.renderer.render()
         pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)  # convert BRG to RGB

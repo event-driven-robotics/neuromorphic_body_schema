@@ -41,11 +41,39 @@ KEY_MAPPING = {
 
 
 class DynamicGroupedSensors:
+    """
+    Provides dynamic access to grouped sensor data from a simulation.
+
+    This class allows accessing specific sensor groups dynamically by mapping keys to sensor data indices.
+
+    Attributes:
+        data (mujoco.MjData): The MuJoCo data object containing sensor data.
+        grouped_sensors (dict): A dictionary mapping sensor group names to their corresponding indices in the sensor data.
+    """
+
     def __init__(self, data, grouped_sensors):
+        """
+        Initializes the DynamicGroupedSensors class with sensor data and group mappings.
+
+        Args:
+            data (mujoco.MjData): The MuJoCo data object containing sensor data.
+            grouped_sensors (dict): A dictionary mapping sensor group names to their corresponding indices in the sensor data.
+        """
+
         self.data = data
         self.grouped_sensors = grouped_sensors
 
     def __getitem__(self, key):
+        """
+        Retrieves sensor data for a specific group.
+
+        Args:
+            key (str): The name of the sensor group to retrieve.
+
+        Returns:
+            np.array: The sensor data corresponding to the specified group.
+        """
+
         adrs = self.grouped_sensors[key]
         return self.data.sensordata[adrs]
 
@@ -53,10 +81,18 @@ class DynamicGroupedSensors:
 ### VIEWER ###
 def init_POV(viewer):
     """
-    Use:
-    Inside the loop:
-    with mujoco.viewer.launch_passive(model, data) as viewer:
+    Initializes the point of view (POV) for the MuJoCo viewer.
+
+    This function sets the camera's azimuth, distance, elevation, and look-at point to predefined values 
+    for a consistent and clear view of the simulation.
+
+    Args:
+        viewer (mujoco.viewer.Viewer): The MuJoCo viewer instance to configure.
+
+    Returns:
+        mujoco.viewer.Viewer: The configured viewer instance with the updated camera settings.
     """
+
     viewer.cam.azimuth = -4.5
     viewer.cam.distance = 2
     viewer.cam.elevation = -16

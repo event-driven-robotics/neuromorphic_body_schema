@@ -112,7 +112,7 @@
         <light directional="false" diffuse=".2 .2 .2" specular="0 0 0" pos="0 0 5" dir="0 0 -1" castshadow="false"/>
         <light mode="targetbodycom" target="torso_1" directional="false" diffuse=".8 .8 .8" specular="0.3 0.3 0.3" pos="0 0 4.0" dir="0 0 -1" attenuation="3 0 0"/>
         
-        <body name="icub" pos="0.0 0.0 1.0" mocap="true">
+        <body name="icub" pos="0.0 0.0 0.63" mocap="true">
             <inertial pos="0.0248821 0.000103947 -0.0440806" quat="-0.110211 -0.1112 -0.697807 0.698966" mass="5.09143" diaginertia="0.0254684 0.0196552 0.0139679" />
             <geom pos="-0.0364 0 0.032" quat="0.5 0.5 -0.5 -0.5" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_root_link_prt-binary" />
             <body name="r_hip_1" pos="0.0064515 0.026 -0.119913" quat="0 0 0 -1">
@@ -3521,18 +3521,18 @@
                                                                     <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001" />
                                                                     <joint name="r_hand_thumb_3_joint" pos="0 0 0" axis="0 0 1" range="0.0 1.5707963267948966" stiffness="3"/>
                                                                     <geom quat="0 0 0 1" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightThumb3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
-                                                                        <site name="r_hand_thumb_taxel_0" size="0.003" pos="0.012 0.00325 -0.00325" rgba="0 1 0 0.5"/>
-                                                                        <site name="r_hand_thumb_taxel_1" size="0.003" pos="0.012 0.0065 0.0" rgba="0 1 0 0.5"/>
-                                                                        <site name="r_hand_thumb_taxel_2" size="0.003" pos="0.012 0.00325 0.00325" rgba="0 1 0 0.5"/>
-                                                                        <site name="r_hand_thumb_taxel_3" size="0.003" pos="0.0135 -0.0015 0.0065" rgba="0 1 0 0.5"/>
-                                                                        <site name="r_hand_thumb_taxel_4" size="0.003" pos="0.0135 -0.0015 -0.0065" rgba="0 1 0 0.5"/>
-                                                                        <site name="r_hand_thumb_taxel_5" size="0.003" pos="0.015 0.00325 0.00325" rgba="0 1 0 0.5"/>
-                                                                        <site name="r_hand_thumb_taxel_6" size="0.003" pos="0.015 0.0065 0.0" rgba="0 1 0 0.5"/>
-                                                                        <site name="r_hand_thumb_taxel_7" size="0.003" pos="0.015 0.00325 -0.00325" rgba="0 1 0 0.5"/>
-                                                                        <site name="r_hand_thumb_taxel_8" size="0.003" pos="0.019625 0.001625 -0.00325" rgba="0 1 0 0.5"/>
-                                                                        <site name="r_hand_thumb_taxel_9" size="0.003" pos="0.02125 0.00325 0.0" rgba="0 1 0 0.5"/>
-                                                                        <site name="r_hand_thumb_taxel_10" size="0.003" pos="0.019625 0.001625 0.00325" rgba="0 1 0 0.5"/>
-                                                                        <site name="r_hand_thumb_taxel_11" size="0.003" pos="0.0245 0.0 0.0" rgba="0 1 0 0.5"/>
+                                                                        <site name="r_hand_thumb_taxel_0" size="0.003" pos="0.012 0.00325 -0.00325" rgba="0 1 0 0.0"/>
+                                                                        <site name="r_hand_thumb_taxel_1" size="0.003" pos="0.012 0.0065 0.0" rgba="0 1 0 0.0"/>
+                                                                        <site name="r_hand_thumb_taxel_2" size="0.003" pos="0.012 0.00325 0.00325" rgba="0 1 0 0.0"/>
+                                                                        <site name="r_hand_thumb_taxel_3" size="0.003" pos="0.0135 -0.0015 0.0065" rgba="0 1 0 0.0"/>
+                                                                        <site name="r_hand_thumb_taxel_4" size="0.003" pos="0.0135 -0.0015 -0.0065" rgba="0 1 0 0.0"/>
+                                                                        <site name="r_hand_thumb_taxel_5" size="0.003" pos="0.015 0.00325 0.00325" rgba="0 1 0 0.0"/>
+                                                                        <site name="r_hand_thumb_taxel_6" size="0.003" pos="0.015 0.0065 0.0" rgba="0 1 0 0.0"/>
+                                                                        <site name="r_hand_thumb_taxel_7" size="0.003" pos="0.015 0.00325 -0.00325" rgba="0 1 0 0.0"/>
+                                                                        <site name="r_hand_thumb_taxel_8" size="0.003" pos="0.019625 0.001625 -0.00325" rgba="0 1 0 0.0"/>
+                                                                        <site name="r_hand_thumb_taxel_9" size="0.003" pos="0.02125 0.00325 0.0" rgba="0 1 0 0.0"/>
+                                                                        <site name="r_hand_thumb_taxel_10" size="0.003" pos="0.019625 0.001625 0.00325" rgba="0 1 0 0.0"/>
+                                                                        <site name="r_hand_thumb_taxel_11" size="0.003" pos="0.0245 0.0 0.0" rgba="0 1 0 0.0"/>
                                                                 </body>
                                                             </body>
                                                         </body>
@@ -4547,6 +4547,12 @@
                 </body>
             </body>    
         </body>
+
+        <!-- Here we inlcude a box as an example object -->
+        <body name="box" pos="-1.0 0 0.063">
+            <geom type="box" size="0.1 0.1 0.1" rgba="0.8 0.8 0.8 1" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+        </body>
+
         <body name="front_camera" pos="-2 0 1.1" quat="-0.5 -0.5 0.5 0.5">
             <camera name="front_cam" fovy="70"/>
         </body>

@@ -1,6 +1,25 @@
 """
+ed_skin.py
 
 Author: Simon F. Muller-Cleve
+Affiliation: Istituto Italiano di Tecnologia (IIT)
+Department: Event-Driven Perception for Robotics (EDPR)
+Date: 29.04.2025
+
+Description:
+This module provides functionality for simulating event-based tactile sensors and integrating them with the iCub robot's 
+skin system. It includes classes and functions for generating events based on changes in taxel intensity, visualizing 
+tactile data, and managing skin sensor configurations.
+
+Classes:
+- SkinEventSimulator: Simulates an event-based skin sensor by generating events based on taxel intensity changes.
+- ICubSkin: Represents the iCub robot's skin system, integrating tactile sensors and visualization.
+
+Functions:
+- visualize_skin_patches: Visualizes the layout of skin patches based on triangle configurations.
+- make_skin_event_frame: Updates a visual representation of skin events on a tactile sensor image.
+- read_triangle_data: Reads triangle data from a given file path.
+
 """
 
 import logging
@@ -8,12 +27,44 @@ import logging
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-from helpers.draw_pads import fingertip3L, fingertip3R, palmL, palmR, triangle_10pad
+from helpers.draw_pads import (fingertip3L, fingertip3R, palmL, palmR,
+                               triangle_10pad)
 from helpers.helpers import KEY_MAPPING, TRIANGLE_FILES, TRIANGLE_INI_PATH
 
 
 class SkinEventSimulator:
+    """
+    Simulates an event-based skin sensor by generating events based on changes in taxel (tactile pixel) intensity.
+
+    Attributes:
+        Cp (float): Positive contrast threshold.
+        Cm (float): Negative contrast threshold.
+        sigma_Cp (float): Standard deviation for noise in the positive contrast threshold.
+        sigma_Cm (float): Standard deviation for noise in the negative contrast threshold.
+        log_eps (float): Small constant added to avoid log(0) when using logarithmic data.
+        refractory_period_ns (int): Minimum time (in nanoseconds) between consecutive events for the same taxel.
+        last_data (np.array): The last processed taxel data.
+        ref_values (np.array): Reference values for contrast threshold crossings.
+        last_event_timestamp (np.array): Timestamps of the last event for each taxel.
+        current_time (int): Current simulation time.
+        size (int): Number of taxels in the sensor.
+    """
+
     def __init__(self, data, time, Cp=0.5, Cm=0.5, sigma_Cp=0.01, sigma_Cm=0.01, log_eps=1e-6, refractory_period_ns=100):
+        """
+        Initializes the SkinEventSimulator.
+
+        Args:
+            data (np.array): Initial taxel data to initialize the simulator.
+            time (int): Initial simulation time in nanoseconds.
+            Cp (float): Positive contrast threshold. Default is 0.5.
+            Cm (float): Negative contrast threshold. Default is 0.5.
+            sigma_Cp (float): Noise standard deviation for Cp. Default is 0.01.
+            sigma_Cm (float): Noise standard deviation for Cm. Default is 0.01.
+            log_eps (float): Small constant for logarithmic transformation. Default is 1e-6.
+            refractory_period_ns (int): Refractory period in nanoseconds. Default is 100.
+        """
+
         self.Cp = Cp
         self.Cm = Cm
         self.sigma_Cp = sigma_Cp
@@ -32,6 +83,20 @@ class SkinEventSimulator:
         self.size = data.shape[0]
 
     def skinCallback(self, data, time):
+        """
+        Processes new taxel data and generates events based on intensity changes.
+
+        Args:
+            data (np.array): The new taxel data to process.
+            time (int): The current simulation time in nanoseconds.
+
+        Returns:
+            np.array: A list of events, where each event is a tuple (taxel_ID, timestamp, polarity).
+                      - taxel_ID: Index of the taxel that generated the event.
+                      - timestamp: Timestamp of the event.
+                      - polarity: True for positive events, False for negative events.
+        """
+
         assert time >= 0
 
         # For each pixel, check if new events need to be generated since the last image sample
@@ -101,6 +166,24 @@ class SkinEventSimulator:
 
 
 def visualize_skin_patches(path_to_triangles, triangles_ini, DEBUG=False):
+    """
+    Visualizes the layout of skin patches based on triangle configurations.
+
+    This function reads triangle data from a specified file, processes the layout, and optionally 
+    generates a visual representation of the skin patch layout, including taxel positions and triangle boundaries.
+
+    Args:
+        path_to_triangles (str): Path to the directory containing triangle configuration files.
+        triangles_ini (str): Name of the triangle configuration file (without the extension).
+        DEBUG (bool): Whether to enable debug mode for visualization and logging. Default is False.
+
+    Returns:
+        tuple: A tuple containing:
+            - img (np.array): A 2D or 3D numpy array representing the visualized skin patch layout.
+            - dX (list): A list of x-coordinates for taxel positions.
+            - dY (list): A list of y-coordinates for taxel positions.
+    """
+
     config_types, triangles = read_triangle_data(
         f"{path_to_triangles}/{triangles_ini}.ini")
     patch_ID = []
@@ -298,14 +381,31 @@ def read_triangle_data(file_path: str) -> np.array:
                 read_header = False
                 continue
             if "[SENSORS]" in line:
-                # for the hand files the header comes before the [SENSORS] line, for now I change the ini files locally. Find a better solution later.
-                # also in torso.ini removes #leftlower
+                # TODO for the hand files the header comes before the [SENSORS] line, for now I change the ini files locally. Find a better solution later.
+                # TODO also in torso.ini removes #leftlower
                 start_found = True
                 read_header = True
     return config_type, triangles
 
 
 def make_skin_event_frame(img, events, locations):
+    """
+    Updates a visual representation of skin events on a tactile sensor image.
+
+    This function overlays events on a given image, marking active taxels with colors based on event polarity.
+
+    Args:
+        img (np.array): A 2D or 3D numpy array representing the current tactile sensor image.
+        events (np.array): A numpy array of shape (N, 3), where each row represents an event with:
+                           - taxel_ID (int): Index of the taxel that generated the event.
+                           - t (int): Timestamp of the event (not used in visualization).
+                           - pol (bool): Polarity of the event (True for positive, False for negative).
+        locations (tuple): A tuple of two lists or arrays representing the (x, y) coordinates of each taxel.
+
+    Returns:
+        np.array: An updated numpy array representing the tactile sensor image with events overlaid.
+    """
+
     # events = taxel_ID, t, pol
     if len(events):
         active_taxel, nb_events = np.unique(events[:, 0], return_counts=True)
@@ -327,7 +427,29 @@ def make_skin_event_frame(img, events, locations):
 
 
 class ICubSkin:
+    """
+    Represents the iCub robot's skin system, integrating event-based tactile sensors and visualization.
+
+    Attributes:
+        esim (list): A list of SkinEventSimulator instances for each skin patch.
+        taxel_locs (dict): A dictionary mapping skin patches to their taxel locations (x, y coordinates).
+        imgs (dict): A dictionary mapping skin patches to their visual representations.
+        grouped_sensors (dict): A dictionary containing grouped sensor data for each skin patch.
+        show_skin (bool): Whether to display the skin event visualizations.
+        DEBUG (bool): Whether to enable debug logging.
+    """
+
     def __init__(self, time, grouped_sensors, show_skin=True, DEBUG=False):
+        """
+        Initializes the ICubSkin class with tactile sensors, visualization options, and debug settings.
+
+        Args:
+            time (int): Initial simulation time in nanoseconds.
+            grouped_sensors (dict): A dictionary containing grouped sensor data for each skin patch.
+            show_skin (bool): Whether to display the skin event visualizations. Default is True.
+            DEBUG (bool): Whether to enable debug logging. Default is False.
+        """
+
         self.esim = []
         self.taxel_locs = {}
         self.imgs = {}
@@ -371,6 +493,19 @@ class ICubSkin:
         # return esim, taxel_locs, imgs
 
     def update_skin(self, time):
+        """
+        Updates the skin system by processing tactile sensor data and generating events.
+
+        Args:
+            time (int): Current simulation timestamp in nanoseconds.
+
+        Returns:
+            list: A list of events for all skin patches, where each event is a numpy array of shape (N, 3):
+                  - taxel_ID (int): Index of the taxel that generated the event.
+                  - timestamp (int): Timestamp of the event in nanoseconds.
+                  - polarity (bool): True for positive events, False for negative events.
+        """
+
         all_events = []
         for triangle_ini, esim_single in zip(TRIANGLE_FILES, self.esim):
             # TODO make sure we hand over the right data here

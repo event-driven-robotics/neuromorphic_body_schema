@@ -1,6 +1,12 @@
 """
 include_skin_to_mujoco_model.py
 
+Author: Simon F. Muller-Cleve
+Affiliation: Istituto Italiano di Tecnologia (IIT)
+Department: Event-Driven Perception for Robotics (EDPR)
+Date: 29.04.2025
+
+Description:
 This script integrates skin sensors (taxels) into a MuJoCo model of the iCub robot. It reads taxel positions from 
 configuration files, processes these positions, and inserts them into the MuJoCo XML model file. The main functionalities include:
 
@@ -12,9 +18,8 @@ configuration files, processes these positions, and inserts them into the MuJoCo
 The script is structured to handle different parts of the robot, ensuring that the taxels are correctly positioned and 
 oriented according to the robot's body parts. The final output is a modified MuJoCo XML model file with the integrated skin sensors.
 
-Author: Simon F. Muller-Cleve
-Date: March 13, 2025
 """
+
 
 import os
 
@@ -73,7 +78,7 @@ def rebase_coordinate_system(taxel_pos):
     _, eigenvectors = np.linalg.eig(cov)
     # now we want to rotate the taxels to the new coordinate system
     taxel_pos_excluded = np.dot(eigenvectors.T, taxel_pos_excluded.T).T
-    
+
     # now we can update the taxel_pos array
     for i in range(len(taxel_pos)):
         taxel_pos[i][0][0] = taxel_pos_excluded[i][0]
@@ -100,11 +105,12 @@ def rotate_position(pos, offsets, angle_degrees):
     pos[0] += offsets[0]
     pos[1] += offsets[1]
     pos[2] += offsets[2]
-    
+
     # rotate the point around x axis
     angle_radians = np.radians(angle_degrees[0])
     rotation_matrix = np.array([[1, 0, 0],
-                                [0, np.cos(angle_radians), -np.sin(angle_radians)],
+                                [0, np.cos(angle_radians), -
+                                 np.sin(angle_radians)],
                                 [0, np.sin(angle_radians), np.cos(angle_radians)]])
     pos = np.dot(rotation_matrix, pos)
 
@@ -118,10 +124,11 @@ def rotate_position(pos, offsets, angle_degrees):
     # rotate the point around z axis
     angle_radians = np.radians(angle_degrees[2])
     rotation_matrix = np.array([[np.cos(angle_radians), -np.sin(angle_radians), 0],
-                                [np.sin(angle_radians), np.cos(angle_radians), 0],
+                                [np.sin(angle_radians), np.cos(
+                                    angle_radians), 0],
                                 [0, 0, 1]])
     pos = np.dot(rotation_matrix, pos)
-    
+
     return np.round(pos, 12)
 
 
@@ -460,49 +467,74 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                                 taxel_ids = []
                         # rebase the coordinate system
                         if part == "r_upper_arm" or part == "r_forearm" or part == "l_upper_arm" or part == "l_forearm" or part == "torso":
-                            taxels_to_add = rebase_coordinate_system(taxels_to_add)
+                            taxels_to_add = rebase_coordinate_system(
+                                taxels_to_add)
                         for taxel in taxels_to_add:
                             # line_counter -= 1  # we want to add the taxels before the next body
                             pos, _, idx = taxel
                             taxel_ids.append(idx)
                             # add the number of whitespace to the beginning of the line
                             if part == "r_upper_arm":
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, -32, 0])
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, -32, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2])
                                 # pos, up-down, left-right, front-back (looking from the front)
-                                pos = rotate_position(pos=pos, offsets=[-0.08, 0.0015, 0.012], angle_degrees=[0, 0, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[-0.08, 0.0015, 0.012], angle_degrees=[0, 0, 0])
                             if part == "r_forearm":
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, 90])
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 78, 0])
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, 90])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 78, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2])
                                 # pos, up-down, left-right, front-back (looking from the front)
-                                pos = rotate_position(pos=pos, offsets=[-0.05, 0, -0.0015], angle_degrees=[0, 0, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[-0.05, 0, -0.0015], angle_degrees=[0, 0, 0])
                             if part == "l_upper_arm":
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[-270, 0, 0])
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, -148, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[-270, 0, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, -148, 0])
                                 # pos, up-down, left-right, front-back (looking from the front)
-                                pos = rotate_position(pos=pos, offsets=[0.08, 0.0015, 0.012], angle_degrees=[0, 0, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0.08, 0.0015, 0.012], angle_degrees=[0, 0, 0])
                             if part == "l_forearm":
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -90])
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 102, 0])
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -90])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 102, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2])
                                 # pos, up-down, left-right, front-back (looking from the front)
-                                pos = rotate_position(pos=pos, offsets=[0.05, -0.001, 0], angle_degrees=[0, 0, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0.05, -0.001, 0], angle_degrees=[0, 0, 0])
                             if part == "torso":
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 90, 0])
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[-4, 0, 0])
-                                pos = rotate_position(pos=pos, offsets=[0, 0.06, 0.068], angle_degrees=[0, 0, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 90, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[-4, 0, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0.06, 0.068], angle_degrees=[0, 0, 0])
                             if part == "r_palm":
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, 180])
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[90, 0, 0])
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 15, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, 180])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[90, 0, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 15, 0])
                                 # pos, up-down, left-right, front-back (looking from the front)
-                                pos = rotate_position(pos=pos, offsets=[-0.055, -0.005, 0.02], angle_degrees=[0, 0, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[-0.055, -0.005, 0.02], angle_degrees=[0, 0, 0])
                             if part == "l_palm":
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[-90, 0, 0])
-                                pos = rotate_position(pos=pos, offsets=[0, 0, 0], angle_degrees=[0, -15, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[-90, 0, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, -15, 0])
                                 # pos, up-down, left-right, front-back (looking from the front)
-                                pos = rotate_position(pos=pos, offsets=[0.055, -0.005, 0.02], angle_degrees=[0, 0, 0])
+                                pos = rotate_position(
+                                    pos=pos, offsets=[0.055, -0.005, 0.02], angle_degrees=[0, 0, 0])
 
                             lines.insert(
                                 line_counter, f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.0"/>\n')
@@ -557,7 +589,6 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
         file.write(f'Part name: Nb of taxels\n')
         for part_to_add, taxels_to_add in zip(parts_to_add, taxel_ids_to_add):
             file.write(f'{part_to_add}: {len(taxels_to_add)}\n')
-
 
 
 if __name__ == "__main__":
