@@ -110,6 +110,33 @@ joint_dict_prop = {
 Pre-set values are indicative and can be modified according to the desired needs of the simulation.
 
 
+### Movement control
+
+MuJoCo simulator's control of movement requires the distinction of two different objects: model and data. Model contains the general (usually immutable) information regarding the object to simulate, like its physics, its meshes etc.. Data contains the variables which strictly relate to the simulation at hand, like current positions, velocities etc.. 
+Both are needed to advance the simulation through the command mujoco.mj_step(model, data).
+However, data can be modified to move the robot.
+To do so, use the function update_joint_positions(data, {joint: joint_position}) where joint_position are the new desired iCub positions. The code can be as follows: 
+```
+joint = 'r_shoulder_roll'
+
+with mujoco.viewer.launch_passive(model, data) as viewer:
+
+    sim_time = data.time
+
+    while viewer.is_running():
+        i+=1
+        mujoco.mj_step(model, data)  # Step the simulation
+        viewer.sync()
+
+        joint_position = model.actuator(joint).ctrlrange[0]+0.001*i
+        
+        update_joint_positions(data, {joint: joint_position})
+
+```
+
+
+
+
 
 
 
