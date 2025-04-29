@@ -118,6 +118,7 @@ However, data can be modified to move the robot.
 To do so, use the function update_joint_positions(data, {joint: joint_position}) where joint_position are the new desired iCub positions. The code can be as follows: 
 ```
 joint = 'r_shoulder_roll'
+i=0
 
 with mujoco.viewer.launch_passive(model, data) as viewer:
 
