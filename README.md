@@ -56,16 +56,16 @@ Finally, each sensor must be defined as sensor element at the bottom of the xml 
 
 ### Implementation of event-driven proprioception
 Event-driven proprioception is an event-driven readout of actuator values in real time from the MuJoCo simulator. 
-'''
+
 In humans we receive proprioceptive inputs encoding for joint value, joint velocity, torque, and closeness to joint position limits. To maximise the informative content of the encoding, for each joint we split the output mimicking an agonistic-antagonistic muscular system. The total number of neurons as output will be therefore 4*2=8. The output is described in the following section.
-'''
+
 ![Screenshot 2025-02-06 111942](https://github.com/user-attachments/assets/8444c8b0-8434-432c-970f-9062c5ceecad)
 
 
-'''
+
 
 To visualize the spiking output, set VISUALIZE_PROPRIOCEPTION_FEED = True. The output will show, from top to bottom:
-'''
+```
 joint position 1
 joint position 2
 joint velocity 1
@@ -74,19 +74,19 @@ joint load 1
 joint load 2
 joint limit 1
 joint limit 2
-'''
+```
 
 To control which joints will be visualized, modify joint_dict_prop as desired. Insert in the dictionary the name of the joint according to the XML file (e.g. r_shoulder_roll), and set the maximum frequency parameters. The setup should look as follows:
-'''
+```
 'r_shoulder_roll': {
             'position_max_freq': 1000,  # Hz, maximum number of spikes per second 
             'velocity_max_freq': 1000,
             'load_max_freq': 1000,
             'limits_max_freq': 1000,
         }
-'''
+```
 Pre-set values are indicative and can be modified according to the desired needs of the simulation.
-'''
+
 
 
 
