@@ -97,12 +97,15 @@ joint limit N2
 
 To control which joints will be visualized, modify joint_dict_prop as desired. Insert in the dictionary the name of the joint according to the XML file (e.g. r_shoulder_roll), and set the maximum frequency parameters. The setup should look as follows:
 ```
-'r_shoulder_roll': {
+joint_dict_prop = {
+    'r_shoulder_roll': {
             'position_max_freq': 1000,  # Hz, maximum number of spikes per second 
             'velocity_max_freq': 1000,
             'load_max_freq': 1000,
             'limits_max_freq': 1000,
-        }
+        },
+    ...
+}
 ```
 Pre-set values are indicative and can be modified according to the desired needs of the simulation.
 
