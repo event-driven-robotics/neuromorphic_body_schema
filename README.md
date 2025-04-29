@@ -59,7 +59,7 @@ Event-driven proprioception is an event-driven readout of actuator values in rea
 
 In humans we receive proprioceptive inputs encoding for joint value, joint velocity, torque, and closeness to joint position limits. To maximise the informative content of the encoding, for each joint we split the output mimicking an agonistic-antagonistic muscular system. The total number of neurons as output will be therefore 4*2=8. The output is described in the following section.
 
-![Screenshot 2025-02-06 111942](https://github.com/user-attachments/assets/8444c8b0-8434-432c-970f-9062c5ceecad)
+![Screenshot 2025-02-06 111942](https://github.com/user-attachments/assets/8444c8b0-8434-432c-970f-9062c5ceecad  =100x20 )
 
 
 
