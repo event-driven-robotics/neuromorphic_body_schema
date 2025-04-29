@@ -60,6 +60,7 @@ Event-driven proprioception is an event-driven readout of actuator values in rea
 In humans we receive proprioceptive inputs encoding for joint value, joint velocity, torque, and closeness to joint position limits. To maximise the informative content of the encoding, for each joint we split the output mimicking an agonistic-antagonistic muscular system. The total number of neurons as output will be therefore 4*2=8. The output is described in the following section.
 
 The proprioceptive output can be scenatized in the following figure.
+<img src="[https://github.com/user-attachments/assets/8444c8b0-8434-432c-970f-9062c5ceecad"] width="200" />
 ![Screenshot 2025-02-06 111942](https://github.com/user-attachments/assets/8444c8b0-8434-432c-970f-9062c5ceecad )
 TODO: the image is very big, change it 
 The joint in analysis is the elbow joint. The joint position value is represented by $\Phi$, in green. The limits of the joint are represented by the red dashed lines. The agonistic-antagonistic system is represented by the two empty bars. 
