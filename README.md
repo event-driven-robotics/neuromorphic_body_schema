@@ -59,21 +59,35 @@ Event-driven proprioception is an event-driven readout of actuator values in rea
 
 In humans we receive proprioceptive inputs encoding for joint value, joint velocity, torque, and closeness to joint position limits. To maximise the informative content of the encoding, for each joint we split the output mimicking an agonistic-antagonistic muscular system. The total number of neurons as output will be therefore 4*2=8. The output is described in the following section.
 
-![Screenshot 2025-02-06 111942](https://github.com/user-attachments/assets/8444c8b0-8434-432c-970f-9062c5ceecad  =100x20 )
+The proprioceptive output can be scenatized in the following figure.
+![Screenshot 2025-02-06 111942](https://github.com/user-attachments/assets/8444c8b0-8434-432c-970f-9062c5ceecad )
+TODO: the image is very big, change it 
+The joint in analysis is the elbow joint. The joint position value is represented by $\Phi$, in green. The limits of the joint are represented by the red dashed lines. The agonistic-antagonistic system is represented by the two empty bars. 
+
+Joint position value is encoded in two opposite sigmoids, as shown. Given a joint value, the output are two frequencies at which the two neurons will fire. The frequencies determine the number of events at each time-frame. The events of the two neurons are the output that will be shown in the simulation.    
+![sigmoid](https://github.com/user-attachments/assets/baa7fe81-94ce-4681-9993-244e3e9658df)
+
+Joint velocity value is encoded in two opposite linear functions, as shown. Given a joint velocity value, the output are two frequencies at which the two neurons will fire.  The frequencies determine the number of events at each time-frame. We assume that when the robot is not moving the velocity is zero, and therefore there are no events. Moreover, we assume that the velocities are symmetric, positive and negative, according to the frame of reference of increasing/decreasing joint value. To not lose this information, one neuron will fire for positive velocities and another neuron for negative velocities. The events of the two neurons are the output that will be shown in the simulation.    
+![vels](https://github.com/user-attachments/assets/b837274a-7efe-4f1c-857b-29b9b10a77ca)
 
 
+Joint loads follow the same logic as joint velocities, as shown.
+![loads](https://github.com/user-attachments/assets/4ef7b243-9f9d-4cf6-a64b-b1089153944f)
+
+Joint position limits are encoded in two opposite steep sigmoids, as shown in the figure. As the actuators reach each limit values, the function outputs a higher frequency, which determines the number of events at each time-frame. The events of the two neurons are the output that will be shown in the simulation.
+![limits](https://github.com/user-attachments/assets/03f331b3-a0db-4287-95cb-1237d4b6c9d0)
 
 
 To visualize the spiking output, set VISUALIZE_PROPRIOCEPTION_FEED = True. The output will show, from top to bottom:
 ```
-joint position 1
-joint position 2
-joint velocity 1
-joint velocity 2
-joint load 1
-joint load 2
-joint limit 1
-joint limit 2
+joint position N1
+joint position N2
+joint velocity N1
+joint velocity N2
+joint load N1
+joint load N2
+joint limit N1
+joint limit N2
 ```
 
 To control which joints will be visualized, modify joint_dict_prop as desired. Insert in the dictionary the name of the joint according to the XML file (e.g. r_shoulder_roll), and set the maximum frequency parameters. The setup should look as follows:
