@@ -70,13 +70,13 @@ Joint position value is encoded in two opposite sigmoids, as shown below. Given 
 ![sigmoid_lowsize](https://github.com/user-attachments/assets/368ff71e-64ab-4b9b-aa63-62e93b0cd9c1)
 
 Joint velocity value is encoded in two opposite linear functions, as shown below. Given a joint velocity value, the output are two frequencies at which the two neurons will fire.  The frequencies determine the number of events at each time-frame. We assume that when the robot is not moving the velocity is zero, and therefore there are no events. Moreover, we assume that the velocities are symmetric, positive and negative, according to the frame of reference of increasing/decreasing joint value. To not lose this information, one neuron will fire for positive velocities and another neuron for negative velocities. The events of the two neurons are the output that will be shown in the simulation.    
+![vels_lowsize](https://github.com/user-attachments/assets/1d0a3b6f-f704-427f-89df-34800002883e)
 
-![vels_lowsize](https://github.com/user-attachments/assets/698f353e-fa51-473c-aff5-18b3318d5ec5)
 
 
 Joint loads follow the same logic as joint velocities, as shown below.
+![loads_lowsize](https://github.com/user-attachments/assets/d00da786-91ce-4625-9726-2bd0770d437d)
 
-![loads_lowsize](https://github.com/user-attachments/assets/d047612c-c725-4d7c-bf74-a2a623daf83d)
 
 Joint position limits are encoded in two opposite steep sigmoids, as shown in the figure below. As the actuators reach each limit values, the function outputs a higher frequency, which determines the number of events at each time-frame. The events of the two neurons are the output that will be shown in the simulation.
 
