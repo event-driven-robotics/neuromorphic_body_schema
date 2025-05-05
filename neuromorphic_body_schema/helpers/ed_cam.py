@@ -27,6 +27,10 @@ import cv2
 import mujoco
 import numpy as np
 
+# set the color for the events
+red = (0, 0, 255)   # positive events
+blue = (255, 0, 0)  # negative events
+
 
 class CameraEventSimulator:
     """
@@ -190,10 +194,18 @@ def make_camera_event_frame(events, width=320, height=240):
                   where pixel values are set to 255 for event locations and 0 elsewhere.
     """
 
-    img = np.zeros((height, width))
+    img = np.zeros((height, width, 3), dtype=np.uint8)
     if len(events):
         coords = events[:, :2].astype(int)
-        img[coords[:, 1], coords[:, 0]] = 255
+        # seperate positive and negative events
+        pos_events = events[events[:, 3] == 1]
+        neg_events = events[events[:, 3] == 0]
+        if len(pos_events):
+            coords = pos_events[:, :2].astype(int)
+            img[coords[:, 1], coords[:, 0]] = red
+        if len(neg_events):
+            coords = neg_events[:, :2].astype(int)
+            img[coords[:, 1], coords[:, 0]] = blue
     return img
 
 
@@ -238,7 +250,7 @@ class ICubEyes:
         self.renderer = mujoco.Renderer(model)
 
         self.camera_feed_window_name = 'Camera Feed'
-        self.events_window_name = 'Events Feed'
+        self.events_window_name = 'Event Feed'
 
         self.renderer.update_scene(self.data, camera=self.camera_name)
         pixels = self.renderer.render()

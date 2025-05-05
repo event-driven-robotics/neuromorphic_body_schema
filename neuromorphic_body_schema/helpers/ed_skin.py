@@ -31,6 +31,14 @@ from helpers.draw_pads import (fingertip3L, fingertip3R, palmL, palmR,
                                triangle_10pad)
 from helpers.helpers import KEY_MAPPING, TRIANGLE_FILES, TRIANGLE_INI_PATH
 
+# set background color to gray
+background_color = (50, 50, 50)
+# set taxel contours to gold
+taxel_color = (0, 215, 255)
+line_color = (255, 255, 255)
+# set the color for the events
+red = (0, 0, 255)   # positive events
+blue = (255, 0, 0)  # negative events
 
 class SkinEventSimulator:
     """
@@ -335,20 +343,20 @@ def visualize_skin_patches(path_to_triangles, triangles_ini, DEBUG=False):
         plt.close(fig)
 
     # Create a blank image
-    img = np.zeros((height, width, 3), dtype=np.uint8)
+    img = np.full((height, width, 3), background_color, dtype=np.uint8)
     # Draw the triangles on the image
     for taxel_counter in range(len(dX)):
         cv2.circle(img, (dX[taxel_counter],  dY[taxel_counter]),
-                   5, (0, 0, 255), 1)  # RGB color
+                   5, taxel_color, 1)  # RGB color
     if not "hand" in triangles_ini:
         for i in range(len(dXv)):
             for j in range(len(dXv[i])):
                 pt1 = (dXv[i][j-1], dYv[i][j-1])
                 pt2 = (dXv[i][j], dYv[i][j])
-                cv2.line(img, pt1, pt2, (255, 255, 255), 1)
+                cv2.line(img, pt1, pt2, line_color, 1)
             pt1 = (dXv[i][-1], dYv[i][-1])
             pt2 = (dXv[i][0], dYv[i][0])
-            cv2.line(img, pt1, pt2, (255, 255, 255), 1)
+            cv2.line(img, pt1, pt2, line_color, 1)
 
     return (img, dX, dY)
 
@@ -415,14 +423,16 @@ def make_skin_event_frame(img, events, locations):
                 # event happened at this location
                 if events[np.where(events[:, 0] == active_taxel[active_taxel == i])[0][0]][-1] > 0:
                     # TODO now we can scale the color according to the nb of spikes
+                    # pos event
                     cv2.circle(img, (int(loc[0]), int(
-                        loc[1])), 4, (0, 255, 0), -1)
+                        loc[1])), 4, red, -1)
                 else:
+                    # neg event
                     cv2.circle(img, (int(loc[0]), int(
-                        loc[1])), 4, (255, 0, 0), -1)
+                        loc[1])), 4, blue, -1)
         else:
             # no event happened, return to blank
-            cv2.circle(img, (int(loc[0]), int(loc[1])), 4, (0, 0, 0), -1)
+            cv2.circle(img, (int(loc[0]), int(loc[1])), 4, background_color, -1)
     return img
 
 

@@ -26,6 +26,7 @@ Run this script to start the simulation and visualize the sensory data.
 
 
 import logging
+import math
 import re
 import threading
 from collections import defaultdict
@@ -45,8 +46,8 @@ logging.basicConfig(
 
 VISUALIZE_CAMERA_FEED = False
 VISUALIZE_ED_CAMERA_FEED = False
-VISUALIZE_SKIN = False
-VISUALIZE_PROPRIOCEPTION_FEED = True
+VISUALIZE_SKIN = True
+VISUALIZE_PROPRIOCEPTION_FEED = False
 
 
 if __name__ == '__main__':
@@ -91,7 +92,7 @@ if __name__ == '__main__':
 
     # init example motion
     # joints = ['r_index_proximal', 'r_index_distal', 'r_middle_proximal', 'r_middle_distal']
-    joints = ['r_shoulder_roll', 'l_shoulder_roll']  # , 'r_pinky', 'l_pinky'
+    joints = ['neck_yaw']  # , 'r_pinky', 'l_pinky'
     joint_dict_prop = {
         'r_shoulder_roll': {
             'position_max_freq': 1000,  # Hz
@@ -120,7 +121,7 @@ if __name__ == '__main__':
     }
 
     # Define parameters for the sine wave
-    frequencies = [0.05, 0.01]
+    frequencies = [1.0]
     min_max_pos = np.zeros((len(joints), 2))
     for i, joint in enumerate(joints):
         min_max_pos[i] = model.actuator(joint).ctrlrange
@@ -154,13 +155,13 @@ if __name__ == '__main__':
             viewer.sync()
             # sim_time_ns = data.time*1E9  # ns
 
-            # for (min_max, frequency, joint) in zip(min_max_pos, frequencies, joints):
-            #     joint_position = min_max[0] + (min_max[1] - min_max[0]) * 0.5 * (
-            #         1 + math.sin(2 * math.pi * frequency * data.time))
-            #     # Update joint positions
-            #     if DEBUG:
-            #         print(joint, joint_position)
-            #     update_joint_positions(data, {joint: joint_position})
+            for (min_max, frequency, joint) in zip(min_max_pos, frequencies, joints):
+                joint_position = min_max[0] + (min_max[1] - min_max[0]) * 0.5 * (
+                    1 + math.sin(2 * math.pi * frequency * data.time))
+                # Update joint positions
+                if DEBUG:
+                    print(joint, joint_position)
+                update_joint_positions(data, {joint: joint_position})
 
             cam_events = camera_object.update_camera(
                 data.time*1E9)  # expects ns
