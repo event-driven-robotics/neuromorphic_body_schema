@@ -249,8 +249,10 @@ class ICubEyes:
 
         self.renderer = mujoco.Renderer(model)
 
-        self.camera_feed_window_name = 'Camera Feed'
-        self.events_window_name = 'Event Feed'
+        camera_name_split = camera_name.split('_')
+        camera_name_spec = f"{camera_name_split[0].capitalize()} {camera_name_split[1].capitalize()}"
+        self.camera_feed_window_name = f'{camera_name_spec} Camera Feed'
+        self.events_window_name = f'{camera_name_spec} Event Feed'
 
         self.renderer.update_scene(self.data, camera=self.camera_name)
         pixels = self.renderer.render()

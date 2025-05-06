@@ -37,17 +37,17 @@ All events are organized following the AER protocoll. Events are sorted by time 
 event = x, y, timestamp, polarity
 ``` 
 
-## Implementation of event-driven camera feed
-The robot is equipped with a single RGB camera named ``head_cam''. On each simulation time step, the scene is rendered and the pixel values are passed to the CameraEventSimulator class which takes the RGB values and turns them into gray scale and creates output events based on either the change in brightness, or the change of the log brightness. For each threshold crossing between to consequtive samples, events are spaced equally in time and increase and decrease of brightness change are indicated by 1, 0 polarity, respectively. Positive events are colored red, negative events are colored in blue. Noise is added to the camera feed before calculating the events.
+### Implementation of event-driven camera feed
+The robot is equipped with a single RGB camera named ``head_cam.'' On each simulation time step, the scene is rendered and the pixel values are passed to the CameraEventSimulator class which takes the RGB values and turns them into gray scale and creates output events based on either the change in brightness, or the change of the log brightness. For each threshold crossing between to consequtive samples, events are spaced equally in time and increase and decrease of brightness change are indicated by 1, 0 polarity, respectively. Positive events are colored red, negative events are colored in blue. Noise is added to the camera feed before calculating the events.
 
 ![cam_lowsize](neuromorphic_body_schema/assets/camera_feed.png)
 
-## Implementation of event-driven skin
+### Implementation of event-driven skin
 The skin is implemented by body part. Each body part has it's own output. The visualization shows each skin part indipendently. The encoding used is the same as for the vision sensor refelcting FA I response which only indicates change of sensor readings by events. 
 
 ![skin_lowsize](neuromorphic_body_schema/assets/skin_vis.png)
 
-## Implementation of event-driven proprioception
+### Implementation of event-driven proprioception
 Event-driven proprioception is an event-driven readout of actuator values in real time from the MuJoCo simulator. 
 
 In humans we receive proprioceptive inputs encoding for joint value, joint velocity, torque, and closeness to joint position limits. To maximise the informative content of the encoding, for each joint we split the output mimicking an agonistic-antagonistic muscular system. The total number of neurons as output will be therefore 4x2=8. The output is described in the following section.
@@ -154,7 +154,10 @@ Finally, each sensor must be defined as sensor element at the bottom of the xml 
 </sensor>
 ```
 
+## Adding objects to the simulation
+One can add objects to the simualtion as shown in the example with a box. The object musst be added to the xml file as part of the ``world.''
 
+![object_lowsize](neuromorphic_body_schema/assets/objects.png)
 
 
 
