@@ -481,27 +481,23 @@
                                     <geom pos="0 -0.067153 -0.0295008" type="mesh" rgba="1 1 1 1" mesh="sim_sea_2-5_head_prt-binary"/>
                                     <body name="eyes_tilt_frame" pos="1.90392435799427e-10 0.104896999999692 0.0455907000018309" quat="0.707106781 0 0.707106781 0">
                                         <site name="eyes_tilt_site" type="sphere" rgba="0 0 0 1" size="0.01"/>
-                                        <!--  TODO check, that this moves both eyes together -->
-                                        <!-- <joint name="eyes_tilt" pos="0 0 0" axis="-1 0 0" range="-0.5235987755982988 0.5235987755982988" damping="5.0"/> -->
                                         <body name="r_eye_frame" pos="0.0 0.0 -0.034" quat="0.70710678 0 -0.70710678 0">
                                             <site name="r_eye_site" pos="0.0 0.0 0.01" type="sphere" rgba="0.9 0.9 0.9 1" size="0.02"/>
-                                            <!--  TODO check the values of pan joint -->
                                             <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
-                                            <joint name="r_eye_pan_joint" pos="0 0 0" axis="0 1 0" range="-0.5235987755982988 0.9599310885968813" damping="5.0"/>
-                                            <joint name="r_eye_tilt_joint" pos="0 0 0" axis="1 0 0" range="-0.5235987755982988 0.9599310885968813" damping="5.0"/>
+                                            <joint name="r_eye_pan_joint" pos="0 0 0" axis="0 -1 0" range="-0.5235987755982988 0.9599310885968813" damping="5.0"/>
+                                            <joint name="r_eye_tilt_joint" pos="0 0 0" axis="-1 0 0" range="-0.5235987755982988 0.5235987755982988" damping="5.0"/>
                                             <site name="r_eye_pupil" pos="0.0 0.0 0.0275" type="cylinder" rgba="0 0 0 1" size="0.0075 0.003"/>
-                                            <body name="r_eye_camera" pos="0.043454 0.217822 0.0835957" quat="-0.0233008 0.0078341 0.9825643 0.1842908">
+                                            <body name="r_eye_camera" pos="0.0 0.0 0.0" quat="-0.0233008 0.0078341 0.9825643 0.1842908">
                                                 <camera name="r_eye_camera" fovy="42.4608673089277"/>
                                             </body>
                                         </body>
                                         <body name="l_eye_frame" pos="0.0 0.0 0.034" quat="0.70710678 0 -0.70710678 0">
                                             <site name="l_eye_site" pos="0.0 0.0 0.01" type="sphere" rgba="0.9 0.9 0.9 1" size="0.02"/>
-                                            <!--  TODO check the values of pan joint -->
                                             <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
-                                            <joint name="l_eye_pan_joint" pos="0 0 0" axis="0 1 0" range="-0.5235987755982988 0.9599310885968813" damping="5.0"/>
-                                            <joint name="l_eye_tilt_joint" pos="0 0 0" axis="1 0 0" range="-0.5235987755982988 0.9599310885968813" damping="5.0"/>
+                                            <joint name="l_eye_pan_joint" pos="0 0 0" axis="0 -1 0" range="-0.5235987755982988 0.9599310885968813" damping="5.0"/>
+                                            <joint name="l_eye_tilt_joint" pos="0 0 0" axis="-1 0 0" range="-0.5235987755982988 0.5235987755982988" damping="5.0"/>
                                             <site name="l_eye_pupil" pos="0.0 0.0 0.0275" type="cylinder" rgba="0 0 0 1" size="0.0075 0.003"/>
-                                            <body name="l_eye_camera" pos="0.043454 0.217822 0.0835957" quat="-0.0233008 0.0078341 0.9825643 0.1842908">
+                                            <body name="l_eye_camera" pos="0.0 0.0 0.0" quat="-0.0233008 0.0078341 0.9825643 0.1842908">
                                                 <camera name="l_eye_camera" fovy="42.4608673089277"/>
                                             </body>
                                         </body>
@@ -515,7 +511,7 @@
         </body>
 
         <!-- Here we inlcude a box as an example object -->
-        <body name="box" pos="1.0 0 0.63">
+        <body name="box" pos="-1.0 0.0 0.1">
             <geom type="box" size="0.1 0.1 0.1" rgba="0.8 0.8 0.8 1" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
         </body>
 
@@ -607,7 +603,6 @@
     </tendon>
 
     <tendon>
-        <!-- Coupled tendon to synchronize both eye joints -->
         <fixed name="eyes_pan_tendon">
             <joint coef="1.0" joint="r_eye_pan_joint"/>
             <joint coef="1.0" joint="l_eye_pan_joint"/>
@@ -615,7 +610,6 @@
     </tendon>
 
     <tendon>
-        <!-- Coupled tendon to synchronize both eye joints -->
         <fixed name="eyes_tilt_tendon">
             <joint coef="1.0" joint="r_eye_tilt_joint"/>
             <joint coef="1.0" joint="l_eye_tilt_joint"/>
@@ -699,7 +693,7 @@
         <position name="neck_roll"              kp="460.0"      joint="neck_roll"                       ctrlrange="-0.3490658503988659 0.3490658503988659"/>
         <position name="neck_yaw"               kp="195.0"      joint="neck_yaw"                        ctrlrange="-0.7853981633974483 0.7853981633974483"/>
         
-        <position name="eyes_pan" kp="195.0" tendon="eyes_pan_tendon" ctrlrange="-0.5235987755982988 0.5235987755982988"/>
+        <position name="eyes_pan" kp="195.0" tendon="eyes_pan_tendon" ctrlrange="-0.5235987755982988 0.9599310885968813"/>
         <position name="eyes_tilt" kp="195.0" tendon="eyes_tilt_tendon" ctrlrange="-0.5235987755982988 0.5235987755982988"/>
     </actuator>
     

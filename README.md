@@ -38,9 +38,53 @@ event = x, y, timestamp, polarity
 ``` 
 
 ### Implementation of event-driven camera feed
-The robot is equipped with a single RGB camera named ``head_cam.'' On each simulation time step, the scene is rendered and the pixel values are passed to the CameraEventSimulator class which takes the RGB values and turns them into gray scale and creates output events based on either the change in brightness, or the change of the log brightness. For each threshold crossing between to consequtive samples, events are spaced equally in time and increase and decrease of brightness change are indicated by 1, 0 polarity, respectively. Positive events are colored red, negative events are colored in blue. Noise is added to the camera feed before calculating the events.
+The robot is equipped with two RGB cameras named ''r_eye_camera'' and ''l_eye_camera.'' At each simulation time step, the scene is rendered and the pixel values are passed to the CameraEventSimulator class which takes the RGB values and turns them into gray scale (and log space; optional: default on) and creates output events based on brightness changes. For each threshold crossing between to consequtive samples, events are spaced equally in time and increase and decrease of brightness change are indicated by polarity of 1, 0, respectively. Positive events are colored red, negative events are colored in blue.
 
-![cam_lowsize](neuromorphic_body_schema/assets/camera_feed.png)
+Eyes are defined and cameras are included:
+```
+<body name="eyes_tilt_frame" pos="1.90392435799427e-10 0.104896999999692 0.0455907000018309" quat="0.707106781 0 0.707106781 0">
+    <site name="eyes_tilt_site" type="sphere" rgba="0 0 0 1" size="0.01"/>
+    <body name="r_eye_frame" pos="0.0 0.0 -0.034" quat="0.70710678 0 -0.70710678 0">
+        <site name="r_eye_site" pos="0.0 0.0 0.01" type="sphere" rgba="0.9 0.9 0.9 1" size="0.02"/>
+        <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
+        <joint name="r_eye_pan_joint" pos="0 0 0" axis="0 -1 0" range="-0.5235987755982988 0.9599310885968813" damping="5.0"/>
+        <joint name="r_eye_tilt_joint" pos="0 0 0" axis="-1 0 0" range="-0.5235987755982988 0.5235987755982988" damping="5.0"/>
+        <site name="r_eye_pupil" pos="0.0 0.0 0.0275" type="cylinder" rgba="0 0 0 1" size="0.0075 0.003"/>
+        <body name="r_eye_camera" pos="0.0 0.0 0.0" quat="-0.0233008 0.0078341 0.9825643 0.1842908">
+            <camera name="r_eye_camera" fovy="42.4608673089277"/>
+        </body>
+    </body>
+    <body name="l_eye_frame" pos="0.0 0.0 0.034" quat="0.70710678 0 -0.70710678 0">
+        <site name="l_eye_site" pos="0.0 0.0 0.01" type="sphere" rgba="0.9 0.9 0.9 1" size="0.02"/>
+        <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
+        <joint name="l_eye_pan_joint" pos="0 0 0" axis="0 -1 0" range="-0.5235987755982988 0.9599310885968813" damping="5.0"/>
+        <joint name="l_eye_tilt_joint" pos="0 0 0" axis="-1 0 0" range="-0.5235987755982988 0.5235987755982988" damping="5.0"/>
+        <site name="l_eye_pupil" pos="0.0 0.0 0.0275" type="cylinder" rgba="0 0 0 1" size="0.0075 0.003"/>
+        <body name="l_eye_camera" pos="0.0 0.0 0.0" quat="-0.0233008 0.0078341 0.9825643 0.1842908">
+            <camera name="l_eye_camera" fovy="42.4608673089277"/>
+        </body>
+    </body>
+</body>
+```
+ 
+Motion for both eyes' pan and tilt joints are coupled:
+```
+<tendon>
+    <fixed name="eyes_pan_tendon">
+        <joint coef="1.0" joint="r_eye_pan_joint"/>
+        <joint coef="1.0" joint="l_eye_pan_joint"/>
+    </fixed>
+</tendon>
+
+<tendon>
+    <fixed name="eyes_tilt_tendon">
+        <joint coef="1.0" joint="r_eye_tilt_joint"/>
+        <joint coef="1.0" joint="l_eye_tilt_joint"/>
+    </fixed>
+</tendon>
+```
+
+![cam_lowsize](neuromorphic_body_schema/assets/vision_feed.png)
 
 ### Implementation of event-driven skin
 The skin is implemented by body part. Each body part has it's own output. The visualization shows each skin part indipendently. The encoding used is the same as for the vision sensor refelcting FA I response which only indicates change of sensor readings by events. 
@@ -155,7 +199,18 @@ Finally, each sensor must be defined as sensor element at the bottom of the xml 
 ```
 
 ## Adding objects to the simulation
-One can add objects to the simualtion as shown in the example with a box. The object musst be added to the xml file as part of the ``world.''
+One can add objects to the simualtion as shown in the example with a box. The object musst be added to the xml file as part of the ''world.''
+```
+<worldbody
+    <body name="icub" pos="0.0 0.0 0.63" mocap="true">
+        ...
+    </body>
+    <!-- Here we inlcude a box as an example object -->
+    <body name="box" pos="-1.0 0.0 0.1">
+        <geom type="box" size="0.1 0.1 0.1" rgba="0.8 0.8 0.8 1" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+    </body>
+</worldbody>
+```
 
 ![object_lowsize](neuromorphic_body_schema/assets/objects.png)
 

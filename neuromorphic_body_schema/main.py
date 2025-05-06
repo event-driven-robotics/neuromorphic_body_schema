@@ -44,8 +44,8 @@ DEBUG = False  # use to visualize the triangles
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-VISUALIZE_CAMERA_FEED = True
-VISUALIZE_ED_CAMERA_FEED = True
+VISUALIZE_CAMERA_FEED = False
+VISUALIZE_ED_CAMERA_FEED = False
 VISUALIZE_SKIN = False
 VISUALIZE_PROPRIOCEPTION_FEED = False
 
