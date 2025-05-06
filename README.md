@@ -227,6 +227,23 @@ One can add objects to the simualtion as shown in the example with a box. The ob
 
 ![object_lowsize](neuromorphic_body_schema/assets/objects.png)
 
+## Inverse kinematics solver for icub arms
+A Levenberg-Marquardt based ik solver for 6D (translation+orientation) manipulation. 
+Should predefine a valid knimatics chains before feed to the ik solver, for example: 
+```
+joint_name=["l_shoulder_pitch","l_shoulder_roll","l_shoulder_yaw","l_elbow","l_wrist_prosup"] 
+end_name="l_forearm"
+ik_solver=Ik_solver(model,data_copy,joint_name,end_name,"quat")
+
+```
+You may try different kinematic chain according to the .xml file.
+
+Example useage: 
+```
+ik_test.py
+```
+
+
 
 
 
