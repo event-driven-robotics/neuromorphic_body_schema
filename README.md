@@ -189,20 +189,25 @@ To implement further cameras add them to the target iCub body or the world (for 
 ### Touch sensors
 The script include_skin_to_mujoco_model.py adds automatically the taxels from the robot's skin to the model saved in models/icub_v2_full_body.xml. To change the placement or implement further touch sensors the file in the models folder needs to be manipulated. Contact sensors are implemented as spheres (other shapes possible) of a user defined size (contact within that sphere are detected by the sensor) and can be visualized setting the RGB color to any desired value. Be aware that visualizing them slowes down the simulation significantly. Every sensor needs to be placed indepenedently and must be added to the according body. E.g.:
 ```
-<body name="l_lower_leg" pos="0 0 -0.145825">
-    <inertial pos="0.0009998 0.0034969 -0.088567" quat="0.037701 0.991172 0.120144 -0.041511" mass="1.4724" diaginertia="0.0046085 0.00423616 0.00148461" />
-    <joint name="l_knee" pos="0 0 0" axis="0 -1 0" range="-2.16421 0.0698132"  />
-    <geom pos="0.0437091 -0.0701 0.386638" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.5 0.1 0.75 1" mesh="sim_sea_2-5_l_shank_prt-binary" contype="0" conaffinity="0"/>
-        <site name="l_lower_leg_taxel_0" size="0.005" pos="0.06 0 0.01" rgba="0 1 0 0.0"/>
-        .../...
-        <site name="l_lower_leg_taxel_32" size="0.005" pos="0.0522 0 -0.15" rgba="0 1 0 0.0"/>
+<body name="l_hand_little_3" pos="0.019 0 0">
+    <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
+    <joint name="l_hand_little_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3"/>
+    <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_LeftLittle3" friction="3.5 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
+        <site name="l_hand_little_taxel_0" size="0.005" pos="0.012 0.00325 -0.00325" rgba="0 1 0 0.0"/>
+        [...]
+        <site name="l_hand_little_taxel_11" size="0.005" pos="0.0245 0.0 0.0" rgba="0 1 0 0.0"/>
+</body>
 ```
 To visualize the sensors set rgba="0 1 0 0.0" to rgba="0 1 0 0.5". The first three are the RGB values and the last the transparency.
 
 Finally, each sensor must be defined as sensor element at the bottom of the xml file
 ```
 <sensor>
-    <touch name="LEFT_LEG__LOWER_LEG__0__0" site="l_lower_leg_taxel_0" />
+    <touch name="l_hand_little_0" site="l_hand_little_taxel_0" />
+</sensor>
+[...]
+<sensor>
+    <touch name="l_hand_little_11" site="l_hand_little_taxel_11" />
 </sensor>
 ```
 
@@ -211,7 +216,7 @@ One can add objects to the simualtion as shown in the example with a box. The ob
 ```
 <worldbody
     <body name="icub" pos="0.0 0.0 0.63" mocap="true">
-        ...
+        [...]
     </body>
     <!-- Here we inlcude a box as an example object -->
     <body name="box" pos="-1.0 0.0 0.1">
