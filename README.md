@@ -32,10 +32,18 @@ The script `main.py` starts a simulated environment with the iCub humanoid robot
 ```
 python main.py
 ```
+
 All events are organized following the AER protocoll. Events are sorted by time and are of the structure:
 ```
 event = x, y, timestamp, polarity
 ``` 
+Events are always calculated, the visualization is optional and is controlled at the top of the main via:
+```
+VISUALIZE_CAMERA_FEED = True
+VISUALIZE_ED_CAMERA_FEED = True
+VISUALIZE_SKIN = True
+VISUALIZE_PROPRIOCEPTION_FEED = True
+```
 
 ### Implementation of event-driven camera feed
 The robot is equipped with two RGB cameras named ''r_eye_camera'' and ''l_eye_camera.'' At each simulation time step, the scene is rendered and the pixel values are passed to the CameraEventSimulator class which takes the RGB values and turns them into gray scale (and log space; optional: default on) and creates output events based on brightness changes. For each threshold crossing between to consequtive samples, events are spaced equally in time and increase and decrease of brightness change are indicated by polarity of 1, 0, respectively. Positive events are colored red, negative events are colored in blue.
