@@ -100,76 +100,70 @@ class SkinEventSimulator:
 
         Returns:
             np.array: A list of events, where each event is a tuple (taxel_ID, timestamp, polarity).
-                      - taxel_ID: Index of the taxel that generated the event.
-                      - timestamp: Timestamp of the event.
-                      - polarity: True for positive events, False for negative events.
         """
-
         assert time >= 0
 
-        # For each pixel, check if new events need to be generated since the last image sample
         tolerance = 1e-6
-        events = []
         delta_t_ns = time - self.current_time
-
         assert delta_t_ns > 0
-        # assert data.size() == self.size
 
-        for taxel_ID in range(self.size):
-            itdt = data[taxel_ID]
-            it = self.last_data[taxel_ID]
-            prev_cross = self.ref_values[taxel_ID]
+        itdt = np.asarray(data)
+        it = self.last_data
+        prev_cross = self.ref_values
 
-            if abs(it - itdt) > tolerance:
-                pol = +1.0 if itdt >= it else -1.0
-                C = self.Cp if pol > 0 else self.Cm
-                sigma_C = self.sigma_Cp if pol > 0 else self.sigma_Cm
+        delta = itdt - it
+        changed_mask = np.abs(delta) > tolerance
+        changed_idx = np.where(changed_mask)[0]
 
-                if sigma_C > 0:
-                    C += np.random.normal(0, sigma_C)
-                    minimum_contrast_threshold = 0.01
-                    C = max(minimum_contrast_threshold, C)
+        events = []
 
-                curr_cross = prev_cross
-                all_crossings = False
+        # Only process changed taxels
+        for idx in changed_idx:
+            it0 = it[idx]
+            it1 = itdt[idx]
+            ref = prev_cross[idx]
+            pol = 1.0 if it1 >= it0 else -1.0
+            C = self.Cp if pol > 0 else self.Cm
+            sigma_C = self.sigma_Cp if pol > 0 else self.sigma_Cm
 
-                while not all_crossings:
-                    curr_cross += pol * C
+            curr_cross = ref
+            while True:
+                # Add noise to threshold
+                C_eff = C + (np.random.normal(0, sigma_C) if sigma_C > 0 else 0)
+                C_eff = max(0.01, C_eff)
+                curr_cross += pol * C_eff
 
-                    if (pol > 0 and curr_cross > it and curr_cross <= itdt) or \
-                            (pol < 0 and curr_cross < it and curr_cross >= itdt):
+                # Check if crossing occurred in this interval
+                if (pol > 0 and curr_cross > it0 and curr_cross <= it1) or \
+                   (pol < 0 and curr_cross < it0 and curr_cross >= it1):
 
-                        edt = int(abs((curr_cross - it) *
-                                      delta_t_ns / (itdt - it)))
-                        t = self.current_time + edt
+                    # Interpolate event time
+                    edt = int(abs((curr_cross - it0) * delta_t_ns / (it1 - it0)))
+                    t_evt = self.current_time + edt
 
-                        # check that taxel (taxel_ID) is not currently in a "refractory" state
-                        # i.e. |t-that last_timestamp(taxel_ID)| >= refractory_period
-                        last_stamp_at_xy = self.last_event_timestamp[taxel_ID]
-                        assert t >= last_stamp_at_xy
-                        dt = t - last_stamp_at_xy
-
-                        if self.last_event_timestamp[taxel_ID] == 0 or dt >= self.refractory_period_ns:
-                            events.append((taxel_ID, t, pol > 0))
-                            self.last_event_timestamp[taxel_ID] = t
-                        else:
-                            logging.info(
-                                f"Dropping skin event because time since last event ({dt} ns) < refractory period ({self.refractory_period_ns} ns).")
-                        self.ref_values[taxel_ID] = curr_cross
+                    # Refractory check
+                    last_stamp = self.last_event_timestamp[idx]
+                    dt = t_evt - last_stamp
+                    if last_stamp == 0 or dt >= self.refractory_period_ns:
+                        events.append((idx, t_evt, pol > 0))
+                        self.last_event_timestamp[idx] = t_evt
+                        self.ref_values[idx] = curr_cross
                     else:
-                        all_crossings = True
-            # end tolerance
+                        # Don't update ref_values if event is dropped
+                        pass
+                else:
+                    break
 
-        # update simvars for next loop
+        # Update state for next call
         self.current_time = time
-        self.last_data = data.copy()  # it is now the latest image
+        self.last_data = itdt.copy()
 
-        # Sort the events by increasing timestamps, since this is what
-        # most event processing algorithms expect
-
-        events = np.array(events)
+        # Sort events by timestamp
         if len(events):
-            events[np.argsort(events[:, 2])]
+            events = np.array(events)
+            events = events[np.argsort(events[:, 1])]
+        else:
+            events = np.empty((0, 3), dtype=object)
         return events
 
 

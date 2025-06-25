@@ -99,80 +99,98 @@ class CameraEventSimulator:
 
         Returns:
             np.array: A list of events, where each event is a tuple (x, y, t, polarity).
-                      - x, y: Pixel coordinates.
-                      - t: Timestamp of the event.
-                      - polarity: True for positive events, False for negative events.
         """
-
         assert time >= 0
 
         if self.use_log_image:
             img = cv2.log(self.log_eps + img)
 
-        # For each pixel, check if new events need to be generated since the last image sample
         tolerance = 1e-6
-        events = []
         delta_t_ns = time - self.current_time
+        assert delta_t_ns > 0
 
-        assert delta_t_ns > 0, "delta_t_ns must be greater than 0."
-        # assert img.size() == self.size
+        # Compute difference from previous image
+        itdt = img
+        it = self.last_img
+        prev_cross = self.ref_values
 
-        for y in range(self.size[0]):
-            for x in range(self.size[1]):
-                itdt = img[y, x]
-                it = self.last_img[y, x]
-                prev_cross = self.ref_values[y, x]
+        delta_img = itdt - it
 
-                if abs(it - itdt) > tolerance:
-                    pol = +1.0 if itdt >= it else -1.0
-                    C = self.Cp if pol > 0 else self.Cm
-                    sigma_C = self.sigma_Cp if pol > 0 else self.sigma_Cm
+        # Avoid division by zero
+        valid_mask = np.abs(delta_img) > tolerance
 
-                    if sigma_C > 0:
-                        C += np.random.normal(0, sigma_C)
-                        minimum_contrast_threshold = 0.01
-                        C = max(minimum_contrast_threshold, C)
+        # Prepare output
+        events = []
 
-                    curr_cross = prev_cross
-                    all_crossings = False
+        # Only process pixels where there is a change
+        yx = np.argwhere(valid_mask)
+        if yx.size == 0:
+            self.current_time = time
+            self.last_img = img.copy()
+            return np.empty((0, 4), dtype=object)
 
-                    while not all_crossings:
-                        curr_cross += pol * C
+        y_idx, x_idx = yx[:, 0], yx[:, 1]
+        itdt_v = itdt[y_idx, x_idx]
+        it_v = it[y_idx, x_idx]
+        prev_cross_v = prev_cross[y_idx, x_idx]
+        delta_v = itdt_v - it_v
 
-                        if (pol > 0 and curr_cross > it and curr_cross <= itdt) or \
-                                (pol < 0 and curr_cross < it and curr_cross >= itdt):
+        # Determine polarity for each pixel
+        pol_v = np.where(delta_v > 0, 1.0, -1.0)
+        C_v = np.where(pol_v > 0, self.Cp, self.Cm)
+        sigma_C_v = np.where(pol_v > 0, self.sigma_Cp, self.sigma_Cm)
 
-                            edt = int(abs((curr_cross - it) *
-                                      delta_t_ns / (itdt - it)))
-                            t = self.current_time + edt
+        # For each pixel, compute all threshold crossings
+        # Number of crossings = floor((itdt_v - prev_cross_v) / (pol_v * C_v))
+        # But need to handle noise per crossing!
+        for idx in range(len(y_idx)):
+            y, x = y_idx[idx], x_idx[idx]
+            it0 = it[y, x]
+            it1 = itdt[y, x]
+            ref = prev_cross[y, x]
+            pol = 1.0 if it1 >= it0 else -1.0
+            C = self.Cp if pol > 0 else self.Cm
+            sigma_C = self.sigma_Cp if pol > 0 else self.sigma_Cm
 
-                            # check that pixel (x,y) is not currently in a "refractory" state
-                            # i.e. |t-that last_timestamp(x,y)| >= refractory_period
-                            last_stamp_at_xy = self.last_event_timestamp[y, x]
-                            assert t >= last_stamp_at_xy
-                            dt = t - last_stamp_at_xy
+            curr_cross = ref
+            all_crossings = False
+            while not all_crossings:
+                # Add noise to threshold
+                C_eff = C + (np.random.normal(0, sigma_C) if sigma_C > 0 else 0)
+                C_eff = max(0.01, C_eff)
+                curr_cross += pol * C_eff
 
-                            if self.last_event_timestamp[y, x] == 0 or dt >= self.refractory_period_ns:
-                                events.append((x, y, t, pol > 0))
-                                self.last_event_timestamp[y, x] = t
-                            else:
-                                logging.info(
-                                    f"Dropping camera event because time since last event ({dt} ns) < refractory period ({self.refractory_period_ns} ns).")
-                            self.ref_values[y, x] = curr_cross
-                        else:
-                            all_crossings = True
-                # end tolerance
+                # Check if crossing occurred in this interval
+                if (pol > 0 and curr_cross > it0 and curr_cross <= it1) or \
+                   (pol < 0 and curr_cross < it0 and curr_cross >= it1):
 
-        # update simvars for next loop
+                    # Interpolate event time
+                    edt = int(abs((curr_cross - it0) * delta_t_ns / (it1 - it0)))
+                    t_evt = self.current_time + edt
+
+                    # Refractory check
+                    last_stamp = self.last_event_timestamp[y, x]
+                    dt = t_evt - last_stamp
+                    if last_stamp == 0 or dt >= self.refractory_period_ns:
+                        events.append((x, y, t_evt, pol > 0))
+                        self.last_event_timestamp[y, x] = t_evt
+                        self.ref_values[y, x] = curr_cross
+                    else:
+                        # Don't update ref_values if event is dropped
+                        pass
+                else:
+                    all_crossings = True
+
+        # Update state for next call
         self.current_time = time
-        self.last_img = img.copy()  # it is now the latest image
+        self.last_img = img.copy()
 
-        # Sort the events by increasing timestamps, since this is what
-        # most event processing algorithms expect
-
-        events = np.array(events)
+        # Sort events by timestamp
         if len(events):
-            events[np.argsort(events[:, 2])]
+            events = np.array(events)
+            events = events[np.argsort(events[:, 2])]
+        else:
+            events = np.empty((0, 4), dtype=object)
         return events
 
 
