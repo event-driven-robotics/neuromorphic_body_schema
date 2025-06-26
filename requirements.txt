@@ -1,2 +1,2 @@
-mujoco>=3.1.6
-opencv-python
+mujoco>=3.3.3
+opencv-python>=4.10.0.84
