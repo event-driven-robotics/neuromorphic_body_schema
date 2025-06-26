@@ -14,6 +14,7 @@ Please note that, current ik solver is only for a single arm while a valid kinem
 
 
 import copy
+import logging
 from math import pi
 from typing import List
 
@@ -50,7 +51,7 @@ def compute_relative_transform(model, data, body_name1, body_name2):
 
 
 class Ik_solver:
-    def __init__(self, model, data, joint_name: List[str], end_name: str, option: str, damp=0.15, alpha=0.1):
+    def __init__(self, model, data, joint_name: List[str], end_name: str, option: str, damp=0.15):
         """
         Levenberg-Marquardt inverse kinematics solver for 6D manipulation
 
@@ -84,7 +85,7 @@ class Ik_solver:
         self.jacr = np.zeros((3, nv), dtype=np.float64)
 
         self.damp = damp
-        self.alpha = alpha
+        # self.alpha = alpha
 
         assert option in ["euler", "quat"], print(
             "should chooese between euler or quat")
@@ -190,6 +191,18 @@ class Ik_solver:
 
     # Levenberg-Marquardt for inverse kinematics
 
+    def compute_dynamic_alpha(self, err_norm, alpha_min=0.001, alpha_max=1.0, decay=1000.0):
+        """
+        Compute a dynamic alpha based on error norm.
+        - err_norm: the norm of the error vector (position + orientation)
+        - alpha_min: minimum step size
+        - alpha_max: maximum step size
+        - decay: controls how quickly alpha decreases as error shrinks
+        """
+        # Exponential decay: alpha = alpha_min - (alpha_max - alpha_min) * exp(-decay * err_norm)
+        alpha = alpha_max - (alpha_max - alpha_min) * np.exp(-decay * err_norm)
+        return alpha
+
     def ik_step(self, target_pos, target_ori, max_iter=100000, pos_thres=0.001, ori_thres=0.001):
         """
         LM for inverse kinematics
@@ -200,7 +213,6 @@ class Ik_solver:
         max_iter: maximum step size
         pos_thres: pose error threshol
         ori_thres: angle error threshold
-
         """
 
         q_arm = self.data.qpos[self.joint_id].copy()
@@ -260,11 +272,17 @@ class Ik_solver:
             except np.linalg.LinAlgError:
                 delta_q = np.linalg.pinv(H) @ g
 
-            q_arm = q_arm + self.alpha * delta_q
+            err_norm = np.linalg.norm(delta_p) + np.linalg.norm(delta_o)
+            alpha = self.compute_dynamic_alpha(err_norm)
+            q_arm = q_arm + alpha * delta_q
             q_arm = self.check_limites(q_arm)
             self.data.qpos[self.joint_id] = q_arm
-
-        raise ValueError("Solution not found")
+            # logging.info(
+            #     f"err_norm: {err_norm}, alpha: {alpha}, target:{target_pos}, current:{current_pos}, delta_p:{delta_p}, target_ori:{target_ori}, current_ori:{current_ori}, delta_o:{delta_o}, iteration:{i+1}")
+            logging.info(
+                f"err_norm: {err_norm}, alpha: {alpha}, iteration:{i+1}")
+            pass
+        raise ValueError(f"Solution not found after {i+1} iterations.")
 
 
 # if __name__ == "__main__":
