@@ -260,6 +260,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 7
                     parts_to_add.append(part)
 
                 elif part == "r_lower_leg":
@@ -269,6 +270,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 8
                     parts_to_add.append(part)
 
                 elif part == "l_upper_leg":
@@ -278,6 +280,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 9
                     parts_to_add.append(part)
 
                 elif part == "l_lower_leg":
@@ -287,6 +290,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 10
                     parts_to_add.append(part)
 
                 elif part == "chest":
@@ -296,6 +300,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 0
                     parts_to_add.append(part)
 
                 elif part == "r_shoulder_3":
@@ -305,6 +310,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 1
                     parts_to_add.append(part)
 
                 elif part == "r_forearm":
@@ -314,6 +320,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 2
                     parts_to_add.append(part)
 
                 elif part == "r_hand":
@@ -324,6 +331,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 3
                     parts_to_add.append(part)
 
                 elif part == "r_hand_thumb_3":
@@ -332,6 +340,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 3
                     parts_to_add.append(part)
 
                 elif part == "r_hand_index_3":
@@ -340,6 +349,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 3
                     parts_to_add.append(part)
 
                 elif part == "r_hand_middle_3":
@@ -348,6 +358,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 3
                     parts_to_add.append(part)
 
                 elif part == "r_hand_ring_3":
@@ -356,6 +367,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 3
                     parts_to_add.append(part)
 
                 elif part == "r_hand_little_3":
@@ -364,6 +376,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 3
                     parts_to_add.append(part)
 
                 elif part == "l_shoulder_3":
@@ -373,6 +386,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 4
                     parts_to_add.append(part)
 
                 elif part == "l_forearm":
@@ -382,6 +396,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 5
                     parts_to_add.append(part)
 
                 elif part == "l_hand":
@@ -392,6 +407,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 6
                     parts_to_add.append(part)
 
                 elif part == "l_hand_thumb_3":
@@ -400,6 +416,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 6
                     parts_to_add.append(part)
 
                 elif part == "l_hand_index_3":
@@ -408,6 +425,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 6
                     parts_to_add.append(part)
 
                 elif part == "l_hand_middle_3":
@@ -416,6 +434,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 6
                     parts_to_add.append(part)
 
                 elif part == "l_hand_ring_3":
@@ -432,6 +451,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = 6
                     parts_to_add.append(part)
 
                 if add_taxels:
@@ -536,8 +556,9 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                                 pos = rotate_position(
                                     pos=pos, offsets=[0.055, -0.005, 0.02], angle_degrees=[0, 0, 0])
 
+                            #TODO possibly use cylinder as type.
                             lines.insert(
-                                line_counter, f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.0"/>\n')
+                                line_counter, f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" type="sphere" group="{group_counter}" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.0"/>\n')
                             line_counter += 1
                     line_counter -= 1  # go one line back after we added the last taxel
                     pass

@@ -15,48 +15,49 @@ Functions:
 
 """
 
+import logging
+
 import mujoco
 
 
-def get_joints(data, model, joint: dict):
+def get_joints(data, model, joint: dict, end_effector: str = "l_wrist_1"):
     """
+    Retrieves the current positions of specified joints and the pose of the end-effector.
+
     Args:
-      data: Mujoco.MjData
-      model: Mujoco model attribute
-      joint: a dict contains the controlled joints' name
+        data: MuJoCo MjData object.
+        model: MuJoCo model object.
+        joint: dict containing the controlled joint names as keys.
+        end_effector (str): Name of the end-effector body (default: "l_wrist_1").
 
-
+    Returns:
+        dict: {
+            "joints": [positions of specified joints],
+            "pose": position of the end-effector (np.ndarray, shape (3,))
+        }
     """
-    joint_poses = {"joints": [], "pose": []}
-
-    for joint_name in joint.keys():
-        joint_pos = data.joint(joint_name).qpos[0]
-        joint_val = data.joint(joint_name).qvel[0]
-        joint_poses["joints"].append(joint_pos)
-
-    body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "l_wrist_1")
-    joint_poses["pose"] = data.xpos[body_id]
+    joint_poses = {
+        "joints": [data.joint(joint_name).qpos[0] for joint_name in joint.keys()],
+        "pose": data.xpos[mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, end_effector)]
+    }
     return joint_poses
 
 
-def check_joints(data, joint: dict):
+def check_joints(data, joint: dict, angle_tolerance: float = 0.1) -> bool:
     """
-    check if reaches the target joints
+    Checks if all specified joints have reached their target positions within a given tolerance.
 
     Args:
-       data: mujoco data attribute
-       joint: a dict contains the controlled joints' name
+        data: MuJoCo data object.
+        joint: dict mapping joint names to target positions.
+        angle_tolerance (float): Allowed absolute error for each joint (default: 0.1).
 
+    Returns:
+        bool: True if all joints are within tolerance, False otherwise.
     """
-    angle_tolerance = [0.03]*len(joint.keys())
-    error = []
-    for joint_name, target_pos in joint.items():
-        error.append(abs(data.joint(joint_name).qpos[0]-target_pos))
-
-    if all(err < tol for err, tol in zip(error, angle_tolerance)):
-        return True
-    else:
-        return False
+    errors = [data.joint(joint_name).qpos[0] - target_pos for joint_name, target_pos in joint.items()]
+    logging.info(f"Joint errors: {errors}")
+    return all(abs(err) < angle_tolerance for err in errors)
 
 
 def update_joint_positions(data, joint_positions):
@@ -70,7 +71,5 @@ def update_joint_positions(data, joint_positions):
     Returns:
         None
     """
-
     for joint_name, target_position in joint_positions.items():
-        joint = data.actuator(joint_name)
-        joint.ctrl[0] = target_position
+        data.actuator(joint_name).ctrl[0] = target_position

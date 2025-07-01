@@ -38,9 +38,8 @@ from helpers.ed_cam import ICubEyes
 from helpers.ed_prop import ICubProprioception
 from helpers.ed_skin import ICubSkin
 from helpers.helpers import MODEL_PATH, DynamicGroupedSensors, init_POV
-from helpers.ik_solver_ruidong import Ik_solver, compute_relative_transform
-from helpers.robot_controller import (check_joints, get_joints,
-                                      update_joint_positions)
+from helpers.ik_solver import Ik_solver
+from helpers.robot_controller import check_joints, update_joint_positions
 from mujoco import viewer
 
 # from helpers.ik_solver_fede import qpos_from_site_pose
@@ -49,26 +48,50 @@ DEBUG = False  # use to visualize the triangles
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-VISUALIZE_CAMERA_FEED = True
+VISUALIZE_CAMERA_FEED = False
 VISUALIZE_ED_CAMERA_FEED = False
 VISUALIZE_SKIN = False
 VISUALIZE_PROPRIOCEPTION_FEED = False
 
 
 def reset(keyframe, data, model):
+    """
+    Resets the simulation to the given keyframe.
+
+    Args:
+        keyframe (np.ndarray): Joint positions to reset to (should match data.qpos shape).
+        data (mujoco.MjData): The MuJoCo data object.
+        model (mujoco.MjModel): The MuJoCo model object.
+
+    Returns:
+        None
+    """
+    assert keyframe.shape == data.qpos.shape, "Keyframe shape does not match qpos shape."
     data.qpos[:] = keyframe
     mujoco.mj_forward(model, data)
 
 
 def ik_caculation(ik_solver, target_pos, target_ori, joint_names):
+    """
+    Runs IK and returns a dictionary mapping joint names to solved positions.
+
+    Args:
+        ik_solver: An instance of the IK solver.
+        target_pos (np.ndarray): Target end-effector position.
+        target_ori (np.ndarray): Target end-effector orientation.
+        joint_names (list): List of joint names in the same order as the solver output.
+
+    Returns:
+        dict or None: {joint_name: position, ...} if successful, None otherwise.
+    """
+
     try:
         q_arm = ik_solver.ik_step(target_pos, target_ori)
-        joint_pose = {joint_name: pose for joint_name,
-                      pose in zip(joint_names, q_arm)}
-        logging.info(f"Soultion found:{joint_pose}")
+        joint_pose = dict(zip(joint_names, q_arm))
+        logging.info(f"Solution found: {joint_pose}")
         return joint_pose
     except ValueError as e:
-        logging.info(e)
+        logging.error(f"IK failed: {e}")
         return None
 
 
@@ -85,6 +108,27 @@ if __name__ == '__main__':
     # Load the MuJoCo model and create a simulation
     model = mujoco.MjModel.from_xml_path(MODEL_PATH)
     data = mujoco.MjData(model)
+    # set model to 0.0 start position
+    data.qpos.fill(0.0)
+    # define a start position for the model
+    joint_init_pos = {
+        'r_shoulder_roll': 0.6,
+        'r_shoulder_pitch': -0.5,
+        'r_shoulder_yaw': 0.0,
+        'r_elbow': 1.1,
+        'l_shoulder_roll': 0.6,
+        'l_shoulder_pitch': -0.5,
+        'l_shoulder_yaw': 0.0,
+        'l_elbow': 1.1,
+    }
+    # let's set the initial joint positions and actuator controls
+    for joint_name, position in joint_init_pos.items():
+        try:
+            joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, joint_name)
+            data.joint(joint_id).qpos[0] = position
+            data.actuator(joint_name).ctrl[0] = position
+        except ValueError:
+            logging.warning(f"Joint {joint_name} not found in the model.")
     print("Model loaded")
 
     # Set the time step duration to 0.001 seconds (1 milliseconds)
@@ -106,17 +150,6 @@ if __name__ == '__main__':
 
     dynamic_grouped_sensors = DynamicGroupedSensors(data, grouped_sensors)
 
-    # set robot to any wanted start position
-    # init_position = {
-    #     'r_shoulder_roll': 0.5,
-    #     'l_shoulder_roll': 0.5
-    # }
-    # update_joint_positions(data, init_position)
-
-    # init example motion
-    # joints = ['r_index_proximal', 'r_index_distal', 'r_middle_proximal', 'r_middle_distal']
-    joints = ['r_index_proximal', 'r_index_distal', 'r_middle_proximal',
-              'r_middle_distal', 'neck_yaw']  # , 'r_pinky', 'l_pinky'
     joint_dict_prop = {
         'r_shoulder_roll': {
             'position_max_freq': 1000,  # Hz
@@ -176,14 +209,14 @@ if __name__ == '__main__':
             model, joint_dict_prop, show_proprioception=VISUALIZE_PROPRIOCEPTION_FEED, DEBUG=DEBUG)
 
         # Valid kinematic links shoulde be predefined
-        joint_name = ["l_shoulder_pitch", "l_shoulder_roll",
+        joint_names = ["l_shoulder_pitch", "l_shoulder_roll",
                       "l_shoulder_yaw", "l_elbow", "l_wrist_prosup"]
-        end_name = "l_forearm"
+        end_effector_name = "l_forearm"
 
         # IK with Quaternion seems more robust for Icub
         # should copy the data for forward knimeatics, otherwise the ik will update the model directly
         data_copy = copy.deepcopy(data)
-        ik_solver = Ik_solver(model, data_copy, joint_name, end_name, "quat")
+        ik_solver = Ik_solver(model, data_copy, joint_names, end_effector_name, "quat")
 
         # Sequential Reaching task
 
@@ -225,7 +258,7 @@ if __name__ == '__main__':
             if not finished:
                 if not caculated:
                     q_arm = ik_caculation(
-                        ik_solver, target_pos[count], target_ori[count], joint_name)
+                        ik_solver, target_pos[count], target_ori[count], joint_names)
                     caculated = True
                     if not q_arm:
                         finished = True

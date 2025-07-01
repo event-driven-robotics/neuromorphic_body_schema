@@ -653,9 +653,9 @@
         <position name="torso_pitch"            kp="470.0"      joint="torso_pitch"                     ctrlrange="-0.3141592653589793 0.7853981633974483"/>
         <position name="torso_roll"             kp="990.0"      joint="torso_roll"                      ctrlrange="-0.4014257279586958 0.4014257279586958"/>
         <position name="torso_yaw"              kp="975.0"      joint="torso_yaw"                       ctrlrange="-0.7504915783575618 0.7504915783575618"/>
-        <position name="l_shoulder_pitch"       kp="100.0"      joint="l_shoulder_pitch"                ctrlrange="-3.0543261909900767 0.3490658503988659"/>
-        <position name="l_shoulder_roll"        kp="200.0"      joint="l_shoulder_roll"                 ctrlrange="0.20943951023931956 2.8448866807507573"/>
-        <position name="l_shoulder_yaw"         kp="200.0"      joint="l_shoulder_yaw"                  ctrlrange="-0.8726646259971648 1.3962634015954636"/>
+        <position name="l_shoulder_pitch"       kp="250.0"      joint="l_shoulder_pitch"                ctrlrange="-3.0543261909900767 0.3490658503988659"/>
+        <position name="l_shoulder_roll"        kp="250.0"      joint="l_shoulder_roll"                 ctrlrange="0.20943951023931956 2.8448866807507573"/>
+        <position name="l_shoulder_yaw"         kp="250.0"      joint="l_shoulder_yaw"                  ctrlrange="-0.8726646259971648 1.3962634015954636"/>
         <position name="l_elbow"                kp="105.0"      joint="l_elbow"                         ctrlrange="-0.05235987755982989 1.3089969389957472"/>
         <position name="l_wrist_prosup"         kp="195.0"      joint="l_wrist_prosup"                  ctrlrange="-1.53588974175501 1.53588974175501"/>
         <position name="l_wrist_pitch"          kp="15.0"       joint="l_wrist_pitch"                   ctrlrange="-1.2217304763960306 0.4363323129985824"/>
@@ -671,9 +671,9 @@
         <position name="l_middle_distal"        kp="10.0"       tendon="l_middle_distal_tendon"         ctrlrange="0.0 2.965555556"/>
         <position name="l_pinky"                kp="15.0"       tendon="l_pinky_tendon"                 ctrlrange="0.0 4.36"/>
 
-        <position name="r_shoulder_pitch"       kp="100.0"      joint="r_shoulder_pitch"                ctrlrange="-3.0543261909900767 0.3490658503988659"/>
-        <position name="r_shoulder_roll"        kp="200.0"      joint="r_shoulder_roll"                 ctrlrange="0.20943951023931956 2.8448866807507573"/>
-        <position name="r_shoulder_yaw"         kp="200.0"      joint="r_shoulder_yaw"                  ctrlrange="-0.8726646259971648 1.3962634015954636"/>
+        <position name="r_shoulder_pitch"       kp="250.0"      joint="r_shoulder_pitch"                ctrlrange="-3.0543261909900767 0.3490658503988659"/>
+        <position name="r_shoulder_roll"        kp="250.0"      joint="r_shoulder_roll"                 ctrlrange="0.20943951023931956 2.8448866807507573"/>
+        <position name="r_shoulder_yaw"         kp="250.0"      joint="r_shoulder_yaw"                  ctrlrange="-0.8726646259971648 1.3962634015954636"/>
         <position name="r_elbow"                kp="105.0"      joint="r_elbow"                         ctrlrange="-0.05235987755982989 1.3089969389957472"/>
         <position name="r_wrist_prosup"         kp="195.0"      joint="r_wrist_prosup"                  ctrlrange="-1.53588974175501 1.53588974175501"/>
         <position name="r_wrist_pitch"          kp="15.0"       joint="r_wrist_pitch"                   ctrlrange="-1.2217304763960306 0.4363323129985824"/>
