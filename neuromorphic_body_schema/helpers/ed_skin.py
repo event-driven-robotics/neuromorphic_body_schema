@@ -390,7 +390,7 @@ def read_triangle_data(file_path: str) -> np.array:
     return config_type, triangles
 
 
-def make_skin_event_frame(img, events, locations):
+def make_skin_event_frame(img, events, locations) -> np.array:
     """
     Updates a visual representation of skin events on a tactile sensor image.
 

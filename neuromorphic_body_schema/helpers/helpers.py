@@ -1,14 +1,14 @@
 import numpy as np
 
 # set model path
-MODEL_PATH = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'  # full iCub
-TRIANGLE_INI_PATH = "../icub-main/app/skinGui/conf/skinGui"
-FIG_PATH = "./figures"
+# MODEL_PATH = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'  # full iCub
+# TRIANGLE_INI_PATH = "../icub-main/app/skinGui/conf/skinGui"
+# FIG_PATH = "./figures"
 
 # DEBUG
-# MODEL_PATH = './models/icub_v2_full_body_contact_sensors.xml'  # full iCub
-# TRIANGLE_INI_PATH = "../../icub-main/app/skinGui/conf/skinGui"
-# FIG_PATH = "../figures"
+MODEL_PATH = './models/icub_v2_full_body_contact_sensors.xml'  # full iCub
+TRIANGLE_INI_PATH = "../../icub-main/app/skinGui/conf/skinGui"
+FIG_PATH = "../figures"
 
 ### SKIN ###
 SKIN_PARTS = ["r_hand", "r_forearm", "r_upper_arm",

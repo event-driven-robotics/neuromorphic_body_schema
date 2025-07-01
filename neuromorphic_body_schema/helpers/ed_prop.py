@@ -26,7 +26,6 @@ Functions:
 import logging
 
 import cv2
-import matplotlib.pyplot as plt
 import numpy as np
 from helpers.helpers import HEIGHT, MARGIN, TICK_HEIGHT, TIME_WINDOW, WIDTH
 
@@ -268,14 +267,14 @@ class ProprioceptionEventSimulator():
             y_debug2 = generalized_sigmoid(x=x_debug,   x_min=self.position_limit_max-2*delta_x,
                                            x_max=self.position_limit_max, y_min=0., y_max=self.position_max_freq, B=B)
 
-            plt.figure()
-            plt.plot(x_debug, y_debug1, label="descending")
-            plt.plot(x_debug, y_debug2, label="ascending")
-            plt.xlabel("Joint position [deg]")
-            plt.ylabel("Firing rate [Hz]")
-            plt.title("Limit")
-            plt.legend()
-            plt.show()
+            # plt.figure()
+            # plt.plot(x_debug, y_debug1, label="descending")
+            # plt.plot(x_debug, y_debug2, label="ascending")
+            # plt.xlabel("Joint position [deg]")
+            # plt.ylabel("Firing rate [Hz]")
+            # plt.title("Limit")
+            # plt.legend()
+            # plt.show()
 
         return (y1, y2)
 
