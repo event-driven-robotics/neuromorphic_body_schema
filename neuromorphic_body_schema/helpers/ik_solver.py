@@ -15,9 +15,7 @@ an example of how to use mujoco's inverse kinematics solver which is not the one
 """
 
 
-import copy
 import logging
-from math import pi
 from typing import List
 
 import mujoco
