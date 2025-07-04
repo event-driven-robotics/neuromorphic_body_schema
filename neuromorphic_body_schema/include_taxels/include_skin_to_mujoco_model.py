@@ -556,7 +556,7 @@ def include_skin_to_mujoco_model(mujoco_model, path_to_skin, skin_parts):
                                 pos = rotate_position(
                                     pos=pos, offsets=[0.055, -0.005, 0.02], angle_degrees=[0, 0, 0])
 
-                            #TODO possibly use cylinder as type.
+                            # TODO possibly use cylinder as type.
                             lines.insert(
                                 line_counter, f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" type="sphere" group="{group_counter}" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.0"/>\n')
                             line_counter += 1

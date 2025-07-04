@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="neuromorphic_body_schema",
@@ -9,7 +9,7 @@ setup(
     author_email="simon.mullercleve@iit.it",
     url='https://github.com/event-driven-robotics/neuromorphic_body_schema',
     keywords=['event', 'event camera', 'event-based', 'event-driven', 'spike', 'dvs', 'dynamic vision sensor',
-              'bio inspired skin', 'neuromorphic skin', 'bio inspired proprioception', 
+              'bio inspired skin', 'neuromorphic skin', 'bio inspired proprioception',
               'neuromorphic proprioception', 'neuromorphic', 'aer', 'address-event representation'],
     packages=find_packages(),
     install_requires=[

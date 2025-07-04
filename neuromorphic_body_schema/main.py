@@ -124,7 +124,8 @@ if __name__ == '__main__':
     # let's set the initial joint positions and actuator controls
     for joint_name, position in joint_init_pos.items():
         try:
-            joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, joint_name)
+            joint_id = mujoco.mj_name2id(
+                model, mujoco.mjtObj.mjOBJ_JOINT, joint_name)
             data.joint(joint_id).qpos[0] = position
             data.actuator(joint_name).ctrl[0] = position
         except ValueError:
@@ -210,13 +211,14 @@ if __name__ == '__main__':
 
         # Valid kinematic links shoulde be predefined
         joint_names = ["l_shoulder_pitch", "l_shoulder_roll",
-                      "l_shoulder_yaw", "l_elbow", "l_wrist_prosup"]
+                       "l_shoulder_yaw", "l_elbow", "l_wrist_prosup"]
         end_effector_name = "l_forearm"
 
         # IK with Quaternion seems more robust for Icub
         # should copy the data for forward knimeatics, otherwise the ik will update the model directly
         data_copy = copy.deepcopy(data)
-        ik_solver = Ik_solver(model, data_copy, joint_names, end_effector_name, "quat")
+        ik_solver = Ik_solver(model, data_copy, joint_names,
+                              end_effector_name, "quat")
 
         # Sequential Reaching task
 

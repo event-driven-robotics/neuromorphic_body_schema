@@ -40,6 +40,7 @@ line_color = (255, 255, 255)
 red = (0, 0, 255)   # positive events
 blue = (255, 0, 0)  # negative events
 
+
 class SkinEventSimulator:
     """
     Simulates an event-based skin sensor by generating events based on changes in taxel (tactile pixel) intensity.
@@ -129,7 +130,8 @@ class SkinEventSimulator:
             curr_cross = ref
             while True:
                 # Add noise to threshold
-                C_eff = C + (np.random.normal(0, sigma_C) if sigma_C > 0 else 0)
+                C_eff = C + (np.random.normal(0, sigma_C)
+                             if sigma_C > 0 else 0)
                 C_eff = max(0.01, C_eff)
                 curr_cross += pol * C_eff
 
@@ -138,7 +140,8 @@ class SkinEventSimulator:
                    (pol < 0 and curr_cross < it0 and curr_cross >= it1):
 
                     # Interpolate event time
-                    edt = int(abs((curr_cross - it0) * delta_t_ns / (it1 - it0)))
+                    edt = int(abs((curr_cross - it0) *
+                              delta_t_ns / (it1 - it0)))
                     t_evt = self.current_time + edt
 
                     # Refractory check
@@ -426,7 +429,8 @@ def make_skin_event_frame(img, events, locations) -> np.array:
                         loc[1])), 4, blue, -1)
         else:
             # no event happened, return to blank
-            cv2.circle(img, (int(loc[0]), int(loc[1])), 4, background_color, -1)
+            cv2.circle(img, (int(loc[0]), int(loc[1])),
+                       4, background_color, -1)
     return img
 
 

@@ -55,7 +55,8 @@ def check_joints(data, joint: dict, angle_tolerance: float = 0.1) -> bool:
     Returns:
         bool: True if all joints are within tolerance, False otherwise.
     """
-    errors = [data.joint(joint_name).qpos[0] - target_pos for joint_name, target_pos in joint.items()]
+    errors = [data.joint(joint_name).qpos[0] -
+              target_pos for joint_name, target_pos in joint.items()]
     logging.info(f"Joint errors: {errors}")
     return all(abs(err) < angle_tolerance for err in errors)
 

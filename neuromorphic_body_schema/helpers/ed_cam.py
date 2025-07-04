@@ -156,7 +156,8 @@ class CameraEventSimulator:
             all_crossings = False
             while not all_crossings:
                 # Add noise to threshold
-                C_eff = C + (np.random.normal(0, sigma_C) if sigma_C > 0 else 0)
+                C_eff = C + (np.random.normal(0, sigma_C)
+                             if sigma_C > 0 else 0)
                 C_eff = max(0.01, C_eff)
                 curr_cross += pol * C_eff
 
@@ -165,7 +166,8 @@ class CameraEventSimulator:
                    (pol < 0 and curr_cross < it0 and curr_cross >= it1):
 
                     # Interpolate event time
-                    edt = int(abs((curr_cross - it0) * delta_t_ns / (it1 - it0)))
+                    edt = int(abs((curr_cross - it0) *
+                              delta_t_ns / (it1 - it0)))
                     t_evt = self.current_time + edt
 
                     # Refractory check
