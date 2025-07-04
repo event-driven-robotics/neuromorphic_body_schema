@@ -16,6 +16,10 @@ git lfs pull
 
 These commands will update your package list, install Git LFS, clone the project repository, and download any Git LFS files required for the project.
 
+To install the package using pip go to the main folder and run
+```
+pip install .
+```
 ## Installing Required Packages
 
 Required Python packages are listed in the `requirements.txt` file. To install them run the following command:
