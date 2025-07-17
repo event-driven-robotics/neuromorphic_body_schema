@@ -5,7 +5,6 @@ MJMODEL.TXT
 *.pdf
 *__pycache__*
 *report_including_taxels.txt
-*.stl
 build/
 dist/
 *.egg-info/
