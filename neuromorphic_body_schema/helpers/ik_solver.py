@@ -285,7 +285,7 @@ class Ik_solver:
             H = J.T @ J + self.damp * self.I  # (n, n)
             g = J.T @ e  # (n,)
 
-            # cacualte joints increment
+            # calculate joints increment
             try:
                 delta_q = np.linalg.solve(H, g)
             except np.linalg.LinAlgError:
