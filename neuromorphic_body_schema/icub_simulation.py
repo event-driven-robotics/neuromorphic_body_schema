@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('TkAgg')  # Use TkAgg backend instead of Qt
 import matplotlib.pyplot as plt
+from collections import deque
 
 # Constants
 MODEL_PATH = "/home/fferrari-iit.local/Code/neuromorphic_body_schema/neuromorphic_body_schema/models/icub_v2_full_body.xml"
@@ -17,6 +18,103 @@ STEPS_PER_RENDER = int(RENDER_INTERVAL / MUJOCO_TIMESTEP)  # 10 steps per render
 def set_stable_pose(model, data):
     """Set the robot to a stable standing pose - ONLY set velocities to zero, don't change positions."""
     data.qvel[:] = 0.0
+
+class EfficientPlotter:
+    """Efficient plotting class that minimizes matplotlib overhead."""
+    
+    def __init__(self, max_points=500):
+        self.max_points = max_points
+        
+        # Use deques for efficient data management
+        self.times = deque(maxlen=max_points)
+        self.positions = deque(maxlen=max_points)
+        self.velocities = deque(maxlen=max_points)
+        self.accelerations = deque(maxlen=max_points)
+        
+        # Setup plots with optimizations
+        plt.ion()
+        plt.style.use('fivethirtyeight')
+        self.fig, self.ax = plt.subplots(3, 1, layout='constrained', figsize=(10, 8))
+        
+        # Initialize empty line objects
+        self.pos_line, = self.ax[0].plot([], [], 'r-.', linewidth=2)
+        self.vel_line, = self.ax[1].plot([], [], 'b-.', linewidth=2)
+        self.acc_line, = self.ax[2].plot([], [], 'g-.', linewidth=2)
+        
+        # Set titles and labels
+        self.ax[0].set_title('Right Elbow Joint Position')
+        self.ax[1].set_title('Right Elbow Joint Velocity')
+        self.ax[2].set_title('Right Elbow Joint Acceleration')
+        self.ax[0].set_xlabel('Time (s)')
+        self.ax[1].set_xlabel('Time (s)')
+        self.ax[2].set_xlabel('Time (s)')
+        self.ax[0].set_ylabel('Position (deg)')
+        self.ax[1].set_ylabel('Velocity (deg/s)')
+        self.ax[2].set_ylabel('Acceleration (deg/s²)')
+        
+        # Enable blitting for faster updates
+        self.fig.canvas.draw()
+        self.background = self.fig.canvas.copy_from_bbox(self.fig.bbox)
+        
+        plt.show(block=False)
+        
+        # Track update timing
+        self.last_update = time.time()
+        self.update_interval = 0.4  #
+        
+    def add_data(self, t, pos, vel, acc):
+        """Add new data point."""
+        self.times.append(t)
+        self.positions.append(pos)
+        self.velocities.append(vel)
+        self.accelerations.append(acc)
+        
+    def update_if_needed(self):
+        """Update plots only if enough time has passed."""
+        current_time = time.time()
+        if current_time - self.last_update >= self.update_interval and len(self.times) > 0:
+            self.update_plots()
+            self.last_update = current_time
+            return True
+        return False
+    
+    def update_plots(self):
+        """Efficiently update the plot lines."""
+        if len(self.times) == 0:
+            return
+            
+        try:
+            # Convert deques to arrays for plotting
+            times_array = np.array(self.times)
+            pos_array = np.array(self.positions)
+            vel_array = np.array(self.velocities)
+            acc_array = np.array(self.accelerations)
+            
+            # Restore background
+            self.fig.canvas.restore_region(self.background)
+            
+            # Update line data
+            self.pos_line.set_data(times_array, pos_array)
+            self.vel_line.set_data(times_array, vel_array)
+            self.acc_line.set_data(times_array, acc_array)
+            
+            # Auto-scale axes only when needed
+            for ax in self.ax:
+                ax.relim()
+                ax.autoscale_view()
+
+            
+            plt.draw()
+            plt.pause(0.000000001)  # Use a very small pause to allow GUI updates
+            
+        except Exception as e:
+            print(f"Plot update error: {e}")
+            # Fallback to normal drawing
+            try:
+                self.fig.canvas.draw_idle()
+                self.fig.canvas.flush_events()
+            except:
+                pass
 
 def main():
     """Main simulation loop."""
@@ -76,29 +174,9 @@ def main():
     # Initialize MuJoCo data properly
     mujoco.mj_forward(model, data)  # Forward kinematics to ensure consistency
     
-    t=[]
-    pos=[]
-    vel=[]
-    acc=[]
+    # Setup efficient plotting
+    plotter = EfficientPlotter(max_points=500)
     
-    plt.ion() 
-    plt.style.use('fivethirtyeight')
-    fig,ax=plt.subplots(3,1,layout='constrained',figsize=(10, 8))
-    pos_graph=ax[0].plot([],[],'r-')
-    vel_graph=ax[1].plot([],[],'b-')
-    acc_graph=ax[2].plot([],[],'g-')
-    ax[0].set_title('Right Elbow Joint Position')
-    ax[1].set_title('Right Elbow Joint Velocity')
-    ax[2].set_title('Right Elbow Joint Acceleration')
-    ax[0].set_xlabel('Time (s)')
-    ax[1].set_xlabel('Time (s)')
-    ax[2].set_xlabel('Time (s)')
-    ax[0].set_ylabel('Position (deg)')
-    ax[1].set_ylabel('Velocity (deg/s)')
-    ax[2].set_ylabel('Acceleration (deg/s²)')
-    plt.show()
-
-  
 
     # Create viewer
     with viewer.launch_passive(model, data) as viewer_instance:
@@ -153,28 +231,24 @@ def main():
 
                 viewer_instance.sync()
                 render_count += 1
+           
+                actual_angle = data.qpos[r_elbow_id]
+                actual_velocity = data.qvel[r_elbow_id]
+                actual_acceleration = data.qacc[r_elbow_id]
+                simulation_time = step_count * MUJOCO_TIMESTEP
                 
-                t.append(simulation_time)
-                pos.append(math.degrees(actual_angle))
-                vel.append(math.degrees(actual_velocity))
-                acc.append(math.degrees(actual_acceleration))
-                if len(t)>500:
-                    t, pos, vel, acc = t[-500:], pos[-500:], vel[-500:], acc[-500:]
-                pos_graph[0].set_xdata(np.arange(len(t)))
-                pos_graph[0].set_ydata(pos)
-                vel_graph[0].set_xdata(np.arange(len(t)))
-                vel_graph[0].set_ydata(vel)
-                acc_graph[0].set_xdata(np.arange(len(t)))
-                acc_graph[0].set_ydata(acc)
+                # Add data to plotter
+                plotter.add_data(
+                    simulation_time,
+                    math.degrees(actual_angle),
+                    math.degrees(actual_velocity),
+                    math.degrees(actual_acceleration)
+                )
                 
-                ax[0].relim()
-                ax[0].autoscale_view()
-                ax[1].relim()
-                ax[1].autoscale_view()
-                ax[2].relim()
-                ax[2].autoscale_view()
-                plt.draw()
-                plt.pause(0.000000001)
+                # Update plots only when needed (every 400ms)
+                plotter.update_if_needed()
+        
+        print("Simulation ended.")
 
 if __name__ == "__main__":
     main()
