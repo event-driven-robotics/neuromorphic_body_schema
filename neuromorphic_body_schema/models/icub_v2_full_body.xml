@@ -674,7 +674,7 @@
         <position name="r_shoulder_pitch"       kp="250.0"      joint="r_shoulder_pitch"                ctrlrange="-3.0543261909900767 0.3490658503988659"/>
         <position name="r_shoulder_roll"        kp="250.0"      joint="r_shoulder_roll"                 ctrlrange="0.20943951023931956 2.8448866807507573"/>
         <position name="r_shoulder_yaw"         kp="250.0"      joint="r_shoulder_yaw"                  ctrlrange="-0.8726646259971648 1.3962634015954636"/>
-        <position name="r_elbow"                kp="105.0"      joint="r_elbow"                         ctrlrange="-0.05235987755982989 1.3089969389957472"/>
+        <position name="r_elbow"                kp="105.0"      joint="r_elbow"                         ctrlrange="-0.0 1.2217304763960306"/>
         <position name="r_wrist_prosup"         kp="195.0"      joint="r_wrist_prosup"                  ctrlrange="-1.53588974175501 1.53588974175501"/>
         <position name="r_wrist_pitch"          kp="15.0"       joint="r_wrist_pitch"                   ctrlrange="-1.2217304763960306 0.4363323129985824"/>
         <position name="r_wrist_yaw"            kp="105.0"      joint="r_wrist_yaw"                     ctrlrange="-0.2617993877991494 0.6108652381980153"/>

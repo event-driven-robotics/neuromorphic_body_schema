@@ -6,7 +6,7 @@ import numpy as np
 # FIG_PATH = "./figures"
 
 # DEBUG
-MODEL_PATH = './models/icub_v2_full_body_contact_sensors.xml'  # full iCub
+MODEL_PATH = '/home/fferrari-iit.local/Code/neuromorphic_body_schema/neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'  # full iCub
 TRIANGLE_INI_PATH = "../../icub-main/app/skinGui/conf/skinGui"
 FIG_PATH = "../figures"
 
