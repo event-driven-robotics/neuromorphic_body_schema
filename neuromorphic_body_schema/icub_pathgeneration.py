@@ -1,0 +1,193 @@
+import math
+import time
+import mujoco
+from mujoco import viewer
+import numpy as np
+import os
+
+# Constants
+MODEL_PATH = "/home/fferrari-iit.local/Code/neuromorphic_body_schema/neuromorphic_body_schema/models/icub_v2_full_body.xml"
+MUJOCO_TIMESTEP = 0.005  # MuJoCo internal timestep
+DATA_DIR = "/home/fferrari-iit.local/Code/neuromorphic_body_schema/Data"
+
+def set_stable_pose(model, data):
+    """Set the robot to a stable standing pose - ONLY set velocities to zero, don't change positions."""
+    data.qvel[:] = 0.0
+
+def run_simulation(target_velocity_deg_s, num_cycles=5):
+    """Run simulation for a specific target velocity and save data."""
+    
+    print(f"Running simulation with target velocity: {target_velocity_deg_s}°/s")
+    
+    # Load the MuJoCo model
+    model = mujoco.MjModel.from_xml_path(MODEL_PATH)
+    data = mujoco.MjData(model)
+    
+    # Set MuJoCo timestep
+    model.opt.timestep = MUJOCO_TIMESTEP
+    
+    # Find the right elbow joint
+    try:
+        r_elbow_id = model.joint("r_elbow").id
+    except:
+        print("Error: Could not find 'r_elbow' joint in model")
+        return False
+    
+    # Check if there's an actuator for the right elbow
+    r_elbow_actuator_id = None
+    for i in range(model.nu):
+        actuator_name = model.actuator(i).name if hasattr(model.actuator(i), 'name') else f"actuator_{i}"
+        if "r_elbow" in actuator_name.lower():
+            r_elbow_actuator_id = i
+            break
+    
+    # Get joint limits
+    joint_range = model.jnt_range[r_elbow_id]
+    min_angle = joint_range[0] + np.deg2rad(1)  # Minimum angle in radians with safety margin
+    max_angle = joint_range[1] - np.deg2rad(1)  # Maximum angle in radians with safety margin
+    
+    print(f"  Joint limits: {math.degrees(min_angle):.2f}° to {math.degrees(max_angle):.2f}°")
+    
+    # Initialize simulation state
+    initial_angle = math.radians(5.0)  # Start at 5 degrees
+    current_angle = initial_angle
+    target_velocity_rad_s = math.radians(target_velocity_deg_s)
+    direction = 1  # 1 for increasing, -1 for decreasing
+    step_count = 0
+    cycle_count = 0
+    
+    # Initialize to default neutral pose first
+    mujoco.mj_resetData(model, data)
+    
+    # Set initial elbow position to 5 degrees
+    data.qpos[r_elbow_id] = current_angle
+    
+    # Initialize MuJoCo data properly
+    mujoco.mj_forward(model, data)
+    
+    # Data storage
+    data_points = []
+    
+    # Initial settling phase
+    print("  Settling robot in initial pose...")
+    for i in range(500):
+        set_stable_pose(model, data)
+        data.qpos[r_elbow_id] = current_angle
+        mujoco.mj_step(model, data)
+    
+    print(f"  Starting motion for {num_cycles} cycles...")
+    
+    # Main simulation loop
+    while cycle_count < num_cycles:
+        # Calculate motion
+        angle_increment = direction * target_velocity_rad_s * MUJOCO_TIMESTEP
+        next_angle = current_angle + angle_increment
+        
+        # Check boundaries and count cycles
+        if next_angle >= max_angle:
+            next_angle = max_angle
+            if direction == 1:  # Was going up, now reverse
+                direction = -1
+                print(f"    Cycle {cycle_count + 1}: Reached max angle {math.degrees(max_angle):.2f}°")
+        elif next_angle <= min_angle:
+            next_angle = min_angle
+            if direction == -1:  # Was going down, now reverse and count cycle
+                direction = 1
+                cycle_count += 1
+                print(f"    Completed cycle {cycle_count}/{num_cycles}")
+        
+        current_angle = next_angle
+        
+        # Control the joint
+        if r_elbow_actuator_id is not None:
+            data.ctrl[r_elbow_actuator_id] = current_angle
+        else:
+            data.qpos[r_elbow_id] = current_angle
+        
+        # Step the simulation
+        mujoco.mj_step(model, data)
+        step_count += 1
+        
+        # Record data every 10 steps (50ms intervals)
+        if step_count % 10 == 0:
+            actual_angle = data.qpos[r_elbow_id]
+            actual_velocity = data.qvel[r_elbow_id]
+            actual_acceleration = data.qacc[r_elbow_id]
+            simulation_time = step_count * MUJOCO_TIMESTEP
+            
+            data_points.append([
+                simulation_time,
+                math.degrees(actual_angle),
+                math.degrees(actual_velocity),
+                math.degrees(actual_acceleration)
+            ])
+    
+    # Save data to file
+    os.makedirs(DATA_DIR, exist_ok=True)
+    filename = f"run_{target_velocity_deg_s:.1f}.txt"
+    filepath = os.path.join(DATA_DIR, filename)
+    
+    with open(filepath, 'w') as f:
+        f.write("# Time(s) Position(deg) Velocity(deg/s) Acceleration(deg/s²)\n")
+        
+        for data_point in data_points:
+            f.write(f"{data_point[0]:.6f} {data_point[1]:.6f} {data_point[2]:.6f} {data_point[3]:.6f}\n")
+    
+    print(f"  Data saved to: {filepath}")
+    print(f"  Total data points: {len(data_points)}")
+    print(f"  Simulation time: {data_points[-1][0]:.2f}s")
+    
+    return True
+
+def main():
+    """Main function to run simulations with different velocities."""
+    
+    print("Starting elbow motion data generation...")
+    print(f"Data will be saved to: {DATA_DIR}")
+    
+    # Generate 20 velocities on logarithmic scale from 1 to 60 deg/s
+    min_velocity = 1.0
+    max_velocity = 60.0
+    num_simulations = 20
+    
+    # Create logarithmic scale
+    log_min = np.log10(min_velocity)
+    log_max = np.log10(max_velocity)
+    log_velocities = np.linspace(log_min, log_max, num_simulations)
+    velocities = 10**log_velocities
+    
+    print(f"\nVelocities to test ({num_simulations} simulations):")
+    for i, vel in enumerate(velocities):
+        print(f"  {i+1:2d}: {vel:.2f} deg/s")
+    
+    print(f"\nStarting simulations...")
+    
+    successful_runs = 0
+    failed_runs = 0
+    
+    for i, velocity in enumerate(velocities):
+        print(f"\n--- Simulation {i+1}/{num_simulations} ---")
+        try:
+            success = run_simulation(velocity, num_cycles=5)
+            if success:
+                successful_runs += 1
+            else:
+                failed_runs += 1
+        except Exception as e:
+            print(f"  ERROR: Simulation failed with error: {e}")
+            failed_runs += 1
+    
+    print(f"\n=== Summary ===")
+    print(f"Total simulations: {num_simulations}")
+    print(f"Successful: {successful_runs}")
+    print(f"Failed: {failed_runs}")
+    print(f"Data saved to: {DATA_DIR}")
+    
+    if successful_runs > 0:
+        print(f"\nFiles created:")
+        for velocity in velocities[:successful_runs]:
+            filename = f"run_{velocity:.1f}.txt"
+            print(f"  {filename}")
+
+if __name__ == "__main__":
+    main()
