@@ -6,7 +6,6 @@
     <default>
         <joint limited="true" damping="5.0" stiffness="0.01" frictionloss="0.01"/>
         <geom friction="1.0 0.005 0.0001"/>
-        <position kp="10" ctrllimited="true"/>
     </default>
    
     <asset>
@@ -637,29 +636,29 @@
     <!-- TODO organize actuators similar to appearance above -->
     <actuator>
         <!-- START setting ranges. Set the correct kp. Ctrl ranges updates according to iCubGazeboV3_visuomanip.urdf -->
-        <position name="r_hip_pitch"            kp="470.0"      joint="r_hip_pitch"                     ctrlrange="-0.7853981633974483 2.007128639793479"/>
-        <position name="r_hip_roll"             kp="470.0"      joint="r_hip_roll"                      ctrlrange="-0.17453292519943295 1.9547687622336491"/>
-        <position name="r_hip_yaw"              kp="470.0"      joint="r_hip_yaw"                       ctrlrange="-1.3962634015954636 1.3962634015954636"/>
-        <position name="r_knee"                 kp="470.0"      joint="r_knee"                          ctrlrange="-1.2217304763960306 0.08726646259971647"/>
-        <position name="r_ankle_pitch"          kp="470.0"      joint="r_ankle_pitch"                   ctrlrange="-0.7853981633974483 0.7853981633974483"/>
-        <position name="r_ankle_roll"           kp="470.0"      joint="r_ankle_roll"                    ctrlrange="-0.4363323129985824 0.4363323129985824"/>
-        <position name="l_hip_pitch"            kp="470.0"      joint="l_hip_pitch"                     ctrlrange="-0.7853981633974483 2.007128639793479"/>
-        <position name="l_hip_roll"             kp="470.0"      joint="l_hip_roll"                      ctrlrange="-0.17453292519943295 1.9547687622336491"/>
-        <position name="l_hip_yaw"              kp="470.0"      joint="l_hip_yaw"                       ctrlrange="-1.3962634015954636 1.3962634015954636"/>
-        <position name="l_knee"                 kp="470.0"      joint="l_knee"                          ctrlrange="-1.2217304763960306 0.08726646259971647"/>
-        <position name="l_ankle_pitch"          kp="470.0"      joint="l_ankle_pitch"                   ctrlrange="-0.7853981633974483 0.7853981633974483"/>
-        <position name="l_ankle_roll"           kp="470.0"      joint="l_ankle_roll"                    ctrlrange="-0.4363323129985824 0.4363323129985824"/>
+        <position name="r_hip_pitch"            kp="460.2829094911231"      joint="r_hip_pitch"                     ctrlrange="-0.7853981633974483 2.007128639793479"/>
+        <position name="r_hip_roll"             kp="461.75166820492313"      joint="r_hip_roll"                      ctrlrange="-0.17453292519943295 1.9547687622336491"/>
+        <position name="r_hip_yaw"              kp="460.4887854082967"      joint="r_hip_yaw"                       ctrlrange="-1.3962634015954636 1.3962634015954636"/>
+        <position name="r_knee"                 kp="465.5779077656425"      joint="r_knee"                          ctrlrange="-1.2217304763960306 0.08726646259971647"/>
+        <position name="r_ankle_pitch"          kp="465.4938285621927"      joint="r_ankle_pitch"                   ctrlrange="-0.7853981633974483 0.7853981633974483"/>
+        <position name="r_ankle_roll"           kp="467.00919449159613"      joint="r_ankle_roll"                    ctrlrange="-0.4363323129985824 0.4363323129985824"/>
+        <position name="l_hip_pitch"            kp="460.92439155991457"      joint="l_hip_pitch"                     ctrlrange="-0.7853981633974483 2.007128639793479"/>
+        <position name="l_hip_roll"             kp="463.4342350178009"      joint="l_hip_roll"                      ctrlrange="-0.17453292519943295 1.9547687622336491"/>
+        <position name="l_hip_yaw"              kp="460.43418657553684"      joint="l_hip_yaw"                       ctrlrange="-1.3962634015954636 1.3962634015954636"/>
+        <position name="l_knee"                 kp="465.74423576747154"      joint="l_knee"                          ctrlrange="-1.2217304763960306 0.08726646259971647"/>
+        <position name="l_ankle_pitch"          kp="464.4996071004378"      joint="l_ankle_pitch"                   ctrlrange="-0.7853981633974483 0.7853981633974483"/>
+        <position name="l_ankle_roll"           kp="467.10897174996717"      joint="l_ankle_roll"                    ctrlrange="-0.4363323129985824 0.4363323129985824"/>
         <!-- END setting ranges -->
-        <position name="torso_pitch"            kp="470.0"      joint="torso_pitch"                     ctrlrange="-0.3141592653589793 0.7853981633974483"/>
-        <position name="torso_roll"             kp="990.0"      joint="torso_roll"                      ctrlrange="-0.4014257279586958 0.4014257279586958"/>
-        <position name="torso_yaw"              kp="975.0"      joint="torso_yaw"                       ctrlrange="-0.7504915783575618 0.7504915783575618"/>
-        <position name="l_shoulder_pitch"       kp="250.0"      joint="l_shoulder_pitch"                ctrlrange="-3.0543261909900767 0.3490658503988659"/>
-        <position name="l_shoulder_roll"        kp="250.0"      joint="l_shoulder_roll"                 ctrlrange="0.20943951023931956 2.8448866807507573"/>
-        <position name="l_shoulder_yaw"         kp="250.0"      joint="l_shoulder_yaw"                  ctrlrange="-0.8726646259971648 1.3962634015954636"/>
-        <position name="l_elbow"                kp="105.0"      joint="l_elbow"                         ctrlrange="-0.05235987755982989 1.3089969389957472"/>
-        <position name="l_wrist_prosup"         kp="195.0"      joint="l_wrist_prosup"                  ctrlrange="-1.53588974175501 1.53588974175501"/>
-        <position name="l_wrist_pitch"          kp="15.0"       joint="l_wrist_pitch"                   ctrlrange="-1.2217304763960306 0.4363323129985824"/>
-        <position name="l_wrist_yaw"            kp="105.0"      joint="l_wrist_yaw"                     ctrlrange="-0.2617993877991494 0.6108652381980153"/>
+        <position name="torso_pitch"            kp="466.5724198896259"      joint="torso_pitch"                     ctrlrange="-0.3141592653589793 0.7853981633974483"/>
+        <position name="torso_roll"             kp="987.52478004925"      joint="torso_roll"                      ctrlrange="-0.4014257279586958 0.4014257279586958"/>
+        <position name="torso_yaw"              kp="970.0076783814056"      joint="torso_yaw"                       ctrlrange="-0.7504915783575618 0.7504915783575618"/>
+        <position name="l_shoulder_pitch"       kp="239.80587468267962"      joint="l_shoulder_pitch"                ctrlrange="-3.0543261909900767 0.3490658503988659"/>
+        <position name="l_shoulder_roll"        kp="242.85484762929923"      joint="l_shoulder_roll"                 ctrlrange="0.20943951023931956 2.8448866807507573"/>
+        <position name="l_shoulder_yaw"         kp="242.55422604404555"      joint="l_shoulder_yaw"                  ctrlrange="-0.8726646259971648 1.3962634015954636"/>
+        <position name="l_elbow"                kp="102.14080592017541"      joint="l_elbow"                         ctrlrange="-0.05235987755982989 1.3089969389957472"/>
+        <position name="l_wrist_prosup"         kp="184.50148165005734"      joint="l_wrist_prosup"                  ctrlrange="-1.53588974175501 1.53588974175501"/>
+        <position name="l_wrist_pitch"          kp="12.041237491223333"       joint="l_wrist_pitch"                   ctrlrange="-1.2217304763960306 0.4363323129985824"/>
+        <position name="l_wrist_yaw"            kp="101.90836669764312"      joint="l_wrist_yaw"                     ctrlrange="-0.2617993877991494 0.6108652381980153"/>
         <!-- TODO check the finger joints! -->
         <position name="l_hand_finger"          kp="25.0"       tendon="l_hand_finger_tendon"           ctrlrange="0.0 1.046666667"/>
         <position name="l_thumb_oppose"         kp="25.0"       joint="l_hand_thumb_0_joint"            ctrlrange="0.0 1.5707963267948966"/>
@@ -671,13 +670,13 @@
         <position name="l_middle_distal"        kp="10.0"       tendon="l_middle_distal_tendon"         ctrlrange="0.0 2.965555556"/>
         <position name="l_pinky"                kp="15.0"       tendon="l_pinky_tendon"                 ctrlrange="0.0 4.36"/>
 
-        <position name="r_shoulder_pitch"       kp="250.0"      joint="r_shoulder_pitch"                ctrlrange="-3.0543261909900767 0.3490658503988659"/>
-        <position name="r_shoulder_roll"        kp="250.0"      joint="r_shoulder_roll"                 ctrlrange="0.20943951023931956 2.8448866807507573"/>
-        <position name="r_shoulder_yaw"         kp="250.0"      joint="r_shoulder_yaw"                  ctrlrange="-0.8726646259971648 1.3962634015954636"/>
-        <position name="r_elbow"                kp="105.0"      joint="r_elbow"                         ctrlrange="-0.05235987755982989 1.3089969389957472"/>
-        <position name="r_wrist_prosup"         kp="195.0"      joint="r_wrist_prosup"                  ctrlrange="-1.53588974175501 1.53588974175501"/>
-        <position name="r_wrist_pitch"          kp="15.0"       joint="r_wrist_pitch"                   ctrlrange="-1.2217304763960306 0.4363323129985824"/>
-        <position name="r_wrist_yaw"            kp="105.0"      joint="r_wrist_yaw"                     ctrlrange="-0.2617993877991494 0.6108652381980153"/>
+        <position name="r_shoulder_pitch"       kp="244.32695509780535"      joint="r_shoulder_pitch"                ctrlrange="-3.0543261909900767 0.3490658503988659"/>
+        <position name="r_shoulder_roll"        kp="241.47486496296148"      joint="r_shoulder_roll"                 ctrlrange="0.20943951023931956 2.8448866807507573"/>
+        <position name="r_shoulder_yaw"         kp="243.14036453575414"      joint="r_shoulder_yaw"                  ctrlrange="-0.8726646259971648 1.3962634015954636"/>
+        <position name="r_elbow"                kp="103.10456469972627"      joint="r_elbow"                         ctrlrange="-0.05235987755982989 1.3089969389957472"/>
+        <position name="r_wrist_prosup"         kp="184.958899816576"      joint="r_wrist_prosup"                  ctrlrange="-1.53588974175501 1.53588974175501"/>
+        <position name="r_wrist_pitch"          kp="12.566093571265277"       joint="r_wrist_pitch"                   ctrlrange="-1.2217304763960306 0.4363323129985824"/>
+        <position name="r_wrist_yaw"            kp="102.28437173493597"      joint="r_wrist_yaw"                     ctrlrange="-0.2617993877991494 0.6108652381980153"/>
         <!-- TODO check the finger joints! -->
         <position name="r_hand_finger"          kp="25.0"       tendon="r_hand_finger_tendon"           ctrlrange="0.0 1.046666667"/>
         <position name="r_thumb_oppose"         kp="25.0"       joint="r_hand_thumb_0_joint"            ctrlrange="0.0 1.5707963267948966"/>
@@ -694,7 +693,7 @@
         <position name="neck_yaw"               kp="195.0"      joint="neck_yaw"                        ctrlrange="-0.7853981633974483 0.7853981633974483"/>
         
         <position name="eyes_pan" kp="195.0" tendon="eyes_pan_tendon" ctrlrange="-0.5235987755982988 0.9599310885968813"/>
-        <position name="eyes_tilt" kp="195.0" tendon="eyes_tilt_tendon" ctrlrange="-0.5235987755982988 0.5235987755982988"/>
+        <position name="eyes_tilt" kp="194.87071990409146" tendon="eyes_tilt_tendon" ctrlrange="-0.5235987755982988 0.5235987755982988"/>
     </actuator>
     
 </mujoco>
