@@ -7,13 +7,83 @@ import matplotlib
 matplotlib.use('TkAgg')  # Use TkAgg backend instead of Qt
 import matplotlib.pyplot as plt
 from collections import deque
-
+import tkinter as tk
+import threading
 # Constants
 MODEL_PATH = "/home/fferrari-iit.local/Code/neuromorphic_body_schema/neuromorphic_body_schema/models/icub_v2_full_body.xml"
 TARGET_VELOCITY_DEG_S = 5.0  # Target velocity in degrees per second
 RENDER_INTERVAL = 0.05  # 50ms between renders
 MUJOCO_TIMESTEP = 0.005  # MuJoCo internal timestep
 STEPS_PER_RENDER = int(RENDER_INTERVAL / MUJOCO_TIMESTEP)  # 10 steps per render
+
+# Global control variables for thread-safe communication
+start_request = False
+move_request = False
+control_lock = threading.Lock()
+
+def set_start_request(value):
+    global start_request
+    with control_lock:
+        start_request = value
+
+def get_start_request():
+    global start_request
+    with control_lock:
+        return start_request
+
+def set_move_request(value):
+    global move_request
+    with control_lock:
+        move_request = value
+        start_request= False  
+
+def get_move_request():
+    global move_request
+    with control_lock:
+        return move_request
+
+def create_control_panel():
+    """Create control panel that runs in a separate thread without blocking."""
+    root = tk.Tk()
+    root.title("Robot Control Panel")
+    root.geometry("300x150")
+    
+    def request_start():
+        set_start_request(True)
+        status_label.config(text="START requested!")
+        print("START button pressed!")
+        
+    def request_move():
+        set_move_request(True)
+        status_label.config(text="MOVE requested!")
+        print("MOVE button pressed!")
+    
+    start_button = tk.Button(root, text="START", command=request_start,
+                            bg="green", fg="white", height=2, width=15, font=("Arial", 12, "bold"))
+    start_button.pack(pady=10)
+
+    move_button = tk.Button(root, text="MOVE", command=request_move,
+                           bg="blue", fg="white", height=2, width=15, font=("Arial", 12, "bold"))
+    move_button.pack(pady=10)
+
+    status_label = tk.Label(root, text="Control panel ready", font=("Arial", 10))
+    status_label.pack(pady=5)
+    
+    # Make the GUI non-blocking by using after() instead of mainloop()
+    def update_gui():
+        try:
+            root.update()  # Process pending events
+            root.after(5, update_gui)  # Schedule next update in 50ms
+        except tk.TclError:
+            # Window was closed
+            pass
+    
+    update_gui()  # Start the update cycle
+    
+  
+
+
+
 
 def set_stable_pose(model, data):
     """Set the robot to a stable standing pose - ONLY set velocities to zero, don't change positions."""
@@ -116,8 +186,16 @@ class EfficientPlotter:
             except:
                 pass
 
+
+
+ 
 def main():
     """Main simulation loop."""
+    
+    # Start GUI in separate thread
+    gui_thread = threading.Thread(target=create_control_panel, daemon=True)
+    gui_thread.start()
+   
     
     # Load the MuJoCo model
     model = mujoco.MjModel.from_xml_path(MODEL_PATH)
@@ -168,7 +246,7 @@ def main():
     # Initialize to default neutral pose first
     mujoco.mj_resetData(model, data)
     
-    # Set initial elbow position
+    # Set initial elbow position to 5 degrees
     data.qpos[r_elbow_id] = current_angle
     
     # Initialize MuJoCo data properly
@@ -177,14 +255,16 @@ def main():
     # Setup efficient plotting
     plotter = EfficientPlotter(max_points=500)
     
-
+    print("Simulation ready. Check control panel for START/MOVE buttons.")
+    
     # Create viewer
     with viewer.launch_passive(model, data) as viewer_instance:
         
-        for i in range(500):  # More steps for better settling
+        # Initial settling
+        for i in range(500):
             set_stable_pose(model, data)
             mujoco.mj_step(model, data)
-            if i % 50 == 0:  # Update viewer every 50 steps
+            if i % 50 == 0:
                 viewer_instance.sync()
                 time.sleep(0.01)
         
@@ -192,8 +272,19 @@ def main():
         step_count = 0
         render_count = 0
         
+        print("Robot initialized. Use control panel to start motion.")
+        
         while viewer_instance.is_running():
+            # Check for start/move requests from GUI
+            if get_start_request():
+                print("Processing START request...")
+                set_start_request(False)  # Reset flag
+                
+            if get_move_request():
+                print("Processing MOVE request...")
+                set_move_request(False)  # Reset flag
             
+            # Main simulation motion (always running for now)
             angle_increment = direction * target_velocity_rad_s * MUJOCO_TIMESTEP
             next_angle = current_angle + angle_increment
             
@@ -201,9 +292,11 @@ def main():
             if next_angle >= max_angle:
                 next_angle = max_angle
                 direction = -1
+                print(f"Reached max angle: {math.degrees(max_angle):.2f}°, reversing direction")
             elif next_angle <= min_angle:
                 next_angle = min_angle
                 direction = 1
+                print(f"Reached min angle: {math.degrees(min_angle):.2f}°, reversing direction")
                 
             current_angle = next_angle
             
