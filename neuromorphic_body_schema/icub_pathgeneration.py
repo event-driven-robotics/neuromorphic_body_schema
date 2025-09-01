@@ -4,15 +4,62 @@ import mujoco
 from mujoco import viewer
 import numpy as np
 import os
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend for saving images
+import matplotlib.pyplot as plt
 
 # Constants
 MODEL_PATH = "/home/fferrari-iit.local/Code/neuromorphic_body_schema/neuromorphic_body_schema/models/icub_v2_full_body.xml"
 MUJOCO_TIMESTEP = 0.005  # MuJoCo internal timestep
 DATA_DIR = "/home/fferrari-iit.local/Code/neuromorphic_body_schema/Data"
+PLOTS_DIR = "/home/fferrari-iit.local/Code/neuromorphic_body_schema/Data/plots"
 
 def set_stable_pose(model, data):
     """Set the robot to a stable standing pose - ONLY set velocities to zero, don't change positions."""
     data.qvel[:] = 0.0
+
+def create_trajectory_plot(data_points, target_velocity_deg_s):
+    """Create and save trajectory plots for position, velocity, and acceleration."""
+    
+    # Extract data
+    times = [dp[0] for dp in data_points]
+    positions = [dp[1] for dp in data_points]
+    velocities = [dp[2] for dp in data_points]
+    accelerations = [dp[3] for dp in data_points]
+    
+    # Setup plots with optimizations
+    plt.style.use('fivethirtyeight')
+    fig, ax = plt.subplots(3, 1, layout='constrained', figsize=(10, 8))
+    
+    # Plot data
+    ax[0].plot(times, positions, 'r-.', linewidth=2, label='Position')
+    ax[1].plot(times, velocities, 'b-.', linewidth=2, label='Velocity')
+    ax[2].plot(times, accelerations, 'g-.', linewidth=2, label='Acceleration')
+    
+    # Set titles and labels
+    ax[0].set_title(f'Right Elbow Joint Position (Target: {target_velocity_deg_s:.1f}°/s)')
+    ax[1].set_title('Right Elbow Joint Velocity')
+    ax[2].set_title('Right Elbow Joint Acceleration')
+    ax[0].set_xlabel('Time (s)')
+    ax[1].set_xlabel('Time (s)')
+    ax[2].set_xlabel('Time (s)')
+    ax[0].set_ylabel('Position (deg)')
+    ax[1].set_ylabel('Velocity (deg/s)')
+    ax[2].set_ylabel('Acceleration (deg/s²)')
+    
+    # Add grids
+    for a in ax:
+        a.grid(True, alpha=0.3)
+    
+    # Save the plot
+    os.makedirs(PLOTS_DIR, exist_ok=True)
+    plot_filename = f"trajectory_{target_velocity_deg_s:.1f}.png"
+    plot_filepath = os.path.join(PLOTS_DIR, plot_filename)
+    
+    plt.savefig(plot_filepath, dpi=300, bbox_inches='tight')
+    plt.close()  # Close the figure to free memory
+    
+    return plot_filepath
 
 def run_simulation(target_velocity_deg_s, num_cycles=5):
     """Run simulation for a specific target velocity and save data."""
@@ -133,7 +180,11 @@ def run_simulation(target_velocity_deg_s, num_cycles=5):
         for data_point in data_points:
             f.write(f"{data_point[0]:.6f} {data_point[1]:.6f} {data_point[2]:.6f} {data_point[3]:.6f}\n")
     
+    # Create and save trajectory plot
+    plot_filepath = create_trajectory_plot(data_points, target_velocity_deg_s)
+    
     print(f"  Data saved to: {filepath}")
+    print(f"  Plot saved to: {plot_filepath}")
     print(f"  Total data points: {len(data_points)}")
     print(f"  Simulation time: {data_points[-1][0]:.2f}s")
     
@@ -182,12 +233,14 @@ def main():
     print(f"Successful: {successful_runs}")
     print(f"Failed: {failed_runs}")
     print(f"Data saved to: {DATA_DIR}")
+    print(f"Plots saved to: {PLOTS_DIR}")
     
     if successful_runs > 0:
         print(f"\nFiles created:")
         for velocity in velocities[:successful_runs]:
-            filename = f"run_{velocity:.1f}.txt"
-            print(f"  {filename}")
+            data_filename = f"run_{velocity:.1f}.txt"
+            plot_filename = f"trajectory_{velocity:.1f}.png"
+            print(f"  {data_filename} + {plot_filename}")
 
 if __name__ == "__main__":
     main()
