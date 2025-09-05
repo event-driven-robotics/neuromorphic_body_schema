@@ -53,6 +53,8 @@ VISUALIZE_ED_CAMERA_FEED = False
 VISUALIZE_SKIN = False
 VISUALIZE_PROPRIOCEPTION_FEED = False
 
+MODEL_PATH = "./neuromorphic_body_schema/models/icub_v2_full_body_kp_tuning_after_with_tuning.xml"
+
 
 def reset(keyframe, data, model):
     """

@@ -11,7 +11,7 @@
 
 import logging
 from collections import defaultdict
-
+import os
 import mujoco
 import numpy as np
 import matplotlib.pyplot as plt
@@ -22,7 +22,7 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 
-MODEL_PATH = "./neuromorphic_body_schema/models/icub_v2_full_body.xml"
+MODEL_PATH = "./neuromorphic_body_schema/models/icub_v2_full_body_kp_tuning_after_with_tuning.xml"
 
 
 
@@ -142,7 +142,7 @@ def find_kp(model, data, kp_original):
             # 6. based on delta history change kp
             sign_change = np.any(np.sign(delta[:-1]) != np.sign(delta[1:]))
             if sign_change:
-                kp_sign_change = 0.1*np.max(np.abs(delta))
+                kp_sign_change = 0.5*np.max(np.abs(delta))
                 kp_drift_change = 0.0
             elif kp_drift_change> 1e-8:
                 kp_sign_change = 0.0
@@ -176,7 +176,7 @@ if __name__ == '__main__':
         lines = file.readlines()
 
     while keep_processing:
-         with open("icub_v2_full_body_kp_tuning_after_with_tuning.xml", 'a') as output_file:
+         with open("icub_v2_full_body_kp_tuning_after_with_tuning_20250904.xml", 'a') as output_file:
              
             model = mujoco.MjModel.from_xml_path(MODEL_PATH)
             data = mujoco.MjData(model)
