@@ -1,17 +1,21 @@
+# Standard library imports
 import math
 import time
+import threading
+import argparse
+from collections import deque
+
+# Third-party imports
 import mujoco
 from mujoco import viewer
 import numpy as np
 import matplotlib
 matplotlib.use('TkAgg')  # Use TkAgg backend instead of Qt
 import matplotlib.pyplot as plt
-from collections import deque
 import tkinter as tk
-import threading
 # Constants
 MODEL_PATH = "/home/fferrari-iit.local/Code/neuromorphic_body_schema/neuromorphic_body_schema/models/icub_v2_full_body.xml"
-TARGET_VELOCITY_DEG_S = 5.0  # Target velocity in degrees per second
+TARGET_VELOCITY_DEG_S = 20.0  # Target velocity in degrees per second
 RENDER_INTERVAL = 0.05  # 50ms between renders
 MUJOCO_TIMESTEP = 0.005  # MuJoCo internal timestep
 STEPS_PER_RENDER = int(RENDER_INTERVAL / MUJOCO_TIMESTEP)  # 10 steps per render
@@ -149,34 +153,32 @@ class EfficientPlotter:
         return False
     
     def update_plots(self):
-        """Efficiently update the plot lines."""
-        if len(self.times) == 0:
+        """Efficiently update the plot lines, skipping the first value."""
+        if len(self.times) <= 1:
             return
-            
         try:
-            # Convert deques to arrays for plotting
-            times_array = np.array(self.times)
-            pos_array = np.array(self.positions)
-            vel_array = np.array(self.velocities)
-            acc_array = np.array(self.accelerations)
-            
+            # Convert deques to arrays for plotting, skip the first value
+            times_array = np.array(self.times)[1:]
+            pos_array = np.array(self.positions)[1:]
+            vel_array = np.array(self.velocities)[1:]
+            acc_array = np.array(self.accelerations)[1:]
+
             # Restore background
             self.fig.canvas.restore_region(self.background)
-            
+
             # Update line data
             self.pos_line.set_data(times_array, pos_array)
             self.vel_line.set_data(times_array, vel_array)
             self.acc_line.set_data(times_array, acc_array)
-            
+
             # Auto-scale axes only when needed
             for ax in self.ax:
                 ax.relim()
                 ax.autoscale_view()
 
-            
             plt.draw()
             plt.pause(0.000000001)  # Use a very small pause to allow GUI updates
-            
+
         except Exception as e:
             print(f"Plot update error: {e}")
             # Fallback to normal drawing
@@ -192,42 +194,46 @@ class EfficientPlotter:
 def main():
     """Main simulation loop."""
     
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(description="iCub neck joint motion simulation")
+    parser.add_argument('--motion', choices=['sinusoidal', 'linear'], default='linear', help="Type of motion: sinusoidal or linear")
+    args = parser.parse_args()
+
     # Start GUI in separate thread
     gui_thread = threading.Thread(target=create_control_panel, daemon=True)
     gui_thread.start()
-   
-    
+
     # Load the MuJoCo model
     model = mujoco.MjModel.from_xml_path(MODEL_PATH)
     data = mujoco.MjData(model)
-    
+
     # Set MuJoCo timestep
     model.opt.timestep = MUJOCO_TIMESTEP
-    
+
     # Find the right elbow joint
     try:
-        r_elbow_id = model.joint("r_elbow").id
+        neck_id = model.joint("neck_yaw").id
     except:
-        print("Error: Could not find 'r_elbow' joint in model")
+        print("Error: Could not find 'neck' joint in model")
         return
-    
+
     # Check if there's an actuator for the right elbow
-    r_elbow_actuator_id = None
+    neck_actuator_id = None
     for i in range(model.nu):
         actuator_name = model.actuator(i).name if hasattr(model.actuator(i), 'name') else f"actuator_{i}"
-        if "r_elbow" in actuator_name.lower():
-            r_elbow_actuator_id = i
+        if "neck_yaw" in actuator_name.lower():
+            neck_actuator_id = i
             print(f"Found right elbow actuator: {actuator_name}")
             break
-    
-    if r_elbow_actuator_id is None:
+
+    if neck_actuator_id is None:
         print("No right elbow actuator found, will use direct position control with smoothing")
-    
+
     # Get joint limits
-    joint_range = model.jnt_range[r_elbow_id]
+    joint_range = model.jnt_range[neck_id]
     min_angle = joint_range[0] + np.deg2rad(1)  # Minimum angle in radians
     max_angle = joint_range[1] - np.deg2rad(1)  # Maximum angle in radians
-    
+
     print(f"Right elbow joint limits:")
     print(f"  Min: {math.degrees(min_angle):.2f}°")
     print(f"  Max: {math.degrees(max_angle):.2f}°")
@@ -235,31 +241,33 @@ def main():
     print(f"MuJoCo timestep: {MUJOCO_TIMESTEP}s")
     print(f"Render interval: {RENDER_INTERVAL}s ({STEPS_PER_RENDER} MuJoCo steps)")
     print(f"Target velocity: {TARGET_VELOCITY_DEG_S}°/s")
-    
+
     # Initialize simulation state
-    current_angle = min_angle
     target_velocity_rad_s = math.radians(TARGET_VELOCITY_DEG_S)
-    direction = 1  # 1 for increasing, -1 for decreasing
+    angle_range = max_angle - min_angle
+    T = (angle_range * math.pi) / (2 * target_velocity_rad_s)
+    t = 0.0
+    direction = 1  # 1 for forward, -1 for backward
     step_count = 0
     render_count = 0
-    
+    current_angle = min_angle
+
     # Initialize to default neutral pose first
     mujoco.mj_resetData(model, data)
-    
+
     # Set initial elbow position to 5 degrees
-    data.qpos[r_elbow_id] = current_angle
-    
+    data.qpos[neck_id] = current_angle
+
     # Initialize MuJoCo data properly
     mujoco.mj_forward(model, data)  # Forward kinematics to ensure consistency
-    
+
     # Setup efficient plotting
     plotter = EfficientPlotter(max_points=500)
-    
+
     print("Simulation ready. Check control panel for START/MOVE buttons.")
-    
+
     # Create viewer
     with viewer.launch_passive(model, data) as viewer_instance:
-        
         # Initial settling
         for i in range(500):
             set_stable_pose(model, data)
@@ -267,54 +275,65 @@ def main():
             if i % 50 == 0:
                 viewer_instance.sync()
                 time.sleep(0.01)
-        
+
         # Reset counters after initialization
         step_count = 0
         render_count = 0
-        
+
         print("Robot initialized. Use control panel to start motion.")
-        
+
+        # For sinusoidal motion, use phase variable
+        if args.motion == 'sinusoidal':
+            if not hasattr(main, "phase"):
+                main.phase = 0.0
+
         while viewer_instance.is_running():
             # Check for start/move requests from GUI
             if get_start_request():
                 print("Processing START request...")
                 set_start_request(False)  # Reset flag
-                
             if get_move_request():
                 print("Processing MOVE request...")
                 set_move_request(False)  # Reset flag
-            
-            # Main simulation motion (always running for now)
-            angle_increment = direction * target_velocity_rad_s * MUJOCO_TIMESTEP
-            next_angle = current_angle + angle_increment
-            
-            # Check boundaries and reverse direction if needed
-            if next_angle >= max_angle:
-                next_angle = max_angle
-                direction = -1
-                print(f"Reached max angle: {math.degrees(max_angle):.2f}°, reversing direction")
-            elif next_angle <= min_angle:
-                next_angle = min_angle
-                direction = 1
-                print(f"Reached min angle: {math.degrees(min_angle):.2f}°, reversing direction")
-                
-            current_angle = next_angle
-            
-            # STABLE CONTROL: Use actuator if available, otherwise VERY careful position control
-            if r_elbow_actuator_id is not None:
-                data.ctrl[r_elbow_actuator_id] = current_angle
 
+            if args.motion == 'sinusoidal':
+                # Sinusoidal (cosine) trajectory: position from min_angle to max_angle and back
+                # Use a phase variable that increases continuously, and use cos(phase) to get smooth back-and-forth motion
+                # q(t) = min_angle + (angle_range) * (1 - cos(phase)) / 2
+                # phase goes from 0 to 2*pi for a full cycle (min->max->min)
+                # The period for a full cycle is 2*T
+                main.phase += math.pi * MUJOCO_TIMESTEP / T  # increment phase so that pi phase = T seconds
+                if main.phase > 2 * math.pi:
+                    main.phase -= 2 * math.pi
+                current_angle = min_angle + angle_range * (1 - math.cos(main.phase)) / 2
             else:
-                data.qpos[r_elbow_id] = current_angle
-            
+                # Linear motion: increment/decrement at constant velocity, reverse at limits
+                angle_increment = direction * target_velocity_rad_s * MUJOCO_TIMESTEP
+                next_angle = current_angle + angle_increment
+                if next_angle >= max_angle:
+                    next_angle = max_angle
+                    direction = -1
+                    print(f"Reached max angle: {math.degrees(max_angle):.2f}°, reversing direction")
+                elif next_angle <= min_angle:
+                    next_angle = min_angle
+                    direction = 1
+                    print(f"Reached min angle: {math.degrees(min_angle):.2f}°, reversing direction")
+                current_angle = next_angle
+
+            # STABLE CONTROL: Use actuator if available, otherwise VERY careful position control
+            if neck_actuator_id is not None:
+                data.ctrl[neck_actuator_id] = current_angle
+            else:
+                data.qpos[neck_id] = current_angle
+
             mujoco.mj_step(model, data)
             step_count += 1
-            
+
             # Render every RENDER_INTERVAL
             if step_count % STEPS_PER_RENDER == 0:
-                actual_angle = data.qpos[r_elbow_id]
-                actual_velocity = data.qvel[r_elbow_id]
-                actual_acceleration = data.qacc[r_elbow_id]
+                actual_angle = data.qpos[neck_id]
+                actual_velocity = data.qvel[neck_id]
+                actual_acceleration = data.qacc[neck_id]
                 simulation_time = step_count * MUJOCO_TIMESTEP
 
                 print(f"Time: {simulation_time:.3f}s, "
@@ -324,12 +343,7 @@ def main():
 
                 viewer_instance.sync()
                 render_count += 1
-           
-                actual_angle = data.qpos[r_elbow_id]
-                actual_velocity = data.qvel[r_elbow_id]
-                actual_acceleration = data.qacc[r_elbow_id]
-                simulation_time = step_count * MUJOCO_TIMESTEP
-                
+
                 # Add data to plotter
                 plotter.add_data(
                     simulation_time,
@@ -337,10 +351,8 @@ def main():
                     math.degrees(actual_velocity),
                     math.degrees(actual_acceleration)
                 )
-                
                 # Update plots only when needed (every 400ms)
                 plotter.update_if_needed()
-        
         print("Simulation ended.")
 
 if __name__ == "__main__":
