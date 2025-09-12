@@ -7,12 +7,12 @@ import os
 import matplotlib
 matplotlib.use('Agg')  # Use non-interactive backend for saving images
 import matplotlib.pyplot as plt
-
+import argparse
 # Constants
 MODEL_PATH = "/home/fferrari-iit.local/Code/neuromorphic_body_schema/neuromorphic_body_schema/models/icub_v2_full_body.xml"
 MUJOCO_TIMESTEP = 0.005  # MuJoCo internal timestep
-DATA_DIR = "/home/fferrari-iit.local/Code/neuromorphic_body_schema/Data"
-PLOTS_DIR = "/home/fferrari-iit.local/Code/neuromorphic_body_schema/Data/plots"
+DATA_DIR = "/home/fferrari-iit.local/Code/neuromorphic_body_schema/Data/neck/data_sinusoidal"
+PLOTS_DIR = "/home/fferrari-iit.local/Code/neuromorphic_body_schema/Data/neck/plots_sinusoidal"
 
 def set_stable_pose(model, data):
     """Set the robot to a stable standing pose - ONLY set velocities to zero, don't change positions."""
@@ -61,7 +61,7 @@ def create_trajectory_plot(data_points, target_velocity_deg_s):
     
     return plot_filepath
 
-def run_simulation(target_velocity_deg_s, num_cycles=5):
+def run_simulation(target_velocity_deg_s, num_cycles=5, motion_type='linear'):
     """Run simulation for a specific target velocity and save data."""
     
     print(f"Running simulation with target velocity: {target_velocity_deg_s}°/s")
@@ -75,39 +75,42 @@ def run_simulation(target_velocity_deg_s, num_cycles=5):
     
     # Find the right elbow joint
     try:
-        r_elbow_id = model.joint("r_elbow").id
+        neck_id = model.joint("neck_yaw").id
     except:
-        print("Error: Could not find 'r_elbow' joint in model")
-        return False
+        print("Error: Could not find 'neck' joint in model")
+        return
     
     # Check if there's an actuator for the right elbow
-    r_elbow_actuator_id = None
+    neck_actuator_id = None
     for i in range(model.nu):
         actuator_name = model.actuator(i).name if hasattr(model.actuator(i), 'name') else f"actuator_{i}"
-        if "r_elbow" in actuator_name.lower():
-            r_elbow_actuator_id = i
+        if "neck_yaw" in actuator_name.lower():
+            neck_actuator_id = i
+            print(f"Found right elbow actuator: {actuator_name}")
             break
-    
+
     # Get joint limits
-    joint_range = model.jnt_range[r_elbow_id]
+    joint_range = model.jnt_range[neck_id]
     min_angle = joint_range[0] + np.deg2rad(1)  # Minimum angle in radians with safety margin
     max_angle = joint_range[1] - np.deg2rad(1)  # Maximum angle in radians with safety margin
     
     print(f"  Joint limits: {math.degrees(min_angle):.2f}° to {math.degrees(max_angle):.2f}°")
     
     # Initialize simulation state
-    initial_angle = math.radians(5.0)  # Start at 5 degrees
-    current_angle = initial_angle
+    current_angle = min_angle
+    angle_range = max_angle - min_angle
     target_velocity_rad_s = math.radians(target_velocity_deg_s)
     direction = 1  # 1 for increasing, -1 for decreasing
     step_count = 0
     cycle_count = 0
+    T = (angle_range * math.pi) / (2 * target_velocity_rad_s)
+    t = 0.0
     
     # Initialize to default neutral pose first
     mujoco.mj_resetData(model, data)
     
-    # Set initial elbow position to 5 degrees
-    data.qpos[r_elbow_id] = current_angle
+    # Set initial neck position to 5 degrees
+    data.qpos[neck_id] = current_angle
     
     # Initialize MuJoCo data properly
     mujoco.mj_forward(model, data)
@@ -119,37 +122,52 @@ def run_simulation(target_velocity_deg_s, num_cycles=5):
     print("  Settling robot in initial pose...")
     for i in range(500):
         set_stable_pose(model, data)
-        data.qpos[r_elbow_id] = current_angle
+        data.qpos[neck_id] = current_angle
         mujoco.mj_step(model, data)
-    
+    if motion_type == 'sinusoidal':
+        phase = 0.0  # Phase for sinusoidal motion
+        prev_phase = 0.0
+        
     print(f"  Starting motion for {num_cycles} cycles...")
     
     # Main simulation loop
     while cycle_count < num_cycles:
-        # Calculate motion
-        angle_increment = direction * target_velocity_rad_s * MUJOCO_TIMESTEP
-        next_angle = current_angle + angle_increment
-        
-        # Check boundaries and count cycles
-        if next_angle >= max_angle:
-            next_angle = max_angle
-            if direction == 1:  # Was going up, now reverse
-                direction = -1
-                print(f"    Cycle {cycle_count + 1}: Reached max angle {math.degrees(max_angle):.2f}°")
-        elif next_angle <= min_angle:
-            next_angle = min_angle
-            if direction == -1:  # Was going down, now reverse and count cycle
-                direction = 1
+        if motion_type == 'sinusoidal':
+            prev_phase = phase
+            phase += math.pi * MUJOCO_TIMESTEP / T
+            if phase > 2 * math.pi:
+                phase -= 2 * math.pi
+            next_angle= min_angle + angle_range * (1 - math.cos(phase)) / 2
+            if prev_phase > phase:
                 cycle_count += 1
                 print(f"    Completed cycle {cycle_count}/{num_cycles}")
-        
-        current_angle = next_angle
+
+            current_angle = next_angle
+            
+        else:
+            # Calculate motion
+            angle_increment = direction * target_velocity_rad_s * MUJOCO_TIMESTEP
+            next_angle = current_angle + angle_increment
+            # Check boundaries and count cycles
+            if next_angle >= max_angle:
+                next_angle = max_angle
+                if direction == 1:  # Was going up, now reverse
+                    direction = -1
+                    print(f"    Cycle {cycle_count + 1}: Reached max angle {math.degrees(max_angle):.2f}°")
+            elif next_angle <= min_angle:
+                next_angle = min_angle
+                if direction == -1:  # Was going down, now reverse and count cycle
+                    direction = 1
+                    cycle_count += 1
+                    print(f"    Completed cycle {cycle_count}/{num_cycles}")
+            
+            current_angle = next_angle
         
         # Control the joint
-        if r_elbow_actuator_id is not None:
-            data.ctrl[r_elbow_actuator_id] = current_angle
+        if neck_actuator_id is not None:
+            data.ctrl[neck_actuator_id] = current_angle
         else:
-            data.qpos[r_elbow_id] = current_angle
+            data.qpos[neck_id] = current_angle
         
         # Step the simulation
         mujoco.mj_step(model, data)
@@ -157,9 +175,9 @@ def run_simulation(target_velocity_deg_s, num_cycles=5):
         
         # Record data every 10 steps (50ms intervals)
         if step_count % 10 == 0:
-            actual_angle = data.qpos[r_elbow_id]
-            actual_velocity = data.qvel[r_elbow_id]
-            actual_acceleration = data.qacc[r_elbow_id]
+            actual_angle = data.qpos[neck_id]
+            actual_velocity = data.qvel[neck_id]
+            actual_acceleration = data.qacc[neck_id]
             simulation_time = step_count * MUJOCO_TIMESTEP
             
             data_points.append([
@@ -192,13 +210,15 @@ def run_simulation(target_velocity_deg_s, num_cycles=5):
 
 def main():
     """Main function to run simulations with different velocities."""
-    
+    parser = argparse.ArgumentParser(description="iCub neck joint motion simulation")
+    parser.add_argument('--motion', choices=['sinusoidal', 'linear'], default='linear', help="Type of motion: sinusoidal or linear")
+    args = parser.parse_args()
     print("Starting elbow motion data generation...")
     print(f"Data will be saved to: {DATA_DIR}")
     
     # Generate 20 velocities on logarithmic scale from 1 to 60 deg/s
-    min_velocity = 1.0
-    max_velocity = 60.0
+    min_velocity = 1
+    max_velocity = 60
     num_simulations = 20
     
     # Create logarithmic scale
@@ -219,7 +239,7 @@ def main():
     for i, velocity in enumerate(velocities):
         print(f"\n--- Simulation {i+1}/{num_simulations} ---")
         try:
-            success = run_simulation(velocity, num_cycles=5)
+            success = run_simulation(velocity, num_cycles=5, motion_type=args.motion)
             if success:
                 successful_runs += 1
             else:
