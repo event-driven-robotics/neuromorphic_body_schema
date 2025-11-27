@@ -47,7 +47,9 @@ def main():
         sim_time = data.time
 
         while viewer.is_running():
+            sleep(0.05)
             mujoco.mj_step(model, data)  # Step the simulation
+            print('time = ', data.time, 'qpos = ', data.qpos,' ctrl = ', data.ctrl)
             viewer.sync()
 
             

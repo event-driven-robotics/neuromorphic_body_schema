@@ -1,12 +1,17 @@
 <mujoco model="iCub">
     <compiler angle="radian" meshdir="../meshes/iCub/" inertiafromgeom="auto"/>
     <size njmax="1000" nconmax="10000"/>
-    <option timestep="0.005" gravity="0 0 -9.81" cone="pyramidal" iterations="20" noslip_iterations="20" noslip_tolerance="1e-6"/>
+    <option timestep="0.005" gravity="0 0 0" cone="pyramidal" iterations="20" noslip_iterations="20" noslip_tolerance="1e-6"/>
 
     <default>
         <joint limited="true" damping="5.0" stiffness="0.01" frictionloss="0.01"/>
         <geom friction="1.0 0.005 0.0001"/>
     </default>
+
+    <default class="hand_col">
+        <geom condim="3" contype="1" conaffinity="1" />
+    </default> 
+    <!-- CHANGED CONTYPE AND CONAFFINITY IN ORDER TO (i HOPE) GET HTE CORRECT COLLISIONS BETWEEN OBJECTS-->
    
     <asset>
         <mesh name="sim_sea_2-5_root_link_prt-binary"               file="sim_sea_2-5_root_link_prt-binary.stl"         scale="0.001 0.001 0.001"/>
@@ -117,30 +122,34 @@
             <body name="r_hip_1" pos="0.0064515 0.026 -0.119913" quat="0 0 0 -1">
                 <inertial pos="-0.0005145 -0.0380753 -7.1e-05" quat="-0.707742 0.702832 -0.0481733 -0.0529812" mass="0.919978" diaginertia="0.000580144 0.000574638 0.000404252"/>
                 <joint name="r_hip_pitch" pos="0 0 0" axis="0 -1 0" range="-0.7853981633974483 2.007128639793479"/>
-                <geom pos="0.0428515 0.026 0.151913" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_hip_1_prt-binary" contype="0" conaffinity="0"/>
+                <geom pos="0.0428515 0.026 0.151913" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_hip_1_prt-binary" contype="1" conaffinity="6"/>
                 <body name="r_hip_2" pos="0 -0.0441 0">
                     <inertial pos="-0.0009614 7.55046e-05 -0.0537485" quat="0.707265 -0.00474132 -0.00746739 0.706893" mass="0.539454" diaginertia="0.0106103 0.0104451 0.0102771"/>
                     <joint name="r_hip_roll" pos="0 0 0" axis="-1 0 0" range="-0.17453292519943295 1.9547687622336491"/>
-                    <geom pos="0.0428515 0.0701 0.151913" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_hip_2_prt-binary" contype="0" conaffinity="0"/>
-                    <geom pos="0.0427727 0.0701139 0.151913" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="sim_sea_2-5_r_upper_thigh_prt-binary" contype="0" conaffinity="0"/>
+                    <geom pos="0.0428515 0.0701 0.151913" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_hip_2_prt-binary" contype="1" conaffinity="6"/>
+                    <geom pos="0.0427727 0.0701139 0.151913" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="sim_sea_2-5_r_upper_thigh_prt-binary" contype="1" conaffinity="6"/>
                     <body name="r_upper_leg" pos="-0.0009363 1.39e-05 -0.0887">
                         <inertial pos="0.0034 -2.91e-05 -0.078954" quat="-0.0186283 0.770014 0.63775 -0.00226625" mass="1.8035" diaginertia="0.00648123 0.00647056 0.00145231"/>
                         <joint name="r_hip_yaw" pos="0 0 0" axis="0 0 -1" range="-1.3962634015954636 1.3962634015954636" />
-                        <geom pos="0.043709 0.0701 0.240813" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="sim_sea_2-5_r_thigh_prt-binary" contype="0" conaffinity="0"/>
+                        <geom pos="0.043709 0.0701 0.240813" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="sim_sea_2-5_r_thigh_prt-binary" contype="1" conaffinity="6"/>
+                        <!-- ADDED THIS THING HERE -->
+                        <!-- <geom type="capsule" pos="0 0 0" size="0.05 0.1" rgba="0 0 0 1" euler="0.0 0 0" class="hand_col"/> -->
                         <body name="r_lower_leg" pos="0 0 -0.145825">
                             <inertial pos="0.0012364 -0.0035131 -0.088794" quat="-0.0357732 0.992736 -0.105359 -0.045782" mass="1.472" diaginertia="0.00461204 0.00424223 0.0014802"/>
                             <joint name="r_knee" pos="0 0 0" axis="0 -1 0" range="-1.2217304763960306 0.08726646259971647" />
-                            <geom pos="0.043709 0.0701 0.386638" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="sim_sea_2-5_r_shank_prt-binary" contype="0" conaffinity="0"/>
+                            <geom pos="0.043709 0.0701 0.386638" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="sim_sea_2-5_r_shank_prt-binary" contype="1" conaffinity="6"/>
+                            <!-- ADDED THIS THING HERE -->
+                            <!-- <geom type="capsule" pos="0 0 0" size="0.05 0.1" rgba="0 0 0 1" euler="0.0 0 0" class="hand_col"/> -->
                             <body name="r_ankle_1" pos="0 0 -0.2005">
                                 <inertial pos="0.0151436 -0.0008686 4.2e-05" quat="-0.0974686 0.706465 0.0994599 0.693913" mass="0.6803" diaginertia="0.000448682 0.000413265 0.000299541"/>
                                 <joint name="r_ankle_pitch" pos="0 0 0" axis="0 1 0" range="-0.7853981633974483 0.7853981633974483" />
-                                <geom pos="0.043709 0.0701 0.587138" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_ankle_prt-binary" contype="0" conaffinity="0"/>
+                                <geom pos="0.043709 0.0701 0.587138" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_ankle_prt-binary" contype="1" conaffinity="6"/>
                                 <body name="r_ankle_2" pos="0 0 0">
                                     <inertial pos="0.0182531 -0.00317253 -0.0508293" quat="-0.0553398 0.729613 -0.0372071 0.680602" mass="0.647988" diaginertia="0.0115584 0.0114072 0.0103395"/>
                                     <joint name="r_ankle_roll" pos="0 0 0" axis="-1 0 0" range="-0.4363323129985824 0.4363323129985824" />
-                                    <geom pos="0.0437878 0.0700861 0.587138" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_foot_prt-binary" contype="0" conaffinity="0"/>
-                                    <geom size="0.08 0.036 0.0005" pos="0.0265 -0.005 -0.0745" quat="0 1 0 0" type="box" rgba="0.57647 0.1176 0.7882 1" contype="0" conaffinity="0"/>
-                                    <geom pos="0.0437878 0.0700861 0.587138" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="sim_sea_2-5_r_sole_prt-binary" contype="0" conaffinity="0"/>
+                                    <geom pos="0.0437878 0.0700861 0.587138" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_foot_prt-binary" contype="1" conaffinity="6"/>
+                                    <geom size="0.08 0.036 0.0005" pos="0.0265 -0.005 -0.0745" quat="0 1 0 0" type="box" rgba="0.57647 0.1176 0.7882 1" contype="1" conaffinity="6"/>
+                                    <geom pos="0.0437878 0.0700861 0.587138" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="sim_sea_2-5_r_sole_prt-binary" contype="1" conaffinity="6"/>
                                 </body>
                             </body>
                         </body>
@@ -151,6 +160,8 @@
                 <inertial pos="-0.0005108 0.0380923 -8.3e-05" quat="-0.701948 0.706519 -0.0657574 -0.0614495" mass="0.919725" diaginertia="0.000579182 0.000573129 0.000404525"/>
                 <joint name="l_hip_pitch" pos="0 0 0" axis="0 -1 0" range="-0.7853981633974483 2.007128639793479" />
                 <geom pos="0.0428515 -0.026 0.151913" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_l_hip_1_prt-binary" contype="0" conaffinity="0"/>
+                <!-- HERE I AM ADDING THE CAPSULES FOR COLLISIONS, JUST TO CHECK -->
+                <!-- <geom type="capsule" pos="0.0428515 -0.026 0.151913" size="0.1 0.1" euler="-0.3 0 0" class="hand_col"/> -->
                 <body name="l_hip_2" pos="0 0.0441 0">
                     <inertial pos="-0.00107064 9.64911e-05 -0.0535229" quat="0.706904 -0.0132372 -0.01704 0.70698" mass="0.542199" diaginertia="0.0106189 0.0104513 0.0102795"/>
                     <joint name="l_hip_roll" pos="0 0 0" axis="1 0 0" range="-0.17453292519943295 1.9547687622336491" />
@@ -160,10 +171,14 @@
                         <inertial pos="0.0033869 0.0001018 -0.078916" quat="-0.00155135 0.681539 0.731551 -0.0183286" mass="1.8084" diaginertia="0.00648824 0.00647988 0.0014557"/>
                         <joint name="l_hip_yaw" pos="0 0 0" axis="0 0 1" range="-1.3962634015954636 1.3962634015954636" />
                         <geom pos="0.0437091 -0.0701 0.240813" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="sim_sea_2-5_l_thigh_prt-binary" contype="0" conaffinity="0"/>
+                        <!-- ADDED THIS THING HERE -->
+                        <!-- <geom type="capsule" pos="0 0 0" size="0.05 0.1" rgba="0 0 0 1" euler="0.0 0 0" class="hand_col"/> -->
                         <body name="l_lower_leg" pos="0 0 -0.145825">
                             <inertial pos="0.0009998 0.0034969 -0.088567" quat="0.037701 0.991172 0.120144 -0.041511" mass="1.4724" diaginertia="0.0046085 0.00423616 0.00148461"/>
                             <joint name="l_knee" pos="0 0 0" axis="0 -1 0" range="-1.2217304763960306 0.08726646259971647" />
                             <geom pos="0.0437091 -0.0701 0.386638" quat="0.5 0.5 0.5 0.5" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="sim_sea_2-5_l_shank_prt-binary" contype="0" conaffinity="0"/>
+                            <!-- ADDED THIS THING HERE -->
+                            <!-- <geom type="capsule" pos="0 0 0" size="0.05 0.1" rgba="0 0 0 1" euler="0.0 0 0" class="hand_col"/> -->
                             <body name="l_ankle_1" pos="0 0 -0.2005">
                                 <inertial pos="0.0151531 0.000902 4.2e-05" quat="0.0942725 0.706107 -0.103691 0.694099" mass="0.6798" diaginertia="0.000447943 0.000413255 0.000298766"/>
                                 <joint name="l_ankle_pitch" pos="0 0 0" axis="0 1 0" range="-0.7853981633974483 0.7853981633974483" />
@@ -191,54 +206,56 @@
                     <body name="chest" pos="0 0.05 0.0628421" >
                         <inertial pos="0.000188619 0.073091 -0.0472381" quat="0.715214 -0.0122675 0.00447107 0.698784" mass="7.638" diaginertia="0.0440944 0.0430339 0.0260442"/>
                         <joint name="torso_yaw" pos="0 0 0" axis="0 -1 0" range="-0.7504915783575618 0.7504915783575618" damping="27.5"/>
-                        <geom pos="0 0.0928 -0.024189" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="chest_hull_1" contype="0" conaffinity="0"/>
-                        <geom pos="0 0.0928 -0.024189" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="chest_hull_2" contype="0" conaffinity="0"/>
+                        <geom pos="0 0.0928 -0.024189" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="chest_hull_1" contype="2" conaffinity="5"/>
+                        <geom pos="0 0.0928 -0.024189" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="chest_hull_2" contype="2" conaffinity="5"/>
                         <geom pos="0 0.0928 -0.024189" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="chest_hull_3"/>
                         <body name="r_shoulder_1" pos="-0.120016 0.0928 0.0079693" quat="0 0.258819 0 0.965926">
                             <inertial pos="-0.0122656 3.2e-05 -0.00321064" quat="0.923843 -0.00544289 0.382668 0.00707733" mass="0.114862" diaginertia="0.0100036 0.01 0.00999644"/>
                             <joint name="r_shoulder_pitch" pos="0 0 0" axis="-0.965926 0 0.258819" range="-1.66679 0.174533" damping="2.5"/>
-                            <geom pos="0.0990079 0 -0.0265292" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_shoulder_1_prt-binary"/>
+                            <geom pos="0.0990079 0 -0.0265292" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_shoulder_1_prt-binary" contype="1" conaffinity="6"/>
                             <body name="r_shoulder_2" pos="-0.00758047 0 0.0142102" quat="0.707107 -0.183013 1.00849e-07 -0.683013">
                                 <inertial pos="-0.0214142 0.000271725 -0.0194402" quat="-0.0271128 0.922305 0.0516326 0.382037" mass="0.238162" diaginertia="0.0100103 0.01 0.00998966"/>
                                 <joint name="r_shoulder_roll" pos="0 0 0" axis="-0.258819 0 -0.965926" range="0.20943951023931956 2.8448866807507573" damping="5.0"/>
-                                <geom pos="0.106588 2.31915e-07 -0.0407392" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_shoulder_2_prt-binary"/>
+                                <geom pos="0.106588 2.31915e-07 -0.0407392" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_shoulder_2_prt-binary" contype="1" conaffinity="6"/>
                                 <body name="r_shoulder_3" pos="-0.0253461 2.3275e-07 -0.00538765" quat="0.991445 -0.126079 -9.78946e-09 0.0337826">
                                     <inertial pos="-0.0632158 8.27444e-05 0.0256137" quat="0.414102 0.578567 0.558885 0.425943" mass="1.10423" diaginertia="0.0114392 0.0113832 0.0104961"/>
                                     <joint name="r_shoulder_yaw" pos="0 0 0" axis="0.965926 0 -0.258819" range="-0.8726646259971648 1.3962634015954636" damping="2.5"/>
-                                    <geom pos="0.131934 0 -0.0353516" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_upper_arm_prt-binary"/>
-                                    <geom pos="0.131934 0 -0.0353516" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="sim_sea_2-5_r_elbow_prt-binary"/>
+                                    <geom pos="0.131934 0 -0.0353516" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_upper_arm_prt-binary" contype="1" conaffinity="6"/>
+                                    <geom pos="0.131934 0 -0.0353516" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="sim_sea_2-5_r_elbow_prt-binary" contype="1" conaffinity="6"/>
                                     <body name="r_elbow_1" pos="-0.127457 -0.0224999 0.049681">
                                         <inertial pos="-0.00673913 0.0188019 -0.00465769" quat="0.889627 0.287374 0.352074 0.0449803" mass="0.267903" diaginertia="0.0100112 0.0100037 0.00998517"/>
                                         <joint name="r_elbow" pos="0 0 0" axis="0 1 0" range="-0.05235987755982989 1.3089969389957472" damping="27.5"/>
-                                        <geom pos="0.25939 0.0224999 -0.0850326" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_elbow_prosup_prt-binary"/>
+                                        <geom pos="0.25939 0.0224999 -0.0850326" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_elbow_prosup_prt-binary" contype="1" conaffinity="6"/>
                                         <body name="r_forearm" pos="-0.0384624 0.0224999 -0.00522317">
                                             <inertial pos="-0.0404391 -0.000328 0.00532733" quat="0.380022 0.595027 0.594184 0.385319" mass="0.6347" diaginertia="0.000672292 0.000601594 0.000322074"/>
                                             <joint name="r_wrist_prosup" pos="0 0 0" axis="0.965926 0 -0.258819" range="-1.53588974175501 1.53588974175501" damping="1.0"/>
-                                            <geom pos="0.296887 0 -0.0795506" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="sim_sea_2-5_r_forearm_prt-binary"/>
+                                            <geom pos="0.296887 0 -0.0795506" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="sim_sea_2-5_r_forearm_prt-binary" contype="1" conaffinity="6"/>
                                             <body name="r_wrist_1" pos="-0.103505 7e-06 0.0251977">
                                                 <inertial pos="0.000986102 -0.001176 0.00410133" quat="0.920531 -0.046124 0.381345 0.0712175" mass="0.0362615" diaginertia="0.010001 0.01 0.00999904"/>
                                                 <joint name="r_wrist_pitch" pos="0 0 0" axis="0.258819 0 0.965926" range="-1.2217304763960306 0.4363323129985824" damping="10.0"/>
-                                                <geom pos="0.400392 -7e-06 -0.104748" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_wrist_pitch_prt-binary"/>
+                                                <geom pos="0.400392 -7e-06 -0.104748" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_r_wrist_pitch_prt-binary" contype="1" conaffinity="6"/>
                                                 <body name="r_hand" pos="0.000634106 -0.0194999 0.00236652">
                                                     <inertial pos="-0.0646682 0.0056002 0.0226813" quat="-0.112385 0.892031 0.231018 0.37186" mass="0.248289" diaginertia="0.0100407 0.010002 0.00995729"/>
-                                                    <joint name="r_wrist_yaw" pos="0 0 0" axis="0 -1 0" range="-0.2617993877991494 0.6108652381980153" damping="1.0"/>
-                                                    <geom pos="0.00271607 -0.0015568 -0.00248235" quat="0.701057 -0.701057 0.0922959 0.0922959" type="mesh" rgba="0 0 0 1" mesh="col_RightHandPalm"/>
+                                                    <joint name="r_wrist_yaw" pos="0 0 0" axis="0 0 -1" range="-0.2617993877991494 0.6108652381980153" damping="1.0"/>
+                                                    <geom pos="0.00271607 -0.0015568 -0.00248235" quat="0.701057 -0.701057 0.0922959 0.0922959" type="mesh" rgba="0 0 0 1" mesh="col_RightHandPalm" contype="1" conaffinity="6"/>
+                                                    <!-- ADDED THIS THING HERE -->
+                                                    <!-- <geom type="capsule" pos="0 0 0" size="0.01 0.01" quat="-0.112385 0.892031 0.231018 0.37186"  class="hand_col"/> euler="0 0 0" -->
                                                     <body name="r_hand_thumb_0" pos="-0.0318492 -0.0040568 0.0192027" quat="0.0382606 0.614855 -0.0162249 0.787545">
                                                         <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                         <joint name="r_hand_thumb_0_joint" pos="0 0 0" axis="0 0 1" range="0.0 1.5707963267948966"/>
-                                                        <geom quat="0 -0.707107 0.707107 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightThumb0" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+                                                        <geom quat="0 -0.707107 0.707107 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightThumb0" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4"/>
                                                         <body name="r_hand_thumb_1" pos="0.0211 0.0049 0" quat="0.707107 -0.707107 0 0">
                                                             <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                             <joint name="r_hand_thumb_1_joint" pos="0 0 0" axis="0 0 1" range="0.0 1.5707963267948966"/>
-                                                            <geom quat="0 1 0 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightThumb1" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+                                                            <geom quat="0 1 0 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightThumb1" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4"/>
                                                             <body name="r_hand_thumb_2" pos="0.026 0 0">
                                                                 <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                                 <joint name="r_hand_thumb_2_joint" pos="0 0 0" axis="0 0 1" range="0.0 1.5707963267948966" stiffness="2"/>
-                                                                <geom quat="0 1 0 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightThumb2" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+                                                                <geom quat="0 1 0 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightThumb2" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4"/>
                                                                 <body name="r_hand_thumb_3" pos="0.022 0 0">
                                                                     <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                                     <joint name="r_hand_thumb_3_joint" pos="0 0 0" axis="0 0 1" range="0.0 1.5707963267948966" stiffness="3"/>
-                                                                    <geom quat="0 0 0 1" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightThumb3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
+                                                                    <geom quat="0 0 0 1" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightThumb3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4" priority="1"/>
                                                                 </body>
                                                             </body>
                                                         </body>
@@ -246,19 +263,19 @@
                                                     <body name="r_hand_index_0" pos="-0.0525584 0.0051432 0.0394733" quat="0.120133 0.114274 -0.727348 0.665939">
                                                         <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                         <joint name="r_hand_index_0_joint" pos="0 0 0" axis="0 0 1" range="0 0.349066" ref="0.349066"/>
-                                                        <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightIndex0" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+                                                        <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightIndex0" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4"/>
                                                         <body name="r_hand_index_1" pos="0.0148 0.00175 0" quat="0.707107 0.707107 0 0">
                                                             <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                             <joint name="r_hand_index_1_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708"/>
-                                                            <geom quat="0 1 0 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightIndex1" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+                                                            <geom quat="0 1 0 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightIndex1" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4"/>
                                                             <body name="r_hand_index_2" pos="0.0259 0 0">
                                                                 <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                                 <joint name="r_hand_index_2_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="2"/>
-                                                                <geom quat="0 1 0 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightIndex2" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+                                                                <geom quat="0 1 0 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightIndex2" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4"/>
                                                                 <body name="r_hand_index_3" pos="0.022 0 0">
                                                                     <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                                     <joint name="r_hand_index_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3"/>
-                                                                    <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightIndex3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
+                                                                    <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightIndex3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4" priority="1"/>
                                                                 </body>
                                                             </body>
                                                         </body>
@@ -266,19 +283,19 @@
                                                     <body name="r_hand_middle_0" pos="-0.0575405 0.0060432 0.023778" quat="0.0922959 0.0922959 -0.701057 0.701057">
                                                         <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                         <joint name="r_hand_middle_0_joint" pos="0 0 0" axis="0 0 1" range="-0.1 0.1" damping="1000000"/>
-                                                        <geom pos="0 0 0.0035" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightMiddle0" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+                                                        <geom pos="0 0 0.0035" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightMiddle0" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4"/>
                                                         <body name="r_hand_middle_1" pos="0.0153 0.0022 0" quat="0.707107 0.707107 0 0">
                                                             <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                             <joint name="r_hand_middle_1_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708"/>
-                                                            <geom quat="0 1 0 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightMiddle1" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+                                                            <geom quat="0 1 0 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightMiddle1" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4"/>
                                                             <body name="r_hand_middle_2" pos="0.0258 0 0">
                                                                 <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                                 <joint name="r_hand_middle_2_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="2"/>
-                                                                <geom quat="0 0 0 1" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightMiddle2" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+                                                                <geom quat="0 0 0 1" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightMiddle2" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4"/>
                                                                 <body name="r_hand_middle_3" pos="0.024 0 0">
                                                                     <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                                     <joint name="r_hand_middle_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3"/>
-                                                                    <geom quat="0 0 0 1" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightMiddle3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
+                                                                    <geom quat="0 0 0 1" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightMiddle3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4" priority="1"/>
                                                                 </body>
                                                             </body>
                                                         </body>
@@ -286,19 +303,19 @@
                                                     <body name="r_hand_ring_0" pos="-0.0606911 0.0054432 0.00865823" quat="0.0851337 0.0244894 -0.698657 0.709951">
                                                         <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                         <joint name="r_hand_ring_0_joint" pos="0 0 0" axis="0 0 1" range="-0.349066 0" ref="-0.349066"/>
-                                                        <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightRing0" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+                                                        <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightRing0" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4"/>
                                                         <body name="r_hand_ring_1" pos="0.0148 0.00175 0" quat="0.707107 0.707107 0 0">
                                                             <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                             <joint name="r_hand_ring_1_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708"/>
-                                                            <geom type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightRing1" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+                                                            <geom type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightRing1" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4"/>
                                                             <body name="r_hand_ring_2" pos="0.0259 0 0">
                                                                 <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                                 <joint name="r_hand_ring_2_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="2" frictionloss="1"/>
-                                                                <geom quat="0 1 0 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightRing2" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+                                                                <geom quat="0 1 0 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightRing2" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4"/>
                                                                 <body name="r_hand_ring_3" pos="0.022 0 0">
                                                                     <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                                     <joint name="r_hand_ring_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3" frictionloss="1"/>
-                                                                    <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightRing3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
+                                                                    <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightRing3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4" priority="1"/>
                                                                 </body>
                                                             </body>
                                                         </body>
@@ -306,19 +323,19 @@
                                                     <body name="r_hand_little_0" pos="-0.063629 0.0044432 -0.0101109" quat="0.0851337 0.0244894 -0.698657 0.709951">
                                                         <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                         <joint name="r_hand_little_0_joint" pos="0 0 0" axis="0 0 1" range="-0.349066 0" ref="-0.349066"/>
-                                                        <geom pos="0 0 0.0038" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightLittle0" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+                                                        <geom pos="0 0 0.0038" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightLittle0" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4"/>
                                                         <body name="r_hand_little_1" pos="0.0148 -0.00175 0" quat="0.707107 0.707107 0 0">
                                                             <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                             <joint name="r_hand_little_1_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708"/>
-                                                            <geom quat="0 1 0 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightLittle1" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+                                                            <geom quat="0 1 0 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightLittle1" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4"/>
                                                             <body name="r_hand_little_2" pos="0.0219 0 0">
                                                                 <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                                 <joint name="r_hand_little_2_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="2" frictionloss="1"/>
-                                                                <geom quat="0 1 0 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightLittle2" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
+                                                                <geom quat="0 1 0 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightLittle2" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4"/>
                                                                 <body name="r_hand_little_3" pos="0.019 0 0">
                                                                     <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                                     <joint name="r_hand_little_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3" frictionloss="1"/>
-                                                                    <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightLittle3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
+                                                                    <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightLittle3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" contype="1" conaffinity="6" condim="4" priority="1"/>
                                                                 </body>
                                                             </body>
                                                         </body>
@@ -375,6 +392,8 @@
                                                                     <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                                     <joint name="l_hand_thumb_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3"/>
                                                                     <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_LeftThumb3" friction="3.5 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
+                                                                    <!-- HERE I AM WORKING ON THE COLLISIONS, TODO: CONTROL THE VALUES -->
+                                                                    <!-- <geom type="capsule" pos="0 0 0" size="0.1 0.1" euler="-0.3 0 0" class="hand_col"/> -->
                                                                 </body>
                                                             </body>
                                                         </body>
@@ -697,3 +716,17 @@
     </actuator>
     
 </mujoco>
+
+
+
+
+
+<!-- 
+<body name="r_ff1_1" pos="0 0.021096 0.029073" gravcomp="1">
+    <inertial pos="0.00697876 0.0067486 0.0235874" quat="0.700497 -0.0949982 -0.0951152 -0.70088" mass="0.0342358" diaginertia="5.2505e-06 5.24298e-06 5.95152e-07"/>
+    <joint name="r_ff1_1" pos="0 0 0" axis="-1 0 0" class="finger"/>
+    <geom type="mesh" rgba="0.776471 0.756863 0.737255 1" mesh="r_ff1_1" class="hand_visual"/>
+    <!-- <geom type="capsule" pos="-0.007 0.008 0.028" size="0.0065 0.016" euler="-0.3 0 0" class="hand_col"/> -->
+</body> -->
+
+

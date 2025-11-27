@@ -113,7 +113,7 @@ if __name__ == '__main__':
                 ax2.plot(error, label=f"Error Run {i+1}", c=colors[i])
             ax2.legend()
             ax2.grid()
-            # plt.savefig(f"./results/kp_tuning_test_3/{part}_position.png")   
+            plt.savefig(f"./results/kp_tuning_test_4/{part}_position.png")   
             plt.close(fig)  
                    
             line_counter+=1
