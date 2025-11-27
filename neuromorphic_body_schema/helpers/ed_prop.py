@@ -27,7 +27,7 @@ import logging
 
 import cv2
 import numpy as np
-from helpers.helpers import HEIGHT, MARGIN, TICK_HEIGHT, TIME_WINDOW, WIDTH
+from helpers import HEIGHT, MARGIN, TICK_HEIGHT, TIME_WINDOW, WIDTH
 
 
 def generalized_sigmoid(x: np.array,  x_min: np.array, x_max: np.array, y_min: np.array, y_max: np.array, B=np.array) -> np.array:
