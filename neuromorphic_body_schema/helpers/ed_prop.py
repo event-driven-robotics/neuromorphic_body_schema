@@ -24,7 +24,7 @@ Functions:
 
 
 import logging
-
+import helpers
 import cv2
 import numpy as np
 from helpers import HEIGHT, MARGIN, TICK_HEIGHT, TIME_WINDOW, WIDTH
