@@ -24,10 +24,10 @@ Functions:
 
 
 import logging
-import helpers
 import cv2
 import numpy as np
-from helpers import HEIGHT, MARGIN, TICK_HEIGHT, TIME_WINDOW, WIDTH
+import mujoco
+from neuromorphic_body_schema.helpers.helpers import HEIGHT, MARGIN, TICK_HEIGHT, TIME_WINDOW, WIDTH
 
 
 def generalized_sigmoid(x: np.array,  x_min: np.array, x_max: np.array, y_min: np.array, y_max: np.array, B=np.array) -> np.array:
@@ -345,6 +345,69 @@ class ProprioceptionEventSimulator():
             events = events[np.argsort(events[:, 2])]
 
         return events
+    
+    
+    def proprioceptionCallback_forlearning(self, x,  time_stamp, B_pos=5.0, B_lim=20.0, delta_x=1.0):
+        """
+        Processes joint position, velocity, and load values to generate spiking events.
+
+        Args:
+            x (float): Joint position value.
+            v (float): Joint velocity value.
+            load (float): Joint load value.
+            time_stamp (int): Current simulation timestamp.
+            B_pos (float): Sigmoid steepness parameter for position. Default is 5.0.
+            B_lim (float): Sigmoid steepness parameter for limits. Default is 20.0.
+            delta_x (float): Range around the joint limits to activate neurons. Default is 1.0.
+
+        Returns:
+            list: A list of events, where each event is a tuple (neuron_id, timestamp, polarity).
+        """
+
+        # update the joint positions values
+        pos = self.position(x, B=B_pos)
+        lim = self.limit(limit=x, B=B_lim, delta_x=delta_x)
+
+        def invert_tuple(frequ):
+            # Check if the current element is a tuple
+            if isinstance(frequ, tuple):
+                # Apply inversion to each element recursively
+                return tuple(invert_tuple(x) for x in frequ)
+            else:
+                # delta_t = np.where(frequ == 0.0, np.inf, 1/frequ)
+                if frequ == 0.0:
+                    delta_t = np.inf
+                else:
+                    delta_t = 1/frequ
+                return delta_t
+
+        # Develop the events according to the AER protocol
+
+        # estimate of the delta time before we should have another spike
+        time_to_spike = np.zeros(4)
+        time_to_spike[0] = invert_tuple(pos[0])
+        # TODO when we have a negative joint value this returns negative times and the simulation crashes!
+        time_to_spike[1] = invert_tuple(pos[1])
+        time_to_spike[2] = invert_tuple(lim[0])
+        time_to_spike[3] = invert_tuple(lim[1])
+
+        # if not working look for np.hstack or np.vstack
+        # time_to_spike = place_holder
+
+        events = []
+        # loop over neuron types
+        for i, single_time_to_spike in enumerate(time_to_spike):
+            while self.time_of_last_spike[i] + single_time_to_spike < time_stamp:
+                self.time_of_last_spike[i] = self.time_of_last_spike[
+                    i] + single_time_to_spike
+                events.append(
+                    (i, self.time_of_last_spike[i], 0))
+
+        if len(events) > 1:
+            events = np.array(events)
+            events = events[np.argsort(events[:, 2])]
+
+        return events
 
 
 def make_proprioception_event_frame(img, time, events):
@@ -416,7 +479,7 @@ class ICubProprioception:
         DEBUG (bool): Whether to enable debug logging.
     """
 
-    def __init__(self, model, joint_dict, show_proprioception=False, DEBUG=False):
+    def __init__(self, model, joint_dict, device = "cpu" , show_proprioception=False, DEBUG=False):
         """
         Initializes the ICubProprioception class with joint-specific simulators and visualization options.
 
@@ -439,6 +502,8 @@ class ICubProprioception:
         self.imgs = []
         self.show_proprioception = show_proprioception
         self.DEBUG = DEBUG
+        self.device=device
+        self.model = model
 
         # TODO replace with joint states I want to access
         for joint_name in list(joint_dict.keys()):
@@ -501,3 +566,47 @@ class ICubProprioception:
                 cv2.waitKey(1)
 
         return all_events
+    
+    
+    def update_proprioception_forlearning(self, time, data):
+        """
+        Updates the proprioception system by processing joint position, velocity, and load data to generate events.
+
+        Args:
+            time (int): Current simulation timestamp in nanoseconds.
+            data (Torch Tensor): The data object containing joint states.
+
+        Returns:
+            list: A list of events for all joints, where each event is a tuple (neuron_id, timestamp, polarity).
+        """
+
+        all_events = []
+        for i, esim_single, joint_name in zip(range(len(self.esim)), self.esim, list(self.joint_dict.keys())):
+            joint_pos = data[0,i,1]  # example for single joint
+            joint_id = data[0,i,0]
+           
+            if joint_id !=  mujoco.mj_name2id( self.model, mujoco.mjtObj.mjOBJ_JOINT, joint_name):
+                pass
+            else:
+                events = esim_single.proprioceptionCallback_forlearning(
+                    x=joint_pos,  time_stamp=time)
+                all_events.append(events)
+
+            if self.DEBUG:
+                if len(events):
+                    logging.info(
+                        f"Generated {len(events)} proprioception events.")
+
+            if self.show_proprioception:
+                events_array = np.array(events)
+                # TODO check why pos enc is similar for both neurons!
+                # TODO some events seem to pop up out of nowhere!
+                self.imgs[i] = make_proprioception_event_frame(
+                    self.imgs[i], time, events_array)
+                cv2.imshow(joint_name, self.imgs[i])
+                cv2.waitKey(1)
+
+        return all_events
+    
+    
+    
