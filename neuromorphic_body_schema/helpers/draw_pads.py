@@ -9,17 +9,17 @@ Date: 29.04.2025
 Description:
 This module provides functions to compute the positions of taxels and vertices for various tactile sensor layouts.
 The layouts include triangular, fingertip, and palm configurations, with options for mirroring and orientation adjustments.
-Implementetation is based on the code written in */icub-main/src/tools/iCubSkinGui/plugin/include/*
+Implementation is based on the code written in */icub-main/src/tools/iCubSkinGui/plugin/include/*
 
 Functions:
-- triangle: Computes positions for a triangular tactile sensor layout.
-- triangle_10pad: Computes positions for a 10-pad triangular tactile sensor layout.
-- fingertip2L: Computes positions for a left fingertip tactile sensor layout.
-- fingertip2R: Computes positions for a right fingertip tactile sensor layout.
-- fingertip3L: Computes positions for a left fingertip tactile sensor layout.
-- fingertip3R: Computes positions for a right fingertip tactile sensor layout.
-- palmR: Computes positions for a right palm tactile sensor layout.
-- palmL: Computes positions for a left palm tactile sensor layout.
+- triangle: Computes positions for a 12-taxel triangular tactile sensor layout.
+- triangle_10pad: Computes positions for a 10-pad (12-taxel) triangular tactile sensor layout with different geometry.
+- fingertip2L: Computes positions for a left fingertip tactile sensor layout (12 taxels, 7 vertices).
+- fingertip2R: Computes positions for a right fingertip tactile sensor layout (12 taxels, 7 vertices).
+- fingertip3L: Computes positions for a left fingertip 3-pad configuration (12 taxels, vertices zeroed).
+- fingertip3R: Computes positions for a right fingertip 3-pad configuration (12 taxels, vertices zeroed).
+- palmR: Computes positions for a right palm tactile sensor layout (48 taxels, 4 vertices).
+- palmL: Computes positions for a left palm tactile sensor layout (48 taxels, 4 vertices).
 
 """
 
@@ -238,8 +238,10 @@ def fingertip2L(cx, cy, th, lr_mirror=0):
     nVerts = 7
     nTaxels = 12
 
-    dX = [41.0, 15.0, 15.0, 41.0, 30.0, 11.0, 0.0, -11.0, -30.0, -41.0, -15.0, -15.0]
-    dY = [10.0, 10.0, 35.0, 35.0, 64.0, 58.0, 82.0, 58.0, 64.0, 35.0, 35.0, 10.0]
+    dX = [41.0, 15.0, 15.0, 41.0, 30.0, 11.0,
+          0.0, -11.0, -30.0, -41.0, -15.0, -15.0]
+    dY = [10.0, 10.0, 35.0, 35.0, 64.0, 58.0,
+          82.0, 58.0, 64.0, 35.0, 35.0, 10.0]
 
     dXv = [53.0, 53.0, dX[4] + 10.0, 0.0, -(dX[4] + 10.0), -53.0, -53.0]
     dYv = [0.0, 45.0, dY[4] + 10.0, dY[6] + 12.0, dY[4] + 10.0, 45.0, 0.0]
@@ -301,8 +303,10 @@ def fingertip2R(cx, cy, th, lr_mirror=0):
     nVerts = 7
     nTaxels = 12
 
-    dX = [-41.0, 15.0, 15.0, 41.0, 30.0, 11.0, 0.0, -11.0, -30.0, -41.0, -15.0, -15.0]
-    dY = [10.0, 10.0, 35.0, 35.0, 64.0, 58.0, 82.0, 58.0, 64.0, 35.0, 35.0, 10.0]
+    dX = [-41.0, 15.0, 15.0, 41.0, 30.0, 11.0,
+          0.0, -11.0, -30.0, -41.0, -15.0, -15.0]
+    dY = [10.0, 10.0, 35.0, 35.0, 64.0, 58.0,
+          82.0, 58.0, 64.0, 35.0, 35.0, 10.0]
 
     dXv = [53.0, 53.0, dX[3] + 10.0, 0.0, -(dX[3] + 10.0), -53.0, -53.0]
     dYv = [0.0, 45.0, dY[3] + 10.0, dY[5] + 12.0, dY[3] + 10.0, 45.0, 0.0]
@@ -348,6 +352,8 @@ def fingertip3L(cx, cy, th, lr_mirror=0):
     with a 3-pad configuration, applying transformations based on the fingertip's center, orientation,
     and optional mirroring.
 
+    Note: Vertices are set to zero in this configuration (no triangular boundary visualization).
+
     Args:
         cx (float): X-coordinate of the fingertip's center.
         cy (float): Y-coordinate of the fingertip's center.
@@ -356,17 +362,19 @@ def fingertip3L(cx, cy, th, lr_mirror=0):
 
     Returns:
         tuple: A tuple containing:
-            - dX (list): X-coordinates of the taxels.
-            - dY (list): Y-coordinates of the taxels.
-            - dXv (list): X-coordinates of the fingertip's vertices.
-            - dYv (list): Y-coordinates of the fingertip's vertices.
+            - dX (list): X-coordinates of the taxels (12 taxels).
+            - dY (list): Y-coordinates of the taxels (12 taxels).
+            - dXv (list): X-coordinates of the fingertip's vertices (all zeros).
+            - dYv (list): Y-coordinates of the fingertip's vertices (all zeros).
     """
 
     nVerts = 7
     nTaxels = 12
 
-    dX = [30.0, 0.0, -30.0, -45.0, 45.0, -30.0, 0.0, 30.0, 25.0, 0.0, -25.0, 0.0]
-    dY = [-20.0, -20.0, -20.0, -39.0, -39.0, -58.0, -58.0, -58.0, 10.0, 0.0, 10.0, 40.0]
+    dX = [30.0, 0.0, -30.0, -45.0, 45.0, -
+          30.0, 0.0, 30.0, 25.0, 0.0, -25.0, 0.0]
+    dY = [-20.0, -20.0, -20.0, -39.0, -39.0, -
+          58.0, -58.0, -58.0, 10.0, 0.0, 10.0, 40.0]
 
     dXv = [53.0, 53.0, dX[4] + 10.0, 0.0, -(dX[4] + 10.0), -53.0, -53.0]
     dYv = [0.0, 45.0, dY[4] + 10.0, dY[6] + 12.0, dY[4] + 10.0, 45.0, 0.0]
@@ -412,6 +420,8 @@ def fingertip3R(cx, cy, th, lr_mirror=0):
     with a 3-pad configuration, applying transformations based on the fingertip's center, orientation,
     and optional mirroring.
 
+    Note: Vertices are set to zero in this configuration (no triangular boundary visualization).
+
     Args:
         cx (float): X-coordinate of the fingertip's center.
         cy (float): Y-coordinate of the fingertip's center.
@@ -420,17 +430,19 @@ def fingertip3R(cx, cy, th, lr_mirror=0):
 
     Returns:
         tuple: A tuple containing:
-            - dX (list): X-coordinates of the taxels.
-            - dY (list): Y-coordinates of the taxels.
-            - dXv (list): X-coordinates of the fingertip's vertices.
-            - dYv (list): Y-coordinates of the fingertip's vertices.
+            - dX (list): X-coordinates of the taxels (12 taxels).
+            - dY (list): Y-coordinates of the taxels (12 taxels).
+            - dXv (list): X-coordinates of the fingertip's vertices (all zeros).
+            - dYv (list): Y-coordinates of the fingertip's vertices (all zeros).
     """
 
     nVerts = 7
     nTaxels = 12
 
-    dX = [-30.0, 0.0, 30.0, 45.0, -45.0, 30.0, 0.0, -30.0, -25.0, 0.0, 25.0, 0.0]
-    dY = [-20.0, -20.0, -20.0, -39.0, -39.0, -58.0, -58.0, -58.0, 10.0, 0.0, 10.0, 40.0]
+    dX = [-30.0, 0.0, 30.0, 45.0, -45.0, 30.0,
+          0.0, -30.0, -25.0, 0.0, 25.0, 0.0]
+    dY = [-20.0, -20.0, -20.0, -39.0, -39.0, -
+          58.0, -58.0, -58.0, 10.0, 0.0, 10.0, 40.0]
 
     dXv = [53.0, 53.0, dX[3] + 10.0, 0.0, -(dX[3] + 10.0), -53.0, -53.0]
     dYv = [0.0, 45.0, dY[3] + 10.0, dY[5] + 12.0, dY[3] + 10.0, 45.0, 0.0]
@@ -484,10 +496,10 @@ def palmR(cx, cy, th, lr_mirror=0):
 
     Returns:
         tuple: A tuple containing:
-            - dX (list): X-coordinates of the taxels.
-            - dY (list): Y-coordinates of the taxels.
-            - dXv (list): X-coordinates of the palm's vertices.
-            - dYv (list): Y-coordinates of the palm's vertices.
+            - dX (list): X-coordinates of the taxels (48 taxels).
+            - dY (list): Y-coordinates of the taxels (48 taxels).
+            - dXv (list): X-coordinates of the palm's vertices (4 vertices).
+            - dYv (list): Y-coordinates of the palm's vertices (4 vertices).
     """
 
     DEG2RAD = math.pi / 180.0
@@ -497,7 +509,6 @@ def palmR(cx, cy, th, lr_mirror=0):
 
     nVerts = 4
     nTaxels = 48
-    m_RadiusOrig = 1.8
 
     dX = [0] * nTaxels
     dY = [0] * nTaxels
@@ -592,10 +603,10 @@ def palmL(cx, cy, th, lr_mirror=0):
 
     Returns:
         tuple: A tuple containing:
-            - dX (list): X-coordinates of the taxels.
-            - dY (list): Y-coordinates of the taxels.
-            - dXv (list): X-coordinates of the palm's vertices.
-            - dYv (list): Y-coordinates of the palm's vertices.
+            - dX (list): X-coordinates of the taxels (48 taxels).
+            - dY (list): Y-coordinates of the taxels (48 taxels).
+            - dXv (list): X-coordinates of the palm's vertices (4 vertices).
+            - dYv (list): Y-coordinates of the palm's vertices (4 vertices).
     """
 
     DEG2RAD = math.pi / 180.0
@@ -603,12 +614,8 @@ def palmL(cx, cy, th, lr_mirror=0):
     CST = math.cos(DEG2RAD * th)
     SNT = math.sin(DEG2RAD * th)
 
-    H = math.sin(DEG2RAD * 60.0)
-    L = 2.0 * H / 9.0
-
     nVerts = 4
     nTaxels = 48
-    m_RadiusOrig = 1.8
 
     dX = [0.0] * nTaxels
     dY = [0.0] * nTaxels
