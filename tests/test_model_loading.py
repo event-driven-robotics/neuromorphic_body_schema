@@ -2,9 +2,10 @@
 Test model loading and simulation initialization.
 """
 
-import pytest
 import mujoco
 import numpy as np
+import pytest
+
 from neuromorphic_body_schema.helpers.helpers import MODEL_PATH
 
 

@@ -2,17 +2,16 @@
 Test helper functions and utilities.
 """
 
-import pytest
-import numpy as np
-import mujoco
 from pathlib import Path
-from neuromorphic_body_schema.helpers.helpers import (
-    MODEL_PATH,
-    FIG_PATH,
-    TRIANGLE_INI_PATH,
-    init_POV,
-    DynamicGroupedSensors,
-)
+
+import mujoco
+import numpy as np
+import pytest
+
+from neuromorphic_body_schema.helpers.helpers import (FIG_PATH, MODEL_PATH,
+                                                      TRIANGLE_INI_PATH,
+                                                      DynamicGroupedSensors,
+                                                      init_POV)
 
 
 def test_model_path_is_string():

@@ -2,8 +2,9 @@
 Shared fixtures for tests.
 """
 
-import pytest
 import mujoco
+import pytest
+
 from neuromorphic_body_schema.helpers.helpers import MODEL_PATH
 
 

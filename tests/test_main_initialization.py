@@ -2,17 +2,18 @@
 Test main.py initialization without running the full interactive loop.
 """
 
-import pytest
 import copy
+import re
+from collections import defaultdict
+
 import mujoco
 import numpy as np
-from collections import defaultdict
-import re
-from neuromorphic_body_schema.helpers.helpers import MODEL_PATH, DynamicGroupedSensors
+import pytest
+
+from neuromorphic_body_schema.helpers.helpers import (MODEL_PATH,
+                                                      DynamicGroupedSensors)
 from neuromorphic_body_schema.helpers.robot_controller import (
-    check_joints,
-    update_joint_positions,
-)
+    check_joints, update_joint_positions)
 
 
 def test_model_initialization(mujoco_model, mujoco_data):
@@ -57,7 +58,8 @@ def test_sensor_grouping_as_in_main(mujoco_model, mujoco_data):
         base_name = re.sub(r"_\d+$", "", name)
         grouped_sensors[base_name].append(adr)
 
-    dynamic_grouped_sensors = DynamicGroupedSensors(mujoco_data, grouped_sensors)
+    dynamic_grouped_sensors = DynamicGroupedSensors(
+        mujoco_data, grouped_sensors)
     assert dynamic_grouped_sensors is not None
 
 

@@ -8,16 +8,25 @@ Date: 29.04.2025
 
 Description:
 This module provides functionality for controlling the iCub robot's joints in a MuJoCo simulation.
-It includes functions to update joint positions by setting control targets for specified joints.
+It includes functions to update joint positions, reset simulations, and perform inverse kinematics calculations.
 
 Functions:
-- update_joint_positions: Updates the joint positions in the MuJoCo model by setting control targets.
+- get_joints: Retrieves current positions of specified joints and end-effector pose.
+- check_joints: Checks if joints have reached their target positions.
+- update_joint_positions: Updates joint positions by setting control targets.
+- reset_simulation: Resets the simulation to a given keyframe.
+- ik_calculation: Performs inverse kinematics calculation using the provided solver.
 
 """
 
 import logging
+from typing import TYPE_CHECKING, Optional
 
 import mujoco
+import numpy as np
+
+if TYPE_CHECKING:
+    from helpers.ik_solver import Ik_solver
 
 
 def get_joints(
@@ -81,3 +90,60 @@ def update_joint_positions(data: mujoco.MjData, joint_positions: dict) -> None:
     """
     for joint_name, target_position in joint_positions.items():
         data.actuator(joint_name).ctrl[0] = target_position
+
+
+def reset_simulation(
+    keyframe: np.ndarray, data: mujoco.MjData, model: mujoco.MjModel
+) -> None:
+    """
+    Resets the simulation to the given keyframe configuration.
+
+    Args:
+        keyframe (np.ndarray): Joint positions to reset to (must match data.qpos shape).
+        data (mujoco.MjData): The MuJoCo data object.
+        model (mujoco.MjModel): The MuJoCo model object.
+
+    Returns:
+        None
+
+    Raises:
+        AssertionError: If keyframe shape does not match data.qpos shape.
+    """
+    assert (
+        keyframe.shape == data.qpos.shape
+    ), "Keyframe shape does not match qpos shape."
+    data.qpos[:] = keyframe
+    mujoco.mj_forward(model, data)
+
+
+def ik_calculation(
+    ik_solver: "Ik_solver",
+    target_pos: np.ndarray,
+    target_ori: np.ndarray,
+    joint_names: list,
+) -> Optional[dict]:
+    """
+    Performs inverse kinematics calculation and returns joint positions.
+
+    Runs the IK solver to compute joint positions that achieve the desired
+    end-effector pose (position and orientation).
+
+    Args:
+        ik_solver (Ik_solver): An instance of the IK solver with an ik_step method.
+        target_pos (np.ndarray): Target end-effector position [x, y, z].
+        target_ori (np.ndarray): Target end-effector orientation (quaternion or rotation matrix).
+        joint_names (list): List of joint names in the same order as the solver output.
+
+    Returns:
+        Optional[dict]: Dictionary mapping joint names to positions {joint_name: position}
+                       if successful, None if IK fails.
+    """
+    try:
+        q_arm = ik_solver.ik_step(target_pos, target_ori)
+        joint_pose = dict(zip(joint_names, q_arm))
+        logging.info(f"Solution found: {joint_pose}")
+        return joint_pose
+    except ValueError as e:
+        logging.error(f"IK failed: {e}")
+        return None
+

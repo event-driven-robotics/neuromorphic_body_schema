@@ -27,14 +27,14 @@ import logging
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-from neuromorphic_body_schema.helpers.draw_pads import (
+from .draw_pads import (
     fingertip3L,
     fingertip3R,
     palmL,
     palmR,
     triangle_10pad,
 )
-from neuromorphic_body_schema.helpers.helpers import (
+from .helpers import (
     KEY_MAPPING,
     TRIANGLE_FILES,
     TRIANGLE_INI_PATH,

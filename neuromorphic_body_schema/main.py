@@ -38,7 +38,12 @@ from helpers.ed_prop import ICubProprioception
 from helpers.ed_skin import ICubSkin
 from helpers.helpers import MODEL_PATH, DynamicGroupedSensors, init_POV
 from helpers.ik_solver import Ik_solver
-from helpers.robot_controller import check_joints, update_joint_positions
+from helpers.robot_controller import (
+    check_joints,
+    ik_calculation,
+    reset_simulation,
+    update_joint_positions,
+)
 from mujoco import viewer
 
 # from helpers.ik_solver_fede import qpos_from_site_pose
@@ -52,49 +57,6 @@ VISUALIZE_CAMERA_FEED = False
 VISUALIZE_ED_CAMERA_FEED = False
 VISUALIZE_SKIN = False
 VISUALIZE_PROPRIOCEPTION_FEED = False
-
-
-def reset(keyframe, data, model):
-    """
-    Resets the simulation to the given keyframe.
-
-    Args:
-        keyframe (np.ndarray): Joint positions to reset to (should match data.qpos shape).
-        data (mujoco.MjData): The MuJoCo data object.
-        model (mujoco.MjModel): The MuJoCo model object.
-
-    Returns:
-        None
-    """
-    assert (
-        keyframe.shape == data.qpos.shape
-    ), "Keyframe shape does not match qpos shape."
-    data.qpos[:] = keyframe
-    mujoco.mj_forward(model, data)
-
-
-def ik_caculation(ik_solver, target_pos, target_ori, joint_names):
-    """
-    Runs IK and returns a dictionary mapping joint names to solved positions.
-
-    Args:
-        ik_solver: An instance of the IK solver.
-        target_pos (np.ndarray): Target end-effector position.
-        target_ori (np.ndarray): Target end-effector orientation.
-        joint_names (list): List of joint names in the same order as the solver output.
-
-    Returns:
-        dict or None: {joint_name: position, ...} if successful, None otherwise.
-    """
-
-    try:
-        q_arm = ik_solver.ik_step(target_pos, target_ori)
-        joint_pose = dict(zip(joint_names, q_arm))
-        logging.info(f"Solution found: {joint_pose}")
-        return joint_pose
-    except ValueError as e:
-        logging.error(f"IK failed: {e}")
-        return None
 
 
 if __name__ == "__main__":
@@ -126,7 +88,8 @@ if __name__ == "__main__":
     # let's set the initial joint positions and actuator controls
     for joint_name, position in joint_init_pos.items():
         try:
-            joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, joint_name)
+            joint_id = mujoco.mj_name2id(
+                model, mujoco.mjtObj.mjOBJ_JOINT, joint_name)
             data.joint(joint_id).qpos[0] = position
             data.actuator(joint_name).ctrl[0] = position
         except ValueError:
@@ -242,7 +205,8 @@ if __name__ == "__main__":
         # IK with Quaternion seems more robust for Icub
         # should copy the data for forward knimeatics, otherwise the ik will update the model directly
         data_copy = copy.deepcopy(data)
-        ik_solver = Ik_solver(model, data_copy, joint_names, end_effector_name, "quat")
+        ik_solver = Ik_solver(model, data_copy, joint_names,
+                              end_effector_name, "quat")
 
         # Sequential Reaching task
 
@@ -280,7 +244,8 @@ if __name__ == "__main__":
                 data.time * 1e9
             )  # expects ns
 
-            skin_events = skin_object.update_skin(data.time * 1e9)  # expects ns
+            skin_events = skin_object.update_skin(
+                data.time * 1e9)  # expects ns
 
             proprioception_events = proprioception_object.update_proprioception(
                 time=data.time, data=data
@@ -290,7 +255,7 @@ if __name__ == "__main__":
                 finished = True
             if not finished:
                 if not caculated:
-                    q_arm = ik_caculation(
+                    q_arm = ik_calculation(
                         ik_solver, target_pos[count], target_ori[count], joint_names
                     )
                     caculated = True

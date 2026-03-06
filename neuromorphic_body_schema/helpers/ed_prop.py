@@ -28,9 +28,9 @@ import cv2
 import mujoco
 import numpy as np
 
-from neuromorphic_body_schema.helpers.helpers import (HEIGHT, MARGIN,
-                                                      TICK_HEIGHT, TIME_WINDOW,
-                                                      WIDTH)
+from .helpers import (HEIGHT, MARGIN,
+                      TICK_HEIGHT, TIME_WINDOW,
+                      WIDTH)
 
 
 def generalized_sigmoid(

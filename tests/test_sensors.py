@@ -2,12 +2,15 @@
 Test sensor parsing and initialization.
 """
 
-import pytest
+import re
+from collections import defaultdict
+
 import mujoco
 import numpy as np
-from collections import defaultdict
-import re
-from neuromorphic_body_schema.helpers.helpers import MODEL_PATH, DynamicGroupedSensors
+import pytest
+
+from neuromorphic_body_schema.helpers.helpers import (MODEL_PATH,
+                                                      DynamicGroupedSensors)
 
 
 def test_sensor_parsing(mujoco_model, mujoco_data):
