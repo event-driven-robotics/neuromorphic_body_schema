@@ -32,15 +32,18 @@ from .helpers import (HEIGHT, MARGIN,
                       TICK_HEIGHT, TIME_WINDOW,
                       WIDTH)
 
+mj_name2id = getattr(mujoco, "mj_name2id")
+mjtObj = getattr(mujoco, "mjtObj")
+
 
 def generalized_sigmoid(
-    x: np.array,
-    x_min: np.array,
-    x_max: np.array,
-    y_min: np.array,
-    y_max: np.array,
+    x: float | np.ndarray,
+    x_min: float | np.ndarray,
+    x_max: float | np.ndarray,
+    y_min: float | np.ndarray,
+    y_max: float | np.ndarray,
     B: float = 10.0,
-) -> np.array:
+) -> float | np.ndarray:
     """
     Computes a generalized sigmoid function value for the given input.
 
@@ -79,7 +82,7 @@ def generalized_sigmoid(
     return y_scaled
 
 
-def linear(x, m=1, q=0):
+def linear(x, m: float | np.ndarray = 1.0, q: float = 0.0):
     """
     Computes a linear function value for the given input.
 
@@ -663,9 +666,7 @@ class ICubProprioception:
             joint_pos = data[0, i, 1]  # example for single joint
             joint_id = data[0, i, 0]
 
-            if joint_id != mujoco.mj_name2id(
-                self.model, mujoco.mjtObj.mjOBJ_JOINT, joint_name
-            ):
+            if joint_id != mj_name2id(self.model, mjtObj.mjOBJ_JOINT, joint_name):
                 pass
             else:
                 events = esim_single.proprioceptionCallback_forlearning(

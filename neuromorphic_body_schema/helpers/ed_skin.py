@@ -225,10 +225,12 @@ def visualize_skin_patches(path_to_triangles, triangles_ini, DEBUG=False):
             to_draw = triangle_10pad(cx=cx, cy=cy, th=th, lr_mirror=lr_mirror)
             # remove the thermal pads
             to_remove = [1, 5]  # always at the same position
-            to_draw = list(to_draw)  # Convert tuple to list
-            to_draw[0] = np.delete(to_draw[0], to_remove)
-            to_draw[1] = np.delete(to_draw[1], to_remove)
-            to_draw = tuple(to_draw)  # Convert back to tuple if needed
+            to_draw = (
+                [v for idx, v in enumerate(to_draw[0]) if idx not in to_remove],
+                [v for idx, v in enumerate(to_draw[1]) if idx not in to_remove],
+                list(to_draw[2]),
+                list(to_draw[3]),
+            )
 
         elif config_type == "fingertip3R":
             to_draw = fingertip3R(cx=cx, cy=cy, th=th, lr_mirror=lr_mirror)
@@ -237,13 +239,21 @@ def visualize_skin_patches(path_to_triangles, triangles_ini, DEBUG=False):
         elif config_type == "palmR":
             to_draw = palmR(cx=cx, cy=cy, th=th, lr_mirror=1)
             for i in range(len(to_draw[0])):
-                to_draw[0][i] = to_draw[0][i] + 20.0
+                to_draw[0][i] = to_draw[0][i] + 20
         elif config_type == "palmL":
             to_draw = palmL(cx=cx, cy=cy, th=th, lr_mirror=0)
             for i in range(len(to_draw[0])):
-                to_draw[0][i] = to_draw[0][i] - 20.0
+                to_draw[0][i] = to_draw[0][i] - 20
         else:
             logging.error("Unknown config type")
+
+        # Normalize to float lists so incremental geometric shifts stay type-consistent.
+        to_draw = (
+            [float(v) for v in to_draw[0]],
+            [float(v) for v in to_draw[1]],
+            [float(v) for v in to_draw[2]],
+            [float(v) for v in to_draw[3]],
+        )
         # rearrange some triangles to make the fig more compact
         if (
             triangles_ini == "left_forearm_V2" or triangles_ini == "right_forearm_V2"
@@ -535,7 +545,7 @@ def read_triangle_data(file_path: str) -> tuple:
     return config_type, triangles
 
 
-def make_skin_event_frame(img, events, locations) -> np.array:
+def make_skin_event_frame(img, events, locations) -> np.ndarray:
     """
     Updates a visual representation of skin events on a tactile sensor image.
 

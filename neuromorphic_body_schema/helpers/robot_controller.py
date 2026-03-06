@@ -20,7 +20,7 @@ Functions:
 """
 
 import logging
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 import mujoco
 import numpy as np
@@ -28,9 +28,15 @@ import numpy as np
 if TYPE_CHECKING:
     from helpers.ik_solver import Ik_solver
 
+MjData = Any
+MjModel = Any
+mj_name2id = getattr(mujoco, "mj_name2id")
+mjtObj = getattr(mujoco, "mjtObj")
+mj_forward = getattr(mujoco, "mj_forward")
+
 
 def get_joints(
-    data: mujoco.MjData, model: mujoco.MjModel, joint: dict, end_effector: str
+    data: MjData, model: MjModel, joint: dict, end_effector: str
 ) -> dict:
     """
     Retrieves the current positions of specified joints and the pose of the end-effector.
@@ -48,15 +54,13 @@ def get_joints(
     """
     joint_poses = {
         "joints": [data.joint(joint_name).qpos[0] for joint_name in joint.keys()],
-        "pose": data.xpos[
-            mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, end_effector)
-        ],
+        "pose": data.xpos[mj_name2id(model, mjtObj.mjOBJ_BODY, end_effector)],
     }
     return joint_poses
 
 
 def check_joints(
-    data: mujoco.MjData, joint: dict, angle_tolerance: float = 0.1
+    data: MjData, joint: dict, angle_tolerance: float = 0.1
 ) -> bool:
     """
     Checks if all specified joints have reached their target positions within a given tolerance.
@@ -77,7 +81,7 @@ def check_joints(
     return all(abs(err) < angle_tolerance for err in errors)
 
 
-def update_joint_positions(data: mujoco.MjData, joint_positions: dict) -> None:
+def update_joint_positions(data: MjData, joint_positions: dict) -> None:
     """
     Updates the joint positions in the MuJoCo simulation by setting control targets for specified actuators.
 
@@ -93,7 +97,7 @@ def update_joint_positions(data: mujoco.MjData, joint_positions: dict) -> None:
 
 
 def reset_simulation(
-    keyframe: np.ndarray, data: mujoco.MjData, model: mujoco.MjModel
+    keyframe: np.ndarray, data: MjData, model: MjModel
 ) -> None:
     """
     Resets the simulation to the given keyframe configuration.
@@ -113,7 +117,7 @@ def reset_simulation(
         keyframe.shape == data.qpos.shape
     ), "Keyframe shape does not match qpos shape."
     data.qpos[:] = keyframe
-    mujoco.mj_forward(model, data)
+    mj_forward(model, data)
 
 
 def ik_calculation(

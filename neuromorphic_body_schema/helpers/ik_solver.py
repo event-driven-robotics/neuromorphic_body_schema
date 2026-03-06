@@ -21,6 +21,9 @@ import mujoco
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 
+mj_forward = getattr(mujoco, "mj_forward")
+mj_jac = getattr(mujoco, "mj_jac")
+
 
 def compute_relative_transform(model, data, body_name1, body_name2):
     """
@@ -251,7 +254,7 @@ class Ik_solver:
 
         for i in range(max_iter):
             self.data.qpos[self.joint_ids] = q_arm
-            mujoco.mj_forward(self.model, self.data)
+            mj_forward(self.model, self.data)
 
             """ 
             NOTE: Seems the jacobian matrix function mujoco.mj_jac() from mujoco 
@@ -282,7 +285,7 @@ class Ik_solver:
                 )
                 return q_arm
 
-            mujoco.mj_jac(
+            mj_jac(
                 self.model,
                 self.data,
                 self.jacp,

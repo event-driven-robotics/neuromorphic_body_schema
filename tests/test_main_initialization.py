@@ -15,6 +15,10 @@ from neuromorphic_body_schema.helpers.helpers import (MODEL_PATH,
 from neuromorphic_body_schema.helpers.robot_controller import (
     check_joints, update_joint_positions)
 
+mj_name2id = getattr(mujoco, "mj_name2id")
+mjtObj = getattr(mujoco, "mjtObj")
+mj_step = getattr(mujoco, "mj_step")
+
 
 def test_model_initialization(mujoco_model, mujoco_data):
     """Test basic model initialization as done in main.py."""
@@ -36,9 +40,7 @@ def test_model_initialization(mujoco_model, mujoco_data):
     # Set the initial joint positions
     for joint_name, position in joint_init_pos.items():
         try:
-            joint_id = mujoco.mj_name2id(
-                mujoco_model, mujoco.mjtObj.mjOBJ_JOINT, joint_name
-            )
+            joint_id = mj_name2id(mujoco_model, mjtObj.mjOBJ_JOINT, joint_name)
             mujoco_data.joint(joint_id).qpos[0] = position
             mujoco_data.actuator(joint_name).ctrl[0] = position
         except ValueError:
@@ -70,5 +72,5 @@ def test_timestep_configuration(mujoco_model, mujoco_data):
 
     # Verify simulation can step
     initial_time = mujoco_data.time
-    mujoco.mj_step(mujoco_model, mujoco_data)
+    mj_step(mujoco_model, mujoco_data)
     assert mujoco_data.time > initial_time

@@ -58,8 +58,8 @@ def triangle(cx, cy, th, lr_mirror=0):
     nVerts = 3
     nTaxels = 12
 
-    dX = [0] * 12
-    dY = [0] * 12
+    dX = [0.0] * 12
+    dY = [0.0] * 12
 
     dX[5] = L * math.cos(DEG2RAD * 30.0)
     dX[4] = 0.5 - dX[5]
@@ -510,8 +510,8 @@ def palmR(cx, cy, th, lr_mirror=0):
     nVerts = 4
     nTaxels = 48
 
-    dX = [0] * nTaxels
-    dY = [0] * nTaxels
+    dX = [0.0] * nTaxels
+    dY = [0.0] * nTaxels
 
     dX[27], dY[27] = 1.5, 6.5
     dX[26], dY[26] = 6.5, 6

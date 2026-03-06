@@ -53,6 +53,14 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO
 )
 
+# MuJoCo is a C-extension module and some symbols are not visible to static analyzers.
+# Resolve once via getattr so runtime behavior stays identical while Pylance can type-check calls.
+MjModel = getattr(mujoco, "MjModel")
+MjData = getattr(mujoco, "MjData")
+mj_name2id = getattr(mujoco, "mj_name2id")
+mjtObj = getattr(mujoco, "mjtObj")
+mj_step = getattr(mujoco, "mj_step")
+
 VISUALIZE_CAMERA_FEED = False
 VISUALIZE_ED_CAMERA_FEED = False
 VISUALIZE_SKIN = False
@@ -70,8 +78,8 @@ if __name__ == "__main__":
     l_eye_camera_name = "l_eye_camera"
 
     # Load the MuJoCo model and create a simulation
-    model = mujoco.MjModel.from_xml_path(MODEL_PATH)
-    data = mujoco.MjData(model)
+    model = MjModel.from_xml_path(MODEL_PATH)
+    data = MjData(model)
     # set model to 0.0 start position
     data.qpos.fill(0.0)
     # define a start position for the model
@@ -88,8 +96,7 @@ if __name__ == "__main__":
     # let's set the initial joint positions and actuator controls
     for joint_name, position in joint_init_pos.items():
         try:
-            joint_id = mujoco.mj_name2id(
-                model, mujoco.mjtObj.mjOBJ_JOINT, joint_name)
+            joint_id = mj_name2id(model, mjtObj.mjOBJ_JOINT, joint_name)
             data.joint(joint_id).qpos[0] = position
             data.actuator(joint_name).ctrl[0] = position
         except ValueError:
@@ -155,7 +162,7 @@ if __name__ == "__main__":
     ### Start the simulation ###
     ############################
 
-    with mujoco.viewer.launch_passive(model, data) as viewer:
+    with viewer.launch_passive(model, data) as viewer:
         # Disable the left and right panels
         # viewer.options.gui_left = False
         # viewer.options.gui_right = False
@@ -210,21 +217,22 @@ if __name__ == "__main__":
 
         # Sequential Reaching task
 
-        target_pos = [
+        target_pos = np.array([
             [-0.09736548, -0.20864483, 0.94718375],
             [-0.13067764, -0.25348467, 1.12211061],
-        ]
-        target_ori = [
+        ])
+        target_ori = np.array([
             [-0.35741511, 0.26772824, 0.02986113, 0.89425071],
             [-0.18286161, -0.0885009, 0.46619002, 0.8610436],
-        ]
+        ])
 
         caculated, reached, finished = False, False, False
+        q_arm: dict[str, float] | None = None
 
         count = 0
         while viewer.is_running():
             # print(sim_time)
-            mujoco.mj_step(model, data)  # Step the simulation
+            mj_step(model, data)  # Step the simulation
             viewer.sync()
             # sim_time_ns = data.time*1E9  # ns
             # new_joint_pos = {}
@@ -267,7 +275,7 @@ if __name__ == "__main__":
                         continue
 
                 # seems like the mujoco can not achieve the joints in one loop, so keep checking and control the joints
-                if caculated and not check_joints(data, q_arm):
+                if q_arm is not None and caculated and not check_joints(data, q_arm):
                     # currently PD controller for the joints
                     update_joint_positions(data, q_arm)
                 else:

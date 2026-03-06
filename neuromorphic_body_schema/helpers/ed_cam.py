@@ -94,7 +94,7 @@ class CameraEventSimulator:
             logging.info(
                 f"Converting the image to log image with eps = {self.log_eps}."
             )
-            img = cv2.log(self.log_eps + img)
+            img = np.log(self.log_eps + img)
         self.last_img = img.copy()
         self.ref_values = img.copy()
         self.last_event_timestamp = np.zeros(img.shape, dtype=np.ulonglong)
@@ -115,7 +115,7 @@ class CameraEventSimulator:
         assert time >= 0
 
         if self.use_log_image:
-            img = cv2.log(self.log_eps + img)
+            img = np.log(self.log_eps + img)
 
         tolerance = 1e-6
         delta_t_ns = time - self.current_time

@@ -8,6 +8,9 @@ import pytest
 
 from neuromorphic_body_schema.helpers.helpers import MODEL_PATH
 
+mj_forward = getattr(mujoco, "mj_forward")
+mj_step = getattr(mujoco, "mj_step")
+
 
 def test_model_path_exists():
     """Test that the model XML file exists."""
@@ -37,7 +40,7 @@ def test_timestep_configuration(mujoco_model, mujoco_data):
 def test_forward_kinematics(mujoco_model, mujoco_data):
     """Test basic forward kinematics."""
     mujoco_data.qpos.fill(0.0)
-    mujoco.mj_forward(mujoco_model, mujoco_data)
+    mj_forward(mujoco_model, mujoco_data)
 
     # Check that forward kinematics produces valid positions
     assert np.all(
@@ -48,6 +51,6 @@ def test_forward_kinematics(mujoco_model, mujoco_data):
 def test_simulation_step(mujoco_model, mujoco_data):
     """Test that simulation can step forward."""
     initial_time = mujoco_data.time
-    mujoco.mj_step(mujoco_model, mujoco_data)
+    mj_step(mujoco_model, mujoco_data)
 
     assert mujoco_data.time > initial_time, "Simulation time did not advance"
