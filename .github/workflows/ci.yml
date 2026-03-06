@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11']
+    
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        lfs: true
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libosmesa6-dev libglfw3
+    
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov black ruff
+    
+    - name: Lint with ruff
+      run: |
+        ruff check neuromorphic_body_schema tests --select=E9,F63,F7,F82 --respect-gitignore
+      continue-on-error: true
+    
+    - name: Format check with black
+      run: |
+        black --check neuromorphic_body_schema tests
+      continue-on-error: true
+    
+    - name: Run tests
+      run: |
+        pytest tests/ -v --tb=short --cov=neuromorphic_body_schema --cov-report=term-only
+      timeout-minutes: 10
+    
+    - name: Test model loading
+      run: |
+        python -c "from neuromorphic_body_schema.helpers.helpers import MODEL_PATH; import os; print(f'Model path: {MODEL_PATH}'); print(f'Model exists: {os.path.exists(MODEL_PATH)}')"
+    
+    - name: Upload coverage reports
+      if: matrix.python-version == '3.10'
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+      continue-on-error: true
+
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install mypy
+    
+    - name: Type check with mypy
+      run: |
+        mypy neuromorphic_body_schema --ignore-missing-imports --no-error-summary
+      continue-on-error: true

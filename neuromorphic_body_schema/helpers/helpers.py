@@ -1,14 +1,12 @@
+import os
+from pathlib import Path
 import numpy as np
 
-# set model path
-# MODEL_PATH = './neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml'  # full iCub
-# TRIANGLE_INI_PATH = "../icub-main/app/skinGui/conf/skinGui"
-# FIG_PATH = "./figures"
-
-# DEBUG
-MODEL_PATH = './models/icub_v2_full_body_contact_sensors.xml'  # full iCub
-TRIANGLE_INI_PATH = "../../icub-main/app/skinGui/conf/skinGui"
-FIG_PATH = "../figures"
+# set model path (relative to this module)
+_PACKAGE_DIR = Path(__file__).parent.parent
+MODEL_PATH = str(_PACKAGE_DIR / 'models' / 'icub_v2_full_body_contact_sensors.xml')
+TRIANGLE_INI_PATH = str(_PACKAGE_DIR.parent / "icub-main/app/skinGui/conf/skinGui")
+FIG_PATH = str(_PACKAGE_DIR / "figures")
 
 ### SKIN ###
 SKIN_PARTS = ["r_hand", "r_forearm", "r_upper_arm",
