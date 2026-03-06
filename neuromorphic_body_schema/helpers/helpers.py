@@ -1,14 +1,46 @@
+"""helpers.py
+
+Author: Simon F. Muller-Cleve
+Affiliation: Istituto Italiano di Tecnologia (IIT)
+Department: Event-Driven Perception for Robotics (EDPR)
+Date: 29.04.2025
+
+Description:
+This module provides helper functions, constants, and utilities for the neuromorphic body schema project.
+It includes path definitions, sensor group mappings, and utility functions for the MuJoCo simulation environment.
+
+Constants:
+- MODEL_PATH: Path to the MuJoCo model XML file.
+- TRIANGLE_INI_PATH: Path to the skin GUI configuration files.
+- FIG_PATH: Path to the figures directory.
+- SKIN_PARTS: List of skin body part identifiers.
+- TRIANGLE_FILES: List of triangle configuration file names for skin visualization.
+- KEY_MAPPING: Dictionary mapping triangle files to sensor names.
+- TIME_WINDOW, TICK_HEIGHT, MARGIN, HEIGHT, WIDTH: Constants for proprioception visualization.
+
+Classes:
+- DynamicGroupedSensors: Provides dynamic access to grouped sensor data from a simulation.
+
+Functions:
+- init_POV: Initializes the point of view for the MuJoCo viewer.
+
+"""
+
 import os
 from pathlib import Path
+
 import numpy as np
 
-# set model path (relative to this module)
+# Model and configuration paths
 _PACKAGE_DIR = Path(__file__).parent.parent
-MODEL_PATH = str(_PACKAGE_DIR / "models" / "icub_v2_full_body_contact_sensors.xml")
-TRIANGLE_INI_PATH = str(_PACKAGE_DIR.parent / "icub-main/app/skinGui/conf/skinGui")
+MODEL_PATH = str(_PACKAGE_DIR / "models" /
+                 "icub_v2_full_body_contact_sensors.xml")
+TRIANGLE_INI_PATH = str(_PACKAGE_DIR.parent /
+                        "icub-main/app/skinGui/conf/skinGui")
 FIG_PATH = str(_PACKAGE_DIR / "figures")
 
-### SKIN ###
+### SKIN CONFIGURATION ###
+# List of all skin-covered body parts in the iCub robot
 SKIN_PARTS = [
     "r_hand",
     "r_forearm",
@@ -23,6 +55,7 @@ SKIN_PARTS = [
     "l_lower_leg",
 ]
 
+# Triangle configuration file names corresponding to each skin part for visualization
 TRIANGLE_FILES = [
     "right_hand_V2_2",
     "right_forearm_V2",
@@ -37,6 +70,9 @@ TRIANGLE_FILES = [
     "left_leg_lower",
 ]
 
+# Mapping from triangle configuration files to MuJoCo sensor names
+# This dictionary links skin visualization configurations to their corresponding
+# tactile sensor data in the simulation
 KEY_MAPPING = {
     "right_leg_upper": "r_upper_leg_taxel",
     "left_leg_upper": "l_upper_leg_taxel",
@@ -127,9 +163,11 @@ def init_POV(viewer):
     return viewer
 
 
-### PROPRIOCEPTION ###
-TIME_WINDOW = 10  # seconds
-TICK_HEIGHT = 20  # pixels
-MARGIN = 5  # pixels
-HEIGHT = 8 * (TICK_HEIGHT + MARGIN)
-WIDTH = 500  # pixels
+### PROPRIOCEPTION VISUALIZATION CONSTANTS ###
+# These constants define the parameters for visualizing proprioception events as time-series plots
+
+TIME_WINDOW = 10  # Time window for event display in seconds
+TICK_HEIGHT = 20  # Height of each neuron's event tick display in pixels
+MARGIN = 5  # Vertical spacing between neuron displays in pixels
+HEIGHT = 8 * (TICK_HEIGHT + MARGIN)  # Total display height (8 neurons per joint)
+WIDTH = 500  # Display width in pixels
