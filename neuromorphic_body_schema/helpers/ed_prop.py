@@ -23,16 +23,14 @@ Functions:
 """
 
 import logging
+
 import cv2
-import numpy as np
 import mujoco
-from neuromorphic_body_schema.helpers.helpers import (
-    HEIGHT,
-    MARGIN,
-    TICK_HEIGHT,
-    TIME_WINDOW,
-    WIDTH,
-)
+import numpy as np
+
+from neuromorphic_body_schema.helpers.helpers import (HEIGHT, MARGIN,
+                                                      TICK_HEIGHT, TIME_WINDOW,
+                                                      WIDTH)
 
 
 def generalized_sigmoid(
@@ -41,7 +39,7 @@ def generalized_sigmoid(
     x_max: np.array,
     y_min: np.array,
     y_max: np.array,
-    B=np.array,
+    B: float = 10.0,
 ) -> np.array:
     """
     Computes a generalized sigmoid function value for the given input.
@@ -55,7 +53,7 @@ def generalized_sigmoid(
         x_max (np.array): Maximum value(s) for input normalization.
         y_min (np.array): Minimum value(s) for output scaling.
         y_max (np.array): Maximum value(s) for output scaling.
-        B (np.array): Steepness parameter(s) of the sigmoid function.
+        B (float): Steepness parameter of the sigmoid function. Default is 10.0.
 
     Returns:
         np.array: The computed generalized sigmoid function value(s), scaled to the range [y_min, y_max].
@@ -147,7 +145,7 @@ class ProprioceptionEventSimulator:
         # self.lim = np.zeros(2)  # closeness to limits
         self.nb_neurons = 8  # 2 for pos, 2 for vel, 2 for load, 2 for limits
 
-        # measuring unity is in Hz. 1000Hz means we expect 1000 events per second (circa 1 per ms).
+        # measuring unit is in Hz. 1000Hz means we expect 1000 events per second (circa 1 per ms).
         self.position_max_freq = position_max_freq
         self.velocity_max_freq = velocity_max_freq
         self.load_max_freq = load_max_freq
@@ -223,7 +221,8 @@ class ProprioceptionEventSimulator:
             v = np.where(v > self.velocity_limit, self.velocity_limit, v)
             print("WARNING: joint velocity value reached")
 
-        module = linear(np.abs(v), m=self.velocity_max_freq / self.velocity_limit)
+        module = linear(np.abs(v), m=self.velocity_max_freq /
+                        self.velocity_limit)
         direction_pos = np.where(v > 0, 1.0, 0.0)
         direction_neg = np.where(v < 0, 1.0, 0.0)
 
@@ -404,12 +403,12 @@ class ProprioceptionEventSimulator:
         self, x, time_stamp, B_pos=5.0, B_lim=20.0, delta_x=1.0
     ):
         """
-        Processes joint position, velocity, and load values to generate spiking events.
+        Processes joint position values to generate spiking events for learning applications.
+
+        This method only generates events for position and limit neurons (not velocity or load).
 
         Args:
             x (float): Joint position value.
-            v (float): Joint velocity value.
-            load (float): Joint load value.
             time_stamp (int): Current simulation timestamp.
             B_pos (float): Sigmoid steepness parameter for position. Default is 5.0.
             B_lim (float): Sigmoid steepness parameter for limits. Default is 20.0.
@@ -517,7 +516,8 @@ def make_proprioception_event_frame(img, time, events):
             )[0][0]
             color = color / 255
 
-            cv2.line(img, (x_val, y_val), (x_val, y_val + TICK_HEIGHT), color, 1)
+            cv2.line(img, (x_val, y_val),
+                     (x_val, y_val + TICK_HEIGHT), color, 1)
 
     return img
 
@@ -532,6 +532,8 @@ class ICubProprioception:
         joint_dict (dict): A dictionary containing joint-specific parameters (e.g., max frequencies).
         imgs (list): A list of images for visualizing proprioception events for each joint.
         show_proprioception (bool): Whether to display proprioception event visualizations.
+        device (str): Device to use for computations (e.g., "cpu" or "cuda").
+        model (mujoco.MjModel): The MuJoCo model of the robot.
         DEBUG (bool): Whether to enable debug logging.
     """
 
@@ -548,6 +550,7 @@ class ICubProprioception:
                                - velocity_max_freq (float): Maximum firing frequency for velocity neurons.
                                - load_max_freq (float): Maximum firing frequency for load neurons.
                                - limits_max_freq (float): Maximum firing frequency for limit neurons.
+            device (str): Device to use for computations (e.g., "cpu" or "cuda"). Default is "cpu".
             show_proprioception (bool): Whether to display proprioception event visualizations. Default is False.
             DEBUG (bool): Whether to enable debug logging. Default is False.
         """
@@ -623,7 +626,8 @@ class ICubProprioception:
 
             if self.DEBUG:
                 if len(events):
-                    logging.info(f"Generated {len(events)} proprioception events.")
+                    logging.info(
+                        f"Generated {len(events)} proprioception events.")
 
             if self.show_proprioception:
                 events_array = np.array(events)
@@ -639,11 +643,14 @@ class ICubProprioception:
 
     def update_proprioception_forlearning(self, time, data):
         """
-        Updates the proprioception system by processing joint position, velocity, and load data to generate events.
+        Updates the proprioception system for learning by processing joint position data to generate events.
+
+        This method is designed for learning applications and only processes position data (not velocity or load).
 
         Args:
             time (int): Current simulation timestamp in nanoseconds.
-            data (Torch Tensor): The data object containing joint states.
+            data (torch.Tensor): A tensor containing joint states with shape (batch, num_joints, 2),
+                                 where data[:, :, 0] contains joint IDs and data[:, :, 1] contains joint positions.
 
         Returns:
             list: A list of events for all joints, where each event is a tuple (neuron_id, timestamp, polarity).
@@ -668,7 +675,8 @@ class ICubProprioception:
 
             if self.DEBUG:
                 if len(events):
-                    logging.info(f"Generated {len(events)} proprioception events.")
+                    logging.info(
+                        f"Generated {len(events)} proprioception events.")
 
             if self.show_proprioception:
                 events_array = np.array(events)
