@@ -25,16 +25,15 @@ def get_joints(data, model, joint: dict, end_effector: str = "l_wrist_1"):
     Retrieves the current positions of specified joints and the pose of the end-effector.
 
     Args:
-        data: MuJoCo MjData object.
-        model: MuJoCo model object.
-        joint: dict containing the controlled joint names as keys.
-        end_effector (str): Name of the end-effector body (default: "l_wrist_1").
+        data (mujoco.MjData): MuJoCo data object containing joint states.
+        model (mujoco.MjModel): MuJoCo model object.
+        joint (dict): Dictionary containing the controlled joint names as keys.
+        end_effector (str): Name of the end-effector body. Default is "l_wrist_1".
 
     Returns:
-        dict: {
-            "joints": [positions of specified joints],
-            "pose": position of the end-effector (np.ndarray, shape (3,))
-        }
+        dict: A dictionary containing:
+            - "joints" (list): List of current positions for the specified joints.
+            - "pose" (np.ndarray): 3D position of the end-effector.
     """
     joint_poses = {
         "joints": [data.joint(joint_name).qpos[0] for joint_name in joint.keys()],
@@ -50,9 +49,9 @@ def check_joints(data, joint: dict, angle_tolerance: float = 0.1) -> bool:
     Checks if all specified joints have reached their target positions within a given tolerance.
 
     Args:
-        data: MuJoCo data object.
-        joint: dict mapping joint names to target positions.
-        angle_tolerance (float): Allowed absolute error for each joint (default: 0.1).
+        data (mujoco.MjData): MuJoCo data object containing joint states.
+        joint (dict): Dictionary mapping joint names (str) to target positions (float).
+        angle_tolerance (float): Allowed absolute error for each joint in radians. Default is 0.1.
 
     Returns:
         bool: True if all joints are within tolerance, False otherwise.
@@ -67,14 +66,14 @@ def check_joints(data, joint: dict, angle_tolerance: float = 0.1) -> bool:
 
 def update_joint_positions(data, joint_positions):
     """
-    Updates the joint positions in the MuJoCo model by setting control targets for specified joints.
+    Updates the joint positions in the MuJoCo simulation by setting control targets for specified actuators.
+
+    This function sets the control values for actuators corresponding to each joint,
+    which will be used by the controller to move the joints to the target positions.
 
     Args:
         data (mujoco.MjData): The MuJoCo data object containing actuator controls.
-        joint_positions (dict): A dictionary with joint names as keys and target positions as values.
-
-    Returns:
-        None
+        joint_positions (dict): A dictionary mapping joint names (str) to target positions (float).
     """
     for joint_name, target_position in joint_positions.items():
         data.actuator(joint_name).ctrl[0] = target_position
