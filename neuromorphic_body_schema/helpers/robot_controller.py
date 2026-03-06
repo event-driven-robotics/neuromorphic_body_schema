@@ -26,7 +26,7 @@ import mujoco
 import numpy as np
 
 if TYPE_CHECKING:
-    from helpers.ik_solver import Ik_solver
+    from .ik_solver import Ik_solver
 
 MjData = Any
 MjModel = Any

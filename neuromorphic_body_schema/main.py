@@ -33,12 +33,16 @@ from collections import defaultdict
 
 import mujoco
 import numpy as np
-from helpers.ed_cam import ICubEyes
-from helpers.ed_prop import ICubProprioception
-from helpers.ed_skin import ICubSkin
-from helpers.helpers import MODEL_PATH, DynamicGroupedSensors, init_POV
-from helpers.ik_solver import Ik_solver
-from helpers.robot_controller import (
+from neuromorphic_body_schema.helpers.ed_cam import ICubEyes
+from neuromorphic_body_schema.helpers.ed_prop import ICubProprioception
+from neuromorphic_body_schema.helpers.ed_skin import ICubSkin
+from neuromorphic_body_schema.helpers.helpers import (
+    MODEL_PATH,
+    DynamicGroupedSensors,
+    init_POV,
+)
+from neuromorphic_body_schema.helpers.ik_solver import Ik_solver
+from neuromorphic_body_schema.helpers.robot_controller import (
     check_joints,
     ik_calculation,
     reset_simulation,
