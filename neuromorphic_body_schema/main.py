@@ -24,6 +24,16 @@ Run this script to start the simulation and visualize the sensory data.
 
 """
 
+# Add parent directory to path for direct script execution
+import sys
+from pathlib import Path
+
+# Get the project root directory (parent of neuromorphic_body_schema)
+if __name__ == "__main__":
+    project_root = Path(__file__).resolve().parent.parent
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+
 import copy
 import logging
 import math
@@ -65,10 +75,13 @@ mj_name2id = getattr(mujoco, "mj_name2id")
 mjtObj = getattr(mujoco, "mjtObj")
 mj_step = getattr(mujoco, "mj_step")
 
-VISUALIZE_CAMERA_FEED = False
-VISUALIZE_ED_CAMERA_FEED = False
+VISUALIZE_CAMERA_FEED = True
+VISUALIZE_ED_CAMERA_FEED = True
 VISUALIZE_SKIN = False
 VISUALIZE_PROPRIOCEPTION_FEED = False
+
+# Event-driven pipeline flags (default: True for event-driven processing)
+USE_EVENT_DRIVEN_VISION = True  # Set to False for traditional frame-based vision
 
 
 if __name__ == "__main__":
@@ -185,6 +198,7 @@ if __name__ == "__main__":
             r_eye_camera_name,
             show_raw_feed=VISUALIZE_CAMERA_FEED,
             show_ed_feed=VISUALIZE_ED_CAMERA_FEED,
+            use_event_driven=USE_EVENT_DRIVEN_VISION,
             DEBUG=DEBUG,
         )
         l_eye_camera_object = ICubEyes(
@@ -194,6 +208,7 @@ if __name__ == "__main__":
             l_eye_camera_name,
             show_raw_feed=VISUALIZE_CAMERA_FEED,
             show_ed_feed=VISUALIZE_ED_CAMERA_FEED,
+            use_event_driven=USE_EVENT_DRIVEN_VISION,
             DEBUG=DEBUG,
         )
         proprioception_object = ICubProprioception(
