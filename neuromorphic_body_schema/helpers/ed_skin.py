@@ -7,8 +7,8 @@ Department: Event-Driven Perception for Robotics (EDPR)
 Date: 29.04.2025
 
 Description:
-This module provides functionality for simulating event-based tactile sensors and integrating them with the iCub robot's 
-skin system. It includes classes and functions for generating events based on changes in taxel intensity, visualizing 
+This module provides functionality for simulating event-based tactile sensors and integrating them with the iCub robot's
+skin system. It includes classes and functions for generating events based on changes in taxel intensity, visualizing
 tactile data, and managing skin sensor configurations.
 
 Classes:
@@ -27,8 +27,7 @@ import logging
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-from helpers.draw_pads import (fingertip3L, fingertip3R, palmL, palmR,
-                               triangle_10pad)
+from helpers.draw_pads import fingertip3L, fingertip3R, palmL, palmR, triangle_10pad
 from helpers.helpers import KEY_MAPPING, TRIANGLE_FILES, TRIANGLE_INI_PATH
 
 # set background color to gray
@@ -37,7 +36,7 @@ background_color = (50, 50, 50)
 taxel_color = (0, 215, 255)
 line_color = (255, 255, 255)
 # set the color for the events
-red = (0, 0, 255)   # positive events
+red = (0, 0, 255)  # positive events
 blue = (255, 0, 0)  # negative events
 
 
@@ -59,7 +58,17 @@ class SkinEventSimulator:
         size (int): Number of taxels in the sensor.
     """
 
-    def __init__(self, data, time, Cp=0.5, Cm=0.5, sigma_Cp=0.01, sigma_Cm=0.01, log_eps=1e-6, refractory_period_ns=100):
+    def __init__(
+        self,
+        data,
+        time,
+        Cp=0.5,
+        Cm=0.5,
+        sigma_Cp=0.01,
+        sigma_Cm=0.01,
+        log_eps=1e-6,
+        refractory_period_ns=100,
+    ):
         """
         Initializes the SkinEventSimulator.
 
@@ -80,10 +89,8 @@ class SkinEventSimulator:
         self.sigma_Cm = sigma_Cm
         self.log_eps = log_eps
         self.refractory_period_ns = refractory_period_ns
-        logging.info(
-            f"Initialized event skin simulator with sensor size: {data.shape}")
-        logging.info(
-            f"and contrast thresholds: C+ = {self.Cp}, C- = {self.Cm}")
+        logging.info(f"Initialized event skin simulator with sensor size: {data.shape}")
+        logging.info(f"and contrast thresholds: C+ = {self.Cp}, C- = {self.Cm}")
 
         self.last_data = data.copy()
         self.ref_values = data.copy()
@@ -130,18 +137,17 @@ class SkinEventSimulator:
             curr_cross = ref
             while True:
                 # Add noise to threshold
-                C_eff = C + (np.random.normal(0, sigma_C)
-                             if sigma_C > 0 else 0)
+                C_eff = C + (np.random.normal(0, sigma_C) if sigma_C > 0 else 0)
                 C_eff = max(0.01, C_eff)
                 curr_cross += pol * C_eff
 
                 # Check if crossing occurred in this interval
-                if (pol > 0 and curr_cross > it0 and curr_cross <= it1) or \
-                   (pol < 0 and curr_cross < it0 and curr_cross >= it1):
+                if (pol > 0 and curr_cross > it0 and curr_cross <= it1) or (
+                    pol < 0 and curr_cross < it0 and curr_cross >= it1
+                ):
 
                     # Interpolate event time
-                    edt = int(abs((curr_cross - it0) *
-                              delta_t_ns / (it1 - it0)))
+                    edt = int(abs((curr_cross - it0) * delta_t_ns / (it1 - it0)))
                     t_evt = self.current_time + edt
 
                     # Refractory check
@@ -174,7 +180,7 @@ def visualize_skin_patches(path_to_triangles, triangles_ini, DEBUG=False):
     """
     Visualizes the layout of skin patches based on triangle configurations.
 
-    This function reads triangle data from a specified file, processes the layout, and optionally 
+    This function reads triangle data from a specified file, processes the layout, and optionally
     generates a visual representation of the skin patch layout, including taxel positions and triangle boundaries.
 
     Args:
@@ -190,7 +196,8 @@ def visualize_skin_patches(path_to_triangles, triangles_ini, DEBUG=False):
     """
 
     config_types, triangles = read_triangle_data(
-        f"{path_to_triangles}/{triangles_ini}.ini")
+        f"{path_to_triangles}/{triangles_ini}.ini"
+    )
     patch_ID = []
     dX = []
     dY = []
@@ -198,12 +205,10 @@ def visualize_skin_patches(path_to_triangles, triangles_ini, DEBUG=False):
     dYv = []
     scale = 3.0
     for tri, config_type in zip(triangles, config_types):
-        cx, cy, th, lr_mirror = tri[0][0], tri[0][1], tri[0][2], int(
-            tri[0][4])
+        cx, cy, th, lr_mirror = tri[0][0], tri[0][1], tri[0][2], int(tri[0][4])
         patch_ID.append(tri[1])
         if config_type == "triangle_10pad":
-            to_draw = triangle_10pad(
-                cx=cx, cy=cy, th=th, lr_mirror=lr_mirror)
+            to_draw = triangle_10pad(cx=cx, cy=cy, th=th, lr_mirror=lr_mirror)
             # remove the thermal pads
             to_remove = [1, 5]  # always at the same position
             to_draw = list(to_draw)  # Convert tuple to list
@@ -212,11 +217,9 @@ def visualize_skin_patches(path_to_triangles, triangles_ini, DEBUG=False):
             to_draw = tuple(to_draw)  # Convert back to tuple if needed
 
         elif config_type == "fingertip3R":
-            to_draw = fingertip3R(
-                cx=cx, cy=cy, th=th, lr_mirror=lr_mirror)
+            to_draw = fingertip3R(cx=cx, cy=cy, th=th, lr_mirror=lr_mirror)
         elif config_type == "fingertip3L":
-            to_draw = fingertip3L(
-                cx=cx, cy=cy, th=th, lr_mirror=lr_mirror)
+            to_draw = fingertip3L(cx=cx, cy=cy, th=th, lr_mirror=lr_mirror)
         elif config_type == "palmR":
             to_draw = palmR(cx=cx, cy=cy, th=th, lr_mirror=1)
             for i in range(len(to_draw[0])):
@@ -228,17 +231,114 @@ def visualize_skin_patches(path_to_triangles, triangles_ini, DEBUG=False):
         else:
             logging.error("Unknown config type")
         # rearrange some triangles to make the fig more compact
-        if (triangles_ini == "left_forearm_V2" or triangles_ini == "right_forearm_V2") and tri[1] in [16, 17, 19, 22, 24, 25, 28, 29]:
+        if (
+            triangles_ini == "left_forearm_V2" or triangles_ini == "right_forearm_V2"
+        ) and tri[1] in [16, 17, 19, 22, 24, 25, 28, 29]:
             for i in range(len(to_draw[1])):
                 to_draw[1][i] += 40.0
             for i in range(len(to_draw[3])):
                 to_draw[3][i] += 40.0
-        if triangles_ini == "left_leg_upper" and tri[1] in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 25, 26, 27, 30, 31, 33, 34, 35, 36, 37, 38, 39, 40, 44, 45, 53, 54, 56, 57, 58, 64, 65, 66, 76, 78, 79]:
+        if triangles_ini == "left_leg_upper" and tri[1] in [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            19,
+            20,
+            21,
+            22,
+            25,
+            26,
+            27,
+            30,
+            31,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            44,
+            45,
+            53,
+            54,
+            56,
+            57,
+            58,
+            64,
+            65,
+            66,
+            76,
+            78,
+            79,
+        ]:
             for i in range(len(to_draw[1])):
                 to_draw[1][i] += 83.0
             for i in range(len(to_draw[3])):
                 to_draw[3][i] += 83.0
-        if triangles_ini == "right_leg_upper" and tri[1] in [0, 1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 25, 26, 27, 30, 31, 33, 34, 35, 36, 37, 38, 39, 40, 44, 45, 51, 53, 54, 57, 58, 59, 64, 65, 66, 67, 76]:
+        if triangles_ini == "right_leg_upper" and tri[1] in [
+            0,
+            1,
+            2,
+            3,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            19,
+            20,
+            21,
+            22,
+            25,
+            26,
+            27,
+            30,
+            31,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            44,
+            45,
+            51,
+            53,
+            54,
+            57,
+            58,
+            59,
+            64,
+            65,
+            66,
+            67,
+            76,
+        ]:
             for i in range(len(to_draw[1])):
                 to_draw[1][i] += 20.0
             for i in range(len(to_draw[3])):
@@ -265,29 +365,39 @@ def visualize_skin_patches(path_to_triangles, triangles_ini, DEBUG=False):
         # now we can draw the triangles
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        ax.scatter(dX, dY, marker='o')
+        ax.scatter(dX, dY, marker="o")
         if not "hand" in triangles_ini:
             # draw the triangles
             for i in range(len(dXv)):
                 for j in range(len(dXv[i])):
-                    ax.plot([dXv[i][j-1], dXv[i][j]], [dYv[i][j-1],
-                            dYv[i][j]], linewidth=0.2, color='black')
-                ax.plot([dXv[i][-1], dXv[i][0]], [dYv[i][-1], dYv[i][0]],
-                        linewidth=0.2, color='black')  # Close the triangle
-        ax.set_aspect('equal', 'box')
+                    ax.plot(
+                        [dXv[i][j - 1], dXv[i][j]],
+                        [dYv[i][j - 1], dYv[i][j]],
+                        linewidth=0.2,
+                        color="black",
+                    )
+                ax.plot(
+                    [dXv[i][-1], dXv[i][0]],
+                    [dYv[i][-1], dYv[i][0]],
+                    linewidth=0.2,
+                    color="black",
+                )  # Close the triangle
+        ax.set_aspect("equal", "box")
         fig.tight_layout()
         fig.savefig(
-            f"./neuromorphic_body_schema/figures/{triangles_ini}.pdf", bbox_inches='tight')
+            f"./neuromorphic_body_schema/figures/{triangles_ini}.pdf",
+            bbox_inches="tight",
+        )
         plt.close(fig)
 
     # scale
-    dX = dX*scale
-    dY = dY*scale
+    dX = dX * scale
+    dY = dY * scale
     if not "hand" in triangles_ini:
         for i in range(len(dXv)):
             for j in range(len(dXv[i])):
-                dXv[i][j] = dXv[i][j]*scale
-                dYv[i][j] = dYv[i][j]*scale
+                dXv[i][j] = dXv[i][j] * scale
+                dYv[i][j] = dYv[i][j] * scale
 
     # flip axis and shift to positive values
     dY = -dY
@@ -300,55 +410,66 @@ def visualize_skin_patches(path_to_triangles, triangles_ini, DEBUG=False):
 
     # find the width and height of the image
     width = np.max(dX)
-    offset_x = width*0.2
+    offset_x = width * 0.2
     width += offset_x
-    width = int(width+0.5)
+    width = int(width + 0.5)
     # offset_x = int((offset_x/2))
 
     height = np.max(dY)
-    offset_y = height*0.2
+    offset_y = height * 0.2
     height += offset_y
-    height = int(height+0.5)
+    height = int(height + 0.5)
     # offset_y = int((offset_y/2))
 
     # convert to int and apply offset to give somoe extra space at the corners
-    dX = [int(x+0.5+offset_x/2) for x in dX]
-    dY = [int(y+0.5+offset_y/2) for y in dY]
+    dX = [int(x + 0.5 + offset_x / 2) for x in dX]
+    dY = [int(y + 0.5 + offset_y / 2) for y in dY]
     if not "hand" in triangles_ini:
         for i in range(len(dYv)):
             for j in range(len(dYv[i])):
-                dXv[i][j] = int(dXv[i][j]+0.5+offset_x/2)
-                dYv[i][j] = int(dYv[i][j]+0.5+offset_y/2)
+                dXv[i][j] = int(dXv[i][j] + 0.5 + offset_x / 2)
+                dYv[i][j] = int(dYv[i][j] + 0.5 + offset_y / 2)
 
     if DEBUG:
         # now we can draw the triangles
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        ax.scatter(dX, dY, marker='o')
+        ax.scatter(dX, dY, marker="o")
         if not "hand" in triangles_ini:
             # draw the triangles
             for i in range(len(dXv)):
                 for j in range(len(dXv[i])):
-                    ax.plot([dXv[i][j-1], dXv[i][j]], [dYv[i][j-1],
-                            dYv[i][j]], linewidth=0.2, color='black')
-                ax.plot([dXv[i][-1], dXv[i][0]], [dYv[i][-1], dYv[i][0]],
-                        linewidth=0.2, color='black')  # Close the triangle
-        ax.set_aspect('equal', 'box')
+                    ax.plot(
+                        [dXv[i][j - 1], dXv[i][j]],
+                        [dYv[i][j - 1], dYv[i][j]],
+                        linewidth=0.2,
+                        color="black",
+                    )
+                ax.plot(
+                    [dXv[i][-1], dXv[i][0]],
+                    [dYv[i][-1], dYv[i][0]],
+                    linewidth=0.2,
+                    color="black",
+                )  # Close the triangle
+        ax.set_aspect("equal", "box")
         fig.tight_layout()
         fig.savefig(
-            f"./neuromorphic_body_schema/figures/{triangles_ini}_processed.pdf", bbox_inches='tight')
+            f"./neuromorphic_body_schema/figures/{triangles_ini}_processed.pdf",
+            bbox_inches="tight",
+        )
         plt.close(fig)
 
     # Create a blank image
     img = np.full((height, width, 3), background_color, dtype=np.uint8)
     # Draw the triangles on the image
     for taxel_counter in range(len(dX)):
-        cv2.circle(img, (dX[taxel_counter],  dY[taxel_counter]),
-                   5, taxel_color, 1)  # RGB color
+        cv2.circle(
+            img, (dX[taxel_counter], dY[taxel_counter]), 5, taxel_color, 1
+        )  # RGB color
     if not "hand" in triangles_ini:
         for i in range(len(dXv)):
             for j in range(len(dXv[i])):
-                pt1 = (dXv[i][j-1], dYv[i][j-1])
+                pt1 = (dXv[i][j - 1], dYv[i][j - 1])
                 pt2 = (dXv[i][j], dYv[i][j])
                 cv2.line(img, pt1, pt2, line_color, 1)
             pt1 = (dXv[i][-1], dYv[i][-1])
@@ -372,7 +493,7 @@ def read_triangle_data(file_path: str) -> np.array:
     config_type = []
     start_found = False
     read_header = False
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         for line in file:
             if start_found and not read_header:
                 if not line.strip():
@@ -418,19 +539,21 @@ def make_skin_event_frame(img, events, locations) -> np.array:
         if len(events):
             if i in active_taxel:
                 # event happened at this location
-                if events[np.where(events[:, 0] == active_taxel[active_taxel == i])[0][0]][-1] > 0:
+                if (
+                    events[
+                        np.where(events[:, 0] == active_taxel[active_taxel == i])[0][0]
+                    ][-1]
+                    > 0
+                ):
                     # TODO now we can scale the color according to the nb of spikes
                     # pos event
-                    cv2.circle(img, (int(loc[0]), int(
-                        loc[1])), 4, red, -1)
+                    cv2.circle(img, (int(loc[0]), int(loc[1])), 4, red, -1)
                 else:
                     # neg event
-                    cv2.circle(img, (int(loc[0]), int(
-                        loc[1])), 4, blue, -1)
+                    cv2.circle(img, (int(loc[0]), int(loc[1])), 4, blue, -1)
         else:
             # no event happened, return to blank
-            cv2.circle(img, (int(loc[0]), int(loc[1])),
-                       4, background_color, -1)
+            cv2.circle(img, (int(loc[0]), int(loc[1])), 4, background_color, -1)
     return img
 
 
@@ -477,11 +600,13 @@ class ICubSkin:
                     taxel_data.extend(self.grouped_sensors[key])
             else:
                 taxel_data = self.grouped_sensors[KEY_MAPPING[triangle_ini]]
-            self.esim.append(SkinEventSimulator(
-                np.array(taxel_data), time))
+            self.esim.append(SkinEventSimulator(np.array(taxel_data), time))
             if show_skin:
-                img, x, y = visualize_skin_patches(path_to_triangles=TRIANGLE_INI_PATH,
-                                                   triangles_ini=triangle_ini, DEBUG=DEBUG)
+                img, x, y = visualize_skin_patches(
+                    path_to_triangles=TRIANGLE_INI_PATH,
+                    triangles_ini=triangle_ini,
+                    DEBUG=DEBUG,
+                )
                 self.taxel_locs[triangle_ini] = [x, y]
                 self.imgs[triangle_ini] = img
                 cv2.namedWindow(triangle_ini, cv2.WINDOW_NORMAL)
@@ -492,8 +617,13 @@ class ICubSkin:
                     self.esim[-1].Cm = val
                     self.esim[-1].Cp = val
 
-                cv2.createTrackbar("Threshold", triangle_ini, int(
-                    self.esim[-1].Cm * 100), 100, on_thresh_slider)
+                cv2.createTrackbar(
+                    "Threshold",
+                    triangle_ini,
+                    int(self.esim[-1].Cm * 100),
+                    100,
+                    on_thresh_slider,
+                )
                 cv2.setTrackbarMin("Threshold", triangle_ini, 1)
         cv2.waitKey(50)
         if DEBUG:
@@ -529,17 +659,21 @@ class ICubSkin:
             else:
                 taxel_data = self.grouped_sensors[KEY_MAPPING[triangle_ini]]
 
-            events = esim_single.skinCallback(
-                taxel_data, time)
+            events = esim_single.skinCallback(taxel_data, time)
             all_events.append(events)
             if self.DEBUG:
                 if len(events):
-                    logging.info(
-                        f"{len(events)} events detected at {triangle_ini}.")
+                    logging.info(f"{len(events)} events detected at {triangle_ini}.")
 
             if self.show_skin:
-                cv2.imshow(triangle_ini, make_skin_event_frame(
-                    img=self.imgs[triangle_ini], events=events, locations=self.taxel_locs[triangle_ini]))
+                cv2.imshow(
+                    triangle_ini,
+                    make_skin_event_frame(
+                        img=self.imgs[triangle_ini],
+                        events=events,
+                        locations=self.taxel_locs[triangle_ini],
+                    ),
+                )
                 cv2.waitKey(1)
 
         return all_events

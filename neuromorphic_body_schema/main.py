@@ -6,9 +6,9 @@ Affiliation: Istituto Italiano di Tecnologia (IIT)
 Department: Event-Driven Perception for Robotics (EDPR)
 Date: 29.04.2025
 
-Description: 
-This script initializes and runs a neuromorphic simulation of the iCub robot using MuJoCo. 
-It integrates event-based camera, proprioception, and skin sensors, and provides visualization 
+Description:
+This script initializes and runs a neuromorphic simulation of the iCub robot using MuJoCo.
+It integrates event-based camera, proprioception, and skin sensors, and provides visualization
 options for each sensory modality.
 
 Modules:
@@ -23,7 +23,6 @@ Usage:
 Run this script to start the simulation and visualize the sensory data.
 
 """
-
 
 import copy
 import logging
@@ -46,7 +45,8 @@ from mujoco import viewer
 
 DEBUG = False  # use to visualize the triangles
 logging.basicConfig(
-    format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
+    format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO
+)
 
 VISUALIZE_CAMERA_FEED = False
 VISUALIZE_ED_CAMERA_FEED = False
@@ -66,7 +66,9 @@ def reset(keyframe, data, model):
     Returns:
         None
     """
-    assert keyframe.shape == data.qpos.shape, "Keyframe shape does not match qpos shape."
+    assert (
+        keyframe.shape == data.qpos.shape
+    ), "Keyframe shape does not match qpos shape."
     data.qpos[:] = keyframe
     mujoco.mj_forward(model, data)
 
@@ -95,15 +97,15 @@ def ik_caculation(ik_solver, target_pos, target_ori, joint_names):
         return None
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     #############################
     ### setting everything up ###
     #############################
 
     viewer_closed_event = threading.Event()
 
-    r_eye_camera_name = 'r_eye_camera'
-    l_eye_camera_name = 'l_eye_camera'
+    r_eye_camera_name = "r_eye_camera"
+    l_eye_camera_name = "l_eye_camera"
 
     # Load the MuJoCo model and create a simulation
     model = mujoco.MjModel.from_xml_path(MODEL_PATH)
@@ -112,20 +114,19 @@ if __name__ == '__main__':
     data.qpos.fill(0.0)
     # define a start position for the model
     joint_init_pos = {
-        'r_shoulder_roll': 0.6,
-        'r_shoulder_pitch': -0.5,
-        'r_shoulder_yaw': 0.0,
-        'r_elbow': 1.1,
-        'l_shoulder_roll': 0.6,
-        'l_shoulder_pitch': -0.5,
-        'l_shoulder_yaw': 0.0,
-        'l_elbow': 1.1,
+        "r_shoulder_roll": 0.6,
+        "r_shoulder_pitch": -0.5,
+        "r_shoulder_yaw": 0.0,
+        "r_elbow": 1.1,
+        "l_shoulder_roll": 0.6,
+        "l_shoulder_pitch": -0.5,
+        "l_shoulder_yaw": 0.0,
+        "l_elbow": 1.1,
     }
     # let's set the initial joint positions and actuator controls
     for joint_name, position in joint_init_pos.items():
         try:
-            joint_id = mujoco.mj_name2id(
-                model, mujoco.mjtObj.mjOBJ_JOINT, joint_name)
+            joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, joint_name)
             data.joint(joint_id).qpos[0] = position
             data.actuator(joint_name).ctrl[0] = position
         except ValueError:
@@ -136,13 +137,13 @@ if __name__ == '__main__':
     model.opt.timestep = 0.001  # sec
 
     # prepare the mapping from skin to body parts
-    names_list = model.names.decode('utf-8').split('\x00')
+    names_list = model.names.decode("utf-8").split("\x00")
     sensor_info = [x for x in names_list if "taxel" in x]
 
     # Extract base names and group sensor addresses by base names
     grouped_sensors = defaultdict(list)
     for adr, name in enumerate(sensor_info):
-        base_name = re.sub(r'_\d+$', '', name)
+        base_name = re.sub(r"_\d+$", "", name)
         grouped_sensors[base_name].append(adr)
 
     if DEBUG:
@@ -152,17 +153,17 @@ if __name__ == '__main__':
     dynamic_grouped_sensors = DynamicGroupedSensors(data, grouped_sensors)
 
     joint_dict_prop = {
-        'r_shoulder_roll': {
-            'position_max_freq': 1000,  # Hz
-            'velocity_max_freq': 1000,
-            'load_max_freq': 1000,
-            'limits_max_freq': 1000,
+        "r_shoulder_roll": {
+            "position_max_freq": 1000,  # Hz
+            "velocity_max_freq": 1000,
+            "load_max_freq": 1000,
+            "limits_max_freq": 1000,
         },
-        'l_shoulder_roll': {
-            'position_max_freq': 1000,
-            'velocity_max_freq': 1000,
-            'load_max_freq': 1000,
-            'limits_max_freq': 1000,
+        "l_shoulder_roll": {
+            "position_max_freq": 1000,
+            "velocity_max_freq": 1000,
+            "load_max_freq": 1000,
+            "limits_max_freq": 1000,
         },
         # 'r_pinky': {
         #     'position_max_freq': 1000,  # Hz
@@ -201,31 +202,58 @@ if __name__ == '__main__':
         sim_time = data.time
 
         skin_object = ICubSkin(
-            sim_time, dynamic_grouped_sensors, show_skin=VISUALIZE_SKIN, DEBUG=DEBUG)
-        r_eye_camera_object = ICubEyes(sim_time, model, data, r_eye_camera_name,
-                                       show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
-        l_eye_camera_object = ICubEyes(sim_time, model, data, l_eye_camera_name,
-                                       show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
+            sim_time, dynamic_grouped_sensors, show_skin=VISUALIZE_SKIN, DEBUG=DEBUG
+        )
+        r_eye_camera_object = ICubEyes(
+            sim_time,
+            model,
+            data,
+            r_eye_camera_name,
+            show_raw_feed=VISUALIZE_CAMERA_FEED,
+            show_ed_feed=VISUALIZE_ED_CAMERA_FEED,
+            DEBUG=DEBUG,
+        )
+        l_eye_camera_object = ICubEyes(
+            sim_time,
+            model,
+            data,
+            l_eye_camera_name,
+            show_raw_feed=VISUALIZE_CAMERA_FEED,
+            show_ed_feed=VISUALIZE_ED_CAMERA_FEED,
+            DEBUG=DEBUG,
+        )
         proprioception_object = ICubProprioception(
-            model, joint_dict_prop, show_proprioception=VISUALIZE_PROPRIOCEPTION_FEED, DEBUG=DEBUG)
+            model,
+            joint_dict_prop,
+            show_proprioception=VISUALIZE_PROPRIOCEPTION_FEED,
+            DEBUG=DEBUG,
+        )
 
         # Valid kinematic links shoulde be predefined
-        joint_names = ["l_shoulder_pitch", "l_shoulder_roll",
-                       "l_shoulder_yaw", "l_elbow", "l_wrist_prosup"]
+        joint_names = [
+            "l_shoulder_pitch",
+            "l_shoulder_roll",
+            "l_shoulder_yaw",
+            "l_elbow",
+            "l_wrist_prosup",
+        ]
         end_effector_name = "l_forearm"
 
         # IK with Quaternion seems more robust for Icub
         # should copy the data for forward knimeatics, otherwise the ik will update the model directly
         data_copy = copy.deepcopy(data)
-        ik_solver = Ik_solver(model, data_copy, joint_names,
-                              end_effector_name, "quat")
+        ik_solver = Ik_solver(model, data_copy, joint_names, end_effector_name, "quat")
 
         # Sequential Reaching task
 
-        target_pos = [[-0.09736548, -0.20864483, 0.94718375],
-                      [-0.13067764, -0.25348467,  1.12211061]]
-        target_ori = [[-0.35741511, 0.26772824, 0.02986113, 0.89425071],
-                      [-0.18286161, -0.0885009,   0.46619002, 0.8610436]]
+        target_pos = [
+            [-0.09736548, -0.20864483, 0.94718375],
+            [-0.13067764, -0.25348467, 1.12211061],
+        ]
+        target_ori = [
+            [-0.35741511, 0.26772824, 0.02986113, 0.89425071],
+            [-0.18286161, -0.0885009, 0.46619002, 0.8610436],
+        ]
 
         caculated, reached, finished = False, False, False
 
@@ -246,29 +274,34 @@ if __name__ == '__main__':
             # update_joint_positions(data, {joint: joint_position})
 
             r_eye_cam_events = r_eye_camera_object.update_camera(
-                data.time*1E9)  # expects ns
+                data.time * 1e9
+            )  # expects ns
             l_eye_cam_events = l_eye_camera_object.update_camera(
-                data.time*1E9)  # expects ns
+                data.time * 1e9
+            )  # expects ns
 
-            skin_events = skin_object.update_skin(data.time*1E9)  # expects ns
+            skin_events = skin_object.update_skin(data.time * 1e9)  # expects ns
 
             proprioception_events = proprioception_object.update_proprioception(
-                time=data.time, data=data)  # expects seconds
+                time=data.time, data=data
+            )  # expects seconds
 
             if count >= len(target_pos):
                 finished = True
             if not finished:
                 if not caculated:
                     q_arm = ik_caculation(
-                        ik_solver, target_pos[count], target_ori[count], joint_names)
+                        ik_solver, target_pos[count], target_ori[count], joint_names
+                    )
                     caculated = True
                     if not q_arm:
                         finished = True
                         logging.info(
-                            f"Solution not found, task terminated at {count}th goal")
+                            f"Solution not found, task terminated at {count}th goal"
+                        )
                         continue
 
-                 # seems like the mujoco can not achieve the joints in one loop, so keep checking and control the joints
+                # seems like the mujoco can not achieve the joints in one loop, so keep checking and control the joints
                 if caculated and not check_joints(data, q_arm):
                     # currently PD controller for the joints
                     update_joint_positions(data, q_arm)

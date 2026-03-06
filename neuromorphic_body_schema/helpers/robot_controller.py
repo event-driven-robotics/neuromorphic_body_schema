@@ -7,7 +7,7 @@ Department: Event-Driven Perception for Robotics (EDPR)
 Date: 29.04.2025
 
 Description:
-This module provides functionality for controlling the iCub robot's joints in a MuJoCo simulation. 
+This module provides functionality for controlling the iCub robot's joints in a MuJoCo simulation.
 It includes functions to update joint positions by setting control targets for specified joints.
 
 Functions:
@@ -38,7 +38,9 @@ def get_joints(data, model, joint: dict, end_effector: str = "l_wrist_1"):
     """
     joint_poses = {
         "joints": [data.joint(joint_name).qpos[0] for joint_name in joint.keys()],
-        "pose": data.xpos[mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, end_effector)]
+        "pose": data.xpos[
+            mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, end_effector)
+        ],
     }
     return joint_poses
 
@@ -55,8 +57,10 @@ def check_joints(data, joint: dict, angle_tolerance: float = 0.1) -> bool:
     Returns:
         bool: True if all joints are within tolerance, False otherwise.
     """
-    errors = [data.joint(joint_name).qpos[0] -
-              target_pos for joint_name, target_pos in joint.items()]
+    errors = [
+        data.joint(joint_name).qpos[0] - target_pos
+        for joint_name, target_pos in joint.items()
+    ]
     logging.info(f"Joint errors: {errors}")
     return all(abs(err) < angle_tolerance for err in errors)
 

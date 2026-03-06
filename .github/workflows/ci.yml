@@ -46,7 +46,7 @@ jobs:
     
     - name: Run tests
       run: |
-        pytest tests/ -v --tb=short --cov=neuromorphic_body_schema --cov-report=term-only
+        pytest tests/ -v --tb=short --cov=neuromorphic_body_schema --cov-report=term
       timeout-minutes: 10
     
     - name: Test model loading

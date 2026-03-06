@@ -5,15 +5,14 @@ Author: Ruidong Ma
 Affiliation: Sheffield Hallam University
 Date: 01.05.2025
 
-Description: 
-This script contains inverse kinematic solver for iCub's arm's 6D manipualtion. Given the target end-effector's position 
+Description:
+This script contains inverse kinematic solver for iCub's arm's 6D manipualtion. Given the target end-effector's position
 and quaternion, the Levenberg-Marquardt solver is used to iteratively caculate the joint configuration to reach such goal.
-Please note that, current ik solver is only for a single arm while a valid kinematic chain should be predefined. 
+Please note that, current ik solver is only for a single arm while a valid kinematic chain should be predefined.
 
-NOTE: https://github.com/google-deepmind/mujoco/blob/main/test/engine/testdata/actuation/refsite.xml 
+NOTE: https://github.com/google-deepmind/mujoco/blob/main/test/engine/testdata/actuation/refsite.xml
 an example of how to use mujoco's inverse kinematics solver which is not the one presented here.
 """
-
 
 import logging
 from typing import List
@@ -42,10 +41,11 @@ def compute_relative_transform(model, data, body_name1, body_name2):
         id2 = model.body(body_name2).id
     except AttributeError:
         raise ValueError(
-            f"One of the body names '{body_name1}' or '{body_name2}' does not exist in the model.")
+            f"One of the body names '{body_name1}' or '{body_name2}' does not exist in the model."
+        )
 
-    p1 = data.xpos[id1]           # shape (3,)
-    p2 = data.xpos[id2]           # shape (3,)
+    p1 = data.xpos[id1]  # shape (3,)
+    p2 = data.xpos[id2]  # shape (3,)
     R1 = data.xmat[id1].reshape(3, 3)
     R2 = data.xmat[id2].reshape(3, 3)
 
@@ -59,7 +59,15 @@ def compute_relative_transform(model, data, body_name1, body_name2):
 
 
 class Ik_solver:
-    def __init__(self, model, data, joint_name: List[str], end_effector_name: str, option: str, damp=0.15):
+    def __init__(
+        self,
+        model,
+        data,
+        joint_name: List[str],
+        end_effector_name: str,
+        option: str,
+        damp=0.15,
+    ):
         """
         Levenberg-Marquardt inverse kinematics solver for 6D manipulation
 
@@ -67,8 +75,8 @@ class Ik_solver:
         model: mujoco model attribute
         data: mujoco data attribute
         joint_name: the list of joints being controled
-        end_effector_name: end_effector body's name 
-        option: to use euler angles or quaternion 
+        end_effector_name: end_effector body's name
+        option: to use euler angles or quaternion
         damp: damping ratio for LM
         alpha: step size for LM
 
@@ -85,8 +93,7 @@ class Ik_solver:
         try:
             self.end_effector_id = model.body(end_effector_name).id
         except:
-            raise ValueError(
-                f"Error: end effector {end_effector_name} does not exist ")
+            raise ValueError(f"Error: end effector {end_effector_name} does not exist ")
 
         nv = model.nv
 
@@ -97,7 +104,8 @@ class Ik_solver:
         # self.alpha = alpha
 
         assert option in ["euler", "quat"], print(
-            "should chooese between euler or quat")
+            "should chooese between euler or quat"
+        )
         self.option = option
 
         n = len(self.joint_ids)
@@ -173,7 +181,7 @@ class Ik_solver:
         """
 
         # 'xyz' gives roll, pitch, yaw (intrinsic rotations)
-        return R.from_matrix(R_mat).as_euler('xyz', degrees=False)
+        return R.from_matrix(R_mat).as_euler("xyz", degrees=False)
 
     def angle_diff(self, o_tgt, o_cur):
         """
@@ -190,7 +198,9 @@ class Ik_solver:
         d = o_tgt - o_cur
         return (d + np.pi) % (2 * np.pi) - np.pi
 
-    def compute_dynamic_alpha(self, err_norm, alpha_min=0.001, alpha_max=1.0, decay=1000.0):
+    def compute_dynamic_alpha(
+        self, err_norm, alpha_min=0.001, alpha_max=1.0, decay=1000.0
+    ):
         """
         Computes a dynamic step size alpha for the IK update based on the current error norm.
 
@@ -208,7 +218,9 @@ class Ik_solver:
         alpha = alpha_max - (alpha_max - alpha_min) * np.exp(-decay * err_norm)
         return alpha
 
-    def ik_step(self, target_pos, target_ori, max_iter=50000, pos_thres=0.001, ori_thres=0.001):
+    def ik_step(
+        self, target_pos, target_ori, max_iter=50000, pos_thres=0.001, ori_thres=0.001
+    ):
         """
         Performs inverse kinematics using the Levenberg-Marquardt method to find joint angles
         that achieve the desired end-effector position and orientation.
@@ -230,55 +242,61 @@ class Ik_solver:
         q_arm = self.data.qpos[self.joint_ids].copy()
 
         if self.option == "euler":
-            assert len(target_ori) == 3, print(
-                "target euler angle shoule eqaul to 3")
+            assert len(target_ori) == 3, print("target euler angle shoule eqaul to 3")
         if self.option == "quat":
-            assert len(target_ori) == 4, print(
-                "target quaternion shoulde eqaul to 4")
+            assert len(target_ori) == 4, print("target quaternion shoulde eqaul to 4")
 
         for i in range(max_iter):
             self.data.qpos[self.joint_ids] = q_arm
             mujoco.mj_forward(self.model, self.data)
 
-            ''' 
+            """ 
             NOTE: Seems the jacobian matrix function mujoco.mj_jac() from mujoco 
             already did the coordinate transformation between frames so here we use 
             the rotation and transformation according to world frame
-            '''
+            """
 
             current_pos = self.data.xpos[self.end_effector_id]
-            current_rotation = self.data.xmat[self.end_effector_id].reshape(
-                3, 3)
+            current_rotation = self.data.xmat[self.end_effector_id].reshape(3, 3)
 
             if self.option == "euler":
                 current_ori = self.compute_euler(current_rotation)
-                delta_p = target_pos-current_pos
+                delta_p = target_pos - current_pos
                 delta_o = self.angle_diff(target_ori, current_ori)
 
             if self.option == "quat":
                 current_ori = self.compute_quat(current_rotation)
-                delta_p = target_pos-current_pos
+                delta_p = target_pos - current_pos
                 delta_o = self.compute_quat_error(current_ori, target_ori)
 
-            if np.linalg.norm(delta_p) <= pos_thres and np.linalg.norm(delta_o) <= ori_thres:
+            if (
+                np.linalg.norm(delta_p) <= pos_thres
+                and np.linalg.norm(delta_o) <= ori_thres
+            ):
                 logging.info(
-                    f"Converged after {i+1} iterations with position error {np.linalg.norm(delta_p)} and orientation error {np.linalg.norm(delta_o)}")
+                    f"Converged after {i+1} iterations with position error {np.linalg.norm(delta_p)} and orientation error {np.linalg.norm(delta_o)}"
+                )
                 return q_arm
 
-            mujoco.mj_jac(self.model, self.data, self.jacp,
-                          self.jacr, current_pos, self.end_effector_id)
+            mujoco.mj_jac(
+                self.model,
+                self.data,
+                self.jacp,
+                self.jacr,
+                current_pos,
+                self.end_effector_id,
+            )
 
             jacp_ = self.jacp[:, self.joint_ids]
 
             jacr_ = self.jacr[:, self.joint_ids]
 
             # Jacobian matrix : [6,joints] and error matrix :[pos,orientation]
-            J = np.vstack((jacp_, jacr_))       # (6, n)
+            J = np.vstack((jacp_, jacr_))  # (6, n)
             cond0 = np.linalg.cond(J)
             if cond0 > 1e8:
                 # TODO We might want to try regularization or log a warning and continue, depending on our application.
-                raise RuntimeError(
-                    f"Jacobian is too ill-conditioned: cond={cond0:.1e}")
+                raise RuntimeError(f"Jacobian is too ill-conditioned: cond={cond0:.1e}")
             e = np.concatenate((delta_p, delta_o))  # (6,)
 
             # LM Matrix
@@ -297,7 +315,6 @@ class Ik_solver:
             q_arm = self.check_limites(q_arm)
             # logging.info(
             #     f"err_norm: {err_norm}, alpha: {alpha}, target:{target_pos}, current:{current_pos}, delta_p:{delta_p}, target_ori:{target_ori}, current_ori:{current_ori}, delta_o:{delta_o}, iteration:{i+1}")
-            logging.info(
-                f"err_norm: {err_norm}, alpha: {alpha}, iteration:{i+1}")
+            logging.info(f"err_norm: {err_norm}, alpha: {alpha}, iteration:{i+1}")
         # TODO You raise a ValueError if the solution is not found. Consider returning the best found q_arm and a flag, or logging the final error for easier debugging.
         raise ValueError(f"Solution not found after {i+1} iterations.")

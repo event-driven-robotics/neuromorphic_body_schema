@@ -7,8 +7,8 @@ Department: Event-Driven Perception for Robotics (EDPR)
 Date: 29.04.2025
 
 Description:
-This module provides functionality for simulating event-based proprioception in the iCub robot. 
-It includes classes and functions for generating spiking events based on joint positions, velocities, 
+This module provides functionality for simulating event-based proprioception in the iCub robot.
+It includes classes and functions for generating spiking events based on joint positions, velocities,
 and loads, as well as visualizing proprioception data.
 
 Classes:
@@ -22,19 +22,31 @@ Functions:
 
 """
 
-
 import logging
 import cv2
 import numpy as np
 import mujoco
-from neuromorphic_body_schema.helpers.helpers import HEIGHT, MARGIN, TICK_HEIGHT, TIME_WINDOW, WIDTH
+from neuromorphic_body_schema.helpers.helpers import (
+    HEIGHT,
+    MARGIN,
+    TICK_HEIGHT,
+    TIME_WINDOW,
+    WIDTH,
+)
 
 
-def generalized_sigmoid(x: np.array,  x_min: np.array, x_max: np.array, y_min: np.array, y_max: np.array, B=np.array) -> np.array:
+def generalized_sigmoid(
+    x: np.array,
+    x_min: np.array,
+    x_max: np.array,
+    y_min: np.array,
+    y_max: np.array,
+    B=np.array,
+) -> np.array:
     """
     Computes a generalized sigmoid function value for the given input.
 
-    This function normalizes the input `x` to a range defined by `x_min` and `x_max`, applies a sigmoid 
+    This function normalizes the input `x` to a range defined by `x_min` and `x_max`, applies a sigmoid
     transformation, and scales the output to the range defined by `y_min` and `y_max`.
 
     Args:
@@ -82,10 +94,10 @@ def linear(x, m=1, q=0):
         float or np.array: The computed linear function value(s).
     """
 
-    return m*x + q
+    return m * x + q
 
 
-class ProprioceptionEventSimulator():
+class ProprioceptionEventSimulator:
     """
     Simulates spiking representations of proprioceptive inputs, such as joint positions, velocities, and loads.
     Inputs can come from fictitious data, MuJoCo simulations, or iCub's YARP values.
@@ -104,7 +116,17 @@ class ProprioceptionEventSimulator():
         DEBUG (bool): Whether to enable debug logging.
     """
 
-    def __init__(self, position_limits, velocity_limit, load_limit,  position_max_freq=np.array(1000.), velocity_max_freq=np.array(1000.), load_max_freq=np.array(1000.), limits_max_freq=np.array(1000.), DEBUG=False):
+    def __init__(
+        self,
+        position_limits,
+        velocity_limit,
+        load_limit,
+        position_max_freq=np.array(1000.0),
+        velocity_max_freq=np.array(1000.0),
+        load_max_freq=np.array(1000.0),
+        limits_max_freq=np.array(1000.0),
+        DEBUG=False,
+    ):
         """
         Initializes the ProprioceptionEventSimulator with joint limits, firing frequencies, and debug options.
 
@@ -160,9 +182,15 @@ class ProprioceptionEventSimulator():
         if (-x + self.position_limit_max).any() < 0:
             print("WARNING: joint value outside scope")
 
-        y1 = 0.1 * generalized_sigmoid(x=x,   x_min=self.position_limit_min,
-                                       x_max=self.position_limit_max, y_min=0.0, y_max=self.position_max_freq, B=B)
-        y2 = 0.1*(self.position_max_freq - 10 * y1)
+        y1 = 0.1 * generalized_sigmoid(
+            x=x,
+            x_min=self.position_limit_min,
+            x_max=self.position_limit_max,
+            y_min=0.0,
+            y_max=self.position_max_freq,
+            B=B,
+        )
+        y2 = 0.1 * (self.position_max_freq - 10 * y1)
 
         # if self.DEBUG:
         #     x_debug = np.linspace(self.position_limit_min, self.position_limit_max, 1000)
@@ -188,15 +216,14 @@ class ProprioceptionEventSimulator():
             tuple: Firing frequencies for agonistic and antagonistic neurons.
         """
 
-        if np.min(v) < - self.velocity_limit:
-            v = np.where(v < (-self.velocity_limit), - self.velocity_limit, v)
+        if np.min(v) < -self.velocity_limit:
+            v = np.where(v < (-self.velocity_limit), -self.velocity_limit, v)
             print("WARNING: joint velocity value reached")
         if np.max(v) > self.velocity_limit:
-            v = np.where(v > self.velocity_limit,  self.velocity_limit, v)
+            v = np.where(v > self.velocity_limit, self.velocity_limit, v)
             print("WARNING: joint velocity value reached")
 
-        module = linear(np.abs(v), m=self.velocity_max_freq /
-                        self.velocity_limit)
+        module = linear(np.abs(v), m=self.velocity_max_freq / self.velocity_limit)
         direction_pos = np.where(v > 0, 1.0, 0.0)
         direction_neg = np.where(v < 0, 1.0, 0.0)
 
@@ -216,12 +243,12 @@ class ProprioceptionEventSimulator():
             tuple: Firing frequencies for agonistic and antagonistic neurons.
         """
 
-        if np.min(load) < - self.load_limit:
+        if np.min(load) < -self.load_limit:
             print("WARNING: joint load value reached")
-            load = np.where(load < (-self.load_limit), - self.load_limit, load)
+            load = np.where(load < (-self.load_limit), -self.load_limit, load)
         if np.max(load) > self.load_limit:
             print("WARNING: joint load value reached")
-            load = np.where(load > self.load_limit,  self.load_limit, load)
+            load = np.where(load > self.load_limit, self.load_limit, load)
 
         module = linear(np.abs(load), m=self.load_max_freq / self.load_limit)
         direction_pos = np.where(load > 0, 1.0, 0.0)
@@ -254,18 +281,43 @@ class ProprioceptionEventSimulator():
         # parameters of the limit function
 
         # below here the two B must be the first positive and the second negative
-        y1 = generalized_sigmoid(x=limit,   x_min=self.position_limit_min + 2*delta_x,
-                                 x_max=self.position_limit_min, y_min=0.0, y_max=self.limits_max_freq, B=-B)
-        y2 = generalized_sigmoid(x=limit,   x_min=self.position_limit_max-2*delta_x,
-                                 x_max=self.position_limit_max, y_min=0.0, y_max=self.position_max_freq, B=B)
+        y1 = generalized_sigmoid(
+            x=limit,
+            x_min=self.position_limit_min + 2 * delta_x,
+            x_max=self.position_limit_min,
+            y_min=0.0,
+            y_max=self.limits_max_freq,
+            B=-B,
+        )
+        y2 = generalized_sigmoid(
+            x=limit,
+            x_min=self.position_limit_max - 2 * delta_x,
+            x_max=self.position_limit_max,
+            y_min=0.0,
+            y_max=self.position_max_freq,
+            B=B,
+        )
 
         if self.DEBUG:
-            x_debug = np.linspace(self.position_limit_min,
-                                  self.position_limit_max, 1000)
-            y_debug1 = generalized_sigmoid(x=x_debug,   x_min=self.position_limit_min + 2*delta_x,
-                                           x_max=self.position_limit_min, y_min=0., y_max=self.limits_max_freq, B=-B)
-            y_debug2 = generalized_sigmoid(x=x_debug,   x_min=self.position_limit_max-2*delta_x,
-                                           x_max=self.position_limit_max, y_min=0., y_max=self.position_max_freq, B=B)
+            x_debug = np.linspace(
+                self.position_limit_min, self.position_limit_max, 1000
+            )
+            y_debug1 = generalized_sigmoid(
+                x=x_debug,
+                x_min=self.position_limit_min + 2 * delta_x,
+                x_max=self.position_limit_min,
+                y_min=0.0,
+                y_max=self.limits_max_freq,
+                B=-B,
+            )
+            y_debug2 = generalized_sigmoid(
+                x=x_debug,
+                x_min=self.position_limit_max - 2 * delta_x,
+                x_max=self.position_limit_max,
+                y_min=0.0,
+                y_max=self.position_max_freq,
+                B=B,
+            )
 
             # plt.figure()
             # plt.plot(x_debug, y_debug1, label="descending")
@@ -278,7 +330,9 @@ class ProprioceptionEventSimulator():
 
         return (y1, y2)
 
-    def proprioceptionCallback(self, x, v, load, time_stamp, B_pos=5.0, B_lim=20.0, delta_x=1.0):
+    def proprioceptionCallback(
+        self, x, v, load, time_stamp, B_pos=5.0, B_lim=20.0, delta_x=1.0
+    ):
         """
         Processes joint position, velocity, and load values to generate spiking events.
 
@@ -311,7 +365,7 @@ class ProprioceptionEventSimulator():
                 if frequ == 0.0:
                     delta_t = np.inf
                 else:
-                    delta_t = 1/frequ
+                    delta_t = 1 / frequ
                 return delta_t
 
         # Develop the events according to the AER protocol
@@ -335,19 +389,20 @@ class ProprioceptionEventSimulator():
         # loop over neuron types
         for i, single_time_to_spike in enumerate(time_to_spike):
             while self.time_of_last_spike[i] + single_time_to_spike < time_stamp:
-                self.time_of_last_spike[i] = self.time_of_last_spike[
-                    i] + single_time_to_spike
-                events.append(
-                    (i, self.time_of_last_spike[i], 0))
+                self.time_of_last_spike[i] = (
+                    self.time_of_last_spike[i] + single_time_to_spike
+                )
+                events.append((i, self.time_of_last_spike[i], 0))
 
         if len(events) > 1:
             events = np.array(events)
             events = events[np.argsort(events[:, 2])]
 
         return events
-    
-    
-    def proprioceptionCallback_forlearning(self, x,  time_stamp, B_pos=5.0, B_lim=20.0, delta_x=1.0):
+
+    def proprioceptionCallback_forlearning(
+        self, x, time_stamp, B_pos=5.0, B_lim=20.0, delta_x=1.0
+    ):
         """
         Processes joint position, velocity, and load values to generate spiking events.
 
@@ -378,7 +433,7 @@ class ProprioceptionEventSimulator():
                 if frequ == 0.0:
                     delta_t = np.inf
                 else:
-                    delta_t = 1/frequ
+                    delta_t = 1 / frequ
                 return delta_t
 
         # Develop the events according to the AER protocol
@@ -398,10 +453,10 @@ class ProprioceptionEventSimulator():
         # loop over neuron types
         for i, single_time_to_spike in enumerate(time_to_spike):
             while self.time_of_last_spike[i] + single_time_to_spike < time_stamp:
-                self.time_of_last_spike[i] = self.time_of_last_spike[
-                    i] + single_time_to_spike
-                events.append(
-                    (i, self.time_of_last_spike[i], 0))
+                self.time_of_last_spike[i] = (
+                    self.time_of_last_spike[i] + single_time_to_spike
+                )
+                events.append((i, self.time_of_last_spike[i], 0))
 
         if len(events) > 1:
             events = np.array(events)
@@ -414,7 +469,7 @@ def make_proprioception_event_frame(img, time, events):
     """
     Updates a visual representation of proprioception events over time.
 
-    This function takes an existing image, shifts its content to the left to simulate a time window, 
+    This function takes an existing image, shifts its content to the left to simulate a time window,
     and overlays new proprioception events as colored lines based on their neuron index and timestamp.
 
     Args:
@@ -444,31 +499,32 @@ def make_proprioception_event_frame(img, time, events):
     # height = 8 * (tick_height + margin)
     # current_img = np.zeros((height, width, 3))
 
-    t_left = time-TIME_WINDOW
-    scale = img.shape[1]/TIME_WINDOW
+    t_left = time - TIME_WINDOW
+    scale = img.shape[1] / TIME_WINDOW
     # TODO find out how many pixel along x is 'one event frame'
     # we override the first 'event column' with empty entries and apply np.roll to move them to the end
     img = np.roll(img, -1, axis=1)
     img[:, -1, :] = np.zeros((img.shape[0], 3))  # , dtype=np.float64
     if len(events):
         for single_event in events:
-            y_val = int(single_event[0]*(TICK_HEIGHT + MARGIN/2))
-            x_val = int((single_event[1]-t_left)*scale)
+            y_val = int(single_event[0] * (TICK_HEIGHT + MARGIN / 2))
+            x_val = int((single_event[1] - t_left) * scale)
             neuron_idx = single_event[0]
 
             color_index = int((neuron_idx * 255 / 8))
             color = cv2.applyColorMap(
-                np.array([[color_index]], dtype=np.uint8), cv2.COLORMAP_HSV)[0][0]
-            color = color/255
+                np.array([[color_index]], dtype=np.uint8), cv2.COLORMAP_HSV
+            )[0][0]
+            color = color / 255
 
-            cv2.line(img, (x_val, y_val), (x_val, y_val+TICK_HEIGHT), color, 1)
+            cv2.line(img, (x_val, y_val), (x_val, y_val + TICK_HEIGHT), color, 1)
 
     return img
 
 
 class ICubProprioception:
     """
-    Represents the iCub robot's proprioception system, integrating joint position, velocity, and load data 
+    Represents the iCub robot's proprioception system, integrating joint position, velocity, and load data
     with event-based spiking representations.
 
     Attributes:
@@ -479,7 +535,9 @@ class ICubProprioception:
         DEBUG (bool): Whether to enable debug logging.
     """
 
-    def __init__(self, model, joint_dict, device = "cpu" , show_proprioception=False, DEBUG=False):
+    def __init__(
+        self, model, joint_dict, device="cpu", show_proprioception=False, DEBUG=False
+    ):
         """
         Initializes the ICubProprioception class with joint-specific simulators and visualization options.
 
@@ -502,19 +560,28 @@ class ICubProprioception:
         self.imgs = []
         self.show_proprioception = show_proprioception
         self.DEBUG = DEBUG
-        self.device=device
+        self.device = device
         self.model = model
 
         # TODO replace with joint states I want to access
         for joint_name in list(joint_dict.keys()):
-            position_max_freq = joint_dict[joint_name]['position_max_freq']
-            velocity_max_freq = joint_dict[joint_name]['velocity_max_freq']
-            load_max_freq = joint_dict[joint_name]['load_max_freq']
-            limits_max_freq = joint_dict[joint_name]['limits_max_freq']
+            position_max_freq = joint_dict[joint_name]["position_max_freq"]
+            velocity_max_freq = joint_dict[joint_name]["velocity_max_freq"]
+            load_max_freq = joint_dict[joint_name]["load_max_freq"]
+            limits_max_freq = joint_dict[joint_name]["limits_max_freq"]
             self.imgs.append(np.zeros((HEIGHT, WIDTH, 3)))  # , dtype=np.uint8
-            self.esim.append(ProprioceptionEventSimulator(position_limits=model.actuator(joint_name).ctrlrange,
-                                                          velocity_limit=20.0, load_limit=10000000.0, position_max_freq=position_max_freq, velocity_max_freq=velocity_max_freq,
-                                                          load_max_freq=load_max_freq, limits_max_freq=limits_max_freq, DEBUG=DEBUG))
+            self.esim.append(
+                ProprioceptionEventSimulator(
+                    position_limits=model.actuator(joint_name).ctrlrange,
+                    velocity_limit=20.0,
+                    load_limit=10000000.0,
+                    position_max_freq=position_max_freq,
+                    velocity_max_freq=velocity_max_freq,
+                    load_max_freq=load_max_freq,
+                    limits_max_freq=limits_max_freq,
+                    DEBUG=DEBUG,
+                )
+            )
 
             # The values used for the next object are absolutely arbitrary, they will be changed in a later stage
             # also based on the platform the code is going to be used on
@@ -542,32 +609,34 @@ class ICubProprioception:
         """
 
         all_events = []
-        for i, esim_single, joint_name in zip(range(len(self.esim)), self.esim, list(self.joint_dict.keys())):
+        for i, esim_single, joint_name in zip(
+            range(len(self.esim)), self.esim, list(self.joint_dict.keys())
+        ):
             joint_pos = data.joint(joint_name).qpos  # example for single joint
             joint_vel = data.joint(joint_name).qvel
             # TODO access load here, not acceleration!
             joint_load = data.joint(joint_name).qacc
             events = esim_single.proprioceptionCallback(
-                x=joint_pos, v=joint_vel, load=joint_load, time_stamp=time)
+                x=joint_pos, v=joint_vel, load=joint_load, time_stamp=time
+            )
             all_events.append(events)
 
             if self.DEBUG:
                 if len(events):
-                    logging.info(
-                        f"Generated {len(events)} proprioception events.")
+                    logging.info(f"Generated {len(events)} proprioception events.")
 
             if self.show_proprioception:
                 events_array = np.array(events)
                 # TODO check why pos enc is similar for both neurons!
                 # TODO some events seem to pop up out of nowhere!
                 self.imgs[i] = make_proprioception_event_frame(
-                    self.imgs[i], time, events_array)
+                    self.imgs[i], time, events_array
+                )
                 cv2.imshow(joint_name, self.imgs[i])
                 cv2.waitKey(1)
 
         return all_events
-    
-    
+
     def update_proprioception_forlearning(self, time, data):
         """
         Updates the proprioception system by processing joint position, velocity, and load data to generate events.
@@ -581,32 +650,34 @@ class ICubProprioception:
         """
 
         all_events = []
-        for i, esim_single, joint_name in zip(range(len(self.esim)), self.esim, list(self.joint_dict.keys())):
-            joint_pos = data[0,i,1]  # example for single joint
-            joint_id = data[0,i,0]
-           
-            if joint_id !=  mujoco.mj_name2id( self.model, mujoco.mjtObj.mjOBJ_JOINT, joint_name):
+        for i, esim_single, joint_name in zip(
+            range(len(self.esim)), self.esim, list(self.joint_dict.keys())
+        ):
+            joint_pos = data[0, i, 1]  # example for single joint
+            joint_id = data[0, i, 0]
+
+            if joint_id != mujoco.mj_name2id(
+                self.model, mujoco.mjtObj.mjOBJ_JOINT, joint_name
+            ):
                 pass
             else:
                 events = esim_single.proprioceptionCallback_forlearning(
-                    x=joint_pos,  time_stamp=time)
+                    x=joint_pos, time_stamp=time
+                )
                 all_events.append(events)
 
             if self.DEBUG:
                 if len(events):
-                    logging.info(
-                        f"Generated {len(events)} proprioception events.")
+                    logging.info(f"Generated {len(events)} proprioception events.")
 
             if self.show_proprioception:
                 events_array = np.array(events)
                 # TODO check why pos enc is similar for both neurons!
                 # TODO some events seem to pop up out of nowhere!
                 self.imgs[i] = make_proprioception_event_frame(
-                    self.imgs[i], time, events_array)
+                    self.imgs[i], time, events_array
+                )
                 cv2.imshow(joint_name, self.imgs[i])
                 cv2.waitKey(1)
 
         return all_events
-    
-    
-    

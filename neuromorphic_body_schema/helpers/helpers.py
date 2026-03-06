@@ -4,22 +4,38 @@ import numpy as np
 
 # set model path (relative to this module)
 _PACKAGE_DIR = Path(__file__).parent.parent
-MODEL_PATH = str(_PACKAGE_DIR / 'models' / 'icub_v2_full_body_contact_sensors.xml')
+MODEL_PATH = str(_PACKAGE_DIR / "models" / "icub_v2_full_body_contact_sensors.xml")
 TRIANGLE_INI_PATH = str(_PACKAGE_DIR.parent / "icub-main/app/skinGui/conf/skinGui")
 FIG_PATH = str(_PACKAGE_DIR / "figures")
 
 ### SKIN ###
-SKIN_PARTS = ["r_hand", "r_forearm", "r_upper_arm",
-              "torso",
-              "l_hand", "l_forearm", "l_upper_arm",
-              "r_upper_leg", "r_lower_leg",
-              "l_upper_leg", "l_lower_leg"]
+SKIN_PARTS = [
+    "r_hand",
+    "r_forearm",
+    "r_upper_arm",
+    "torso",
+    "l_hand",
+    "l_forearm",
+    "l_upper_arm",
+    "r_upper_leg",
+    "r_lower_leg",
+    "l_upper_leg",
+    "l_lower_leg",
+]
 
-TRIANGLE_FILES = ['right_hand_V2_2', 'right_forearm_V2', 'right_arm_V2_7',
-                  'torso',
-                  'left_hand_V2_2', 'left_forearm_V2', 'left_arm_V2_7',
-                  'right_leg_upper', 'right_leg_lower',
-                  'left_leg_upper', 'left_leg_lower']
+TRIANGLE_FILES = [
+    "right_hand_V2_2",
+    "right_forearm_V2",
+    "right_arm_V2_7",
+    "torso",
+    "left_hand_V2_2",
+    "left_forearm_V2",
+    "left_arm_V2_7",
+    "right_leg_upper",
+    "right_leg_lower",
+    "left_leg_upper",
+    "left_leg_lower",
+]
 
 KEY_MAPPING = {
     "right_leg_upper": "r_upper_leg_taxel",
@@ -27,14 +43,26 @@ KEY_MAPPING = {
     "right_leg_lower": "r_lower_leg_taxel",
     "left_leg_lower": "l_lower_leg_taxel",
     "r_hand": [
-        "r_palm_taxel", "r_hand_thumb_taxel", "r_hand_index_taxel", "r_hand_middle_taxel", "r_hand_ring_taxel", "r_hand_pinky_taxel"],
+        "r_palm_taxel",
+        "r_hand_thumb_taxel",
+        "r_hand_index_taxel",
+        "r_hand_middle_taxel",
+        "r_hand_ring_taxel",
+        "r_hand_pinky_taxel",
+    ],
     "torso": "torso_taxel",
     "right_forearm_V2": "r_forearm_taxel",
     "left_forearm_V2": "l_forearm_taxel",
     "right_arm_V2_7": "r_upper_arm_taxel",
     "left_arm_V2_7": "l_upper_arm_taxel",
     "l_hand": [
-        "l_palm_taxel", "l_hand_thumb_taxel", "l_hand_index_taxel", "l_hand_middle_taxel", "l_hand_ring_taxel", "l_hand_pinky_taxel"],
+        "l_palm_taxel",
+        "l_hand_thumb_taxel",
+        "l_hand_index_taxel",
+        "l_hand_middle_taxel",
+        "l_hand_ring_taxel",
+        "l_hand_pinky_taxel",
+    ],
 }
 
 
@@ -81,7 +109,7 @@ def init_POV(viewer):
     """
     Initializes the point of view (POV) for the MuJoCo viewer.
 
-    This function sets the camera's azimuth, distance, elevation, and look-at point to predefined values 
+    This function sets the camera's azimuth, distance, elevation, and look-at point to predefined values
     for a consistent and clear view of the simulation.
 
     Args:
