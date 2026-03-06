@@ -80,9 +80,6 @@ VISUALIZE_ED_CAMERA_FEED = True
 VISUALIZE_SKIN = False
 VISUALIZE_PROPRIOCEPTION_FEED = False
 
-# Event-driven pipeline flags (default: True for event-driven processing)
-USE_EVENT_DRIVEN_VISION = True  # Set to False for traditional frame-based vision
-
 
 if __name__ == "__main__":
     #############################
@@ -198,7 +195,6 @@ if __name__ == "__main__":
             r_eye_camera_name,
             show_raw_feed=VISUALIZE_CAMERA_FEED,
             show_ed_feed=VISUALIZE_ED_CAMERA_FEED,
-            use_event_driven=USE_EVENT_DRIVEN_VISION,
             DEBUG=DEBUG,
         )
         l_eye_camera_object = ICubEyes(
@@ -208,7 +204,6 @@ if __name__ == "__main__":
             l_eye_camera_name,
             show_raw_feed=VISUALIZE_CAMERA_FEED,
             show_ed_feed=VISUALIZE_ED_CAMERA_FEED,
-            use_event_driven=USE_EVENT_DRIVEN_VISION,
             DEBUG=DEBUG,
         )
         proprioception_object = ICubProprioception(
