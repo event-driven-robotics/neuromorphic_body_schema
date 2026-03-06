@@ -87,7 +87,8 @@ class CameraEventSimulator:
         logging.info(
             f"Initialized event camera simulator with sensor size: {img.shape}"
         )
-        logging.info(f"and contrast thresholds: C+ = {self.Cp}, C- = {self.Cm}")
+        logging.info(
+            f"and contrast thresholds: C+ = {self.Cp}, C- = {self.Cm}")
 
         if self.use_log_image:
             logging.info(
@@ -167,7 +168,8 @@ class CameraEventSimulator:
             all_crossings = False
             while not all_crossings:
                 # Add noise to threshold
-                C_eff = C + (np.random.normal(0, sigma_C) if sigma_C > 0 else 0)
+                C_eff = C + (np.random.normal(0, sigma_C)
+                             if sigma_C > 0 else 0)
                 C_eff = max(0.01, C_eff)
                 curr_cross += pol * C_eff
 
@@ -177,7 +179,8 @@ class CameraEventSimulator:
                 ):
 
                     # Interpolate event time
-                    edt = int(abs((curr_cross - it0) * delta_t_ns / (it1 - it0)))
+                    edt = int(abs((curr_cross - it0) *
+                              delta_t_ns / (it1 - it0)))
                     t_evt = self.current_time + edt
 
                     # Refractory check
@@ -208,26 +211,26 @@ class CameraEventSimulator:
 
 def make_camera_event_frame(events, width=320, height=240):
     """
-    Generates a visual representation of event-based camera data as a 2D image.
+    Generates a visual representation of event-based camera data as a color image.
 
     Args:
         events (np.array): A numpy array of shape (N, 4), where each row represents an event with:
                            - x (int): X-coordinate of the event.
                            - y (int): Y-coordinate of the event.
                            - t (int): Timestamp of the event (not used in visualization).
-                           - polarity (bool): Polarity of the event (not used in visualization).
+                           - polarity (bool): Polarity of the event (True for positive, False for negative).
         width (int): Width of the output image. Default is 320.
         height (int): Height of the output image. Default is 240.
 
     Returns:
-        np.array: A 2D numpy array of shape (height, width) representing the event frame,
-                  where pixel values are set to 255 for event locations and 0 elsewhere.
+        np.array: A color image of shape (height, width, 3) representing the event frame,
+                  where positive events are shown in red, negative events in blue, and other pixels are black.
     """
 
     img = np.zeros((height, width, 3), dtype=np.uint8)
     if len(events):
         coords = events[:, :2].astype(int)
-        # seperate positive and negative events
+        # separate positive and negative events
         pos_events = events[events[:, 3] == 1]
         neg_events = events[events[:, 3] == 0]
         if len(pos_events):
@@ -299,7 +302,8 @@ class ICubEyes:
         pixels = self.renderer.render()
         pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)  # convert BGR to RGB
 
-        self.esim = CameraEventSimulator(cv2.cvtColor(pixels, cv2.COLOR_RGB2GRAY), time)
+        self.esim = CameraEventSimulator(
+            cv2.cvtColor(pixels, cv2.COLOR_RGB2GRAY), time)
         if show_ed_feed:
             cv2.namedWindow(self.events_window_name)
 
@@ -334,8 +338,9 @@ class ICubEyes:
 
         self.renderer.update_scene(self.data, camera=self.camera_name)
         pixels = self.renderer.render()
-        pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)  # convert BRG to RGB
-        events = self.esim.imageCallback(cv2.cvtColor(pixels, cv2.COLOR_RGB2GRAY), time)
+        pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)  # convert BGR to RGB
+        events = self.esim.imageCallback(
+            cv2.cvtColor(pixels, cv2.COLOR_RGB2GRAY), time)
 
         if self.DEBUG:
             if len(events):
@@ -344,7 +349,8 @@ class ICubEyes:
         if self.show_raw_feed:
             cv2.imshow(self.camera_feed_window_name, pixels)
         if self.show_ed_feed:
-            cv2.imshow(self.events_window_name, make_camera_event_frame(events))
+            cv2.imshow(self.events_window_name,
+                       make_camera_event_frame(events))
         if self.show_ed_feed or self.show_raw_feed:
             cv2.waitKey(1)
         return events
