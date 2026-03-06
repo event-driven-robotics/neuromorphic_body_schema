@@ -20,7 +20,9 @@ import logging
 import mujoco
 
 
-def get_joints(data, model, joint: dict, end_effector: str = "l_wrist_1"):
+def get_joints(
+    data: mujoco.MjData, model: mujoco.MjModel, joint: dict, end_effector: str
+) -> dict:
     """
     Retrieves the current positions of specified joints and the pose of the end-effector.
 
@@ -28,7 +30,7 @@ def get_joints(data, model, joint: dict, end_effector: str = "l_wrist_1"):
         data (mujoco.MjData): MuJoCo data object containing joint states.
         model (mujoco.MjModel): MuJoCo model object.
         joint (dict): Dictionary containing the controlled joint names as keys.
-        end_effector (str): Name of the end-effector body. Default is "l_wrist_1".
+        end_effector (str): Name of the end-effector body.
 
     Returns:
         dict: A dictionary containing:
@@ -44,7 +46,9 @@ def get_joints(data, model, joint: dict, end_effector: str = "l_wrist_1"):
     return joint_poses
 
 
-def check_joints(data, joint: dict, angle_tolerance: float = 0.1) -> bool:
+def check_joints(
+    data: mujoco.MjData, joint: dict, angle_tolerance: float = 0.1
+) -> bool:
     """
     Checks if all specified joints have reached their target positions within a given tolerance.
 
@@ -64,7 +68,7 @@ def check_joints(data, joint: dict, angle_tolerance: float = 0.1) -> bool:
     return all(abs(err) < angle_tolerance for err in errors)
 
 
-def update_joint_positions(data, joint_positions):
+def update_joint_positions(data: mujoco.MjData, joint_positions: dict) -> None:
     """
     Updates the joint positions in the MuJoCo simulation by setting control targets for specified actuators.
 
