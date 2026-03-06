@@ -32,17 +32,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install pytest pytest-cov black ruff
+        pip install pytest pytest-cov pytest-timeout ruff
         pip install -e .
     
     - name: Lint with ruff
       run: |
         ruff check neuromorphic_body_schema tests --select=E9,F63,F7,F82 --respect-gitignore
-      continue-on-error: true
-    
-    - name: Format check with black
-      run: |
-        black --check neuromorphic_body_schema tests
       continue-on-error: true
     
     - name: Run tests
