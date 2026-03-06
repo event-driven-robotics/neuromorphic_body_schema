@@ -21,6 +21,7 @@ oriented according to the robot's body parts. The final output is a modified MuJ
 """
 
 import os
+from typing import Sequence, cast
 
 import numpy as np
 
@@ -69,7 +70,7 @@ mujoco_model_out = (
 )
 
 
-def rebase_coordinate_system(taxel_pos: list) -> list:
+def rebase_coordinate_system(taxel_pos: list[tuple[np.ndarray, np.ndarray, int]]) -> list[tuple[np.ndarray, np.ndarray, int]]:
     """
     Rebases the coordinate system of the taxels to the center of the taxel array and rotates them using PCA.
 
@@ -77,7 +78,7 @@ def rebase_coordinate_system(taxel_pos: list) -> list:
     to find the axes with the largest variance and rotates the coordinate system accordingly.
 
     Args:
-        taxel_pos (list): A list of lists where each element contains:
+        taxel_pos (list): A list of tuples where each tuple contains:
             - [0]: np.ndarray - 3D position [x, y, z] of the taxel
             - [1]: np.ndarray - 3D normal vector of the taxel
             - [2]: int - Index of the taxel
@@ -112,7 +113,7 @@ def rebase_coordinate_system(taxel_pos: list) -> list:
 
 
 def rotate_position(
-    pos: np.ndarray, offsets: list, angle_degrees: list
+    pos: np.ndarray, offsets: Sequence[float], angle_degrees: Sequence[float]
 ) -> np.ndarray:
     """
     Rotates a position vector around the x, y, and z axes sequentially by specified angles.
@@ -122,8 +123,8 @@ def rotate_position(
 
     Args:
         pos (np.ndarray): The 3D position vector to rotate [x, y, z].
-        offsets (list): Translation offsets [x_offset, y_offset, z_offset] applied before rotation.
-        angle_degrees (list): Rotation angles in degrees [angle_x, angle_y, angle_z] for each axis.
+        offsets (Sequence[float]): Translation offsets [x_offset, y_offset, z_offset] applied before rotation.
+        angle_degrees (Sequence[float]): Rotation angles in degrees [angle_x, angle_y, angle_z] for each axis.
 
     Returns:
         np.ndarray: The rotated and translated 3D position vector, rounded to 12 decimal places.
@@ -197,7 +198,7 @@ def read_calibration_data(file_path: str) -> np.ndarray:
     return np.array(calibration)
 
 
-def validate_taxel_data(calibration: np.ndarray) -> list:
+def validate_taxel_data(calibration: np.ndarray) -> list[tuple[np.ndarray, np.ndarray, int]]:
     """
     Validates and extracts taxel data from the calibration array.
 
@@ -225,7 +226,7 @@ def validate_taxel_data(calibration: np.ndarray) -> list:
     return taxels
 
 
-def read_triangle_data(file_path: str) -> tuple:
+def read_triangle_data(file_path: str) -> tuple[str, list[tuple[np.ndarray, int]]]:
     """
     Reads triangle configuration data from a skinGui configuration file.
 
@@ -553,13 +554,12 @@ def include_skin_to_mujoco_model(
                                 taxel_ids = []
                         idx = 0
                         # line_counter -= 1
-                        for taxel in finger_taxels:
-                            pos = taxel
+                        for finger_pos in finger_taxels:
                             taxel_ids.append(idx)
                             # add the number of whitespace to the beginning of the line
                             lines.insert(
                                 line_counter,
-                                f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.0"/>\n',
+                                f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" pos="{finger_pos[0]} {finger_pos[1]} {finger_pos[2]}" rgba="0 1 0 0.0"/>\n',
                             )
                             line_counter += 1
                             idx += 1
@@ -585,7 +585,7 @@ def include_skin_to_mujoco_model(
                                 taxels_to_add)
                         for taxel in taxels_to_add:
                             # line_counter -= 1  # we want to add the taxels before the next body
-                            pos, _, idx = taxel
+                            pos, _, idx = cast(tuple[np.ndarray, np.ndarray, int], taxel)
                             taxel_ids.append(idx)
                             # add the number of whitespace to the beginning of the line
                             if part == "r_upper_arm":
@@ -728,13 +728,13 @@ def include_skin_to_mujoco_model(
         #     <touch name="name_to_display" site="name_of_taxel" />
         # </sensor>
         if "<contact>" in lines[line_counter]:
-            for part_to_add, taxels_to_add in zip(parts_to_add, taxel_ids_to_add):
+            for part_to_add, taxel_id_list in zip(parts_to_add, taxel_ids_to_add):
                 lines.insert(line_counter, "\n")
                 line_counter += 1
                 lines.insert(
                     line_counter, f'{" "*identation}<!--{part_to_add}-->\n')
                 line_counter += 1
-                for id in taxels_to_add:
+                for id in taxel_id_list:
                     lines.insert(line_counter, f'{" "*identation}<sensor>\n')
                     line_counter += 1
                     lines.insert(
@@ -760,8 +760,8 @@ def include_skin_to_mujoco_model(
     # write report to txt file
     with open(f"./report_including_taxels.txt", "w") as file:
         file.write(f"Part name: Nb of taxels\n")
-        for part_to_add, taxels_to_add in zip(parts_to_add, taxel_ids_to_add):
-            file.write(f"{part_to_add}: {len(taxels_to_add)}\n")
+        for part_to_add, taxel_id_list in zip(parts_to_add, taxel_ids_to_add):
+            file.write(f"{part_to_add}: {len(taxel_id_list)}\n")
 
 
 if __name__ == "__main__":
