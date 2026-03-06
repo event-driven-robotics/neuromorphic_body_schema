@@ -27,8 +27,18 @@ import logging
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-from helpers.draw_pads import fingertip3L, fingertip3R, palmL, palmR, triangle_10pad
-from helpers.helpers import KEY_MAPPING, TRIANGLE_FILES, TRIANGLE_INI_PATH
+from neuromorphic_body_schema.helpers.draw_pads import (
+    fingertip3L,
+    fingertip3R,
+    palmL,
+    palmR,
+    triangle_10pad,
+)
+from neuromorphic_body_schema.helpers.helpers import (
+    KEY_MAPPING,
+    TRIANGLE_FILES,
+    TRIANGLE_INI_PATH,
+)
 
 # set background color to gray
 background_color = (50, 50, 50)
@@ -89,8 +99,10 @@ class SkinEventSimulator:
         self.sigma_Cm = sigma_Cm
         self.log_eps = log_eps
         self.refractory_period_ns = refractory_period_ns
-        logging.info(f"Initialized event skin simulator with sensor size: {data.shape}")
-        logging.info(f"and contrast thresholds: C+ = {self.Cp}, C- = {self.Cm}")
+        logging.info(
+            f"Initialized event skin simulator with sensor size: {data.shape}")
+        logging.info(
+            f"and contrast thresholds: C+ = {self.Cp}, C- = {self.Cm}")
 
         self.last_data = data.copy()
         self.ref_values = data.copy()
@@ -137,7 +149,8 @@ class SkinEventSimulator:
             curr_cross = ref
             while True:
                 # Add noise to threshold
-                C_eff = C + (np.random.normal(0, sigma_C) if sigma_C > 0 else 0)
+                C_eff = C + (np.random.normal(0, sigma_C)
+                             if sigma_C > 0 else 0)
                 C_eff = max(0.01, C_eff)
                 curr_cross += pol * C_eff
 
@@ -147,7 +160,8 @@ class SkinEventSimulator:
                 ):
 
                     # Interpolate event time
-                    edt = int(abs((curr_cross - it0) * delta_t_ns / (it1 - it0)))
+                    edt = int(abs((curr_cross - it0) *
+                              delta_t_ns / (it1 - it0)))
                     t_evt = self.current_time + edt
 
                     # Refractory check
@@ -190,9 +204,9 @@ def visualize_skin_patches(path_to_triangles, triangles_ini, DEBUG=False):
 
     Returns:
         tuple: A tuple containing:
-            - img (np.array): A 2D or 3D numpy array representing the visualized skin patch layout.
-            - dX (list): A list of x-coordinates for taxel positions.
-            - dY (list): A list of y-coordinates for taxel positions.
+            - img (np.array): A 3D numpy array of shape (height, width, 3) representing the visualized skin patch layout.
+            - dX (list): A list of x-coordinates (in pixels) for taxel positions.
+            - dY (list): A list of y-coordinates (in pixels) for taxel positions.
     """
 
     config_types, triangles = read_triangle_data(
@@ -479,15 +493,22 @@ def visualize_skin_patches(path_to_triangles, triangles_ini, DEBUG=False):
     return (img, dX, dY)
 
 
-def read_triangle_data(file_path: str) -> np.array:
+def read_triangle_data(file_path: str) -> tuple:
     """
     Reads triangle data from a given file path.
+
+    This function parses a triangle configuration file and extracts the configuration type
+    and triangle parameters (position, orientation, mirror flag, and patch ID).
 
     Args:
         file_path (str): The path to the triangle data file.
 
     Returns:
-        np.array: A numpy array containing the triangle data. First two entries are x and y followed by orientation and triangle index.
+        tuple: A tuple containing:
+            - config_type (list): A list of configuration type strings (e.g., "triangle_10pad", "palmR").
+            - triangles (list): A list of tuples, where each tuple contains:
+                - np.array: Triangle parameters [x, y, orientation, mirror_flag].
+                - int: Patch ID (triangle index).
     """
     triangles = []
     config_type = []
@@ -519,14 +540,15 @@ def make_skin_event_frame(img, events, locations) -> np.array:
     Updates a visual representation of skin events on a tactile sensor image.
 
     This function overlays events on a given image, marking active taxels with colors based on event polarity.
+    Taxels with positive events are shown in red, negative events in blue, and inactive taxels in gray.
 
     Args:
-        img (np.array): A 2D or 3D numpy array representing the current tactile sensor image.
+        img (np.array): A 3D numpy array of shape (height, width, 3) representing the current tactile sensor image.
         events (np.array): A numpy array of shape (N, 3), where each row represents an event with:
                            - taxel_ID (int): Index of the taxel that generated the event.
-                           - t (int): Timestamp of the event (not used in visualization).
-                           - pol (bool): Polarity of the event (True for positive, False for negative).
-        locations (tuple): A tuple of two lists or arrays representing the (x, y) coordinates of each taxel.
+                           - timestamp (int): Timestamp of the event (not used in visualization).
+                           - polarity (bool): Polarity of the event (True for positive, False for negative).
+        locations (tuple): A tuple of two lists (x_coords, y_coords) representing the pixel coordinates of each taxel.
 
     Returns:
         np.array: An updated numpy array representing the tactile sensor image with events overlaid.
@@ -541,7 +563,8 @@ def make_skin_event_frame(img, events, locations) -> np.array:
                 # event happened at this location
                 if (
                     events[
-                        np.where(events[:, 0] == active_taxel[active_taxel == i])[0][0]
+                        np.where(events[:, 0] ==
+                                 active_taxel[active_taxel == i])[0][0]
                     ][-1]
                     > 0
                 ):
@@ -553,7 +576,8 @@ def make_skin_event_frame(img, events, locations) -> np.array:
                     cv2.circle(img, (int(loc[0]), int(loc[1])), 4, blue, -1)
         else:
             # no event happened, return to blank
-            cv2.circle(img, (int(loc[0]), int(loc[1])), 4, background_color, -1)
+            cv2.circle(img, (int(loc[0]), int(loc[1])),
+                       4, background_color, -1)
     return img
 
 
@@ -663,7 +687,8 @@ class ICubSkin:
             all_events.append(events)
             if self.DEBUG:
                 if len(events):
-                    logging.info(f"{len(events)} events detected at {triangle_ini}.")
+                    logging.info(
+                        f"{len(events)} events detected at {triangle_ini}.")
 
             if self.show_skin:
                 cv2.imshow(
