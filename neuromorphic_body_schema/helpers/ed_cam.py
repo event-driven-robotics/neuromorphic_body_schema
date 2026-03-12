@@ -7,8 +7,8 @@ Department: Event-Driven Perception for Robotics (EDPR)
 Date: 29.04.2025
 
 Description:
-This module provides functionality for simulating an event-based camera and integrating it with the iCub robot's
-visual system. It includes classes and functions for generating events based on pixel intensity changes,
+This module provides functionality for simulating an event-based camera and integrating it with the iCub robot's 
+visual system. It includes classes and functions for generating events based on pixel intensity changes, 
 visualizing event data, and managing the camera feed.
 
 Classes:
@@ -20,6 +20,7 @@ Functions:
 
 """
 
+
 import logging
 
 import cv2
@@ -27,7 +28,7 @@ import mujoco
 import numpy as np
 
 # set the color for the events
-red = (0, 0, 255)  # positive events
+red = (0, 0, 255)   # positive events
 blue = (255, 0, 0)  # negative events
 
 
@@ -50,18 +51,7 @@ class CameraEventSimulator:
         size (tuple): Size of the input image (height, width).
     """
 
-    def __init__(
-        self,
-        img,
-        time,
-        Cp=0.5,
-        Cm=0.5,
-        sigma_Cp=0.01,
-        sigma_Cm=0.01,
-        log_eps=1e-6,
-        refractory_period_ns=100,
-        use_log_image=True,
-    ):
+    def __init__(self, img, time, Cp=0.5, Cm=0.5, sigma_Cp=0.01, sigma_Cm=0.01, log_eps=1e-6, refractory_period_ns=100, use_log_image=True):
         """
         Initializes the CameraEventSimulator.
 
@@ -85,16 +75,14 @@ class CameraEventSimulator:
         self.use_log_image = use_log_image
         self.refractory_period_ns = refractory_period_ns
         logging.info(
-            f"Initialized event camera simulator with sensor size: {img.shape}"
-        )
+            f"Initialized event camera simulator with sensor size: {img.shape}")
         logging.info(
             f"and contrast thresholds: C+ = {self.Cp}, C- = {self.Cm}")
 
         if self.use_log_image:
             logging.info(
-                f"Converting the image to log image with eps = {self.log_eps}."
-            )
-            img = np.log(self.log_eps + img)
+                f"Converting the image to log image with eps = {self.log_eps}.")
+            img = cv2.log(self.log_eps + img)
         self.last_img = img.copy()
         self.ref_values = img.copy()
         self.last_event_timestamp = np.zeros(img.shape, dtype=np.ulonglong)
@@ -115,7 +103,7 @@ class CameraEventSimulator:
         assert time >= 0
 
         if self.use_log_image:
-            img = np.log(self.log_eps + img)
+            img = cv2.log(self.log_eps + img)
 
         tolerance = 1e-6
         delta_t_ns = time - self.current_time
@@ -174,9 +162,8 @@ class CameraEventSimulator:
                 curr_cross += pol * C_eff
 
                 # Check if crossing occurred in this interval
-                if (pol > 0 and curr_cross > it0 and curr_cross <= it1) or (
-                    pol < 0 and curr_cross < it0 and curr_cross >= it1
-                ):
+                if (pol > 0 and curr_cross > it0 and curr_cross <= it1) or \
+                   (pol < 0 and curr_cross < it0 and curr_cross >= it1):
 
                     # Interpolate event time
                     edt = int(abs((curr_cross - it0) *
@@ -211,26 +198,26 @@ class CameraEventSimulator:
 
 def make_camera_event_frame(events, width=320, height=240):
     """
-    Generates a visual representation of event-based camera data as a color image.
+    Generates a visual representation of event-based camera data as a 2D image.
 
     Args:
         events (np.array): A numpy array of shape (N, 4), where each row represents an event with:
                            - x (int): X-coordinate of the event.
                            - y (int): Y-coordinate of the event.
                            - t (int): Timestamp of the event (not used in visualization).
-                           - polarity (bool): Polarity of the event (True for positive, False for negative).
+                           - polarity (bool): Polarity of the event (not used in visualization).
         width (int): Width of the output image. Default is 320.
         height (int): Height of the output image. Default is 240.
 
     Returns:
-        np.array: A color image of shape (height, width, 3) representing the event frame,
-                  where positive events are shown in red, negative events in blue, and other pixels are black.
+        np.array: A 2D numpy array of shape (height, width) representing the event frame, 
+                  where pixel values are set to 255 for event locations and 0 elsewhere.
     """
 
     img = np.zeros((height, width, 3), dtype=np.uint8)
     if len(events):
         coords = events[:, :2].astype(int)
-        # separate positive and negative events
+        # seperate positive and negative events
         pos_events = events[events[:, 3] == 1]
         neg_events = events[events[:, 3] == 0]
         if len(pos_events):
@@ -259,16 +246,7 @@ class ICubEyes:
         esim (CameraEventSimulator): Event-based camera simulator.
     """
 
-    def __init__(
-        self,
-        time,
-        model,
-        data,
-        camera_name,
-        show_raw_feed=True,
-        show_ed_feed=True,
-        DEBUG=False,
-    ):
+    def __init__(self, time, model, data, camera_name, camera_mode="frame_based", show_raw_feed=True, show_ed_feed=False, DEBUG=False):
         """
         Initializes the ICubEyes class with a renderer and an event-based camera simulator.
 
@@ -280,6 +258,7 @@ class ICubEyes:
             show_raw_feed (bool): Whether to display the raw camera feed. Default is True.
             show_ed_feed (bool): Whether to display the event-based camera feed. Default is True.
             DEBUG (bool): Whether to enable debug logging. Default is False.
+            camera_mode (str): Camera mode, either "frame_based" or "event_driven". Default is "frame_based".
         """
 
         self.camera_name = camera_name
@@ -288,38 +267,41 @@ class ICubEyes:
         self.show_raw_feed = show_raw_feed
         self.show_ed_feed = show_ed_feed
         self.DEBUG = DEBUG
+        self.camera_mode = camera_mode  # TODO check if we need this in self
 
         self.renderer = mujoco.Renderer(model)
 
-        camera_name_split = camera_name.split("_")
-        camera_name_spec = (
-            f"{camera_name_split[0].capitalize()} {camera_name_split[1].capitalize()}"
-        )
-        self.camera_feed_window_name = f"{camera_name_spec} Camera Feed"
-        self.events_window_name = f"{camera_name_spec} Event Feed"
+        camera_name_split = camera_name.split('_')
+        camera_name_spec = f"{camera_name_split[0].capitalize()} {camera_name_split[1].capitalize()}"
+        self.camera_feed_window_name = f'{camera_name_spec} Camera Feed'
+        self.events_window_name = f'{camera_name_spec} Event Feed'
 
         self.renderer.update_scene(self.data, camera=self.camera_name)
         pixels = self.renderer.render()
         pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)  # convert BGR to RGB
 
-        self.esim = CameraEventSimulator(
-            cv2.cvtColor(pixels, cv2.COLOR_RGB2GRAY), time)
-        if show_ed_feed:
-            cv2.namedWindow(self.events_window_name)
+        if show_ed_feed and self.camera_mode == "frame_based":
+            self.camera_mode = "event_driven"
+            logging.warning(
+                "Event camera disabled. Enabling it to show event feed.")
 
-            def on_thresh_slider(val):
-                val /= 100
-                self.esim.Cm = val
-                self.esim.Cp = val
+        if self.camera_mode == "event_driven":
+            self.esim = CameraEventSimulator(cv2.cvtColor(
+                pixels, cv2.COLOR_RGB2GRAY), time)
+            if show_ed_feed:
+                cv2.namedWindow(self.events_window_name)
 
-            cv2.createTrackbar(
-                "Threshold",
-                self.events_window_name,
-                int(self.esim.Cm * 100),
-                100,
-                on_thresh_slider,
-            )
-            cv2.setTrackbarMin("Threshold", self.events_window_name, 1)
+                def on_thresh_slider(val):
+                    val /= 100
+                    self.esim.Cm = val
+                    self.esim.Cp = val
+
+                cv2.createTrackbar("Threshold", self.events_window_name, int(
+                    self.esim.Cm * 100), 100, on_thresh_slider)
+                cv2.setTrackbarMin("Threshold", self.events_window_name, 1)
+        else:
+            self.esim = None
+            self.events = None
 
     def update_camera(self, time):
         """
@@ -338,19 +320,19 @@ class ICubEyes:
 
         self.renderer.update_scene(self.data, camera=self.camera_name)
         pixels = self.renderer.render()
-        pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)  # convert BGR to RGB
-        events = self.esim.imageCallback(
-            cv2.cvtColor(pixels, cv2.COLOR_RGB2GRAY), time)
-
-        if self.DEBUG:
-            if len(events):
-                logging.info(f"Generated {len(events)} camera events.")
-
+        pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)  # convert BRG to RGB
         if self.show_raw_feed:
             cv2.imshow(self.camera_feed_window_name, pixels)
-        if self.show_ed_feed:
-            cv2.imshow(self.events_window_name,
-                       make_camera_event_frame(events))
+        if self.esim is not None:
+            self.events = self.esim.imageCallback(cv2.cvtColor(
+                pixels, cv2.COLOR_RGB2GRAY), time)
+            if self.show_ed_feed:
+                cv2.imshow(self.events_window_name,
+                           make_camera_event_frame(self.events))
+            if self.DEBUG:
+                if len(self.events):
+                    logging.info(
+                        f"Generated {len(self.events)} camera events.")
+
         if self.show_ed_feed or self.show_raw_feed:
             cv2.waitKey(1)
-        return events
