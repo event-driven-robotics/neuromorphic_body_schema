@@ -233,20 +233,22 @@ class ICubEyes:
     """
     Represents the iCub robot's eyes, integrating a renderer and an event-based camera simulator.
 
+    Supports one or both eyes via the ``eye`` parameter.
+
     Attributes:
-        camera_name (str): Name of the camera to use in the MuJoCo model.
         model (mujoco.MjModel): The MuJoCo model of the robot.
         data (mujoco.MjData): The MuJoCo data object for simulation.
         show_raw_feed (bool): Whether to display the raw camera feed.
         show_ed_feed (bool): Whether to display the event-based camera feed.
         DEBUG (bool): Whether to enable debug logging.
-        renderer (mujoco.Renderer): Renderer for the MuJoCo simulation.
-        camera_feed_window_name (str): Name of the window displaying the raw camera feed.
-        events_window_name (str): Name of the window displaying the event-based camera feed.
-        esim (CameraEventSimulator): Event-based camera simulator.
     """
 
-    def __init__(self, time, model, data, camera_name, camera_mode="frame_based", show_raw_feed=True, show_ed_feed=False, DEBUG=False):
+    _EYE_CAMERA_NAMES = {
+        "left": "l_eye_camera",
+        "right": "r_eye_camera",
+    }
+
+    def __init__(self, time, model, data, eye="all", camera_mode="frame_based", show_raw_feed=True, show_ed_feed=False, DEBUG=False):
         """
         Initializes the ICubEyes class with a renderer and an event-based camera simulator.
 
@@ -254,85 +256,101 @@ class ICubEyes:
             time (int): Initial simulation time in nanoseconds.
             model (mujoco.MjModel): The MuJoCo model of the robot.
             data (mujoco.MjData): The MuJoCo data object for simulation.
-            camera_name (str): Name of the camera to use in the MuJoCo model.
-            show_raw_feed (bool): Whether to display the raw camera feed. Default is True.
-            show_ed_feed (bool): Whether to display the event-based camera feed. Default is True.
-            DEBUG (bool): Whether to enable debug logging. Default is False.
+            eye (str): Which eye(s) to activate: "all", "left", or "right". Default is "all".
             camera_mode (str): Camera mode, either "frame_based" or "event_driven". Default is "frame_based".
+            show_raw_feed (bool): Whether to display the raw camera feed. Default is True.
+            show_ed_feed (bool): Whether to display the event-based camera feed. Default is False.
+            DEBUG (bool): Whether to enable debug logging. Default is False.
         """
 
-        self.camera_name = camera_name
+        if eye == "all":
+            eye_keys = ["left", "right"]
+        elif eye in ("left", "right"):
+            eye_keys = [eye]
+        else:
+            raise ValueError(f"eye must be 'all', 'left', or 'right', got '{eye}'")
+
         self.model = model
         self.data = data
         self.show_raw_feed = show_raw_feed
         self.show_ed_feed = show_ed_feed
         self.DEBUG = DEBUG
-        self.camera_mode = camera_mode  # TODO check if we need this in self
-
-        self.renderer = mujoco.Renderer(model)
-
-        camera_name_split = camera_name.split('_')
-        camera_name_spec = f"{camera_name_split[0].capitalize()} {camera_name_split[1].capitalize()}"
-        self.camera_feed_window_name = f'{camera_name_spec} Camera Feed'
-        self.events_window_name = f'{camera_name_spec} Event Feed'
-
-        self.renderer.update_scene(self.data, camera=self.camera_name)
-        pixels = self.renderer.render()
-        pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)  # convert BGR to RGB
+        self.camera_mode = camera_mode
 
         if show_ed_feed and self.camera_mode == "frame_based":
             self.camera_mode = "event_driven"
             logging.warning(
                 "Event camera disabled. Enabling it to show event feed.")
 
-        if self.camera_mode == "event_driven":
-            self.esim = CameraEventSimulator(cv2.cvtColor(
-                pixels, cv2.COLOR_RGB2GRAY), time)
-            if show_ed_feed:
-                cv2.namedWindow(self.events_window_name)
+        self._eyes = []
+        for eye_key in eye_keys:
+            camera_name = self._EYE_CAMERA_NAMES[eye_key]
+            renderer = mujoco.Renderer(model)
+            renderer.update_scene(self.data, camera=camera_name)
+            pixels = renderer.render()
+            pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)
 
-                def on_thresh_slider(val):
-                    val /= 100
-                    self.esim.Cm = val
-                    self.esim.Cp = val
+            label = eye_key.capitalize()
+            camera_feed_window_name = f'{label} Eye Camera Feed'
+            events_window_name = f'{label} Eye Event Feed'
 
-                cv2.createTrackbar("Threshold", self.events_window_name, int(
-                    self.esim.Cm * 100), 100, on_thresh_slider)
-                cv2.setTrackbarMin("Threshold", self.events_window_name, 1)
-        else:
-            self.esim = None
-            self.events = None
+            if self.camera_mode == "event_driven":
+                esim = CameraEventSimulator(cv2.cvtColor(pixels, cv2.COLOR_RGB2GRAY), time)
+                if show_ed_feed:
+                    cv2.namedWindow(events_window_name)
+
+                    def on_thresh_slider(val, _esim=esim):
+                        val /= 100
+                        _esim.Cm = val
+                        _esim.Cp = val
+
+                    cv2.createTrackbar("Threshold", events_window_name, int(
+                        esim.Cm * 100), 100, on_thresh_slider)
+                    cv2.setTrackbarMin("Threshold", events_window_name, 1)
+            else:
+                esim = None
+
+            self._eyes.append({
+                "key": eye_key,
+                "camera_name": camera_name,
+                "renderer": renderer,
+                "esim": esim,
+                "camera_feed_window_name": camera_feed_window_name,
+                "events_window_name": events_window_name,
+                "events": None,
+            })
 
     def update_camera(self, time):
         """
-        Updates the camera feed and processes events using the event-based camera simulator.
+        Updates all active camera feeds and processes events.
 
         Args:
             time (int): Current simulation time in nanoseconds.
 
         Returns:
-            np.array: A list of events generated by the event-based camera simulator.
-                      Each event is a tuple (x, y, t, polarity):
-                      - x, y: Pixel coordinates.
-                      - t: Timestamp of the event.
-                      - polarity: True for positive events, False for negative events.
+            dict: A dict mapping each active eye key ("left" and/or "right") to its event array.
+                  Each event array has rows of (x, y, t, polarity).
         """
 
-        self.renderer.update_scene(self.data, camera=self.camera_name)
-        pixels = self.renderer.render()
-        pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)  # convert BRG to RGB
-        if self.show_raw_feed:
-            cv2.imshow(self.camera_feed_window_name, pixels)
-        if self.esim is not None:
-            self.events = self.esim.imageCallback(cv2.cvtColor(
-                pixels, cv2.COLOR_RGB2GRAY), time)
-            if self.show_ed_feed:
-                cv2.imshow(self.events_window_name,
-                           make_camera_event_frame(self.events))
-            if self.DEBUG:
-                if len(self.events):
+        results = {}
+        for eye in self._eyes:
+            eye["renderer"].update_scene(self.data, camera=eye["camera_name"])
+            pixels = eye["renderer"].render()
+            pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)
+            if self.show_raw_feed:
+                cv2.imshow(eye["camera_feed_window_name"], pixels)
+            if eye["esim"] is not None:
+                eye["events"] = eye["esim"].imageCallback(
+                    cv2.cvtColor(pixels, cv2.COLOR_RGB2GRAY), time)
+                if self.show_ed_feed:
+                    cv2.imshow(eye["events_window_name"],
+                               make_camera_event_frame(eye["events"]))
+                if self.DEBUG and len(eye["events"]):
                     logging.info(
-                        f"Generated {len(self.events)} camera events.")
+                        f"Generated {len(eye['events'])} camera events for {eye['key']} eye.")
+            results[eye["key"]] = eye["events"]
 
         if self.show_ed_feed or self.show_raw_feed:
             cv2.waitKey(1)
+
+        return results

@@ -75,7 +75,8 @@ mj_name2id = getattr(mujoco, "mj_name2id")
 mjtObj = getattr(mujoco, "mjtObj")
 mj_step = getattr(mujoco, "mj_step")
 
-CAMERA_MODE = "frame_based"  # "event_driven" or "frame_based"
+CAMERA_MODE = "event_driven"  # "event_driven" or "frame_based"
+CAM_TO_USE = "all"  # "left", "right", or "all"
 VISUALIZE_CAMERA_FEED = True
 # setting this to true also activates the event-based camera if not already activated, since we need it to show the feed
 if CAMERA_MODE == "event_driven":
@@ -99,9 +100,6 @@ if __name__ == "__main__":
     #############################
 
     viewer_closed_event = threading.Event()
-
-    r_eye_camera_name = "r_eye_camera"
-    l_eye_camera_name = "l_eye_camera"
 
     # Load the MuJoCo model and create a simulation
     model = MjModel.from_xml_path(MODEL_PATH)
@@ -200,10 +198,7 @@ if __name__ == "__main__":
         # skin_object = ICubSkin(
         #     sim_time, dynamic_grouped_sensors, show_skin=VISUALIZE_SKIN, DEBUG=DEBUG
         # )
-        r_eye_camera_object = ICubEyes(sim_time, model, data, r_eye_camera_name, camera_mode=CAMERA_MODE,
-                                       show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
-        l_eye_camera_object = ICubEyes(sim_time, model, data, l_eye_camera_name, camera_mode=CAMERA_MODE,
-                                       show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
+        eye_camera_object = ICubEyes(sim_time, model, data, eye=CAM_TO_USE, camera_mode=CAMERA_MODE, show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
         # proprioception_object = ICubProprioception(
         #     model,
         #     joint_dict_prop,
@@ -257,12 +252,9 @@ if __name__ == "__main__":
             #         print(joint, joint_position)
             # update_joint_positions(data, {joint: joint_position})
 
-            r_eye_cam_events = r_eye_camera_object.update_camera(
+            eye_cam_events = eye_camera_object.update_camera(
                 data.time * 1e9
-            )  # expects ns
-            l_eye_cam_events = l_eye_camera_object.update_camera(
-                data.time * 1e9
-            )  # expects ns
+            )  # expects ns; returns dict {"left": events, "right": events}
 
             # skin_events = skin_object.update_skin(
             #     data.time * 1e9)  # expects ns
