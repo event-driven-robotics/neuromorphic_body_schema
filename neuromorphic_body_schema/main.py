@@ -75,19 +75,19 @@ mj_name2id = getattr(mujoco, "mj_name2id")
 mjtObj = getattr(mujoco, "mjtObj")
 mj_step = getattr(mujoco, "mj_step")
 
-CAMERA_MODE = "event_driven"  # "event_driven" or "frame_based"
+CAMERA_MODE = "frame_based"  # "event_driven" or "frame_based"
 CAM_TO_USE = "all"  # "left", "right", or "all"
-VISUALIZE_CAMERA_FEED = True
+VISUALIZE_CAMERA_FEED = False
 # setting this to true also activates the event-based camera if not already activated, since we need it to show the feed
 if CAMERA_MODE == "event_driven":
     VISUALIZE_ED_CAMERA_FEED = True
 else:
     VISUALIZE_ED_CAMERA_FEED = False
 
-SKIN_MODE = "event_driven"  # "event_driven" or "frame_based"
+SKIN_MODE = "frame_based"  # "event_driven" or "frame_based"
 SKIN_PART = "all"  # see helpers SKIN_PARTS for the list of possible skin parts
 # ["r_hand", "r_forearm", "r_upper_arm", "torso", "l_hand", "l_forearm", "l_upper_arm", "r_upper_leg", "r_lower_leg", "l_upper_leg", "l_lower_leg"]
-VISUALIZE_SKIN_FEED = False
+VISUALIZE_SKIN_FEED = True
 VISUALIZE_ED_SKIN_FEED = False
 
 PROPRIOCEPTION_MODE = "event_driven"  # "event_driven" or "frame_based"
@@ -195,9 +195,9 @@ if __name__ == "__main__":
 
         sim_time = data.time
 
-        # skin_object = ICubSkin(
-        #     sim_time, dynamic_grouped_sensors, show_skin=VISUALIZE_SKIN, DEBUG=DEBUG
-        # )
+        skin_object = ICubSkin(
+            sim_time, dynamic_grouped_sensors, skin_mode=SKIN_MODE, show_raw_feed=VISUALIZE_SKIN_FEED, show_ed_feed=VISUALIZE_ED_SKIN_FEED, DEBUG=DEBUG
+        )
         eye_camera_object = ICubEyes(sim_time, model, data, eye=CAM_TO_USE, camera_mode=CAMERA_MODE, show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
         # proprioception_object = ICubProprioception(
         #     model,
@@ -256,8 +256,8 @@ if __name__ == "__main__":
                 data.time * 1e9
             )  # expects ns; returns dict {"left": events, "right": events}
 
-            # skin_events = skin_object.update_skin(
-            #     data.time * 1e9)  # expects ns
+            skin_events = skin_object.update_skin(
+                data.time * 1e9)  # expects ns
 
             # proprioception_events = proprioception_object.update_proprioception(
             #     time=data.time, data=data

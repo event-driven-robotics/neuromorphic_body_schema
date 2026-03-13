@@ -35,8 +35,12 @@ import numpy as np
 _PACKAGE_DIR = Path(__file__).parent.parent
 MODEL_PATH = str(_PACKAGE_DIR / "models" /
                  "icub_v2_full_body_contact_sensors.xml")
-TRIANGLE_INI_PATH = str(_PACKAGE_DIR.parent /
-                        "icub-main/app/skinGui/conf/skinGui")
+# Prefer the current folder name in this repository (skinGUI), but keep a
+# fallback for earlier naming variants.
+_triangle_ini_dir = _PACKAGE_DIR / "skinGUI"
+if not _triangle_ini_dir.exists():
+    _triangle_ini_dir = _PACKAGE_DIR / "skinGui"
+TRIANGLE_INI_PATH = str(_triangle_ini_dir)
 FIG_PATH = str(_PACKAGE_DIR / "figures")
 
 ### SKIN CONFIGURATION ###
@@ -55,15 +59,43 @@ SKIN_PARTS = [
     "l_lower_leg",
 ]
 
+# Mapping from triangle configuration basename → positions file basename.
+# Used to look up taxel2Repr for non-tactile channel filtering in the visualizer.
+POSITIONS_FILES = {
+    "right_arm":        "right_arm.txt",
+    "left_arm":         "left_arm.txt",
+    "torso":            "torso.txt",
+    "right_forearm_V2": "right_forearm_V2.txt",
+    "left_forearm_V2":  "left_forearm_V2.txt",
+    # skinGUI uses *_V2_2 while positions files are stored as *_V2_1.
+    "right_hand_V2_2":  "right_hand_V2_1.txt",
+    "left_hand_V2_2":   "left_hand_V2_1.txt",
+    "right_leg_upper":  "right_leg_upper.txt",
+    "left_leg_upper":   "left_leg_upper.txt",
+    "right_leg_lower":  "right_leg_lower.txt",
+    "left_leg_lower":   "left_leg_lower.txt",
+}
+
+# Deterministic remap from skinGUI triangle patch IDs to taxel2Repr module IDs.
+#
+# Arm skinGUI files currently draw one module ID that is not represented as a
+# tactile block in positions/taxel2Repr (7), while the tactile block 2 is not
+# drawn directly. We remap 7 -> 2 so visualization uses the same tactile
+# channels as the generated MuJoCo model and live sensor vectors.
+ARM_PATCH_ID_REMAP = {
+    "right_arm": {7: 2},
+    "left_arm": {7: 2},
+}
+
 # Triangle configuration file names corresponding to each skin part for visualization
 TRIANGLE_FILES = [
     "right_hand_V2_2",
     "right_forearm_V2",
-    "right_arm_V2_7",
+    "right_arm",
     "torso",
     "left_hand_V2_2",
     "left_forearm_V2",
-    "left_arm_V2_7",
+    "left_arm",
     "right_leg_upper",
     "right_leg_lower",
     "left_leg_upper",
@@ -84,20 +116,20 @@ KEY_MAPPING = {
         "r_hand_index_taxel",
         "r_hand_middle_taxel",
         "r_hand_ring_taxel",
-        "r_hand_pinky_taxel",
+        "r_hand_little_taxel",
     ],
     "torso": "torso_taxel",
     "right_forearm_V2": "r_forearm_taxel",
     "left_forearm_V2": "l_forearm_taxel",
-    "right_arm_V2_7": "r_upper_arm_taxel",
-    "left_arm_V2_7": "l_upper_arm_taxel",
+    "right_arm": "r_upper_arm_taxel",
+    "left_arm": "l_upper_arm_taxel",
     "l_hand": [
         "l_palm_taxel",
         "l_hand_thumb_taxel",
         "l_hand_index_taxel",
         "l_hand_middle_taxel",
         "l_hand_ring_taxel",
-        "l_hand_pinky_taxel",
+        "l_hand_little_taxel",
     ],
 }
 

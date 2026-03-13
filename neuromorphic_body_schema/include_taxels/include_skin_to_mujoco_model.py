@@ -5,27 +5,38 @@ Author: Simon F. Muller-Cleve
 Affiliation: Istituto Italiano di Tecnologia (IIT)
 Department: Event-Driven Perception for Robotics (EDPR)
 Date: 29.04.2025
+Updated: 13.03.2026
 
 Description:
-This script integrates skin sensors (taxels) into a MuJoCo model of the iCub robot. It reads taxel positions from
-configuration files, processes these positions, and inserts them into the MuJoCo XML model file. The main functionalities include:
+This script integrates iCub skin sensors (taxels) into a MuJoCo model by
+reading skin position files, filtering tactile channels, transforming taxel
+coordinates into body frames, and emitting MuJoCo sites and touch sensors.
 
-1. Reading and Validating Taxel Data: Functions to read calibration data from .ini files and validate the taxel data.
-2. Coordinate System Transformation: Functions to rebase and rotate the coordinate system of the taxels.
-3. Integrating Taxels into MuJoCo Model: The main function `include_skin_to_mujoco_model` reads the MuJoCo model file,
-   inserts the taxel positions, and defines them as touch sensors in the model.
+Current filtering policy:
+1. If taxel2Repr is available, channels with taxel2Repr >= 0 are tactile,
+    while -1/-2 are filtered out.
+2. Calibration rows with zero position and zero normal are always treated as
+    non-physical channels and filtered out.
+3. If taxel2Repr is missing, filtering falls back to calibration non-zero
+    checks only.
 
-The script is structured to handle different parts of the robot, ensuring that the taxels are correctly positioned and
-oriented according to the robot's body parts. The final output is a modified MuJoCo XML model file with the integrated skin sensors.
+This behavior is aligned with the visualization pipeline in helpers/ed_skin.py
+to keep model sensor counts and displayed tactile channels consistent.
 
+For more information about taxel placement and data structure please see https://mesh-iit.github.io/documentation/tactile_sensors/
+
+Reproducibility notes for the full skin/taxel alignment workflow are documented
+in ``docs/SKIN_TAXEL_ALIGNMENT_REPRODUCIBILITY.md``.
 """
 
 import os
+import re
 from typing import Sequence, cast
 
 import numpy as np
 
 # ini files from [...]/icub-main/app/skinGui/conf/positions/*.ini
+# triangle files from [...]/icub-main/app/skinGui/conf/skinGUI/*.ini
 skin_parts = [
     "left_arm",
     "left_forearm_V2",
@@ -64,8 +75,8 @@ MOJOCO_SKIN_PARTS = [
 ]
 
 MUJOCO_MODEL = "./neuromorphic_body_schema/models/icub_v2_full_body.xml"
-TAXEL_INI_PATH = "../icub-main/app/skinGui/conf/positions"
-mujoco_model_out = (
+TAXEL_INI_PATH = "./neuromorphic_body_schema/include_taxels/positions"
+MUJOCO_MODEL_OUT = (
     "./neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml"
 )
 
@@ -198,15 +209,62 @@ def read_calibration_data(file_path: str) -> np.ndarray:
     return np.array(calibration)
 
 
-def validate_taxel_data(calibration: np.ndarray) -> list[tuple[np.ndarray, np.ndarray, int]]:
+def read_taxel2repr_data(file_path: str) -> list[int]:
+    """Read taxel2Repr mapping values from a positions file.
+
+    Values have the following semantics in iCub skin files:
+    - ``>= 0`` tactile channels,
+    - ``-1`` unused channels,
+    - ``-2`` thermal/non-tactile channels.
+    """
+    text = ""
+    with open(file_path, "r") as file:
+        text = file.read()
+
+    key_idx = text.find("taxel2Repr")
+    if key_idx < 0:
+        return []
+
+    start_idx = text.find("(", key_idx)
+    if start_idx < 0:
+        return []
+
+    depth = 0
+    end_idx = -1
+    for idx in range(start_idx, len(text)):
+        if text[idx] == "(":
+            depth += 1
+        elif text[idx] == ")":
+            depth -= 1
+            if depth == 0:
+                end_idx = idx
+                break
+
+    if end_idx < 0:
+        return []
+
+    block = text[start_idx + 1:end_idx]
+    return [int(v) for v in re.findall(r"-?\d+", block)]
+
+
+def validate_taxel_data(
+    calibration: np.ndarray, taxel2repr: list[int] | None = None
+) -> list[tuple[np.ndarray, np.ndarray, int]]:
     """
     Validates and extracts taxel data from the calibration array.
 
-    Filters out invalid taxels (those with zero position and normal vectors) and structures
-    the data for further processing.
+    Channels are kept if they are tactile according to taxel2Repr (when
+    provided) and have non-zero calibration content.
+
+    Filtering rules:
+    1. If ``taxel2repr[i] < 0`` (unused or thermal), the channel is skipped.
+    2. Rows with both zero position and zero normal are skipped.
+    3. If taxel2Repr is shorter than calibration, remaining rows are decided
+       by calibration non-zero check.
 
     Args:
         calibration (np.ndarray): A 2D numpy array containing raw calibration data.
+        taxel2repr (list[int] | None): Optional taxel2Repr mapping values.
 
     Returns:
         list: A list of tuples where each tuple contains:
@@ -216,13 +274,17 @@ def validate_taxel_data(calibration: np.ndarray) -> list[tuple[np.ndarray, np.nd
     """
     taxels = []
     size = len(calibration)
-    for i in range(1, size):
+    for i in range(size):
+        if taxel2repr is not None and i < len(taxel2repr):
+            # Keep only tactile channels, skip unused/thermal channels.
+            if taxel2repr[i] < 0:
+                continue
         taxel_data = calibration[i]
         pos_nrm = taxel_data[:6]
         pos = pos_nrm[:3]
         nrm = pos_nrm[3:]
         if np.linalg.norm(nrm) != 0 or np.linalg.norm(pos) != 0:
-            taxels.append((pos, nrm, i - 1))
+            taxels.append((pos, nrm, len(taxels)))
     return taxels
 
 
@@ -279,13 +341,14 @@ def include_skin_to_mujoco_model(
 
     The function performs the following steps:
     1. Reads taxel calibration data from .txt files in the specified directory
-    2. Validates and filters taxel data
-    3. Parses the MuJoCo XML model file
-    4. For each body part, transforms taxel positions to the correct coordinate frame
-    5. Inserts taxel sites into the XML structure
-    6. Adds touch sensor definitions for each taxel
-    7. Writes the modified model to a new file
-    8. Generates a report of added taxels
+    2. Reads taxel2Repr mapping and reports tactile/unused/thermal counts
+    3. Validates and filters taxel data using taxel2Repr + calibration checks
+    4. Parses the MuJoCo XML model file
+    5. For each body part, transforms taxel positions to the correct coordinate frame
+    6. Inserts taxel sites into the XML structure
+    7. Adds touch sensor definitions for each taxel
+    8. Writes the modified model to a new file
+    9. Generates a report of added taxels
 
     Args:
         mujoco_model (str): Path to the input MuJoCo XML model file.
@@ -294,7 +357,7 @@ def include_skin_to_mujoco_model(
 
     Returns:
         None: The function writes output to files:
-            - Modified MuJoCo model saved to `mujoco_model_out` path
+            - Modified MuJoCo model saved to `MUJOCO_MODEL_OUT` path
             - Report saved to "./report_including_taxels.txt"
     """
     # read the taxel positions from the skin configuration file
@@ -304,8 +367,22 @@ def include_skin_to_mujoco_model(
         0] in skin_parts]
     all_taxels = []
     for taxels_ini in ini_files_taxels:
-        calibration = read_calibration_data(f"{path_to_skin}/{taxels_ini}")
-        taxels = validate_taxel_data(calibration)
+        file_path = f"{path_to_skin}/{taxels_ini}"
+        calibration = read_calibration_data(file_path)
+        taxel2repr = read_taxel2repr_data(file_path)
+        if taxel2repr:
+            tactile = len([v for v in taxel2repr if v >= 0])
+            unused = len([v for v in taxel2repr if v == -1])
+            thermal = len([v for v in taxel2repr if v == -2])
+            print(
+                f"[{taxels_ini}] taxel2Repr: tactile={tactile}, unused={unused}, thermal={thermal}, total={len(taxel2repr)}"
+            )
+        else:
+            print(
+                f"[{taxels_ini}] taxel2Repr not found. Falling back to non-zero calibration filtering only."
+            )
+
+        taxels = validate_taxel_data(calibration, taxel2repr if taxel2repr else None)
         all_taxels.append(taxels)
 
     # now we can open the xml robot config file and start adding all the taxels
@@ -353,7 +430,7 @@ def include_skin_to_mujoco_model(
                 elif part == "r_lower_leg":
                     # find the corresponding taxels
                     pos_of_taxels = ini_files_taxels.index(
-                        "left_leg_lower.txt")
+                        "right_leg_lower.txt")
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
@@ -559,7 +636,7 @@ def include_skin_to_mujoco_model(
                             # add the number of whitespace to the beginning of the line
                             lines.insert(
                                 line_counter,
-                                f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" pos="{finger_pos[0]} {finger_pos[1]} {finger_pos[2]}" rgba="0 1 0 0.0"/>\n',
+                                f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" type="sphere" group="{group_counter}" pos="{finger_pos[0]} {finger_pos[1]} {finger_pos[2]}" rgba="0 1 0 0.0"/>\n',
                             )
                             line_counter += 1
                             idx += 1
@@ -753,12 +830,12 @@ def include_skin_to_mujoco_model(
     pass
 
     # now we can write the new xml file
-    with open(mujoco_model_out, "w") as file:
+    with open(MUJOCO_MODEL_OUT, "w") as file:
         file.writelines(lines)
     pass
 
     # write report to txt file
-    with open(f"./report_including_taxels.txt", "w") as file:
+    with open(f"./neuromorphic_body_schema/include_taxels/report_including_taxels.txt", "w") as file:
         file.write(f"Part name: Nb of taxels\n")
         for part_to_add, taxel_id_list in zip(parts_to_add, taxel_ids_to_add):
             file.write(f"{part_to_add}: {len(taxel_id_list)}\n")

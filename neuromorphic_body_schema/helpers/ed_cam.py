@@ -22,6 +22,7 @@ Functions:
 
 
 import logging
+from pathlib import Path
 
 import cv2
 import mujoco
@@ -52,19 +53,22 @@ class CameraEventSimulator:
     """
 
     def __init__(self, img, time, Cp=0.5, Cm=0.5, sigma_Cp=0.01, sigma_Cm=0.01, log_eps=1e-6, refractory_period_ns=100, use_log_image=True):
-        """
-        Initializes the CameraEventSimulator.
+        """Create an event-camera simulator from an initial grayscale frame.
 
         Args:
-            img (np.array): Initial image to initialize the simulator.
-            time (int): Initial simulation time in nanoseconds.
-            Cp (float): Positive contrast threshold. Default is 0.5.
-            Cm (float): Negative contrast threshold. Default is 0.5.
-            sigma_Cp (float): Noise standard deviation for Cp. Default is 0.01.
-            sigma_Cm (float): Noise standard deviation for Cm. Default is 0.01.
-            log_eps (float): Small constant for logarithmic transformation. Default is 1e-6.
-            refractory_period_ns (int): Refractory period in nanoseconds. Default is 100.
-            use_log_image (bool): Whether to use logarithmic transformation. Default is True.
+            img (np.ndarray): Initial grayscale frame (typically uint8) used to
+                seed internal references.
+            time (int): Initial timestamp in nanoseconds.
+            Cp (float): Positive contrast threshold for ON events.
+            Cm (float): Negative contrast threshold for OFF events.
+            sigma_Cp (float): Std-dev of Gaussian noise added to ``Cp``.
+            sigma_Cm (float): Std-dev of Gaussian noise added to ``Cm``.
+            log_eps (float): Small value added before log transform to avoid
+                log(0) when ``use_log_image`` is enabled.
+            refractory_period_ns (int): Minimum interval between two accepted
+                events at the same pixel.
+            use_log_image (bool): If True, apply logarithmic encoding before
+                event generation.
         """
 
         self.Cp = Cp
@@ -90,15 +94,22 @@ class CameraEventSimulator:
         self.size = img.shape[:2]
 
     def imageCallback(self, img, time):
-        """
-        Processes a new image and generates events based on pixel intensity changes.
+        """Process a new frame and emit event tuples for threshold crossings.
 
         Args:
-            img (np.array): The new image to process.
-            time (int): The current simulation time in nanoseconds.
+            img (np.ndarray): New grayscale frame sampled at ``time``.
+            time (int): Current timestamp in nanoseconds. Must be strictly
+                greater than the previous callback timestamp.
 
         Returns:
-            np.array: A list of events, where each event is a tuple (x, y, t, polarity).
+            np.ndarray: Event array of shape ``(N, 4)`` with rows
+                ``(x, y, t_ns, polarity)`` where polarity is ``True`` for ON
+                events and ``False`` for OFF events. Returns an empty object
+                array when no events are generated.
+
+        Notes:
+            - Events are sorted by timestamp before returning.
+            - Refractory filtering is applied per pixel.
         """
         assert time >= 0
 
@@ -197,21 +208,17 @@ class CameraEventSimulator:
 
 
 def make_camera_event_frame(events, width=320, height=240):
-    """
-    Generates a visual representation of event-based camera data as a 2D image.
+    """Render a color event image from an event array.
 
     Args:
-        events (np.array): A numpy array of shape (N, 4), where each row represents an event with:
-                           - x (int): X-coordinate of the event.
-                           - y (int): Y-coordinate of the event.
-                           - t (int): Timestamp of the event (not used in visualization).
-                           - polarity (bool): Polarity of the event (not used in visualization).
-        width (int): Width of the output image. Default is 320.
-        height (int): Height of the output image. Default is 240.
+        events (np.ndarray): Array of shape ``(N, 4)`` with rows
+            ``(x, y, t_ns, polarity)``.
+        width (int): Output image width in pixels.
+        height (int): Output image height in pixels.
 
     Returns:
-        np.array: A 2D numpy array of shape (height, width) representing the event frame, 
-                  where pixel values are set to 255 for event locations and 0 elsewhere.
+        np.ndarray: BGR image of shape ``(height, width, 3)``. ON events are
+            drawn in red and OFF events in blue.
     """
 
     img = np.zeros((height, width, 3), dtype=np.uint8)
@@ -249,18 +256,29 @@ class ICubEyes:
     }
 
     def __init__(self, time, model, data, eye="all", camera_mode="frame_based", show_raw_feed=True, show_ed_feed=False, DEBUG=False):
-        """
-        Initializes the ICubEyes class with a renderer and an event-based camera simulator.
+        """Initialize camera renderers and optional event simulators per eye.
 
         Args:
-            time (int): Initial simulation time in nanoseconds.
-            model (mujoco.MjModel): The MuJoCo model of the robot.
-            data (mujoco.MjData): The MuJoCo data object for simulation.
-            eye (str): Which eye(s) to activate: "all", "left", or "right". Default is "all".
-            camera_mode (str): Camera mode, either "frame_based" or "event_driven". Default is "frame_based".
-            show_raw_feed (bool): Whether to display the raw camera feed. Default is True.
-            show_ed_feed (bool): Whether to display the event-based camera feed. Default is False.
-            DEBUG (bool): Whether to enable debug logging. Default is False.
+            time (int): Initial simulation timestamp in nanoseconds.
+            model (mujoco.MjModel): MuJoCo model used by the renderer.
+            data (mujoco.MjData): MuJoCo runtime data used by the renderer.
+            eye (str): Active eye selection: ``"left"``, ``"right"``, or
+                ``"all"``.
+            camera_mode (str): ``"frame_based"`` for RGB only or
+                ``"event_driven"`` to run event simulation.
+            show_raw_feed (bool): If True, display raw eye images in OpenCV
+                windows.
+            show_ed_feed (bool): If True, display event images in OpenCV
+                windows.
+            DEBUG (bool): If True, emit additional logging.
+
+        Raises:
+            ValueError: If ``eye`` is not one of ``"left"``, ``"right"``, or
+                ``"all"``.
+
+        Notes:
+            - If ``show_ed_feed`` is requested while ``camera_mode`` is
+              ``"frame_based"``, event mode is enabled automatically.
         """
 
         if eye == "all":
@@ -276,6 +294,8 @@ class ICubEyes:
         self.show_ed_feed = show_ed_feed
         self.DEBUG = DEBUG
         self.camera_mode = camera_mode
+        self.latest_raw_frames = {}
+        self.latest_ed_frames = {}
 
         if show_ed_feed and self.camera_mode == "frame_based":
             self.camera_mode = "event_driven"
@@ -321,15 +341,20 @@ class ICubEyes:
             })
 
     def update_camera(self, time):
-        """
-        Updates all active camera feeds and processes events.
+        """Render current eye frames, update event streams, and refresh windows.
 
         Args:
-            time (int): Current simulation time in nanoseconds.
+            time (int): Current simulation timestamp in nanoseconds.
 
         Returns:
-            dict: A dict mapping each active eye key ("left" and/or "right") to its event array.
-                  Each event array has rows of (x, y, t, polarity).
+            dict[str, np.ndarray | None]: Mapping from eye key (``"left"`` and/or
+            ``"right"``) to its event array. When running in frame-based mode,
+            values are ``None`` for each eye.
+
+        Side Effects:
+            - Updates ``latest_raw_frames`` and ``latest_ed_frames`` caches.
+            - Pushes frames to OpenCV windows when the corresponding
+              ``show_*_feed`` flags are enabled.
         """
 
         results = {}
@@ -337,14 +362,16 @@ class ICubEyes:
             eye["renderer"].update_scene(self.data, camera=eye["camera_name"])
             pixels = eye["renderer"].render()
             pixels = cv2.cvtColor(pixels, cv2.COLOR_BGR2RGB)
+            self.latest_raw_frames[eye["key"]] = pixels.copy()
             if self.show_raw_feed:
                 cv2.imshow(eye["camera_feed_window_name"], pixels)
             if eye["esim"] is not None:
                 eye["events"] = eye["esim"].imageCallback(
                     cv2.cvtColor(pixels, cv2.COLOR_RGB2GRAY), time)
+                event_frame = make_camera_event_frame(eye["events"])
+                self.latest_ed_frames[eye["key"]] = event_frame
                 if self.show_ed_feed:
-                    cv2.imshow(eye["events_window_name"],
-                               make_camera_event_frame(eye["events"]))
+                    cv2.imshow(eye["events_window_name"], event_frame)
                 if self.DEBUG and len(eye["events"]):
                     logging.info(
                         f"Generated {len(eye['events'])} camera events for {eye['key']} eye.")
@@ -354,3 +381,69 @@ class ICubEyes:
             cv2.waitKey(1)
 
         return results
+
+    def save_feed_images(
+        self,
+        output_dir: str,
+        prefix: str = "",
+        time_ns: int | None = None,
+        include_raw: bool = True,
+        include_ed: bool = True,
+    ) -> list[str]:
+        """Save one image per eye for raw and/or event-driven camera feeds.
+
+        This method writes the latest rendered frames stored by ``update_camera``
+        to disk. It is intended to be called after each simulation step where
+        ``update_camera`` ran, or at a lower save cadence (for example every
+        N-th step) to reduce disk I/O.
+
+        Args:
+            output_dir: Directory where image files are written. It is created
+                automatically if it does not exist.
+            prefix: Optional filename prefix (for example ``"frame_"``).
+            time_ns: Optional timestamp (typically simulation time in ns) added
+                to each filename as ``_<time_ns>``.
+            include_raw: If True, save RGB camera frames captured from each eye.
+            include_ed: If True, save event-rendered frames for each eye.
+
+        Returns:
+            list[str]: Absolute/relative paths of all files written in this call.
+
+        Notes:
+            - Raw frames are internally stored as RGB and converted to BGR before
+              ``cv2.imwrite`` so saved colors look correct.
+            - If an eye/feed has no available frame yet (for example event feed
+              before the first ``update_camera``), that file is skipped.
+
+        Example:
+            eye_camera_object.update_camera(int(data.time * 1e9))
+            eye_camera_object.save_feed_images(
+                output_dir="neuromorphic_body_schema/camera_frames",
+                prefix="frame_",
+                time_ns=int(data.time * 1e9),
+                include_raw=True,
+                include_ed=True,
+            )
+        """
+        out_path = Path(output_dir)
+        out_path.mkdir(parents=True, exist_ok=True)
+
+        time_label = f"_{int(time_ns)}" if time_ns is not None else ""
+        saved_files = []
+
+        if include_raw:
+            for eye_key, frame in self.latest_raw_frames.items():
+                filename = f"{prefix}{eye_key}_eye_raw{time_label}.png"
+                file_path = out_path / filename
+                # Convert RGB back to BGR for OpenCV file writing.
+                cv2.imwrite(str(file_path), cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+                saved_files.append(str(file_path))
+
+        if include_ed:
+            for eye_key, frame in self.latest_ed_frames.items():
+                filename = f"{prefix}{eye_key}_eye_ed{time_label}.png"
+                file_path = out_path / filename
+                cv2.imwrite(str(file_path), frame)
+                saved_files.append(str(file_path))
+
+        return saved_files
