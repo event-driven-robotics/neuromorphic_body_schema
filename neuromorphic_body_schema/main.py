@@ -85,11 +85,11 @@ else:
     VISUALIZE_ED_CAMERA_FEED = False
 
 # NOTE: Skin can be visualized when toggling Site group 1-5 in the MuJoCo viewer
-SKIN_MODE = "event_driven"  # "event_driven" or "frame_based"
-SKIN_PART = "r_hand"  # see helpers SKIN_PARTS for the list of possible skin parts
+SKIN_MODE = "frame_based"  # "event_driven" or "frame_based"
+SKIN_PART = "all"  # see helpers SKIN_PARTS for the list of possible skin parts
 # ["r_hand", "r_forearm", "r_upper_arm", "torso", "l_hand", "l_forearm", "l_upper_arm", "r_upper_leg", "r_lower_leg", "l_upper_leg", "l_lower_leg"]
 VISUALIZE_SKIN_FEED = False
-VISUALIZE_ED_SKIN_FEED = True
+VISUALIZE_ED_SKIN_FEED = False
 
 PROPRIOCEPTION_MODE = "event_driven"  # "event_driven" or "frame_based"
 VISUALIZE_PROPRIOCEPTION_FEED = False
@@ -197,7 +197,13 @@ if __name__ == "__main__":
         sim_time = data.time
 
         skin_object = ICubSkin(
-            sim_time, dynamic_grouped_sensors, skin_mode=SKIN_MODE, show_raw_feed=VISUALIZE_SKIN_FEED, show_ed_feed=VISUALIZE_ED_SKIN_FEED, DEBUG=DEBUG
+            sim_time,
+            dynamic_grouped_sensors,
+            skin=SKIN_PART,
+            skin_mode=SKIN_MODE,
+            show_raw_feed=VISUALIZE_SKIN_FEED,
+            show_ed_feed=VISUALIZE_ED_SKIN_FEED,
+            DEBUG=DEBUG
         )
         eye_camera_object = ICubEyes(sim_time, model, data, eye=CAM_TO_USE, camera_mode=CAMERA_MODE, show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
         # proprioception_object = ICubProprioception(

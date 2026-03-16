@@ -847,15 +847,37 @@ class ICubSkin:
         self.grouped_sensors = grouped_sensors
         self.show_raw_feed = show_raw_feed
         self.show_ed_feed = show_ed_feed
-        self.skin = skin  # list or str ofskin parts to visualize
+        self.skin = skin  # list or str of skin parts to visualize
         self.skin_mode = skin_mode
         self.show_raw_feed = show_raw_feed
         self.show_ed_feed = show_ed_feed
         self.DEBUG = DEBUG
-        for triangle_ini in TRIANGLE_FILES:
-            # TODO make sure we hand over the right data here
+
+        # Map from high-level part to triangle_ini(s)
+        PART_TO_TRIANGLE = {
+            "r_hand": ["right_hand_V2_2"],
+            "r_forearm": ["right_forearm_V2"],
+            "r_upper_arm": ["right_arm"],
+            "torso": ["torso"],
+            "l_hand": ["left_hand_V2_2"],
+            "l_forearm": ["left_forearm_V2"],
+            "l_upper_arm": ["left_arm"],
+            "r_upper_leg": ["right_leg_upper"],
+            "r_lower_leg": ["right_leg_lower"],
+            "l_upper_leg": ["left_leg_upper"],
+            "l_lower_leg": ["left_leg_lower"],
+        }
+        if skin == "all":
+            selected_patches = TRIANGLE_FILES
+        elif isinstance(skin, str):
+            selected_patches = PART_TO_TRIANGLE.get(skin, [])
+        else:  # assume list
+            selected_patches = []
+            for part in skin:
+                selected_patches.extend(PART_TO_TRIANGLE.get(part, []))
+
+        for triangle_ini in selected_patches:
             if "right_hand" in triangle_ini:
-                # TODO double check the order of the taxels!
                 taxel_data = []
                 for key in KEY_MAPPING["r_hand"]:
                     taxel_data.extend(self.grouped_sensors[key])
@@ -902,11 +924,10 @@ class ICubSkin:
                         on_thresh_slider,
                     )
                     cv2.setTrackbarMin("Threshold", ed_window_name, 1)
-                    
+
         cv2.waitKey(50)
         if DEBUG:
             logging.info("All panels initialized.")
-        # return esim, taxel_locs, imgs
 
     def update_skin(self, time):
         """Update all skin patches, generate events, and refresh feed images.
