@@ -642,16 +642,16 @@ def visualize_skin_patches(
         is_tactile = (not taxel_mask) or taxel_mask[taxel_counter]
         color = taxel_color if is_tactile else non_tactile_color
         cv2.circle(
-            img, (dX[taxel_counter], dY[taxel_counter]), 5, color, 1
+            img, (int(dX[taxel_counter]), int(dY[taxel_counter])), 5, color, 1
         )  # RGB color
     if not "hand" in triangles_ini:
         for i in range(len(dXv)):
             for j in range(len(dXv[i])):
-                pt1 = (dXv[i][j - 1], dYv[i][j - 1])
-                pt2 = (dXv[i][j], dYv[i][j])
+                pt1 = (int(dXv[i][j - 1]), int(dYv[i][j - 1]))
+                pt2 = (int(dXv[i][j]), int(dYv[i][j]))
                 cv2.line(img, pt1, pt2, line_color, 1)
-            pt1 = (dXv[i][-1], dYv[i][-1])
-            pt2 = (dXv[i][0], dYv[i][0])
+            pt1 = (int(dXv[i][-1]), int(dYv[i][-1]))
+            pt2 = (int(dXv[i][0]), int(dYv[i][0]))
             cv2.line(img, pt1, pt2, line_color, 1)
 
     return (img, dX, dY, taxel_mask)
