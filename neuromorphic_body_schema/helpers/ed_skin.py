@@ -871,10 +871,12 @@ class ICubSkin:
             selected_patches = TRIANGLE_FILES
         elif isinstance(skin, str):
             selected_patches = PART_TO_TRIANGLE.get(skin, [])
-        else:  # assume list
+        elif isinstance(skin, (list, tuple)):
             selected_patches = []
             for part in skin:
                 selected_patches.extend(PART_TO_TRIANGLE.get(part, []))
+        else:
+            selected_patches = []
 
         for triangle_ini in selected_patches:
             if "right_hand" in triangle_ini:
