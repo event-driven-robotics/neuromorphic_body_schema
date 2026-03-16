@@ -322,7 +322,7 @@ def validate_taxel_data(
             - [1]: np.ndarray - 3D normal vector of the taxel
             - [2]: int - Zero-based index of the taxel
     """
-    taxels = []
+    taxels: list[tuple[np.ndarray, np.ndarray, int]] = []
     size = len(calibration)
     for i in range(size):
         if taxel2repr is not None and i < len(taxel2repr):
