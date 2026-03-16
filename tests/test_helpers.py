@@ -34,7 +34,14 @@ def test_fig_path_is_absolute():
 def test_init_pov_function():
     """Test that init_POV can be called on a viewer."""
 
-    # Create a minimal mock viewer object
+
+    # Create a minimal mock viewer object with opt.sitegroup
+    import numpy as np
+    class MockOpt:
+        def __init__(self):
+            # Simulate 5 site groups (as in MuJoCo default)
+            self.sitegroup = np.ones(5, dtype=int)
+
     class MockViewer:
         class Camera:
             azimuth = 0
@@ -44,6 +51,7 @@ def test_init_pov_function():
 
         def __init__(self):
             self.cam = self.Camera()
+            self.opt = MockOpt()
 
     viewer = MockViewer()
     result = init_POV(viewer)
