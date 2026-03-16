@@ -192,6 +192,10 @@ def init_POV(viewer):
     viewer.cam.elevation = -16
     viewer.cam.lookat = np.array([0, -0.25, 1])
 
+    # Example: Only show groups 0 and 2, hide others
+    viewer.opt.sitegroup[:] = 0  # Hide all groups
+    viewer.opt.sitegroup[0] = 1  # Show group 0
+
     return viewer
 
 

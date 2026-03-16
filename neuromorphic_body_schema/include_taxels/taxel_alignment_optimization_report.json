@@ -1,0 +1,1461 @@
+[
+  {
+    "part": "r_upper_leg",
+    "position_file": "right_leg_upper.txt",
+    "mesh_files": [
+      "sim_sea_2-5_r_thigh_prt-binary.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0007906428834863429,
+      "median_distance_m": 0.0007804963993446569,
+      "p90_distance_m": 0.0010965564590869378
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        -0.06686069630189122,
+        -0.4172386921692749,
+        -0.2807203158302379
+      ],
+      "delta_offsets_m": [
+        0.00020872781261266652,
+        5.57444390378603e-05,
+        0.0013216383898538469
+      ],
+      "mean_distance_m": 0.000719009086089626,
+      "median_distance_m": 0.0006926816916022472,
+      "p90_distance_m": 0.0011189594161780674
+    },
+    "delta": {
+      "angles_deg": [
+        -0.06686069630189122,
+        -0.4172386921692749,
+        -0.2807203158302379
+      ],
+      "offsets_m": [
+        0.00020872781261266652,
+        5.57444390378603e-05,
+        0.0013216383898538469
+      ],
+      "mean_distance_m": -7.163379739671689e-05,
+      "mean_distance_improvement_pct": 9.060196315288058
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 90,
+      "nfev": 1071,
+      "objective": 0.000658555549477302,
+      "seed_count": 2,
+      "selected_seed_label": "previous:optimized",
+      "selected_seed_angles_deg": [
+        5.799792695416521e-06,
+        -2.1837758811319058e-05,
+        5.774731520944493e-06
+      ],
+      "selected_seed_offsets_m": [
+        0.0004697923453920399,
+        -5.904014809501626e-05,
+        0.0014434094968819753
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.000719009086089626,
+        "post_polish_mean_distance_m": 0.000719009086089626,
+        "angle_window_deg": [
+          2.0,
+          2.0,
+          2.0
+        ],
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": false
+      }
+    }
+  },
+  {
+    "part": "r_lower_leg",
+    "position_file": "right_leg_lower.txt",
+    "mesh_files": [
+      "sim_sea_2-5_r_shank_prt-binary.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0008865002545417742,
+      "median_distance_m": 0.0008559199615549996,
+      "p90_distance_m": 0.0012718611712743077
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        -0.038024581389330056,
+        -0.10577185850136157,
+        -0.02054263556274306
+      ],
+      "delta_offsets_m": [
+        0.000571239244579298,
+        0.00011194026788960041,
+        -0.0004126523836512605
+      ],
+      "mean_distance_m": 0.0007138135286190418,
+      "median_distance_m": 0.0006671520657634817,
+      "p90_distance_m": 0.0011531598650924048
+    },
+    "delta": {
+      "angles_deg": [
+        -0.038024581389330056,
+        -0.10577185850136157,
+        -0.02054263556274306
+      ],
+      "offsets_m": [
+        0.000571239244579298,
+        0.00011194026788960041,
+        -0.0004126523836512605
+      ],
+      "mean_distance_m": -0.00017268672592273243,
+      "mean_distance_improvement_pct": 19.4796025199105
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 81,
+      "nfev": 1190,
+      "objective": 0.0006323979275864892,
+      "seed_count": 2,
+      "selected_seed_label": "configured:0",
+      "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.0007138135286190418,
+        "post_polish_mean_distance_m": 0.0007138135286190418,
+        "angle_window_deg": [
+          2.0,
+          2.0,
+          2.0
+        ],
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": true
+      }
+    }
+  },
+  {
+    "part": "l_upper_leg",
+    "position_file": "left_leg_upper.txt",
+    "mesh_files": [
+      "sim_sea_2-5_l_thigh_prt-binary.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0008040477270542898,
+      "median_distance_m": 0.0007856725396412306,
+      "p90_distance_m": 0.0011355792020009158
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        -0.21143382997230276,
+        -0.3285466967236121,
+        0.14299497013739507
+      ],
+      "delta_offsets_m": [
+        0.0002055415895333374,
+        0.00017202595965175153,
+        0.0008560413624247505
+      ],
+      "mean_distance_m": 0.0007311365912918843,
+      "median_distance_m": 0.0007004285453540166,
+      "p90_distance_m": 0.0011604238313833687
+    },
+    "delta": {
+      "angles_deg": [
+        -0.21143382997230276,
+        -0.3285466967236121,
+        0.14299497013739507
+      ],
+      "offsets_m": [
+        0.0002055415895333374,
+        0.00017202595965175153,
+        0.0008560413624247505
+      ],
+      "mean_distance_m": -7.291113576240549e-05,
+      "mean_distance_improvement_pct": 9.068010928844089
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 90,
+      "nfev": 973,
+      "objective": 0.0006717495023689188,
+      "seed_count": 2,
+      "selected_seed_label": "configured:0",
+      "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.0007311365912918843,
+        "post_polish_mean_distance_m": 0.0007311365912918843,
+        "angle_window_deg": [
+          2.0,
+          2.0,
+          2.0
+        ],
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": false
+      }
+    }
+  },
+  {
+    "part": "l_lower_leg",
+    "position_file": "left_leg_lower.txt",
+    "mesh_files": [
+      "sim_sea_2-5_l_shank_prt-binary.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0008891633648509984,
+      "median_distance_m": 0.0008590025983800629,
+      "p90_distance_m": 0.0013131312985184948
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        -0.1486882240643513,
+        -0.09264657610423804,
+        0.037543555216242946
+      ],
+      "delta_offsets_m": [
+        0.0005247381194418414,
+        4.1419181921500506e-05,
+        -0.00030788612934512635
+      ],
+      "mean_distance_m": 0.0007223247666580012,
+      "median_distance_m": 0.000677877314265176,
+      "p90_distance_m": 0.0012014444140634672
+    },
+    "delta": {
+      "angles_deg": [
+        -0.1486882240643513,
+        -0.09264657610423804,
+        0.037543555216242946
+      ],
+      "offsets_m": [
+        0.0005247381194418414,
+        4.1419181921500506e-05,
+        -0.00030788612934512635
+      ],
+      "mean_distance_m": -0.0001668385981929972,
+      "mean_distance_improvement_pct": 18.76354838584192
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 118,
+      "nfev": 1519,
+      "objective": 0.0006416882744927852,
+      "seed_count": 2,
+      "selected_seed_label": "configured:0",
+      "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.0007223247666580012,
+        "post_polish_mean_distance_m": 0.0007223247666580012,
+        "angle_window_deg": [
+          2.0,
+          2.0,
+          2.0
+        ],
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": false
+      }
+    }
+  },
+  {
+    "part": "r_upper_arm",
+    "position_file": "right_arm.txt",
+    "mesh_files": [
+      "sim_sea_2-5_r_upper_arm_prt-binary.stl",
+      "sim_sea_2-5_r_elbow_prt-binary.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          -32.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          -2.0
+        ]
+      },
+      {
+        "offsets_m": [
+          -0.08,
+          0.0015,
+          0.012
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0010187675636098422,
+      "median_distance_m": 0.0008248206483873032,
+      "p90_distance_m": 0.0019806023695902457
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        0.6147387466790626,
+        -0.14556779557071026,
+        -0.2607860894851315
+      ],
+      "delta_offsets_m": [
+        0.0007383156026203966,
+        -0.0003619891686885029,
+        0.0005344165494654723
+      ],
+      "mean_distance_m": 0.0009238434752428399,
+      "median_distance_m": 0.0007442391289909681,
+      "p90_distance_m": 0.0017804205587433665
+    },
+    "delta": {
+      "angles_deg": [
+        0.6147387466790626,
+        -0.14556779557071026,
+        -0.2607860894851315
+      ],
+      "offsets_m": [
+        0.0007383156026203966,
+        -0.0003619891686885029,
+        0.0005344165494654723
+      ],
+      "mean_distance_m": -9.492408836700233e-05,
+      "mean_distance_improvement_pct": 9.31754128789238
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 77,
+      "nfev": 875,
+      "objective": 0.0007716682274791824,
+      "seed_count": 2,
+      "selected_seed_label": "previous:optimized",
+      "selected_seed_angles_deg": [
+        7.7128969898083e-07,
+        5.550984822973099e-08,
+        -1.2969083539138547e-06
+      ],
+      "selected_seed_offsets_m": [
+        -3.5933562759351566e-05,
+        -0.00016914731231823383,
+        0.00046294980579601237
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.0009238434752428399,
+        "post_polish_mean_distance_m": 0.0009238434752428399,
+        "angle_window_deg": [
+          2.0,
+          2.0,
+          2.0
+        ],
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": false
+      }
+    }
+  },
+  {
+    "part": "r_forearm",
+    "position_file": "right_forearm_V2.txt",
+    "mesh_files": [
+      "sim_sea_2-5_r_forearm_prt-binary.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          90.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          78.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          -2.0
+        ]
+      },
+      {
+        "offsets_m": [
+          -0.05,
+          0.0,
+          -0.0015
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.007511949878533892,
+      "median_distance_m": 0.007061105866774565,
+      "p90_distance_m": 0.016751539911129845
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        180.17038702393947,
+        -26.176640098313786,
+        -1.021381058611964
+      ],
+      "delta_offsets_m": [
+        0.0035930732734529855,
+        0.0013260994020100482,
+        -0.018820690392878772
+      ],
+      "mean_distance_m": 0.0008139476066300412,
+      "median_distance_m": 0.0005291020861875302,
+      "p90_distance_m": 0.001603732184855392
+    },
+    "delta": {
+      "angles_deg": [
+        180.17038702393947,
+        -26.176640098313786,
+        -1.021381058611964
+      ],
+      "offsets_m": [
+        0.0035930732734529855,
+        0.0013260994020100482,
+        -0.018820690392878772
+      ],
+      "mean_distance_m": -0.006698002271903851,
+      "mean_distance_improvement_pct": 89.16462942656243
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 75,
+      "nfev": 966,
+      "objective": 0.0006260003163980199,
+      "seed_count": 42,
+      "selected_seed_label": "previous:combo_+0_-5_+5",
+      "selected_seed_angles_deg": [
+        181.91169049016156,
+        -31.19182380572243,
+        1.7739766534328392
+      ],
+      "selected_seed_offsets_m": [
+        0.006244559490408846,
+        0.0023791371688558194,
+        -0.0162261964660771
+      ],
+      "angle_bounds_deg": [
+        15.0,
+        8.0,
+        8.0
+      ],
+      "translation_bounds_m": [
+        0.008,
+        0.008,
+        0.008
+      ],
+      "fine_refinement": {
+        "candidate_count": 11,
+        "selected_jitter_deg": [
+          0.0,
+          -5.0,
+          -5.0
+        ],
+        "pre_refine_mean_distance_m": 0.000907717802689304,
+        "post_refine_mean_distance_m": 0.0008139476066300412,
+        "angle_window_deg": [
+          6.0,
+          6.0,
+          6.0
+        ],
+        "translation_window_m": [
+          0.002,
+          0.002,
+          0.002
+        ]
+      },
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.0008139476066300412,
+        "post_polish_mean_distance_m": 0.0008139476066300412,
+        "angle_window_deg": [
+          2.0,
+          2.0,
+          2.0
+        ],
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": false
+      }
+    }
+  },
+  {
+    "part": "l_upper_arm",
+    "position_file": "left_arm.txt",
+    "mesh_files": [
+      "sim_sea_2-5_l_upper_arm_prt-binary.stl",
+      "sim_sea_2-5_l_elbow_prt-binary.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          -270.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          -148.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.08,
+          0.0015,
+          0.012
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0011864664941107612,
+      "median_distance_m": 0.0009762201504891695,
+      "p90_distance_m": 0.0023084174890394544
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        0.2900167716484819,
+        0.5418052329131446,
+        2.0179415071012308
+      ],
+      "delta_offsets_m": [
+        -0.0007862576380531929,
+        -0.002914678339491652,
+        0.0010825093125168448
+      ],
+      "mean_distance_m": 0.0009541614450367104,
+      "median_distance_m": 0.0007787441274777417,
+      "p90_distance_m": 0.0018167035014663613
+    },
+    "delta": {
+      "angles_deg": [
+        0.2900167716484819,
+        0.5418052329131446,
+        2.0179415071012308
+      ],
+      "offsets_m": [
+        -0.0007862576380531929,
+        -0.002914678339491652,
+        0.0010825093125168448
+      ],
+      "mean_distance_m": -0.00023230504907405074,
+      "mean_distance_improvement_pct": 19.579570955196665
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 152,
+      "nfev": 2037,
+      "objective": 0.0008104748432502291,
+      "seed_count": 2,
+      "selected_seed_label": "configured:0",
+      "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.0010289280016231874,
+        "post_polish_mean_distance_m": 0.0009541614450367104,
+        "angle_window_deg": [
+          2.0,
+          2.0,
+          2.0
+        ],
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": true
+      }
+    }
+  },
+  {
+    "part": "l_forearm",
+    "position_file": "left_forearm_V2.txt",
+    "mesh_files": [
+      "sim_sea_2-5_l_forearm_prt-binary.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          -90.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          102.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          -2.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.05,
+          -0.001,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0018746971962403287,
+      "median_distance_m": 0.0016682334079091007,
+      "p90_distance_m": 0.003448991072152647
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        1.4474734413329551e-06,
+        2.2907134362295124e-05,
+        -7.795473080472504e-06
+      ],
+      "delta_offsets_m": [
+        0.0022896244665846148,
+        -0.0010042296312969131,
+        -0.0021072743935058582
+      ],
+      "mean_distance_m": 0.001034479639724234,
+      "median_distance_m": 0.0008474039362480128,
+      "p90_distance_m": 0.001846116974145905
+    },
+    "delta": {
+      "angles_deg": [
+        1.4474734413329551e-06,
+        2.2907134362295124e-05,
+        -7.795473080472504e-06
+      ],
+      "offsets_m": [
+        0.0022896244665846148,
+        -0.0010042296312969131,
+        -0.0021072743935058582
+      ],
+      "mean_distance_m": -0.0008402175565160948,
+      "mean_distance_improvement_pct": 44.818841048097575
+    },
+    "optimizer": {
+      "success": false,
+      "status": 2,
+      "message": "ABNORMAL: ",
+      "nit": 53,
+      "nfev": 1701,
+      "objective": 0.0007836559965576426,
+      "seed_count": 2,
+      "selected_seed_label": "previous:optimized",
+      "selected_seed_angles_deg": [
+        1.4474734413329551e-06,
+        2.2907134362295124e-05,
+        -7.795473080472504e-06
+      ],
+      "selected_seed_offsets_m": [
+        0.0022896244665846148,
+        -0.0010042296312969131,
+        -0.0021072743935058582
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.001034479639724234,
+        "post_polish_mean_distance_m": 0.001034479639724234,
+        "angle_window_deg": [
+          2.0,
+          2.0,
+          2.0
+        ],
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": false
+      }
+    }
+  },
+  {
+    "part": "torso",
+    "position_file": "torso.txt",
+    "mesh_files": [
+      "chest_hull_1.stl",
+      "chest_hull_2.stl",
+      "chest_hull_3.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          90.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          -4.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.06,
+          0.068
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.002776087775582679,
+      "median_distance_m": 0.00245400954559701,
+      "p90_distance_m": 0.004749284030848081
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        -4.415735284331532,
+        -0.15676026047789016,
+        -0.13444536250904357
+      ],
+      "delta_offsets_m": [
+        0.00023970604854474126,
+        6.491684684132464e-06,
+        0.0034814769908506175
+      ],
+      "mean_distance_m": 0.001853352610551946,
+      "median_distance_m": 0.0013290910128571124,
+      "p90_distance_m": 0.0031311882384220378
+    },
+    "delta": {
+      "angles_deg": [
+        -4.415735284331532,
+        -0.15676026047789016,
+        -0.13444536250904357
+      ],
+      "offsets_m": [
+        0.00023970604854474126,
+        6.491684684132464e-06,
+        0.0034814769908506175
+      ],
+      "mean_distance_m": -0.0009227351650307328,
+      "mean_distance_improvement_pct": 33.238688385386446
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 188,
+      "nfev": 2401,
+      "objective": 0.0013791918475252608,
+      "seed_count": 2,
+      "selected_seed_label": "previous:optimized",
+      "selected_seed_angles_deg": [
+        -3.6545111653070026,
+        0.004050859500847661,
+        -0.24403613292864126
+      ],
+      "selected_seed_offsets_m": [
+        -6.42358665535887e-05,
+        -0.0003945706938397833,
+        0.002764656188347113
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.001853352610551946,
+        "post_polish_mean_distance_m": 0.001853352610551946,
+        "angle_window_deg": [
+          2.0,
+          2.0,
+          2.0
+        ],
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": false
+      }
+    }
+  },
+  {
+    "part": "r_palm",
+    "position_file": "right_hand_V2_1.txt",
+    "mesh_files": [
+      "col_RightHandPalm.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          180.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          90.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          15.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          -0.055,
+          -0.005,
+          0.02
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0024770303822999333,
+      "median_distance_m": 0.0024847135644493167,
+      "p90_distance_m": 0.003070147035180649
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        -1.1041262748801866,
+        -0.15627767719806618,
+        -0.295869456941196
+      ],
+      "delta_offsets_m": [
+        -0.0008376557075796641,
+        -0.0029906547538093155,
+        -0.0001860314066015665
+      ],
+      "mean_distance_m": 0.00033929112075391205,
+      "median_distance_m": 0.00023692986784807068,
+      "p90_distance_m": 0.0006622253792881855
+    },
+    "delta": {
+      "angles_deg": [
+        -1.1041262748801866,
+        -0.15627767719806618,
+        -0.295869456941196
+      ],
+      "offsets_m": [
+        -0.0008376557075796641,
+        -0.0029906547538093155,
+        -0.0001860314066015665
+      ],
+      "mean_distance_m": -0.0021377392615460214,
+      "mean_distance_improvement_pct": 86.30250467744047
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 119,
+      "nfev": 1582,
+      "objective": 0.0002788682136798033,
+      "seed_count": 2,
+      "selected_seed_label": "previous:optimized",
+      "selected_seed_angles_deg": [
+        1.5571370886079685e-05,
+        2.0592821888371266e-08,
+        5.970808141427758e-05
+      ],
+      "selected_seed_offsets_m": [
+        -0.00108782068808121,
+        -0.002523616695784559,
+        -6.046350389995432e-05
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.00033929112075391205,
+        "post_polish_mean_distance_m": 0.00033929112075391205,
+        "angle_window_deg": [
+          2.0,
+          2.0,
+          2.0
+        ],
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": false
+      }
+    }
+  },
+  {
+    "part": "l_palm",
+    "position_file": "left_hand_V2_1.txt",
+    "mesh_files": [
+      "col_LeftHandPalm.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          -90.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          -15.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.055,
+          -0.005,
+          0.02
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.002507108028596666,
+      "median_distance_m": 0.0025184980163675324,
+      "p90_distance_m": 0.0031176806059912982
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        -1.1186219130245452,
+        0.1232687767239839,
+        0.5511667028829643
+      ],
+      "delta_offsets_m": [
+        0.0006341692208547976,
+        -0.003254149339706445,
+        -0.000396833562097953
+      ],
+      "mean_distance_m": 0.00037584357718305986,
+      "median_distance_m": 0.00027309743608614065,
+      "p90_distance_m": 0.000769164369193831
+    },
+    "delta": {
+      "angles_deg": [
+        -1.1186219130245452,
+        0.1232687767239839,
+        0.5511667028829643
+      ],
+      "offsets_m": [
+        0.0006341692208547976,
+        -0.003254149339706445,
+        -0.000396833562097953
+      ],
+      "mean_distance_m": -0.002131264451413606,
+      "mean_distance_improvement_pct": 85.00887983700346
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 42,
+      "nfev": 518,
+      "objective": 0.00030554910230470443,
+      "seed_count": 2,
+      "selected_seed_label": "previous:optimized",
+      "selected_seed_angles_deg": [
+        1.5701716018771263e-05,
+        2.6483406477506166e-07,
+        -6.230790207624855e-05
+      ],
+      "selected_seed_offsets_m": [
+        0.0005940170074013134,
+        -0.002557199875835507,
+        -0.0004312516711544228
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.00037584357718305986,
+        "post_polish_mean_distance_m": 0.00037584357718305986,
+        "angle_window_deg": [
+          2.0,
+          2.0,
+          2.0
+        ],
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": false
+      }
+    }
+  }
+]

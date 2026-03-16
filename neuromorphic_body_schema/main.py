@@ -84,11 +84,12 @@ if CAMERA_MODE == "event_driven":
 else:
     VISUALIZE_ED_CAMERA_FEED = False
 
-SKIN_MODE = "frame_based"  # "event_driven" or "frame_based"
-SKIN_PART = "all"  # see helpers SKIN_PARTS for the list of possible skin parts
+# NOTE: Skin can be visualized when toggling Site group 1-5 in the MuJoCo viewer
+SKIN_MODE = "event_driven"  # "event_driven" or "frame_based"
+SKIN_PART = "r_hand"  # see helpers SKIN_PARTS for the list of possible skin parts
 # ["r_hand", "r_forearm", "r_upper_arm", "torso", "l_hand", "l_forearm", "l_upper_arm", "r_upper_leg", "r_lower_leg", "l_upper_leg", "l_lower_leg"]
-VISUALIZE_SKIN_FEED = True
-VISUALIZE_ED_SKIN_FEED = False
+VISUALIZE_SKIN_FEED = False
+VISUALIZE_ED_SKIN_FEED = True
 
 PROPRIOCEPTION_MODE = "event_driven"  # "event_driven" or "frame_based"
 VISUALIZE_PROPRIOCEPTION_FEED = False
@@ -186,12 +187,12 @@ if __name__ == "__main__":
     ### Start the simulation ###
     ############################
 
-    with viewer.launch_passive(model, data) as viewer:
+    with viewer.launch_passive(model, data) as sim_viewer:
         # Disable the left and right panels
-        # viewer.options.gui_left = False
-        # viewer.options.gui_right = False
+        # sim_viewer.options.gui_left = False
+        # sim_viewer.options.gui_right = False
 
-        init_POV(viewer)
+        init_POV(sim_viewer)
 
         sim_time = data.time
 
@@ -237,10 +238,10 @@ if __name__ == "__main__":
         q_arm: dict[str, float] | None = None
 
         count = 0
-        while viewer.is_running():
+        while sim_viewer.is_running():
             # print(sim_time)
             mj_step(model, data)  # Step the simulation
-            viewer.sync()
+            sim_viewer.sync()
             # sim_time_ns = data.time*1E9  # ns
             # new_joint_pos = {}
             # for (min_max, frequency, joint) in zip(min_max_pos, frequencies, joints):
@@ -263,28 +264,28 @@ if __name__ == "__main__":
             #     time=data.time, data=data
             # )  # expects seconds
 
-            if count >= len(target_pos):
-                finished = True
-            if not finished:
-                if not caculated:
-                    q_arm = ik_calculation(
-                        ik_solver, target_pos[count], target_ori[count], joint_names
-                    )
-                    caculated = True
-                    if not q_arm:
-                        finished = True
-                        logging.info(
-                            f"Solution not found, task terminated at {count}th goal"
-                        )
-                        continue
+            # if count >= len(target_pos):
+            #     finished = True
+            # if not finished:
+            #     if not caculated:
+            #         q_arm = ik_calculation(
+            #             ik_solver, target_pos[count], target_ori[count], joint_names
+            #         )
+            #         caculated = True
+            #         if not q_arm:
+            #             finished = True
+            #             logging.info(
+            #                 f"Solution not found, task terminated at {count}th goal"
+            #             )
+            #             continue
 
-                # seems like the mujoco can not achieve the joints in one loop, so keep checking and control the joints
-                if q_arm is not None and caculated and not check_joints(data, q_arm):
-                    # currently PD controller for the joints
-                    update_joint_positions(data, q_arm)
-                else:
-                    logging.info("Goal reached")
-                    caculated = False
-                    count += 1
+            #     # seems like the mujoco can not achieve the joints in one loop, so keep checking and control the joints
+            #     if q_arm is not None and caculated and not check_joints(data, q_arm):
+            #         # currently PD controller for the joints
+            #         update_joint_positions(data, q_arm)
+            #     else:
+            #         logging.info("Goal reached")
+            #         caculated = False
+            #         count += 1
 
             pass

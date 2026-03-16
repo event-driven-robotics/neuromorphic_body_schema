@@ -32,8 +32,16 @@ in ``docs/SKIN_TAXEL_ALIGNMENT_REPRODUCIBILITY.md``.
 import os
 import re
 from typing import Sequence, cast
+import json
 
 import numpy as np
+
+# Semantic group constants for taxel site assignment
+GROUP_TORSO = 1
+GROUP_RIGHT_ARM_HAND = 2
+GROUP_LEFT_ARM_HAND = 3
+GROUP_RIGHT_LEG = 4
+GROUP_LEFT_LEG = 5
 
 # ini files from [...]/icub-main/app/skinGui/conf/positions/*.ini
 # triangle files from [...]/icub-main/app/skinGui/conf/skinGUI/*.ini
@@ -79,6 +87,48 @@ TAXEL_INI_PATH = "./neuromorphic_body_schema/include_taxels/positions"
 MUJOCO_MODEL_OUT = (
     "./neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml"
 )
+OPTIMIZATION_REPORT_JSON = (
+    "./neuromorphic_body_schema/include_taxels/taxel_alignment_optimization_report.json"
+)
+
+
+def load_optimized_deltas(report_path: str) -> dict[str, tuple[np.ndarray, np.ndarray]]:
+    """Load optimized delta transforms from the optimizer JSON report.
+
+    Returns a mapping:
+        part_name -> (delta_angles_deg[3], delta_offsets_m[3])
+    """
+    if not os.path.exists(report_path):
+        return {}
+
+    with open(report_path, "r", encoding="utf-8") as file:
+        raw = json.load(file)
+
+    deltas: dict[str, tuple[np.ndarray, np.ndarray]] = {}
+    if not isinstance(raw, list):
+        return deltas
+
+    for entry in raw:
+        if not isinstance(entry, dict):
+            continue
+        part = entry.get("part")
+        optimized = entry.get("optimized")
+        if not isinstance(part, str) or not isinstance(optimized, dict):
+            continue
+
+        angle_values = optimized.get("delta_angles_deg")
+        offset_values = optimized.get("delta_offsets_m")
+        if angle_values is None or offset_values is None:
+            continue
+
+        angles = np.array(angle_values, dtype=float)
+        offsets = np.array(offset_values, dtype=float)
+        if angles.shape != (3,) or offsets.shape != (3,):
+            continue
+
+        deltas[part] = (angles, offsets)
+
+    return deltas
 
 
 def rebase_coordinate_system(taxel_pos: list[tuple[np.ndarray, np.ndarray, int]]) -> list[tuple[np.ndarray, np.ndarray, int]]:
@@ -330,7 +380,10 @@ def read_triangle_data(file_path: str) -> tuple[str, list[tuple[np.ndarray, int]
 
 
 def include_skin_to_mujoco_model(
-    mujoco_model: str, path_to_skin: str, skin_parts: list
+    mujoco_model: str,
+    path_to_skin: str,
+    skin_parts: list,
+    optimized_deltas: dict[str, tuple[np.ndarray, np.ndarray]] | None = None,
 ) -> None:
     """
     Integrates tactile sensor (taxel) data into a MuJoCo robot model XML file.
@@ -354,6 +407,9 @@ def include_skin_to_mujoco_model(
         mujoco_model (str): Path to the input MuJoCo XML model file.
         path_to_skin (str): Path to the directory containing taxel configuration .txt files.
         skin_parts (list): List of skin part names (strings) to process (e.g., "left_arm", "right_hand_V2_1").
+        optimized_deltas (dict | None): Optional per-part transform deltas from optimization,
+            mapping ``part -> (delta_angles_deg, delta_offsets_m)``. If provided,
+            each taxel gets this final delta after the hand-tuned transform chain.
 
     Returns:
         None: The function writes output to files:
@@ -361,6 +417,9 @@ def include_skin_to_mujoco_model(
             - Report saved to "./report_including_taxels.txt"
     """
     # read the taxel positions from the skin configuration file
+    if optimized_deltas is None:
+        optimized_deltas = {}
+
     ini_files_taxels = os.listdir(path_to_skin)
     # only keep the files listed in skin_parts
     ini_files_taxels = [f for f in ini_files_taxels if f.split(".")[
@@ -424,7 +483,7 @@ def include_skin_to_mujoco_model(
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 7
+                    group_counter = GROUP_RIGHT_LEG
                     parts_to_add.append(part)
 
                 elif part == "r_lower_leg":
@@ -434,7 +493,7 @@ def include_skin_to_mujoco_model(
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 8
+                    group_counter = GROUP_RIGHT_LEG
                     parts_to_add.append(part)
 
                 elif part == "l_upper_leg":
@@ -444,7 +503,7 @@ def include_skin_to_mujoco_model(
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 9
+                    group_counter = GROUP_LEFT_LEG
                     parts_to_add.append(part)
 
                 elif part == "l_lower_leg":
@@ -454,7 +513,7 @@ def include_skin_to_mujoco_model(
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 10
+                    group_counter = GROUP_LEFT_LEG
                     parts_to_add.append(part)
 
                 elif part == "chest":
@@ -464,7 +523,7 @@ def include_skin_to_mujoco_model(
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 0
+                    group_counter = GROUP_TORSO
                     parts_to_add.append(part)
 
                 elif part == "r_shoulder_3":
@@ -474,7 +533,7 @@ def include_skin_to_mujoco_model(
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 1
+                    group_counter = GROUP_RIGHT_ARM_HAND
                     parts_to_add.append(part)
 
                 elif part == "r_forearm":
@@ -484,7 +543,7 @@ def include_skin_to_mujoco_model(
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 2
+                    group_counter = GROUP_RIGHT_ARM_HAND
                     parts_to_add.append(part)
 
                 elif part == "r_hand":
@@ -495,7 +554,7 @@ def include_skin_to_mujoco_model(
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 3
+                    group_counter = GROUP_RIGHT_ARM_HAND
                     parts_to_add.append(part)
 
                 elif part == "r_hand_thumb_3":
@@ -504,7 +563,7 @@ def include_skin_to_mujoco_model(
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 3
+                    group_counter = GROUP_RIGHT_ARM_HAND
                     parts_to_add.append(part)
 
                 elif part == "r_hand_index_3":
@@ -513,7 +572,7 @@ def include_skin_to_mujoco_model(
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 3
+                    group_counter = GROUP_RIGHT_ARM_HAND
                     parts_to_add.append(part)
 
                 elif part == "r_hand_middle_3":
@@ -522,7 +581,7 @@ def include_skin_to_mujoco_model(
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 3
+                    group_counter = GROUP_RIGHT_ARM_HAND
                     parts_to_add.append(part)
 
                 elif part == "r_hand_ring_3":
@@ -531,7 +590,7 @@ def include_skin_to_mujoco_model(
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 3
+                    group_counter = GROUP_RIGHT_ARM_HAND
                     parts_to_add.append(part)
 
                 elif part == "r_hand_little_3":
@@ -540,7 +599,7 @@ def include_skin_to_mujoco_model(
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 3
+                    group_counter = GROUP_RIGHT_ARM_HAND
                     parts_to_add.append(part)
 
                 elif part == "l_shoulder_3":
@@ -550,7 +609,7 @@ def include_skin_to_mujoco_model(
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 4
+                    group_counter = GROUP_LEFT_ARM_HAND
                     parts_to_add.append(part)
 
                 elif part == "l_forearm":
@@ -560,7 +619,7 @@ def include_skin_to_mujoco_model(
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 5
+                    group_counter = GROUP_LEFT_ARM_HAND
                     parts_to_add.append(part)
 
                 elif part == "l_hand":
@@ -571,7 +630,7 @@ def include_skin_to_mujoco_model(
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 6
+                    group_counter = GROUP_LEFT_ARM_HAND
                     parts_to_add.append(part)
 
                 elif part == "l_hand_thumb_3":
@@ -580,7 +639,7 @@ def include_skin_to_mujoco_model(
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 6
+                    group_counter = GROUP_LEFT_ARM_HAND
                     parts_to_add.append(part)
 
                 elif part == "l_hand_index_3":
@@ -589,7 +648,7 @@ def include_skin_to_mujoco_model(
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 6
+                    group_counter = GROUP_LEFT_ARM_HAND
                     parts_to_add.append(part)
 
                 elif part == "l_hand_middle_3":
@@ -598,7 +657,7 @@ def include_skin_to_mujoco_model(
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 6
+                    group_counter = GROUP_LEFT_ARM_HAND
                     parts_to_add.append(part)
 
                 elif part == "l_hand_ring_3":
@@ -607,6 +666,7 @@ def include_skin_to_mujoco_model(
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
+                    group_counter = GROUP_LEFT_ARM_HAND
                     parts_to_add.append(part)
 
                 elif part == "l_hand_little_3":
@@ -615,7 +675,7 @@ def include_skin_to_mujoco_model(
                     add_finger_taxels = True
                     found_spot_to_add = False
                     add_taxels = True
-                    group_counter = 6
+                    group_counter = GROUP_LEFT_ARM_HAND
                     parts_to_add.append(part)
 
                 if add_taxels:
@@ -781,6 +841,15 @@ def include_skin_to_mujoco_model(
                                     angle_degrees=[0, 0, 0],
                                 )
 
+                            # Apply optional optimized per-part refinement as final step.
+                            if part in optimized_deltas:
+                                delta_angles, delta_offsets = optimized_deltas[part]
+                                pos = rotate_position(
+                                    pos=pos,
+                                    offsets=delta_offsets.tolist(),
+                                    angle_degrees=delta_angles.tolist(),
+                                )
+
                             # TODO possibly use cylinder as type.
                             lines.insert(
                                 line_counter,
@@ -842,7 +911,22 @@ def include_skin_to_mujoco_model(
 
 
 if __name__ == "__main__":
-    include_skin_to_mujoco_model(MUJOCO_MODEL, TAXEL_INI_PATH, skin_parts)
+    optimized = load_optimized_deltas(OPTIMIZATION_REPORT_JSON)
+    if optimized:
+        print(
+            f"Loaded optimized deltas for {len(optimized)} parts from {OPTIMIZATION_REPORT_JSON}"
+        )
+    else:
+        print(
+            "No optimization report found or no valid deltas loaded. Using hand-tuned transforms only."
+        )
+
+    include_skin_to_mujoco_model(
+        MUJOCO_MODEL,
+        TAXEL_INI_PATH,
+        skin_parts,
+        optimized_deltas=optimized,
+    )
     print("*******************")
     print("DONE")
     pass
