@@ -88,7 +88,7 @@ else:
 SKIN_MODE = "frame_based"  # "event_driven" or "frame_based"
 SKIN_PART = "all"  # see helpers SKIN_PARTS for the list of possible skin parts
 # ["r_hand", "r_forearm", "r_upper_arm", "torso", "l_hand", "l_forearm", "l_upper_arm", "r_upper_leg", "r_lower_leg", "l_upper_leg", "l_lower_leg"]
-VISUALIZE_SKIN_FEED = False
+VISUALIZE_SKIN_FEED = True
 VISUALIZE_ED_SKIN_FEED = False
 
 PROPRIOCEPTION_MODE = "event_driven"  # "event_driven" or "frame_based"
@@ -213,37 +213,37 @@ if __name__ == "__main__":
         #     DEBUG=DEBUG,
         # )
 
-        # Valid kinematic links shoulde be predefined
-        joint_names = [
-            "l_shoulder_pitch",
-            "l_shoulder_roll",
-            "l_shoulder_yaw",
-            "l_elbow",
-            "l_wrist_prosup",
-        ]
-        end_effector_name = "l_forearm"
+        # # Valid kinematic links shoulde be predefined
+        # joint_names = [
+        #     "l_shoulder_pitch",
+        #     "l_shoulder_roll",
+        #     "l_shoulder_yaw",
+        #     "l_elbow",
+        #     "l_wrist_prosup",
+        # ]
+        # end_effector_name = "l_forearm"
 
-        # IK with Quaternion seems more robust for Icub
-        # should copy the data for forward knimeatics, otherwise the ik will update the model directly
-        data_copy = copy.deepcopy(data)
-        ik_solver = Ik_solver(model, data_copy, joint_names,
-                              end_effector_name, "quat")
+        # # IK with Quaternion seems more robust for Icub
+        # # should copy the data for forward knimeatics, otherwise the ik will update the model directly
+        # data_copy = copy.deepcopy(data)
+        # ik_solver = Ik_solver(model, data_copy, joint_names,
+        #                       end_effector_name, "quat")
 
-        # Sequential Reaching task
+        # # Sequential Reaching task
 
-        target_pos = np.array([
-            [-0.09736548, -0.20864483, 0.94718375],
-            [-0.13067764, -0.25348467, 1.12211061],
-        ])
-        target_ori = np.array([
-            [-0.35741511, 0.26772824, 0.02986113, 0.89425071],
-            [-0.18286161, -0.0885009, 0.46619002, 0.8610436],
-        ])
+        # target_pos = np.array([
+        #     [-0.09736548, -0.20864483, 0.94718375],
+        #     [-0.13067764, -0.25348467, 1.12211061],
+        # ])
+        # target_ori = np.array([
+        #     [-0.35741511, 0.26772824, 0.02986113, 0.89425071],
+        #     [-0.18286161, -0.0885009, 0.46619002, 0.8610436],
+        # ])
 
-        caculated, reached, finished = False, False, False
-        q_arm: dict[str, float] | None = None
+        # caculated, reached, finished = False, False, False
+        # q_arm: dict[str, float] | None = None
 
-        count = 0
+        # count = 0
         while sim_viewer.is_running():
             # print(sim_time)
             mj_step(model, data)  # Step the simulation

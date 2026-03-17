@@ -1,145 +1,77 @@
 Taxel alignment optimization report
 
 Part: r_upper_leg
-  mean distance: 0.000791 -> 0.000719 m (9.06% improvement)
-  mean abs improvement: 0.072 mm
-  median distance: 0.000780 -> 0.000693 m
-  p90 distance: 0.001097 -> 0.001119 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.06686069630189122, -0.4172386921692749, -0.2807203158302379]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.00020872781261266652, 5.57444390378603e-05, 0.0013216383898538469]
-  delta angles deg: [-0.06686069630189122, -0.4172386921692749, -0.2807203158302379]
-  delta offsets m: [0.00020872781261266652, 5.57444390378603e-05, 0.0013216383898538469]
+  mean distance: 0.000791 -> 0.000722 m (8.80% improvement)
+  mean abs improvement: 0.070 mm
+  median distance: 0.000777 -> 0.000707 m
+  p90 distance: 0.001102 -> 0.001121 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.09193724149259358, -0.48649025067903995, -0.009126627456002642]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0001037145777382832, -0.00012308398485133613, 0.001471658232427726]
+  delta angles deg: [0.09193724149259358, -0.48649025067903995, -0.009126627456002642]
+  delta offsets m: [0.0001037145777382832, -0.00012308398485133613, 0.001471658232427726]
   seed count: 2
   selected seed label: previous:optimized
-  selected seed angles deg: [5.799792695416521e-06, -2.1837758811319058e-05, 5.774731520944493e-06]
-  selected seed offsets m: [0.0004697923453920399, -5.904014809501626e-05, 0.0014434094968819753]
-  angle bounds deg: [25.0, 25.0, 25.0]
-  translation bounds m: [0.03, 0.03, 0.03]
-  polish mode: True
-  polish mean distance: 0.000719 -> 0.000719 m
-  polish angle window deg: [2.0, 2.0, 2.0]
-  polish translation window m: [0.001, 0.001, 0.001]
-  polish success: False
-
-Part: r_lower_leg
-  mean distance: 0.000887 -> 0.000714 m (19.48% improvement)
-  mean abs improvement: 0.173 mm
-  median distance: 0.000856 -> 0.000667 m
-  p90 distance: 0.001272 -> 0.001153 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.038024581389330056, -0.10577185850136157, -0.02054263556274306]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.000571239244579298, 0.00011194026788960041, -0.0004126523836512605]
-  delta angles deg: [-0.038024581389330056, -0.10577185850136157, -0.02054263556274306]
-  delta offsets m: [0.000571239244579298, 0.00011194026788960041, -0.0004126523836512605]
-  seed count: 2
-  selected seed label: configured:0
-  selected seed angles deg: [0.0, 0.0, 0.0]
-  selected seed offsets m: [0.0, 0.0, 0.0]
-  angle bounds deg: [25.0, 25.0, 25.0]
-  translation bounds m: [0.03, 0.03, 0.03]
-  polish mode: True
-  polish mean distance: 0.000714 -> 0.000714 m
-  polish angle window deg: [2.0, 2.0, 2.0]
-  polish translation window m: [0.001, 0.001, 0.001]
-  polish success: True
-
-Part: l_upper_leg
-  mean distance: 0.000804 -> 0.000731 m (9.07% improvement)
-  mean abs improvement: 0.073 mm
-  median distance: 0.000786 -> 0.000700 m
-  p90 distance: 0.001136 -> 0.001160 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.21143382997230276, -0.3285466967236121, 0.14299497013739507]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0002055415895333374, 0.00017202595965175153, 0.0008560413624247505]
-  delta angles deg: [-0.21143382997230276, -0.3285466967236121, 0.14299497013739507]
-  delta offsets m: [0.0002055415895333374, 0.00017202595965175153, 0.0008560413624247505]
-  seed count: 2
-  selected seed label: configured:0
-  selected seed angles deg: [0.0, 0.0, 0.0]
-  selected seed offsets m: [0.0, 0.0, 0.0]
-  angle bounds deg: [25.0, 25.0, 25.0]
-  translation bounds m: [0.03, 0.03, 0.03]
-  polish mode: True
-  polish mean distance: 0.000731 -> 0.000731 m
-  polish angle window deg: [2.0, 2.0, 2.0]
-  polish translation window m: [0.001, 0.001, 0.001]
-  polish success: False
-
-Part: l_lower_leg
-  mean distance: 0.000889 -> 0.000722 m (18.76% improvement)
-  mean abs improvement: 0.167 mm
-  median distance: 0.000859 -> 0.000678 m
-  p90 distance: 0.001313 -> 0.001201 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.1486882240643513, -0.09264657610423804, 0.037543555216242946]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0005247381194418414, 4.1419181921500506e-05, -0.00030788612934512635]
-  delta angles deg: [-0.1486882240643513, -0.09264657610423804, 0.037543555216242946]
-  delta offsets m: [0.0005247381194418414, 4.1419181921500506e-05, -0.00030788612934512635]
-  seed count: 2
-  selected seed label: configured:0
-  selected seed angles deg: [0.0, 0.0, 0.0]
-  selected seed offsets m: [0.0, 0.0, 0.0]
+  selected seed angles deg: [-0.06686069630189122, -0.4172386921692749, -0.2807203158302379]
+  selected seed offsets m: [0.00020872781261266652, 5.57444390378603e-05, 0.0013216383898538469]
   angle bounds deg: [25.0, 25.0, 25.0]
   translation bounds m: [0.03, 0.03, 0.03]
   polish mode: True
   polish mean distance: 0.000722 -> 0.000722 m
   polish angle window deg: [2.0, 2.0, 2.0]
   polish translation window m: [0.001, 0.001, 0.001]
-  polish success: False
+  polish success: True
 
-Part: r_upper_arm
-  mean distance: 0.001019 -> 0.000924 m (9.32% improvement)
-  mean abs improvement: 0.095 mm
-  median distance: 0.000825 -> 0.000744 m
-  p90 distance: 0.001981 -> 0.001780 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.6147387466790626, -0.14556779557071026, -0.2607860894851315]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0007383156026203966, -0.0003619891686885029, 0.0005344165494654723]
-  delta angles deg: [0.6147387466790626, -0.14556779557071026, -0.2607860894851315]
-  delta offsets m: [0.0007383156026203966, -0.0003619891686885029, 0.0005344165494654723]
+Part: r_lower_leg
+  mean distance: 0.000897 -> 0.000734 m (18.14% improvement)
+  mean abs improvement: 0.163 mm
+  median distance: 0.000871 -> 0.000671 m
+  p90 distance: 0.001297 -> 0.001164 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.0494184251940219, -0.13037803359955874, 0.06712232026275546]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.00048431022403312143, 0.00016251763500735656, -0.000565896092997653]
+  delta angles deg: [-0.0494184251940219, -0.13037803359955874, 0.06712232026275546]
+  delta offsets m: [0.00048431022403312143, 0.00016251763500735656, -0.000565896092997653]
   seed count: 2
   selected seed label: previous:optimized
-  selected seed angles deg: [7.7128969898083e-07, 5.550984822973099e-08, -1.2969083539138547e-06]
-  selected seed offsets m: [-3.5933562759351566e-05, -0.00016914731231823383, 0.00046294980579601237]
+  selected seed angles deg: [-0.038024581389330056, -0.10577185850136157, -0.02054263556274306]
+  selected seed offsets m: [0.000571239244579298, 0.00011194026788960041, -0.0004126523836512605]
   angle bounds deg: [25.0, 25.0, 25.0]
   translation bounds m: [0.03, 0.03, 0.03]
   polish mode: True
-  polish mean distance: 0.000924 -> 0.000924 m
+  polish mean distance: 0.000735 -> 0.000734 m
   polish angle window deg: [2.0, 2.0, 2.0]
   polish translation window m: [0.001, 0.001, 0.001]
-  polish success: False
+  polish success: True
 
-Part: r_forearm
-  mean distance: 0.007512 -> 0.000814 m (89.16% improvement)
-  mean abs improvement: 6.698 mm
-  median distance: 0.007061 -> 0.000529 m
-  p90 distance: 0.016752 -> 0.001604 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [180.17038702393947, -26.176640098313786, -1.021381058611964]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0035930732734529855, 0.0013260994020100482, -0.018820690392878772]
-  delta angles deg: [180.17038702393947, -26.176640098313786, -1.021381058611964]
-  delta offsets m: [0.0035930732734529855, 0.0013260994020100482, -0.018820690392878772]
-  seed count: 42
-  selected seed label: previous:combo_+0_-5_+5
-  selected seed angles deg: [181.91169049016156, -31.19182380572243, 1.7739766534328392]
-  selected seed offsets m: [0.006244559490408846, 0.0023791371688558194, -0.0162261964660771]
-  angle bounds deg: [15.0, 8.0, 8.0]
-  translation bounds m: [0.008, 0.008, 0.008]
-  fine refine candidates: 11
-  fine refine selected jitter deg: [0.0, -5.0, -5.0]
-  fine refine mean distance: 0.000908 -> 0.000814 m
-  fine refine angle window deg: [6.0, 6.0, 6.0]
-  fine refine translation window m: [0.002, 0.002, 0.002]
+Part: l_upper_leg
+  mean distance: 0.000811 -> 0.000735 m (9.31% improvement)
+  mean abs improvement: 0.075 mm
+  median distance: 0.000800 -> 0.000708 m
+  p90 distance: 0.001140 -> 0.001118 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.0812341037198914, -0.4746347079204272, 0.45706867237527954]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.00011573557963286245, 4.012611214654129e-05, 0.0010921205858033481]
+  delta angles deg: [-0.0812341037198914, -0.4746347079204272, 0.45706867237527954]
+  delta offsets m: [0.00011573557963286245, 4.012611214654129e-05, 0.0010921205858033481]
+  seed count: 2
+  selected seed label: previous:optimized
+  selected seed angles deg: [-0.21143382997230276, -0.3285466967236121, 0.14299497013739507]
+  selected seed offsets m: [0.0002055415895333374, 0.00017202595965175153, 0.0008560413624247505]
+  angle bounds deg: [25.0, 25.0, 25.0]
+  translation bounds m: [0.03, 0.03, 0.03]
   polish mode: True
-  polish mean distance: 0.000814 -> 0.000814 m
+  polish mean distance: 0.000735 -> 0.000735 m
   polish angle window deg: [2.0, 2.0, 2.0]
   polish translation window m: [0.001, 0.001, 0.001]
   polish success: False
 
-Part: l_upper_arm
-  mean distance: 0.001186 -> 0.000954 m (19.58% improvement)
-  mean abs improvement: 0.232 mm
-  median distance: 0.000976 -> 0.000779 m
-  p90 distance: 0.002308 -> 0.001817 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.2900167716484819, 0.5418052329131446, 2.0179415071012308]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [-0.0007862576380531929, -0.002914678339491652, 0.0010825093125168448]
-  delta angles deg: [0.2900167716484819, 0.5418052329131446, 2.0179415071012308]
-  delta offsets m: [-0.0007862576380531929, -0.002914678339491652, 0.0010825093125168448]
+Part: l_lower_leg
+  mean distance: 0.000867 -> 0.000695 m (19.84% improvement)
+  mean abs improvement: 0.172 mm
+  median distance: 0.000864 -> 0.000636 m
+  p90 distance: 0.001283 -> 0.001164 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.2917956907719473, -0.10281731995162563, -0.39478292929584274]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0005654215820322792, 0.00017388525663156212, -0.00011692052951321932]
+  delta angles deg: [-0.2917956907719473, -0.10281731995162563, -0.39478292929584274]
+  delta offsets m: [0.0005654215820322792, 0.00017388525663156212, -0.00011692052951321932]
   seed count: 2
   selected seed label: configured:0
   selected seed angles deg: [0.0, 0.0, 0.0]
@@ -147,20 +79,88 @@ Part: l_upper_arm
   angle bounds deg: [25.0, 25.0, 25.0]
   translation bounds m: [0.03, 0.03, 0.03]
   polish mode: True
-  polish mean distance: 0.001029 -> 0.000954 m
+  polish mean distance: 0.000695 -> 0.000695 m
+  polish angle window deg: [2.0, 2.0, 2.0]
+  polish translation window m: [0.001, 0.001, 0.001]
+  polish success: True
+
+Part: r_upper_arm
+  mean distance: 0.001020 -> 0.000939 m (7.96% improvement)
+  mean abs improvement: 0.081 mm
+  median distance: 0.000800 -> 0.000779 m
+  p90 distance: 0.001970 -> 0.001739 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.3971116673866343, -0.34985933076437176, -0.21081616219845836]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0011441709740243361, -0.0003128671669302278, 0.0006485290630362868]
+  delta angles deg: [0.3971116673866343, -0.34985933076437176, -0.21081616219845836]
+  delta offsets m: [0.0011441709740243361, -0.0003128671669302278, 0.0006485290630362868]
+  seed count: 2
+  selected seed label: previous:optimized
+  selected seed angles deg: [0.6147387466790626, -0.14556779557071026, -0.2607860894851315]
+  selected seed offsets m: [0.0007383156026203966, -0.0003619891686885029, 0.0005344165494654723]
+  angle bounds deg: [25.0, 25.0, 25.0]
+  translation bounds m: [0.03, 0.03, 0.03]
+  polish mode: True
+  polish mean distance: 0.000939 -> 0.000939 m
+  polish angle window deg: [2.0, 2.0, 2.0]
+  polish translation window m: [0.001, 0.001, 0.001]
+  polish success: False
+
+Part: r_forearm
+  mean distance: 0.007503 -> 0.000794 m (89.41% improvement)
+  mean abs improvement: 6.709 mm
+  median distance: 0.007058 -> 0.000546 m
+  p90 distance: 0.016746 -> 0.001631 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [180.1567875699961, -26.247021734324196, -1.0462457802277916]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0027331916293539924, 0.0014733388946877517, -0.01989781643512899]
+  delta angles deg: [180.1567875699961, -26.247021734324196, -1.0462457802277916]
+  delta offsets m: [0.0027331916293539924, 0.0014733388946877517, -0.01989781643512899]
+  seed count: 42
+  selected seed label: previous:offset_-0.002_+0.000_+0.000
+  selected seed angles deg: [180.17038702393947, -26.176640098313786, -1.021381058611964]
+  selected seed offsets m: [0.0015930732734529855, 0.0013260994020100482, -0.018820690392878772]
+  angle bounds deg: [15.0, 8.0, 8.0]
+  translation bounds m: [0.008, 0.008, 0.008]
+  fine refine candidates: 11
+  fine refine selected jitter deg: [0.0, 0.0, 0.0]
+  fine refine mean distance: 0.000795 -> 0.000794 m
+  fine refine angle window deg: [6.0, 6.0, 6.0]
+  fine refine translation window m: [0.002, 0.002, 0.002]
+  polish mode: True
+  polish mean distance: 0.000794 -> 0.000794 m
+  polish angle window deg: [2.0, 2.0, 2.0]
+  polish translation window m: [0.001, 0.001, 0.001]
+  polish success: False
+
+Part: l_upper_arm
+  mean distance: 0.001172 -> 0.000935 m (20.24% improvement)
+  mean abs improvement: 0.237 mm
+  median distance: 0.000992 -> 0.000781 m
+  p90 distance: 0.002295 -> 0.001809 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.3504618580899149, 0.7223827064050545, 2.2702791321618845]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [-0.0013989629039067712, -0.0032421352869447593, 0.0009817375464329955]
+  delta angles deg: [0.3504618580899149, 0.7223827064050545, 2.2702791321618845]
+  delta offsets m: [-0.0013989629039067712, -0.0032421352869447593, 0.0009817375464329955]
+  seed count: 2
+  selected seed label: previous:optimized
+  selected seed angles deg: [0.2900167716484819, 0.5418052329131446, 2.0179415071012308]
+  selected seed offsets m: [-0.0007862576380531929, -0.002914678339491652, 0.0010825093125168448]
+  angle bounds deg: [25.0, 25.0, 25.0]
+  translation bounds m: [0.03, 0.03, 0.03]
+  polish mode: True
+  polish mean distance: 0.000936 -> 0.000935 m
   polish angle window deg: [2.0, 2.0, 2.0]
   polish translation window m: [0.001, 0.001, 0.001]
   polish success: True
 
 Part: l_forearm
-  mean distance: 0.001875 -> 0.001034 m (44.82% improvement)
-  mean abs improvement: 0.840 mm
-  median distance: 0.001668 -> 0.000847 m
-  p90 distance: 0.003449 -> 0.001846 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [1.4474734413329551e-06, 2.2907134362295124e-05, -7.795473080472504e-06]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0022896244665846148, -0.0010042296312969131, -0.0021072743935058582]
-  delta angles deg: [1.4474734413329551e-06, 2.2907134362295124e-05, -7.795473080472504e-06]
-  delta offsets m: [0.0022896244665846148, -0.0010042296312969131, -0.0021072743935058582]
+  mean distance: 0.001888 -> 0.000892 m (52.75% improvement)
+  mean abs improvement: 0.996 mm
+  median distance: 0.001661 -> 0.000810 m
+  p90 distance: 0.003441 -> 0.001537 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.14014363974452584, 0.6706577831963499, 1.0121212057290074]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.002328914333016436, -0.0017786006339883173, -0.0011072743935058582]
+  delta angles deg: [-0.14014363974452584, 0.6706577831963499, 1.0121212057290074]
+  delta offsets m: [0.002328914333016436, -0.0017786006339883173, -0.0011072743935058582]
   seed count: 2
   selected seed label: previous:optimized
   selected seed angles deg: [1.4474734413329551e-06, 2.2907134362295124e-05, -7.795473080472504e-06]
@@ -168,70 +168,70 @@ Part: l_forearm
   angle bounds deg: [25.0, 25.0, 25.0]
   translation bounds m: [0.03, 0.03, 0.03]
   polish mode: True
-  polish mean distance: 0.001034 -> 0.001034 m
+  polish mean distance: 0.001048 -> 0.000892 m
   polish angle window deg: [2.0, 2.0, 2.0]
   polish translation window m: [0.001, 0.001, 0.001]
-  polish success: False
+  polish success: True
 
 Part: torso
-  mean distance: 0.002776 -> 0.001853 m (33.24% improvement)
-  mean abs improvement: 0.923 mm
-  median distance: 0.002454 -> 0.001329 m
-  p90 distance: 0.004749 -> 0.003131 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-4.415735284331532, -0.15676026047789016, -0.13444536250904357]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.00023970604854474126, 6.491684684132464e-06, 0.0034814769908506175]
-  delta angles deg: [-4.415735284331532, -0.15676026047789016, -0.13444536250904357]
-  delta offsets m: [0.00023970604854474126, 6.491684684132464e-06, 0.0034814769908506175]
+  mean distance: 0.002789 -> 0.001872 m (32.87% improvement)
+  mean abs improvement: 0.917 mm
+  median distance: 0.002452 -> 0.001371 m
+  p90 distance: 0.004815 -> 0.003305 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-4.43983279217227, -0.2264422596570704, -0.12736297403383823]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [8.034537083834085e-05, -0.0002947996278048093, 0.0035593332445714282]
+  delta angles deg: [-4.43983279217227, -0.2264422596570704, -0.12736297403383823]
+  delta offsets m: [8.034537083834085e-05, -0.0002947996278048093, 0.0035593332445714282]
   seed count: 2
   selected seed label: previous:optimized
-  selected seed angles deg: [-3.6545111653070026, 0.004050859500847661, -0.24403613292864126]
-  selected seed offsets m: [-6.42358665535887e-05, -0.0003945706938397833, 0.002764656188347113]
+  selected seed angles deg: [-4.415735284331532, -0.15676026047789016, -0.13444536250904357]
+  selected seed offsets m: [0.00023970604854474126, 6.491684684132464e-06, 0.0034814769908506175]
   angle bounds deg: [25.0, 25.0, 25.0]
   translation bounds m: [0.03, 0.03, 0.03]
   polish mode: True
-  polish mean distance: 0.001853 -> 0.001853 m
+  polish mean distance: 0.001872 -> 0.001872 m
   polish angle window deg: [2.0, 2.0, 2.0]
   polish translation window m: [0.001, 0.001, 0.001]
-  polish success: False
+  polish success: True
 
 Part: r_palm
-  mean distance: 0.002477 -> 0.000339 m (86.30% improvement)
-  mean abs improvement: 2.138 mm
-  median distance: 0.002485 -> 0.000237 m
-  p90 distance: 0.003070 -> 0.000662 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-1.1041262748801866, -0.15627767719806618, -0.295869456941196]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [-0.0008376557075796641, -0.0029906547538093155, -0.0001860314066015665]
-  delta angles deg: [-1.1041262748801866, -0.15627767719806618, -0.295869456941196]
-  delta offsets m: [-0.0008376557075796641, -0.0029906547538093155, -0.0001860314066015665]
+  mean distance: 0.002477 -> 0.000363 m (85.36% improvement)
+  mean abs improvement: 2.114 mm
+  median distance: 0.002488 -> 0.000259 m
+  p90 distance: 0.003069 -> 0.000821 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-1.3624465532997945, -0.38136327102892376, -0.5887868920350113]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [-0.0007243228924421162, -0.0033484021385651115, -3.975023239076402e-05]
+  delta angles deg: [-1.3624465532997945, -0.38136327102892376, -0.5887868920350113]
+  delta offsets m: [-0.0007243228924421162, -0.0033484021385651115, -3.975023239076402e-05]
   seed count: 2
   selected seed label: previous:optimized
-  selected seed angles deg: [1.5571370886079685e-05, 2.0592821888371266e-08, 5.970808141427758e-05]
-  selected seed offsets m: [-0.00108782068808121, -0.002523616695784559, -6.046350389995432e-05]
+  selected seed angles deg: [-1.1041262748801866, -0.15627767719806618, -0.295869456941196]
+  selected seed offsets m: [-0.0008376557075796641, -0.0029906547538093155, -0.0001860314066015665]
   angle bounds deg: [25.0, 25.0, 25.0]
   translation bounds m: [0.03, 0.03, 0.03]
   polish mode: True
-  polish mean distance: 0.000339 -> 0.000339 m
+  polish mean distance: 0.000363 -> 0.000363 m
   polish angle window deg: [2.0, 2.0, 2.0]
   polish translation window m: [0.001, 0.001, 0.001]
-  polish success: False
+  polish success: True
 
 Part: l_palm
-  mean distance: 0.002507 -> 0.000376 m (85.01% improvement)
-  mean abs improvement: 2.131 mm
-  median distance: 0.002518 -> 0.000273 m
-  p90 distance: 0.003118 -> 0.000769 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-1.1186219130245452, 0.1232687767239839, 0.5511667028829643]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0006341692208547976, -0.003254149339706445, -0.000396833562097953]
-  delta angles deg: [-1.1186219130245452, 0.1232687767239839, 0.5511667028829643]
-  delta offsets m: [0.0006341692208547976, -0.003254149339706445, -0.000396833562097953]
+  mean distance: 0.002505 -> 0.000371 m (85.20% improvement)
+  mean abs improvement: 2.134 mm
+  median distance: 0.002520 -> 0.000311 m
+  p90 distance: 0.003116 -> 0.000741 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.8716704883855015, -0.14761707585676284, -0.2896030754214292]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [-0.00033091588324858206, -0.0024711148552089123, 0.00029574823916374927]
+  delta angles deg: [-0.8716704883855015, -0.14761707585676284, -0.2896030754214292]
+  delta offsets m: [-0.00033091588324858206, -0.0024711148552089123, 0.00029574823916374927]
   seed count: 2
-  selected seed label: previous:optimized
-  selected seed angles deg: [1.5701716018771263e-05, 2.6483406477506166e-07, -6.230790207624855e-05]
-  selected seed offsets m: [0.0005940170074013134, -0.002557199875835507, -0.0004312516711544228]
+  selected seed label: configured:0
+  selected seed angles deg: [0.0, 0.0, 0.0]
+  selected seed offsets m: [0.0, 0.0, 0.0]
   angle bounds deg: [25.0, 25.0, 25.0]
   translation bounds m: [0.03, 0.03, 0.03]
   polish mode: True
-  polish mean distance: 0.000376 -> 0.000376 m
+  polish mean distance: 0.000371 -> 0.000371 m
   polish angle window deg: [2.0, 2.0, 2.0]
   polish translation window m: [0.001, 0.001, 0.001]
   polish success: False

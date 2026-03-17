@@ -28,14 +28,14 @@ from pathlib import Path
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-from .draw_pads import (
+from neuromorphic_body_schema.helpers.draw_pads import (
     fingertip3L,
     fingertip3R,
     palmL,
     palmR,
     triangle_10pad,
 )
-from .helpers import (
+from neuromorphic_body_schema.helpers.helpers import (
     ARM_PATCH_ID_REMAP,
     KEY_MAPPING,
     POSITIONS_FILES,
@@ -224,18 +224,57 @@ def _build_taxel_mask(
     )
 
     pos_fn = POSITIONS_FILES.get(triangles_ini)
+    # If unknown part or missing file, treat every point as tactile (all True mask)
     if pos_fn is None:
-        # Unknown part - treat every point as tactile.
-        return []
+        # Estimate number of points from patch_entries
+        num_points = 0
+        drawn_offsets = [0, 1, 2, 3, 4, 5, 7, 8, 9, 11]
+        full_offsets = list(range(12))
+        for pid, config_type in patch_entries:
+            if config_type == "triangle_10pad":
+                num_points += len(drawn_offsets)
+            elif config_type in {"fingertip3R", "fingertip3L"}:
+                num_points += len(full_offsets)
+            elif config_type in {"palmR", "palmL"}:
+                num_points += 4 * len(full_offsets)
+            else:
+                num_points += len(drawn_offsets)
+        return [True] * num_points
 
     pos_dir = Path(__file__).parent.parent / "include_taxels" / "positions"
     pos_path = pos_dir / pos_fn
     if not pos_path.exists():
-        return []
+        # Estimate number of points from patch_entries
+        num_points = 0
+        drawn_offsets = [0, 1, 2, 3, 4, 5, 7, 8, 9, 11]
+        full_offsets = list(range(12))
+        for pid, config_type in patch_entries:
+            if config_type == "triangle_10pad":
+                num_points += len(drawn_offsets)
+            elif config_type in {"fingertip3R", "fingertip3L"}:
+                num_points += len(full_offsets)
+            elif config_type in {"palmR", "palmL"}:
+                num_points += 4 * len(full_offsets)
+            else:
+                num_points += len(drawn_offsets)
+        return [True] * num_points
 
     repr_vals = read_taxel2repr_data(str(pos_path))
     if not repr_vals:
-        return []
+        # Estimate number of points from patch_entries
+        num_points = 0
+        drawn_offsets = [0, 1, 2, 3, 4, 5, 7, 8, 9, 11]
+        full_offsets = list(range(12))
+        for pid, config_type in patch_entries:
+            if config_type == "triangle_10pad":
+                num_points += len(drawn_offsets)
+            elif config_type in {"fingertip3R", "fingertip3L"}:
+                num_points += len(full_offsets)
+            elif config_type in {"palmR", "palmL"}:
+                num_points += 4 * len(full_offsets)
+            else:
+                num_points += len(drawn_offsets)
+        return [True] * num_points
 
     calibration = read_calibration_data(str(pos_path))
 
@@ -294,6 +333,7 @@ def _build_taxel_mask(
 def visualize_skin_patches(
     path_to_triangles,
     triangles_ini,
+    position_txt,
     expected_tactile_count: int | None = None,
     DEBUG=False,
 ):
@@ -533,19 +573,16 @@ def visualize_skin_patches(
     dX = dX * scale
     dY = dY * scale
     if not "hand" in triangles_ini:
-        for i in range(len(dXv)):
-            for j in range(len(dXv[i])):
-                dXv[i][j] = dXv[i][j] * scale
-                dYv[i][j] = dYv[i][j] * scale
+        # Vectorized scaling for lists of lists
+        dXv = [np.asarray(x) * scale for x in dXv]
+        dYv = [np.asarray(y) * scale for y in dYv]
 
     # flip axis and shift to positive values
     dY = -dY
     dYv_min = np.abs(np.min(dY))
     dY += dYv_min
     if not "hand" in triangles_ini:
-        for i in range(len(dYv)):
-            for j in range(len(dYv[i])):
-                dYv[i][j] = -dYv[i][j] + dYv_min
+        dYv = [-(y) + dYv_min for y in dYv]
 
     # find the width and height of the image
     width = np.max(dX)
@@ -564,10 +601,8 @@ def visualize_skin_patches(
     dX = [int(x + 0.5 + offset_x / 2) for x in dX]
     dY = [int(y + 0.5 + offset_y / 2) for y in dY]
     if not "hand" in triangles_ini:
-        for i in range(len(dYv)):
-            for j in range(len(dYv[i])):
-                dXv[i][j] = int(dXv[i][j] + 0.5 + offset_x / 2)
-                dYv[i][j] = int(dYv[i][j] + 0.5 + offset_y / 2)
+        dXv = [np.asarray(xj + 0.5 + offset_x / 2, dtype=int) for xj in dXv]
+        dYv = [np.asarray(yj + 0.5 + offset_y / 2, dtype=int) for yj in dYv]
 
     if DEBUG:
         # now we can draw the triangles
@@ -599,14 +634,14 @@ def visualize_skin_patches(
         plt.close(fig)
 
     # Build tactile mask from taxel2Repr before drawing
-    taxel_mask = _build_taxel_mask(triangles_ini, patch_entries_ordered)
+    taxel_mask = _build_taxel_mask(position_txt, patch_entries_ordered)
     if taxel_mask and len(taxel_mask) != len(dX):
         logging.warning(
             "Taxel mask length (%d) does not match drawn points (%d) for %s; "
             "falling back to all tactile.",
             len(taxel_mask),
             len(dX),
-            triangles_ini,
+            position_txt,
         )
         taxel_mask = []
     if taxel_mask and expected_tactile_count is not None:
@@ -617,7 +652,7 @@ def visualize_skin_patches(
                 "reconciling mask.",
                 tactile_count,
                 expected_tactile_count,
-                triangles_ini,
+                position_txt,
             )
             if tactile_count < expected_tactile_count:
                 for idx, is_tactile in enumerate(taxel_mask):
@@ -639,11 +674,17 @@ def visualize_skin_patches(
     # Draw the triangles on the image; colour non-tactile points distinctly so
     # the user can see their position but understands they never respond.
     for taxel_counter in range(len(dX)):
-        is_tactile = (not taxel_mask) or taxel_mask[taxel_counter]
-        color = taxel_color if is_tactile else non_tactile_color
+        if taxel_mask and not taxel_mask[taxel_counter]:
+            continue  # Skip non-tactile points entirely
+        color = taxel_color
         cv2.circle(
             img, (int(dX[taxel_counter]), int(dY[taxel_counter])), 5, color, 1
-        )  # RGB color
+        )
+        # is_tactile = (not taxel_mask) or taxel_mask[taxel_counter]
+        # color = taxel_color if is_tactile else non_tactile_color
+        # cv2.circle(
+        #     img, (int(dX[taxel_counter]), int(dY[taxel_counter])), 5, color, 1
+        # )  # RGB color
     if not "hand" in triangles_ini:
         for i in range(len(dXv)):
             for j in range(len(dXv[i])):
@@ -731,13 +772,14 @@ def make_skin_event_frame(
         # Keep the most recent polarity per tactile taxel index.
         for evt in events:
             event_by_taxel[int(evt[0])] = bool(evt[-1] > 0)
-
+    
     tactile_idx = 0
     for i, loc in enumerate(zip(locations[0], locations[1])):
         # Skip non-tactile positions: leave them as drawn by visualize_skin_patches.
         if taxel_mask and not taxel_mask[i]:
             continue
 
+        # TODO here we re-draw all taxels as background. We only want to change those which have been non-background before, otherwise skip
         if not len(events):
             # No event happened, return to blank for tactile points.
             cv2.circle(img, (int(loc[0]), int(loc[1])), 4, background_color, -1)
@@ -757,6 +799,8 @@ def make_skin_raw_frame(
     img,
     taxel_data,
     locations,
+    change_mask, 
+    taxel_scale,
     taxel_mask: list[bool] | None = None,
 ) -> np.ndarray:
     """Render raw skin values as a per-taxel color map.
@@ -778,28 +822,34 @@ def make_skin_raw_frame(
         np.ndarray: Updated BGR image with normalized low-to-high tactile
             values mapped from blue to red.
     """
-    values = np.asarray(taxel_data, dtype=float)
-    if values.size == 0:
+    # TODO tune the global scale to reflect interaction
+    # Mask validation: check only once, cache result
+    if not hasattr(make_skin_raw_frame, "_mask_validated"):
+        assert len(taxel_data) == np.sum(taxel_mask), (
+            f"taxel_data length ({len(taxel_data)}) != tactile mask sum ({np.sum(taxel_mask)})"
+        )
+        assert len(locations[0]) == len(taxel_mask), (
+            f"locations length ({len(locations[0])}) != mask length ({len(taxel_mask)})"
+        )
+        make_skin_raw_frame._mask_validated = True
+
+    if np.sum(change_mask) == 0:
+        # No change in tactile values, keep the previous frame.
         return img
 
-    vmin = float(np.min(values))
-    vmax = float(np.max(values))
-    if np.isclose(vmax, vmin):
-        norm_values = np.zeros_like(values)
-    else:
-        norm_values = (values - vmin) / (vmax - vmin)
+    values = np.asarray(taxel_data, dtype=float)
+    norm_values = values * taxel_scale + 50.0  # shift to respect background color
+    tactile_sensor_idc = np.array(taxel_mask).nonzero()[0]
+    tactile_change_idc = change_mask.nonzero()[0]
 
-    tactile_idx = 0  # index into taxel_data / norm_values
-    for i, loc in enumerate(zip(locations[0], locations[1])):
-        if taxel_mask and not taxel_mask[i]:
-            continue  # non-tactile: leave dot as drawn by visualize_skin_patches
-        if tactile_idx >= len(norm_values):
-            break
-        level = int(np.clip(norm_values[tactile_idx] * 255.0, 0, 255))
-        # BGR: blue->red gradient for low->high pressure values.
-        color = (255 - level, 0, level)
-        cv2.circle(img, (int(loc[0]), int(loc[1])), 4, color, -1)
-        tactile_idx += 1
+    # Vectorized drawing: get all changed indices and their locations
+    changed_locs_x = np.array(locations[0])[tactile_sensor_idc[tactile_change_idc]]
+    changed_locs_y = np.array(locations[1])[tactile_sensor_idc[tactile_change_idc]]
+    reds = np.clip(norm_values[tactile_change_idc], 50, 255)
+
+    for x, y, red in zip(changed_locs_x, changed_locs_y, reds):
+        color = (50, 50, red)
+        cv2.circle(img, (int(x), int(y)), 4, color, -1)
     return img
 
 
@@ -842,6 +892,8 @@ class ICubSkin:
         self.taxel_masks = {}   # per-patch bool list: True = tactile channel
         self.imgs = {}
         self.ed_imgs = {}
+        self.latest_taxel_data = {}
+        self.latest_ed_data = {}
         self.latest_raw_frames = {}
         self.latest_ed_frames = {}
         self.grouped_sensors = grouped_sensors
@@ -852,66 +904,58 @@ class ICubSkin:
         self.show_raw_feed = show_raw_feed
         self.show_ed_feed = show_ed_feed
         self.DEBUG = DEBUG
-
-        # Map from high-level part to triangle_ini(s)
-        PART_TO_TRIANGLE = {
-            "r_hand": ["right_hand_V2_2"],
-            "r_forearm": ["right_forearm_V2"],
-            "r_upper_arm": ["right_arm"],
-            "torso": ["torso"],
-            "l_hand": ["left_hand_V2_2"],
-            "l_forearm": ["left_forearm_V2"],
-            "l_upper_arm": ["left_arm"],
-            "r_upper_leg": ["right_leg_upper"],
-            "r_lower_leg": ["right_leg_lower"],
-            "l_upper_leg": ["left_leg_upper"],
-            "l_lower_leg": ["left_leg_lower"],
-        }
+        # potentially we always save the max value here over time? not sure...
+        max_taxel_val = 10.0  # TODO tune this value to reflect actual max value in the future
+        self.taxel_scale = (255.0 - 50.0) / max_taxel_val  # we want to map 0->50 and max_val to 255 to respect background color when no pressure
+        
         if skin == "all":
-            selected_patches = TRIANGLE_FILES
+            self.selected_patches = TRIANGLE_FILES
         elif isinstance(skin, str):
-            selected_patches = PART_TO_TRIANGLE.get(skin, [])
-        elif isinstance(skin, (list, tuple)):
-            selected_patches = []
-            for part in skin:
-                selected_patches.extend(PART_TO_TRIANGLE.get(part, []))
+            self.selected_patches = [skin]
         else:
-            selected_patches = []
+            self.selected_patches = skin
 
-        for triangle_ini in selected_patches:
-            if "right_hand" in triangle_ini:
+        for triangle_ini in self.selected_patches:
+            if "hand" in triangle_ini:
                 taxel_data = []
-                for key in KEY_MAPPING["r_hand"]:
-                    taxel_data.extend(self.grouped_sensors[key])
-            elif "left_hand" in triangle_ini:
-                taxel_data = []
-                for key in KEY_MAPPING["l_hand"]:
+                for key in KEY_MAPPING[triangle_ini]:
                     taxel_data.extend(self.grouped_sensors[key])
             else:
                 taxel_data = self.grouped_sensors[KEY_MAPPING[triangle_ini]]
-            self.esim.append(SkinEventSimulator(np.array(taxel_data), time))
+
+            if self.skin_mode == "event_driven":
+                self.esim.append(SkinEventSimulator(np.array(taxel_data), time))
+            
             if self.show_raw_feed or self.show_ed_feed:
                 img, x, y, mask = visualize_skin_patches(
                     path_to_triangles=TRIANGLE_INI_PATH,
-                    triangles_ini=triangle_ini,
+                    triangles_ini=TRIANGLE_FILES[triangle_ini],
+                    position_txt=POSITIONS_FILES[triangle_ini],
                     expected_tactile_count=len(taxel_data),
                     DEBUG=DEBUG,
                 )
                 self.taxel_locs[triangle_ini] = [x, y]
                 self.taxel_masks[triangle_ini] = mask
                 self.imgs[triangle_ini] = img
-                if self.show_ed_feed:
-                    self.ed_imgs[triangle_ini] = img.copy()
 
                 if self.show_raw_feed:
                     raw_window_name = f"{triangle_ini}_raw"
                     cv2.namedWindow(raw_window_name, cv2.WINDOW_NORMAL)
+                    # Set window size to match image
+                    img_shape = self.imgs[triangle_ini].shape
+                    cv2.resizeWindow(raw_window_name, img_shape[1], img_shape[0])
                     cv2.imshow(raw_window_name, self.imgs[triangle_ini])
+                    self.latest_taxel_data[triangle_ini] = np.array(taxel_data).copy()
 
                 if self.show_ed_feed:
+                    self.ed_imgs[triangle_ini] = img.copy()
                     ed_window_name = f"{triangle_ini}_ed"
                     cv2.namedWindow(ed_window_name, cv2.WINDOW_NORMAL)
+                    # Set window size to match image
+                    img_shape = self.ed_imgs[triangle_ini].shape
+                    cv2.resizeWindow(ed_window_name, img_shape[1], img_shape[0])
                     cv2.imshow(ed_window_name, self.ed_imgs[triangle_ini])
+                    self.latest_ed_data[triangle_ini] = []  # start with empty event list
 
                     def on_thresh_slider(val):
                         val /= 100
@@ -938,49 +982,45 @@ class ICubSkin:
             time (int): Current simulation timestamp in nanoseconds.
 
         Returns:
-            list[np.ndarray]: Event arrays in the same order as
-            ``TRIANGLE_FILES``. Each array contains rows
-            ``(taxel_id, t_ns, polarity)``.
-
-        Side Effects:
-            - Updates ``latest_raw_frames`` and ``latest_ed_frames`` caches.
-            - Refreshes OpenCV windows when corresponding ``show_*_feed`` flags
-              are enabled.
+            list[np.ndarray]: Event arrays in the same order as selected patches.
         """
 
         all_events = []
-        for triangle_ini, esim_single in zip(TRIANGLE_FILES, self.esim):
-            # TODO make sure we hand over the right data here
-            if "right_hand" in triangle_ini:
-                # TODO double check the order of the taxels!
+        for idx, triangle_ini in enumerate(self.selected_patches):
+            if "hand" in triangle_ini:
                 taxel_data = []
-                for key in KEY_MAPPING["r_hand"]:
-                    taxel_data.extend(self.grouped_sensors[key])
-            elif "left_hand" in triangle_ini:
-                taxel_data = []
-                for key in KEY_MAPPING["l_hand"]:
+                for key in KEY_MAPPING[triangle_ini]:
                     taxel_data.extend(self.grouped_sensors[key])
             else:
                 taxel_data = self.grouped_sensors[KEY_MAPPING[triangle_ini]]
+            taxel_data = np.array(taxel_data)
 
-            events = esim_single.skinCallback(taxel_data, time)
-            all_events.append(events)
-            if self.DEBUG:
-                if len(events):
-                    logging.info(
-                        f"{len(events)} events detected at {triangle_ini}.")
+            if self.skin_mode == "event_driven":
+                # Always compute events (for event-driven mode)            
+                esim_single = self.esim[idx]
+                events = esim_single.skinCallback(taxel_data, time)
+                all_events.append(events)
+                if self.DEBUG:
+                    if len(events):
+                        logging.info(f"{len(events)} events detected at {triangle_ini}.")
 
+            # Frame-based: update and show raw feed if enabled
             if self.show_raw_feed:
+                active_raw_data_mask = self.latest_taxel_data[triangle_ini] != taxel_data
                 raw_img = make_skin_raw_frame(
                     img=self.imgs[triangle_ini].copy(),
                     taxel_data=taxel_data,
                     locations=self.taxel_locs[triangle_ini],
+                    taxel_scale=self.taxel_scale,
+                    change_mask=active_raw_data_mask,
                     taxel_mask=self.taxel_masks[triangle_ini],
                 )
                 self.latest_raw_frames[triangle_ini] = raw_img
                 cv2.imshow(f"{triangle_ini}_raw", raw_img)
 
+            # Event-driven: update and show event feed if enabled
             if self.show_ed_feed:
+                # TODO introduce a similar metric to the active_raw_data_mask to avoid unnecessary redraws when no events are present
                 ed_img = make_skin_event_frame(
                     img=self.ed_imgs[triangle_ini],
                     events=events,

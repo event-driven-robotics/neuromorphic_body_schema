@@ -62,14 +62,14 @@ SKIN_PARTS = [
 # Mapping from triangle configuration basename → positions file basename.
 # Used to look up taxel2Repr for non-tactile channel filtering in the visualizer.
 POSITIONS_FILES = {
-    "right_arm":        "right_arm.txt",
-    "left_arm":         "left_arm.txt",
+    "right_arm":        "right_arm_mesh.txt",
+    "left_arm":         "left_arm_mesh.txt",
     "torso":            "torso.txt",
-    "right_forearm_V2": "right_forearm_V2.txt",
-    "left_forearm_V2":  "left_forearm_V2.txt",
+    "right_forearm": "right_forearm_V2.txt",
+    "left_forearm":  "left_forearm_V2.txt",
     # skinGUI uses *_V2_2 while positions files are stored as *_V2_1.
-    "right_hand_V2_2":  "right_hand_V2_1.txt",
-    "left_hand_V2_2":   "left_hand_V2_1.txt",
+    "right_hand":  "right_hand_V2_1.txt",
+    "left_hand":   "left_hand_V2_1.txt",
     "right_leg_upper":  "right_leg_upper.txt",
     "left_leg_upper":   "left_leg_upper.txt",
     "right_leg_lower":  "right_leg_lower.txt",
@@ -88,19 +88,19 @@ ARM_PATCH_ID_REMAP = {
 }
 
 # Triangle configuration file names corresponding to each skin part for visualization
-TRIANGLE_FILES = [
-    "right_hand_V2_2",
-    "right_forearm_V2",
-    "right_arm",
-    "torso",
-    "left_hand_V2_2",
-    "left_forearm_V2",
-    "left_arm",
-    "right_leg_upper",
-    "right_leg_lower",
-    "left_leg_upper",
-    "left_leg_lower",
-]
+TRIANGLE_FILES = {
+    "right_hand": "right_hand_V2_2",
+    "right_forearm": "right_forearm_V2",
+    "right_arm": "right_arm",
+    "torso": "torso",
+    "left_hand": "left_hand_V2_2",
+    "left_forearm": "left_forearm_V2",
+    "left_arm": "left_arm",
+    "right_leg_upper": "right_leg_upper",
+    "right_leg_lower": "right_leg_lower",
+    "left_leg_upper": "left_leg_upper",
+    "left_leg_lower":"left_leg_lower",
+}
 
 # Mapping from triangle configuration files to MuJoCo sensor names
 # This dictionary links skin visualization configurations to their corresponding
@@ -110,7 +110,7 @@ KEY_MAPPING = {
     "left_leg_upper": "l_upper_leg_taxel",
     "right_leg_lower": "r_lower_leg_taxel",
     "left_leg_lower": "l_lower_leg_taxel",
-    "r_hand": [
+    "right_hand": [
         "r_palm_taxel",
         "r_hand_thumb_taxel",
         "r_hand_index_taxel",
@@ -123,7 +123,7 @@ KEY_MAPPING = {
     "left_forearm_V2": "l_forearm_taxel",
     "right_arm": "r_upper_arm_taxel",
     "left_arm": "l_upper_arm_taxel",
-    "l_hand": [
+    "left_hand": [
         "l_palm_taxel",
         "l_hand_thumb_taxel",
         "l_hand_index_taxel",

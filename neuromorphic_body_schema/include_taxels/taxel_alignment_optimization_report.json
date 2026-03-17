@@ -30,57 +30,57 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0007906428834863429,
-      "median_distance_m": 0.0007804963993446569,
-      "p90_distance_m": 0.0010965564590869378
+      "mean_distance_m": 0.0007912309458666496,
+      "median_distance_m": 0.000776890293839581,
+      "p90_distance_m": 0.0011021468798644762
     },
     "optimized": {
       "delta_angles_deg": [
-        -0.06686069630189122,
-        -0.4172386921692749,
-        -0.2807203158302379
+        0.09193724149259358,
+        -0.48649025067903995,
+        -0.009126627456002642
       ],
       "delta_offsets_m": [
-        0.00020872781261266652,
-        5.57444390378603e-05,
-        0.0013216383898538469
+        0.0001037145777382832,
+        -0.00012308398485133613,
+        0.001471658232427726
       ],
-      "mean_distance_m": 0.000719009086089626,
-      "median_distance_m": 0.0006926816916022472,
-      "p90_distance_m": 0.0011189594161780674
+      "mean_distance_m": 0.0007216353001952687,
+      "median_distance_m": 0.0007067206312029788,
+      "p90_distance_m": 0.001120904188250811
     },
     "delta": {
       "angles_deg": [
-        -0.06686069630189122,
-        -0.4172386921692749,
-        -0.2807203158302379
+        0.09193724149259358,
+        -0.48649025067903995,
+        -0.009126627456002642
       ],
       "offsets_m": [
-        0.00020872781261266652,
-        5.57444390378603e-05,
-        0.0013216383898538469
+        0.0001037145777382832,
+        -0.00012308398485133613,
+        0.001471658232427726
       ],
-      "mean_distance_m": -7.163379739671689e-05,
-      "mean_distance_improvement_pct": 9.060196315288058
+      "mean_distance_m": -6.959564567138093e-05,
+      "mean_distance_improvement_pct": 8.795870034525958
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 90,
-      "nfev": 1071,
-      "objective": 0.000658555549477302,
+      "nit": 96,
+      "nfev": 1218,
+      "objective": 0.0006578604087852668,
       "seed_count": 2,
       "selected_seed_label": "previous:optimized",
       "selected_seed_angles_deg": [
-        5.799792695416521e-06,
-        -2.1837758811319058e-05,
-        5.774731520944493e-06
+        -0.06686069630189122,
+        -0.4172386921692749,
+        -0.2807203158302379
       ],
       "selected_seed_offsets_m": [
-        0.0004697923453920399,
-        -5.904014809501626e-05,
-        0.0014434094968819753
+        0.00020872781261266652,
+        5.57444390378603e-05,
+        0.0013216383898538469
       ],
       "angle_bounds_deg": [
         25.0,
@@ -95,8 +95,8 @@
       "fine_refinement": null,
       "polish_mode": true,
       "polish_refinement": {
-        "pre_polish_mean_distance_m": 0.000719009086089626,
-        "post_polish_mean_distance_m": 0.000719009086089626,
+        "pre_polish_mean_distance_m": 0.0007216353001952687,
+        "post_polish_mean_distance_m": 0.0007216353001952687,
         "angle_window_deg": [
           2.0,
           2.0,
@@ -107,7 +107,7 @@
           0.001,
           0.001
         ],
-        "success": false
+        "success": true
       }
     }
   },
@@ -142,57 +142,57 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0008865002545417742,
-      "median_distance_m": 0.0008559199615549996,
-      "p90_distance_m": 0.0012718611712743077
+      "mean_distance_m": 0.0008971160899798999,
+      "median_distance_m": 0.0008713793732056078,
+      "p90_distance_m": 0.0012972090921825926
     },
     "optimized": {
       "delta_angles_deg": [
-        -0.038024581389330056,
-        -0.10577185850136157,
-        -0.02054263556274306
+        -0.0494184251940219,
+        -0.13037803359955874,
+        0.06712232026275546
       ],
       "delta_offsets_m": [
-        0.000571239244579298,
-        0.00011194026788960041,
-        -0.0004126523836512605
+        0.00048431022403312143,
+        0.00016251763500735656,
+        -0.000565896092997653
       ],
-      "mean_distance_m": 0.0007138135286190418,
-      "median_distance_m": 0.0006671520657634817,
-      "p90_distance_m": 0.0011531598650924048
+      "mean_distance_m": 0.0007343953195255706,
+      "median_distance_m": 0.0006707318712739055,
+      "p90_distance_m": 0.0011639835092649177
     },
     "delta": {
       "angles_deg": [
-        -0.038024581389330056,
-        -0.10577185850136157,
-        -0.02054263556274306
+        -0.0494184251940219,
+        -0.13037803359955874,
+        0.06712232026275546
       ],
       "offsets_m": [
-        0.000571239244579298,
-        0.00011194026788960041,
-        -0.0004126523836512605
+        0.00048431022403312143,
+        0.00016251763500735656,
+        -0.000565896092997653
       ],
-      "mean_distance_m": -0.00017268672592273243,
-      "mean_distance_improvement_pct": 19.4796025199105
+      "mean_distance_m": -0.00016272077045432934,
+      "mean_distance_improvement_pct": 18.138206668211147
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 81,
-      "nfev": 1190,
-      "objective": 0.0006323979275864892,
+      "nit": 137,
+      "nfev": 1855,
+      "objective": 0.0006520097935901755,
       "seed_count": 2,
-      "selected_seed_label": "configured:0",
+      "selected_seed_label": "previous:optimized",
       "selected_seed_angles_deg": [
-        0.0,
-        0.0,
-        0.0
+        -0.038024581389330056,
+        -0.10577185850136157,
+        -0.02054263556274306
       ],
       "selected_seed_offsets_m": [
-        0.0,
-        0.0,
-        0.0
+        0.000571239244579298,
+        0.00011194026788960041,
+        -0.0004126523836512605
       ],
       "angle_bounds_deg": [
         25.0,
@@ -207,8 +207,8 @@
       "fine_refinement": null,
       "polish_mode": true,
       "polish_refinement": {
-        "pre_polish_mean_distance_m": 0.0007138135286190418,
-        "post_polish_mean_distance_m": 0.0007138135286190418,
+        "pre_polish_mean_distance_m": 0.0007351796918686706,
+        "post_polish_mean_distance_m": 0.0007343953195255706,
         "angle_window_deg": [
           2.0,
           2.0,
@@ -254,57 +254,57 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0008040477270542898,
-      "median_distance_m": 0.0007856725396412306,
-      "p90_distance_m": 0.0011355792020009158
+      "mean_distance_m": 0.0008106030475351304,
+      "median_distance_m": 0.0008003049812051896,
+      "p90_distance_m": 0.0011401985521389297
     },
     "optimized": {
       "delta_angles_deg": [
-        -0.21143382997230276,
-        -0.3285466967236121,
-        0.14299497013739507
+        -0.0812341037198914,
+        -0.4746347079204272,
+        0.45706867237527954
       ],
       "delta_offsets_m": [
-        0.0002055415895333374,
-        0.00017202595965175153,
-        0.0008560413624247505
+        0.00011573557963286245,
+        4.012611214654129e-05,
+        0.0010921205858033481
       ],
-      "mean_distance_m": 0.0007311365912918843,
-      "median_distance_m": 0.0007004285453540166,
-      "p90_distance_m": 0.0011604238313833687
+      "mean_distance_m": 0.0007351671513728303,
+      "median_distance_m": 0.0007075537497990427,
+      "p90_distance_m": 0.0011182480184567657
     },
     "delta": {
       "angles_deg": [
-        -0.21143382997230276,
-        -0.3285466967236121,
-        0.14299497013739507
+        -0.0812341037198914,
+        -0.4746347079204272,
+        0.45706867237527954
       ],
       "offsets_m": [
-        0.0002055415895333374,
-        0.00017202595965175153,
-        0.0008560413624247505
+        0.00011573557963286245,
+        4.012611214654129e-05,
+        0.0010921205858033481
       ],
-      "mean_distance_m": -7.291113576240549e-05,
-      "mean_distance_improvement_pct": 9.068010928844089
+      "mean_distance_m": -7.543589616230007e-05,
+      "mean_distance_improvement_pct": 9.306145146096407
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 90,
-      "nfev": 973,
-      "objective": 0.0006717495023689188,
+      "nit": 44,
+      "nfev": 602,
+      "objective": 0.0006680329822823044,
       "seed_count": 2,
-      "selected_seed_label": "configured:0",
+      "selected_seed_label": "previous:optimized",
       "selected_seed_angles_deg": [
-        0.0,
-        0.0,
-        0.0
+        -0.21143382997230276,
+        -0.3285466967236121,
+        0.14299497013739507
       ],
       "selected_seed_offsets_m": [
-        0.0,
-        0.0,
-        0.0
+        0.0002055415895333374,
+        0.00017202595965175153,
+        0.0008560413624247505
       ],
       "angle_bounds_deg": [
         25.0,
@@ -319,8 +319,8 @@
       "fine_refinement": null,
       "polish_mode": true,
       "polish_refinement": {
-        "pre_polish_mean_distance_m": 0.0007311365912918843,
-        "post_polish_mean_distance_m": 0.0007311365912918843,
+        "pre_polish_mean_distance_m": 0.0007351671513728303,
+        "post_polish_mean_distance_m": 0.0007351671513728303,
         "angle_window_deg": [
           2.0,
           2.0,
@@ -366,46 +366,46 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0008891633648509984,
-      "median_distance_m": 0.0008590025983800629,
-      "p90_distance_m": 0.0013131312985184948
+      "mean_distance_m": 0.0008666951409590825,
+      "median_distance_m": 0.00086350470862987,
+      "p90_distance_m": 0.0012826892416444944
     },
     "optimized": {
       "delta_angles_deg": [
-        -0.1486882240643513,
-        -0.09264657610423804,
-        0.037543555216242946
+        -0.2917956907719473,
+        -0.10281731995162563,
+        -0.39478292929584274
       ],
       "delta_offsets_m": [
-        0.0005247381194418414,
-        4.1419181921500506e-05,
-        -0.00030788612934512635
+        0.0005654215820322792,
+        0.00017388525663156212,
+        -0.00011692052951321932
       ],
-      "mean_distance_m": 0.0007223247666580012,
-      "median_distance_m": 0.000677877314265176,
-      "p90_distance_m": 0.0012014444140634672
+      "mean_distance_m": 0.0006947770076207309,
+      "median_distance_m": 0.0006360505301421775,
+      "p90_distance_m": 0.0011637806488558656
     },
     "delta": {
       "angles_deg": [
-        -0.1486882240643513,
-        -0.09264657610423804,
-        0.037543555216242946
+        -0.2917956907719473,
+        -0.10281731995162563,
+        -0.39478292929584274
       ],
       "offsets_m": [
-        0.0005247381194418414,
-        4.1419181921500506e-05,
-        -0.00030788612934512635
+        0.0005654215820322792,
+        0.00017388525663156212,
+        -0.00011692052951321932
       ],
-      "mean_distance_m": -0.0001668385981929972,
-      "mean_distance_improvement_pct": 18.76354838584192
+      "mean_distance_m": -0.0001719181333383516,
+      "mean_distance_improvement_pct": 19.836055980204005
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 118,
-      "nfev": 1519,
-      "objective": 0.0006416882744927852,
+      "nit": 70,
+      "nfev": 945,
+      "objective": 0.0006065646339009559,
       "seed_count": 2,
       "selected_seed_label": "configured:0",
       "selected_seed_angles_deg": [
@@ -431,8 +431,8 @@
       "fine_refinement": null,
       "polish_mode": true,
       "polish_refinement": {
-        "pre_polish_mean_distance_m": 0.0007223247666580012,
-        "post_polish_mean_distance_m": 0.0007223247666580012,
+        "pre_polish_mean_distance_m": 0.0006950988437201377,
+        "post_polish_mean_distance_m": 0.0006947770076207309,
         "angle_window_deg": [
           2.0,
           2.0,
@@ -443,7 +443,7 @@
           0.001,
           0.001
         ],
-        "success": false
+        "success": true
       }
     }
   },
@@ -503,57 +503,57 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0010187675636098422,
-      "median_distance_m": 0.0008248206483873032,
-      "p90_distance_m": 0.0019806023695902457
+      "mean_distance_m": 0.0010204773115091762,
+      "median_distance_m": 0.0007995768463161184,
+      "p90_distance_m": 0.0019702859950862838
     },
     "optimized": {
       "delta_angles_deg": [
-        0.6147387466790626,
-        -0.14556779557071026,
-        -0.2607860894851315
+        0.3971116673866343,
+        -0.34985933076437176,
+        -0.21081616219845836
       ],
       "delta_offsets_m": [
-        0.0007383156026203966,
-        -0.0003619891686885029,
-        0.0005344165494654723
+        0.0011441709740243361,
+        -0.0003128671669302278,
+        0.0006485290630362868
       ],
-      "mean_distance_m": 0.0009238434752428399,
-      "median_distance_m": 0.0007442391289909681,
-      "p90_distance_m": 0.0017804205587433665
+      "mean_distance_m": 0.0009392315329496319,
+      "median_distance_m": 0.0007786569448731398,
+      "p90_distance_m": 0.0017389246205695371
     },
     "delta": {
       "angles_deg": [
-        0.6147387466790626,
-        -0.14556779557071026,
-        -0.2607860894851315
+        0.3971116673866343,
+        -0.34985933076437176,
+        -0.21081616219845836
       ],
       "offsets_m": [
-        0.0007383156026203966,
-        -0.0003619891686885029,
-        0.0005344165494654723
+        0.0011441709740243361,
+        -0.0003128671669302278,
+        0.0006485290630362868
       ],
-      "mean_distance_m": -9.492408836700233e-05,
-      "mean_distance_improvement_pct": 9.31754128789238
+      "mean_distance_m": -8.124577855954428e-05,
+      "mean_distance_improvement_pct": 7.961546782396417
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 77,
-      "nfev": 875,
-      "objective": 0.0007716682274791824,
+      "nit": 41,
+      "nfev": 539,
+      "objective": 0.0007806384762513185,
       "seed_count": 2,
       "selected_seed_label": "previous:optimized",
       "selected_seed_angles_deg": [
-        7.7128969898083e-07,
-        5.550984822973099e-08,
-        -1.2969083539138547e-06
+        0.6147387466790626,
+        -0.14556779557071026,
+        -0.2607860894851315
       ],
       "selected_seed_offsets_m": [
-        -3.5933562759351566e-05,
-        -0.00016914731231823383,
-        0.00046294980579601237
+        0.0007383156026203966,
+        -0.0003619891686885029,
+        0.0005344165494654723
       ],
       "angle_bounds_deg": [
         25.0,
@@ -568,8 +568,8 @@
       "fine_refinement": null,
       "polish_mode": true,
       "polish_refinement": {
-        "pre_polish_mean_distance_m": 0.0009238434752428399,
-        "post_polish_mean_distance_m": 0.0009238434752428399,
+        "pre_polish_mean_distance_m": 0.0009392315329496319,
+        "post_polish_mean_distance_m": 0.0009392315329496319,
         "angle_window_deg": [
           2.0,
           2.0,
@@ -651,57 +651,57 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.007511949878533892,
-      "median_distance_m": 0.007061105866774565,
-      "p90_distance_m": 0.016751539911129845
+      "mean_distance_m": 0.007503371112004087,
+      "median_distance_m": 0.007057719082183509,
+      "p90_distance_m": 0.016746077077630126
     },
     "optimized": {
       "delta_angles_deg": [
-        180.17038702393947,
-        -26.176640098313786,
-        -1.021381058611964
+        180.1567875699961,
+        -26.247021734324196,
+        -1.0462457802277916
       ],
       "delta_offsets_m": [
-        0.0035930732734529855,
-        0.0013260994020100482,
-        -0.018820690392878772
+        0.0027331916293539924,
+        0.0014733388946877517,
+        -0.01989781643512899
       ],
-      "mean_distance_m": 0.0008139476066300412,
-      "median_distance_m": 0.0005291020861875302,
-      "p90_distance_m": 0.001603732184855392
+      "mean_distance_m": 0.0007944277735872522,
+      "median_distance_m": 0.0005463424311360301,
+      "p90_distance_m": 0.0016309352889175292
     },
     "delta": {
       "angles_deg": [
-        180.17038702393947,
-        -26.176640098313786,
-        -1.021381058611964
+        180.1567875699961,
+        -26.247021734324196,
+        -1.0462457802277916
       ],
       "offsets_m": [
-        0.0035930732734529855,
-        0.0013260994020100482,
-        -0.018820690392878772
+        0.0027331916293539924,
+        0.0014733388946877517,
+        -0.01989781643512899
       ],
-      "mean_distance_m": -0.006698002271903851,
-      "mean_distance_improvement_pct": 89.16462942656243
+      "mean_distance_m": -0.0067089433384168356,
+      "mean_distance_improvement_pct": 89.41238862201143
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 75,
-      "nfev": 966,
-      "objective": 0.0006260003163980199,
+      "nit": 68,
+      "nfev": 833,
+      "objective": 0.0005761459148029477,
       "seed_count": 42,
-      "selected_seed_label": "previous:combo_+0_-5_+5",
+      "selected_seed_label": "previous:offset_-0.002_+0.000_+0.000",
       "selected_seed_angles_deg": [
-        181.91169049016156,
-        -31.19182380572243,
-        1.7739766534328392
+        180.17038702393947,
+        -26.176640098313786,
+        -1.021381058611964
       ],
       "selected_seed_offsets_m": [
-        0.006244559490408846,
-        0.0023791371688558194,
-        -0.0162261964660771
+        0.0015930732734529855,
+        0.0013260994020100482,
+        -0.018820690392878772
       ],
       "angle_bounds_deg": [
         15.0,
@@ -717,11 +717,11 @@
         "candidate_count": 11,
         "selected_jitter_deg": [
           0.0,
-          -5.0,
-          -5.0
+          0.0,
+          0.0
         ],
-        "pre_refine_mean_distance_m": 0.000907717802689304,
-        "post_refine_mean_distance_m": 0.0008139476066300412,
+        "pre_refine_mean_distance_m": 0.0007949366578585741,
+        "post_refine_mean_distance_m": 0.0007944277735872522,
         "angle_window_deg": [
           6.0,
           6.0,
@@ -735,8 +735,8 @@
       },
       "polish_mode": true,
       "polish_refinement": {
-        "pre_polish_mean_distance_m": 0.0008139476066300412,
-        "post_polish_mean_distance_m": 0.0008139476066300412,
+        "pre_polish_mean_distance_m": 0.0007944277735872522,
+        "post_polish_mean_distance_m": 0.0007944277735872522,
         "angle_window_deg": [
           2.0,
           2.0,
@@ -807,57 +807,57 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0011864664941107612,
-      "median_distance_m": 0.0009762201504891695,
-      "p90_distance_m": 0.0023084174890394544
+      "mean_distance_m": 0.00117242652219242,
+      "median_distance_m": 0.0009924397752053165,
+      "p90_distance_m": 0.002294576777881838
     },
     "optimized": {
       "delta_angles_deg": [
-        0.2900167716484819,
-        0.5418052329131446,
-        2.0179415071012308
+        0.3504618580899149,
+        0.7223827064050545,
+        2.2702791321618845
       ],
       "delta_offsets_m": [
-        -0.0007862576380531929,
-        -0.002914678339491652,
-        0.0010825093125168448
+        -0.0013989629039067712,
+        -0.0032421352869447593,
+        0.0009817375464329955
       ],
-      "mean_distance_m": 0.0009541614450367104,
-      "median_distance_m": 0.0007787441274777417,
-      "p90_distance_m": 0.0018167035014663613
+      "mean_distance_m": 0.0009350947561003368,
+      "median_distance_m": 0.0007813292894402694,
+      "p90_distance_m": 0.0018089824384709867
     },
     "delta": {
       "angles_deg": [
-        0.2900167716484819,
-        0.5418052329131446,
-        2.0179415071012308
+        0.3504618580899149,
+        0.7223827064050545,
+        2.2702791321618845
       ],
       "offsets_m": [
-        -0.0007862576380531929,
-        -0.002914678339491652,
-        0.0010825093125168448
+        -0.0013989629039067712,
+        -0.0032421352869447593,
+        0.0009817375464329955
       ],
-      "mean_distance_m": -0.00023230504907405074,
-      "mean_distance_improvement_pct": 19.579570955196665
+      "mean_distance_m": -0.00023733176609208324,
+      "mean_distance_improvement_pct": 20.24278379921638
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 152,
-      "nfev": 2037,
-      "objective": 0.0008104748432502291,
+      "nit": 126,
+      "nfev": 1981,
+      "objective": 0.0007648914074544771,
       "seed_count": 2,
-      "selected_seed_label": "configured:0",
+      "selected_seed_label": "previous:optimized",
       "selected_seed_angles_deg": [
-        0.0,
-        0.0,
-        0.0
+        0.2900167716484819,
+        0.5418052329131446,
+        2.0179415071012308
       ],
       "selected_seed_offsets_m": [
-        0.0,
-        0.0,
-        0.0
+        -0.0007862576380531929,
+        -0.002914678339491652,
+        0.0010825093125168448
       ],
       "angle_bounds_deg": [
         25.0,
@@ -872,8 +872,8 @@
       "fine_refinement": null,
       "polish_mode": true,
       "polish_refinement": {
-        "pre_polish_mean_distance_m": 0.0010289280016231874,
-        "post_polish_mean_distance_m": 0.0009541614450367104,
+        "pre_polish_mean_distance_m": 0.0009357512316521488,
+        "post_polish_mean_distance_m": 0.0009350947561003368,
         "angle_window_deg": [
           2.0,
           2.0,
@@ -955,46 +955,46 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0018746971962403287,
-      "median_distance_m": 0.0016682334079091007,
-      "p90_distance_m": 0.003448991072152647
+      "mean_distance_m": 0.00188843167922571,
+      "median_distance_m": 0.0016605821185429282,
+      "p90_distance_m": 0.003440816205859417
     },
     "optimized": {
       "delta_angles_deg": [
-        1.4474734413329551e-06,
-        2.2907134362295124e-05,
-        -7.795473080472504e-06
+        -0.14014363974452584,
+        0.6706577831963499,
+        1.0121212057290074
       ],
       "delta_offsets_m": [
-        0.0022896244665846148,
-        -0.0010042296312969131,
-        -0.0021072743935058582
+        0.002328914333016436,
+        -0.0017786006339883173,
+        -0.0011072743935058582
       ],
-      "mean_distance_m": 0.001034479639724234,
-      "median_distance_m": 0.0008474039362480128,
-      "p90_distance_m": 0.001846116974145905
+      "mean_distance_m": 0.0008923479851171472,
+      "median_distance_m": 0.0008101160194382359,
+      "p90_distance_m": 0.0015365341506461997
     },
     "delta": {
       "angles_deg": [
-        1.4474734413329551e-06,
-        2.2907134362295124e-05,
-        -7.795473080472504e-06
+        -0.14014363974452584,
+        0.6706577831963499,
+        1.0121212057290074
       ],
       "offsets_m": [
-        0.0022896244665846148,
-        -0.0010042296312969131,
-        -0.0021072743935058582
+        0.002328914333016436,
+        -0.0017786006339883173,
+        -0.0011072743935058582
       ],
-      "mean_distance_m": -0.0008402175565160948,
-      "mean_distance_improvement_pct": 44.818841048097575
+      "mean_distance_m": -0.0009960836941085628,
+      "mean_distance_improvement_pct": 52.74661006094615
     },
     "optimizer": {
-      "success": false,
-      "status": 2,
-      "message": "ABNORMAL: ",
-      "nit": 53,
-      "nfev": 1701,
-      "objective": 0.0007836559965576426,
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 160,
+      "nfev": 2303,
+      "objective": 0.000725761182651443,
       "seed_count": 2,
       "selected_seed_label": "previous:optimized",
       "selected_seed_angles_deg": [
@@ -1020,8 +1020,8 @@
       "fine_refinement": null,
       "polish_mode": true,
       "polish_refinement": {
-        "pre_polish_mean_distance_m": 0.001034479639724234,
-        "post_polish_mean_distance_m": 0.001034479639724234,
+        "pre_polish_mean_distance_m": 0.0010475364228245305,
+        "post_polish_mean_distance_m": 0.0008923479851171472,
         "angle_window_deg": [
           2.0,
           2.0,
@@ -1032,7 +1032,7 @@
           0.001,
           0.001
         ],
-        "success": false
+        "success": true
       }
     }
   },
@@ -1093,57 +1093,57 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.002776087775582679,
-      "median_distance_m": 0.00245400954559701,
-      "p90_distance_m": 0.004749284030848081
+      "mean_distance_m": 0.002789099682973316,
+      "median_distance_m": 0.0024516228511038815,
+      "p90_distance_m": 0.004814952666662059
     },
     "optimized": {
       "delta_angles_deg": [
-        -4.415735284331532,
-        -0.15676026047789016,
-        -0.13444536250904357
+        -4.43983279217227,
+        -0.2264422596570704,
+        -0.12736297403383823
       ],
       "delta_offsets_m": [
-        0.00023970604854474126,
-        6.491684684132464e-06,
-        0.0034814769908506175
+        8.034537083834085e-05,
+        -0.0002947996278048093,
+        0.0035593332445714282
       ],
-      "mean_distance_m": 0.001853352610551946,
-      "median_distance_m": 0.0013290910128571124,
-      "p90_distance_m": 0.0031311882384220378
+      "mean_distance_m": 0.0018723215047939524,
+      "median_distance_m": 0.0013712299206819854,
+      "p90_distance_m": 0.003304806102494474
     },
     "delta": {
       "angles_deg": [
-        -4.415735284331532,
-        -0.15676026047789016,
-        -0.13444536250904357
+        -4.43983279217227,
+        -0.2264422596570704,
+        -0.12736297403383823
       ],
       "offsets_m": [
-        0.00023970604854474126,
-        6.491684684132464e-06,
-        0.0034814769908506175
+        8.034537083834085e-05,
+        -0.0002947996278048093,
+        0.0035593332445714282
       ],
-      "mean_distance_m": -0.0009227351650307328,
-      "mean_distance_improvement_pct": 33.238688385386446
+      "mean_distance_m": -0.0009167781781793637,
+      "mean_distance_improvement_pct": 32.87003988333731
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 188,
-      "nfev": 2401,
-      "objective": 0.0013791918475252608,
+      "nit": 58,
+      "nfev": 742,
+      "objective": 0.0013774023541134515,
       "seed_count": 2,
       "selected_seed_label": "previous:optimized",
       "selected_seed_angles_deg": [
-        -3.6545111653070026,
-        0.004050859500847661,
-        -0.24403613292864126
+        -4.415735284331532,
+        -0.15676026047789016,
+        -0.13444536250904357
       ],
       "selected_seed_offsets_m": [
-        -6.42358665535887e-05,
-        -0.0003945706938397833,
-        0.002764656188347113
+        0.00023970604854474126,
+        6.491684684132464e-06,
+        0.0034814769908506175
       ],
       "angle_bounds_deg": [
         25.0,
@@ -1158,8 +1158,8 @@
       "fine_refinement": null,
       "polish_mode": true,
       "polish_refinement": {
-        "pre_polish_mean_distance_m": 0.001853352610551946,
-        "post_polish_mean_distance_m": 0.001853352610551946,
+        "pre_polish_mean_distance_m": 0.0018723215047939524,
+        "post_polish_mean_distance_m": 0.0018723215047939524,
         "angle_window_deg": [
           2.0,
           2.0,
@@ -1170,7 +1170,7 @@
           0.001,
           0.001
         ],
-        "success": false
+        "success": true
       }
     }
   },
@@ -1241,57 +1241,57 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0024770303822999333,
-      "median_distance_m": 0.0024847135644493167,
-      "p90_distance_m": 0.003070147035180649
+      "mean_distance_m": 0.0024769017306532507,
+      "median_distance_m": 0.0024880528592096185,
+      "p90_distance_m": 0.0030694016585110628
     },
     "optimized": {
       "delta_angles_deg": [
-        -1.1041262748801866,
-        -0.15627767719806618,
-        -0.295869456941196
+        -1.3624465532997945,
+        -0.38136327102892376,
+        -0.5887868920350113
       ],
       "delta_offsets_m": [
-        -0.0008376557075796641,
-        -0.0029906547538093155,
-        -0.0001860314066015665
+        -0.0007243228924421162,
+        -0.0033484021385651115,
+        -3.975023239076402e-05
       ],
-      "mean_distance_m": 0.00033929112075391205,
-      "median_distance_m": 0.00023692986784807068,
-      "p90_distance_m": 0.0006622253792881855
+      "mean_distance_m": 0.00036251546275918784,
+      "median_distance_m": 0.00025937176745762343,
+      "p90_distance_m": 0.0008213280230829502
     },
     "delta": {
       "angles_deg": [
-        -1.1041262748801866,
-        -0.15627767719806618,
-        -0.295869456941196
+        -1.3624465532997945,
+        -0.38136327102892376,
+        -0.5887868920350113
       ],
       "offsets_m": [
-        -0.0008376557075796641,
-        -0.0029906547538093155,
-        -0.0001860314066015665
+        -0.0007243228924421162,
+        -0.0033484021385651115,
+        -3.975023239076402e-05
       ],
-      "mean_distance_m": -0.0021377392615460214,
-      "mean_distance_improvement_pct": 86.30250467744047
+      "mean_distance_m": -0.002114386267894063,
+      "mean_distance_improvement_pct": 85.36415642684464
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 119,
-      "nfev": 1582,
-      "objective": 0.0002788682136798033,
+      "nit": 43,
+      "nfev": 539,
+      "objective": 0.0002658393507021052,
       "seed_count": 2,
       "selected_seed_label": "previous:optimized",
       "selected_seed_angles_deg": [
-        1.5571370886079685e-05,
-        2.0592821888371266e-08,
-        5.970808141427758e-05
+        -1.1041262748801866,
+        -0.15627767719806618,
+        -0.295869456941196
       ],
       "selected_seed_offsets_m": [
-        -0.00108782068808121,
-        -0.002523616695784559,
-        -6.046350389995432e-05
+        -0.0008376557075796641,
+        -0.0029906547538093155,
+        -0.0001860314066015665
       ],
       "angle_bounds_deg": [
         25.0,
@@ -1306,8 +1306,8 @@
       "fine_refinement": null,
       "polish_mode": true,
       "polish_refinement": {
-        "pre_polish_mean_distance_m": 0.00033929112075391205,
-        "post_polish_mean_distance_m": 0.00033929112075391205,
+        "pre_polish_mean_distance_m": 0.00036251546275918784,
+        "post_polish_mean_distance_m": 0.00036251546275918784,
         "angle_window_deg": [
           2.0,
           2.0,
@@ -1318,7 +1318,7 @@
           0.001,
           0.001
         ],
-        "success": false
+        "success": true
       }
     }
   },
@@ -1377,57 +1377,57 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.002507108028596666,
-      "median_distance_m": 0.0025184980163675324,
-      "p90_distance_m": 0.0031176806059912982
+      "mean_distance_m": 0.0025053570822704857,
+      "median_distance_m": 0.002520091017975677,
+      "p90_distance_m": 0.0031157569478457822
     },
     "optimized": {
       "delta_angles_deg": [
-        -1.1186219130245452,
-        0.1232687767239839,
-        0.5511667028829643
+        -0.8716704883855015,
+        -0.14761707585676284,
+        -0.2896030754214292
       ],
       "delta_offsets_m": [
-        0.0006341692208547976,
-        -0.003254149339706445,
-        -0.000396833562097953
+        -0.00033091588324858206,
+        -0.0024711148552089123,
+        0.00029574823916374927
       ],
-      "mean_distance_m": 0.00037584357718305986,
-      "median_distance_m": 0.00027309743608614065,
-      "p90_distance_m": 0.000769164369193831
+      "mean_distance_m": 0.00037088271185577897,
+      "median_distance_m": 0.00031139988623620553,
+      "p90_distance_m": 0.0007412944146889626
     },
     "delta": {
       "angles_deg": [
-        -1.1186219130245452,
-        0.1232687767239839,
-        0.5511667028829643
+        -0.8716704883855015,
+        -0.14761707585676284,
+        -0.2896030754214292
       ],
       "offsets_m": [
-        0.0006341692208547976,
-        -0.003254149339706445,
-        -0.000396833562097953
+        -0.00033091588324858206,
+        -0.0024711148552089123,
+        0.00029574823916374927
       ],
-      "mean_distance_m": -0.002131264451413606,
-      "mean_distance_improvement_pct": 85.00887983700346
+      "mean_distance_m": -0.0021344743704147066,
+      "mean_distance_improvement_pct": 85.19641313885421
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 42,
-      "nfev": 518,
-      "objective": 0.00030554910230470443,
+      "nit": 46,
+      "nfev": 777,
+      "objective": 0.00038130667115866677,
       "seed_count": 2,
-      "selected_seed_label": "previous:optimized",
+      "selected_seed_label": "configured:0",
       "selected_seed_angles_deg": [
-        1.5701716018771263e-05,
-        2.6483406477506166e-07,
-        -6.230790207624855e-05
+        0.0,
+        0.0,
+        0.0
       ],
       "selected_seed_offsets_m": [
-        0.0005940170074013134,
-        -0.002557199875835507,
-        -0.0004312516711544228
+        0.0,
+        0.0,
+        0.0
       ],
       "angle_bounds_deg": [
         25.0,
@@ -1442,8 +1442,8 @@
       "fine_refinement": null,
       "polish_mode": true,
       "polish_refinement": {
-        "pre_polish_mean_distance_m": 0.00037584357718305986,
-        "post_polish_mean_distance_m": 0.00037584357718305986,
+        "pre_polish_mean_distance_m": 0.00037088271185577897,
+        "post_polish_mean_distance_m": 0.00037088271185577897,
         "angle_window_deg": [
           2.0,
           2.0,
