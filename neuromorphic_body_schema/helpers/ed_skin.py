@@ -909,7 +909,7 @@ class ICubSkin:
         self.taxel_scale = (255.0 - 50.0) / max_taxel_val  # we want to map 0->50 and max_val to 255 to respect background color when no pressure
         
         if skin == "all":
-            self.selected_patches = TRIANGLE_FILES
+            self.selected_patches = list(TRIANGLE_FILES.values())
         elif isinstance(skin, str):
             self.selected_patches = [skin]
         else:

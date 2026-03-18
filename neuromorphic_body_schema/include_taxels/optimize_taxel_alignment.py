@@ -31,7 +31,6 @@ from include_skin_to_mujoco_model import (
     validate_taxel_data,
 )
 
-
 @dataclass(frozen=True)
 class PartConfig:
     part_name: str
@@ -52,12 +51,16 @@ REPORT_JSON = ROOT / "neuromorphic_body_schema" / "include_taxels" / "taxel_alig
 REPORT_TXT = ROOT / "neuromorphic_body_schema" / "include_taxels" / "taxel_alignment_optimization_report.txt"
 
 
+
 def _angle_seed_grid(
     x_values: tuple[float, ...],
     y_values: tuple[float, ...] = (0.0,),
     z_values: tuple[float, ...] = (0.0,),
 ) -> tuple[tuple[float, float, float], ...]:
     return tuple((x, y, z) for x in x_values for y in y_values for z in z_values)
+
+# Expanded grid for upper arms: 0, 45, 90 degrees for each axis
+UPPER_ARM_ANGLE_GRID = _angle_seed_grid((0.0, 45.0, 90.0), (0.0, 45.0, 90.0), (0.0, 45.0, 90.0))
 
 MANUAL_STEPS: dict[str, tuple[tuple[tuple[float, float, float], tuple[float, float, float]], ...]] = {
     "r_upper_leg": (
@@ -112,6 +115,7 @@ MANUAL_STEPS: dict[str, tuple[tuple[tuple[float, float, float], tuple[float, flo
     ),
 }
 
+
 PARTS: tuple[PartConfig, ...] = (
     PartConfig(
         part_name="r_upper_leg",
@@ -147,11 +151,12 @@ PARTS: tuple[PartConfig, ...] = (
     ),
     PartConfig(
         part_name="r_upper_arm",
-        position_file="right_arm.txt",
+        position_file="right_arm_mesh.txt",
         mesh_files=("sim_sea_2-5_r_upper_arm_prt-binary.stl", "sim_sea_2-5_r_elbow_prt-binary.stl"),
         mesh_pos=((0.131934, 0.0, -0.0353516), (0.131934, 0.0, -0.0353516)),
         mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0), (1.0, 0.0, 0.0, 0.0)),
         rebase=True,
+        delta_angle_seed_candidates=UPPER_ARM_ANGLE_GRID,
     ),
     PartConfig(
         part_name="r_forearm",
@@ -170,11 +175,12 @@ PARTS: tuple[PartConfig, ...] = (
     ),
     PartConfig(
         part_name="l_upper_arm",
-        position_file="left_arm.txt",
+        position_file="left_arm_mesh.txt",
         mesh_files=("sim_sea_2-5_l_upper_arm_prt-binary.stl", "sim_sea_2-5_l_elbow_prt-binary.stl"),
         mesh_pos=((-0.131901, 0.0, -0.0353428), (-0.131901, 0.0, -0.0353428)),
         mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0), (1.0, 0.0, 0.0, 0.0)),
         rebase=True,
+        delta_angle_seed_candidates=UPPER_ARM_ANGLE_GRID,
     ),
     PartConfig(
         part_name="l_forearm",
@@ -360,8 +366,47 @@ def build_seed_candidates(
         # In polish mode, start from the best known solution first.
         add_candidate("previous:optimized", previous_seed["angles"], previous_seed["offsets"])
 
-    for idx, angle_seed in enumerate(config.delta_angle_seed_candidates):
-        add_candidate(f"configured:{idx}", np.array(angle_seed, dtype=float), zero_offsets)
+
+    # Special logic for l_upper_arm: focused grid around previous best with specified rotations and translations
+    if config.part_name == "l_upper_arm" and previous_seed is not None and not polish:
+        prev_angles = previous_seed["angles"]
+        prev_offsets = previous_seed["offsets"]
+        # Best so far
+        # rot_x_vals = [-15.0]
+        # rot_y_vals = [95.0]
+        # rot_z_vals = [170.0]
+        # trans_x_vals = [-0.04]  # moves along z
+        # trans_y_vals = [0.0]
+        # trans_z_vals = [-0.09]  # moves along x
+
+        # Experimental
+        rot_x_vals = [-6.000012628466136]
+        rot_y_vals = [114.99998344324177]
+        rot_z_vals = [168.2978092632269]
+        trans_x_vals = [-0.07, -0.06, -0.05, -0.04, -0.03]  # moves along z
+        trans_y_vals = [-0.0032137035524437718]
+        trans_z_vals = [-0.08003560586316362]  # moves along x
+
+        for dx in rot_x_vals:
+            for dy in rot_y_vals:
+                for dz in rot_z_vals:
+                    for tx in trans_x_vals:
+                        for ty in trans_y_vals:
+                            for tz in trans_z_vals:
+                                # use previous best as starting point
+                                # angles = prev_angles + np.array([dx, dy, dz], dtype=float)
+                                # offsets = prev_offsets + np.array([tx, ty, tz], dtype=float)
+                                # always start from original orientation
+                                angles = np.array([dx, dy, dz], dtype=float)
+                                offsets = np.array([tx, ty, tz], dtype=float)
+                                add_candidate(
+                                    f"l_upper_arm:refine_rotx{dx}_roty{dy}_rotz{dz}_x{tx}_y{ty}_z{tz}",
+                                    angles,
+                                    offsets
+                                )
+    else:
+        for idx, angle_seed in enumerate(config.delta_angle_seed_candidates):
+            add_candidate(f"configured:{idx}", np.array(angle_seed, dtype=float), zero_offsets)
 
     if previous_seed is not None and config.part_name == "r_forearm":
         prev_angles = previous_seed["angles"]
@@ -468,10 +513,20 @@ def optimize_part(
     initial_mean = float(initial_stats["mean_m"])
     print(f"[{config.part_name}] initial mean distance={initial_mean:.6f} m")
 
-    seed_candidates = build_seed_candidates(config, previous_seed_map.get(config.part_name), polish=polish)
+    previous_seed = previous_seed_map.get(config.part_name)
+    if polish and previous_seed is not None:
+        # In polish mode, only use the previous optimized result as the seed
+        seed_candidates = [("previous:optimized", previous_seed["angles"], previous_seed["offsets"])]
+    else:
+        # In normal mode, use all seed candidates
+        seed_candidates = build_seed_candidates(config, previous_seed, polish=polish)
 
     seed_results: list[tuple[float, np.ndarray, Any, np.ndarray, np.ndarray, str]] = []
+
+
     for seed_idx, (seed_label, seed_angles, seed_offsets) in enumerate(seed_candidates):
+        print(f"\n[{config.part_name}] Trying seed {seed_idx}/{len(seed_candidates)}: {seed_label}")
+        print(f"    angles: {seed_angles.tolist()} offsets: {seed_offsets.tolist()}")
         x_seed = np.hstack([seed_angles, seed_offsets])
         bounds = [
             (seed_angles[0] - angle_bounds[0], seed_angles[0] + angle_bounds[0]),
@@ -483,6 +538,7 @@ def optimize_part(
         ]
 
         iteration = {"count": 0}
+        best_so_far = {"score": float("inf"), "params": x_seed.copy()}
 
         def callback(xk: np.ndarray) -> None:
             iteration["count"] += 1
@@ -490,6 +546,9 @@ def optimize_part(
             print(
                 f"[{config.part_name}] seed={seed_idx} ({seed_label}) iter={iteration['count']:02d} mean_distance={md:.6f} m"
             )
+            if md < best_so_far["score"]:
+                best_so_far["score"] = md
+                best_so_far["params"] = xk.copy()
 
         primary_maxiter = 220 if polish else 120
         primary_ftol = 1e-14 if polish else 1e-10
@@ -502,8 +561,9 @@ def optimize_part(
             options={"maxiter": primary_maxiter, "ftol": primary_ftol, "gtol": 1e-12},
         )
 
-        x_candidate = result.x if result.success else x_seed
-        score = mean_distance(x_candidate)
+        # Use best-so-far parameters, not just final iterate
+        x_candidate = best_so_far["params"]
+        score = best_so_far["score"]
         seed_results.append((score, x_candidate, result, seed_angles, seed_offsets, seed_label))
 
     seed_results.sort(key=lambda x: x[0])

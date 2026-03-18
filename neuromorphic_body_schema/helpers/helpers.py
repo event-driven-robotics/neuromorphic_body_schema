@@ -59,6 +59,30 @@ SKIN_PARTS = [
     "l_lower_leg",
 ]
 
+MOJOCO_SKIN_PARTS = [
+    "r_upper_leg",
+    "r_lower_leg",
+    "l_upper_leg",
+    "l_lower_leg",
+    "chest",
+    "r_shoulder_3",
+    "r_forearm",
+    "r_hand",
+    "r_hand_thumb_3",
+    "r_hand_index_3",
+    "r_hand_middle_3",
+    "r_hand_ring_3",
+    "r_hand_little_3",
+    "l_shoulder_3",
+    "l_forearm",
+    "l_hand",
+    "l_hand_thumb_3",
+    "l_hand_index_3",
+    "l_hand_middle_3",
+    "l_hand_ring_3",
+    "l_hand_little_3",
+]
+
 # Mapping from triangle configuration basename → positions file basename.
 # Used to look up taxel2Repr for non-tactile channel filtering in the visualizer.
 POSITIONS_FILES = {
@@ -110,7 +134,7 @@ KEY_MAPPING = {
     "left_leg_upper": "l_upper_leg_taxel",
     "right_leg_lower": "r_lower_leg_taxel",
     "left_leg_lower": "l_lower_leg_taxel",
-    "right_hand": [
+    "right_hand_V2_2": [
         "r_palm_taxel",
         "r_hand_thumb_taxel",
         "r_hand_index_taxel",
@@ -123,7 +147,7 @@ KEY_MAPPING = {
     "left_forearm_V2": "l_forearm_taxel",
     "right_arm": "r_upper_arm_taxel",
     "left_arm": "l_upper_arm_taxel",
-    "left_hand": [
+    "left_hand_V2_2": [
         "l_palm_taxel",
         "l_hand_thumb_taxel",
         "l_hand_index_taxel",

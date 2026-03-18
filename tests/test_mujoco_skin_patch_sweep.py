@@ -35,7 +35,7 @@ from neuromorphic_body_schema.helpers.helpers import (KEY_MAPPING, MODEL_PATH,
 # possible skin patches: 
 # ["right_leg_upper", "left_leg_upper", "right_leg_lower", "left_leg_lower", "right_hand", "torso", "right_forearm_V2", "left_forearm_V2", "right_arm", "left_arm", "left_hand"]
 
-PATCH_NAME = 'right_hand'  # Change to desired patch
+PATCH_NAME = 'right_leg_upper'  # Change to desired patch
 RAMP_STEPS = 100
 HOLD_STEPS = 50
 RAMP_MAX = 10.0

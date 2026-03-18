@@ -88,7 +88,7 @@ else:
 SKIN_MODE = "frame_based"  # "event_driven" or "frame_based"
 SKIN_PART = "all"  # see helpers SKIN_PARTS for the list of possible skin parts
 # ["r_hand", "r_forearm", "r_upper_arm", "torso", "l_hand", "l_forearm", "l_upper_arm", "r_upper_leg", "r_lower_leg", "l_upper_leg", "l_lower_leg"]
-VISUALIZE_SKIN_FEED = True
+VISUALIZE_SKIN_FEED = False
 VISUALIZE_ED_SKIN_FEED = False
 
 PROPRIOCEPTION_MODE = "event_driven"  # "event_driven" or "frame_based"
