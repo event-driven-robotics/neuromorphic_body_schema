@@ -20,8 +20,9 @@ from typing import Any, Callable, cast
 
 import numpy as np
 import trimesh
-from scipy.optimize import minimize
+from scipy.optimize import differential_evolution, dual_annealing, minimize
 from scipy.spatial import KDTree
+from scipy.spatial.transform import Rotation
 
 from include_skin_to_mujoco_model import (
     read_calibration_data,
@@ -31,6 +32,14 @@ from include_skin_to_mujoco_model import (
     validate_taxel_data,
 )
 
+
+# PartConfig quick guide:
+# - Base seed set: delta_angle_seed_candidates (+ implicit zero translation seed).
+# - Previous-result seeding: include_previous_seed plus optional previous_*_jitter_candidates.
+# - Previous-result dense grid: previous_angle_grid_values_deg + previous_offset_grid_values_m.
+# - Global stage (optional): global_optimizer and global_maxiter.
+# - Local stage: local_optimizer (used for main optimization, local refine, and --polish).
+# - Local refine pass (optional): local_refine_angle_jitter_candidates with refine windows.
 @dataclass(frozen=True)
 class PartConfig:
     part_name: str
@@ -39,9 +48,21 @@ class PartConfig:
     mesh_pos: tuple[tuple[float, float, float], ...]
     mesh_quat_wxyz: tuple[tuple[float, float, float, float], ...]
     rebase: bool
+    manual_steps: tuple[tuple[tuple[float, float, float], tuple[float, float, float]], ...] = ()
     delta_angle_seed_candidates: tuple[tuple[float, float, float], ...] = ((0.0, 0.0, 0.0),)
     delta_angle_bounds_deg: tuple[float, float, float] = (25.0, 25.0, 25.0)
     delta_translation_bounds_m: tuple[float, float, float] = (0.03, 0.03, 0.03)
+    include_previous_seed: bool = True
+    previous_angle_jitter_candidates: tuple[tuple[float, float, float], ...] = ()
+    previous_offset_jitter_candidates: tuple[tuple[float, float, float], ...] = ()
+    previous_angle_grid_values_deg: tuple[tuple[float, ...], tuple[float, ...], tuple[float, ...]] | None = None
+    previous_offset_grid_values_m: tuple[tuple[float, ...], tuple[float, ...], tuple[float, ...]] | None = None
+    local_refine_angle_jitter_candidates: tuple[tuple[float, float, float], ...] = ()
+    local_refine_angle_window_deg: tuple[float, float, float] = (6.0, 6.0, 6.0)
+    local_refine_translation_window_m: tuple[float, float, float] = (0.002, 0.002, 0.002)
+    global_optimizer: str = "none"  # one of: none, differential_evolution, dual_annealing
+    global_maxiter: int = 40
+    local_optimizer: str = "L-BFGS-B"
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -49,6 +70,56 @@ POSITIONS_DIR = ROOT / "neuromorphic_body_schema" / "include_taxels" / "position
 MESH_DIR = ROOT / "neuromorphic_body_schema" / "meshes" / "iCub"
 REPORT_JSON = ROOT / "neuromorphic_body_schema" / "include_taxels" / "taxel_alignment_optimization_report.json"
 REPORT_TXT = ROOT / "neuromorphic_body_schema" / "include_taxels" / "taxel_alignment_optimization_report.txt"
+
+
+def normalize_quaternion_wxyz(quat_wxyz: np.ndarray) -> np.ndarray:
+    quat = np.array(quat_wxyz, dtype=float)
+    norm = float(np.linalg.norm(quat))
+    if norm < 1e-12:
+        return np.array([1.0, 0.0, 0.0, 0.0], dtype=float)
+    quat = quat / norm
+    # Canonical sign for stable reporting/comparisons.
+    if quat[0] < 0.0:
+        quat = -quat
+    return quat
+
+
+def quat_wxyz_to_xyzw(quat_wxyz: np.ndarray) -> np.ndarray:
+    q = normalize_quaternion_wxyz(quat_wxyz)
+    return np.array([q[1], q[2], q[3], q[0]], dtype=float)
+
+
+def quat_xyzw_to_wxyz(quat_xyzw: np.ndarray) -> np.ndarray:
+    q = np.array(quat_xyzw, dtype=float)
+    return normalize_quaternion_wxyz(np.array([q[3], q[0], q[1], q[2]], dtype=float))
+
+
+def euler_xyz_deg_to_quat_wxyz(angles_deg: np.ndarray) -> np.ndarray:
+    rot = Rotation.from_euler("xyz", np.array(angles_deg, dtype=float), degrees=True)
+    return quat_xyzw_to_wxyz(rot.as_quat())
+
+
+def quat_wxyz_to_euler_xyz_deg(quat_wxyz: np.ndarray) -> np.ndarray:
+    quat_xyzw = quat_wxyz_to_xyzw(quat_wxyz)
+    rot = Rotation.from_quat(quat_xyzw)
+    return np.array(rot.as_euler("xyz", degrees=True), dtype=float)
+
+
+def quaternion_geodesic_distance_deg(q1_wxyz: np.ndarray, q2_wxyz: np.ndarray) -> float:
+    q1 = normalize_quaternion_wxyz(q1_wxyz)
+    q2 = normalize_quaternion_wxyz(q2_wxyz)
+    dot = float(np.clip(np.abs(np.dot(q1, q2)), -1.0, 1.0))
+    return float(np.degrees(2.0 * np.arccos(dot)))
+
+
+def apply_quaternion_transform(
+    pos: np.ndarray,
+    offsets: np.ndarray,
+    quat_wxyz: np.ndarray,
+) -> np.ndarray:
+    rot = Rotation.from_quat(quat_wxyz_to_xyzw(quat_wxyz))
+    pos_shifted = np.array(pos, dtype=float) + np.array(offsets, dtype=float)
+    return np.array(rot.apply(pos_shifted), dtype=float)
 
 
 
@@ -59,62 +130,6 @@ def _angle_seed_grid(
 ) -> tuple[tuple[float, float, float], ...]:
     return tuple((x, y, z) for x in x_values for y in y_values for z in z_values)
 
-# Expanded grid for upper arms: 0, 45, 90 degrees for each axis
-UPPER_ARM_ANGLE_GRID = _angle_seed_grid((0.0, 45.0, 90.0), (0.0, 45.0, 90.0), (0.0, 45.0, 90.0))
-
-MANUAL_STEPS: dict[str, tuple[tuple[tuple[float, float, float], tuple[float, float, float]], ...]] = {
-    "r_upper_leg": (
-        ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
-    ),
-    "r_lower_leg": (
-        ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
-    ),
-    "l_upper_leg": (
-        ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
-    ),
-    "l_lower_leg": (
-        ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
-    ),
-    "r_upper_arm": (
-        ((0.0, 0.0, 0.0), (0.0, -32.0, 0.0)),
-        ((0.0, 0.0, 0.0), (0.0, 0.0, -2.0)),
-        ((-0.08, 0.0015, 0.012), (0.0, 0.0, 0.0)),
-    ),
-    "r_forearm": (
-        ((0.0, 0.0, 0.0), (0.0, 0.0, 90.0)),
-        ((0.0, 0.0, 0.0), (0.0, 78.0, 0.0)),
-        ((0.0, 0.0, 0.0), (0.0, 0.0, -2.0)),
-        ((-0.05, 0.0, -0.0015), (0.0, 0.0, 0.0)),
-    ),
-    "l_upper_arm": (
-        ((0.0, 0.0, 0.0), (-270.0, 0.0, 0.0)),
-        ((0.0, 0.0, 0.0), (0.0, -148.0, 0.0)),
-        ((0.08, 0.0015, 0.012), (0.0, 0.0, 0.0)),
-    ),
-    "l_forearm": (
-        ((0.0, 0.0, 0.0), (0.0, 0.0, -90.0)),
-        ((0.0, 0.0, 0.0), (0.0, 102.0, 0.0)),
-        ((0.0, 0.0, 0.0), (0.0, 0.0, -2.0)),
-        ((0.05, -0.001, 0.0), (0.0, 0.0, 0.0)),
-    ),
-    "torso": (
-        ((0.0, 0.0, 0.0), (0.0, 90.0, 0.0)),
-        ((0.0, 0.0, 0.0), (-4.0, 0.0, 0.0)),
-        ((0.0, 0.06, 0.068), (0.0, 0.0, 0.0)),
-    ),
-    "r_palm": (
-        ((0.0, 0.0, 0.0), (0.0, 0.0, 180.0)),
-        ((0.0, 0.0, 0.0), (90.0, 0.0, 0.0)),
-        ((0.0, 0.0, 0.0), (0.0, 15.0, 0.0)),
-        ((-0.055, -0.005, 0.02), (0.0, 0.0, 0.0)),
-    ),
-    "l_palm": (
-        ((0.0, 0.0, 0.0), (-90.0, 0.0, 0.0)),
-        ((0.0, 0.0, 0.0), (0.0, -15.0, 0.0)),
-        ((0.055, -0.005, 0.02), (0.0, 0.0, 0.0)),
-    ),
-}
-
 
 PARTS: tuple[PartConfig, ...] = (
     PartConfig(
@@ -124,6 +139,9 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_pos=((0.043709, 0.0701, 0.240813),),
         mesh_quat_wxyz=((0.5, 0.5, 0.5, 0.5),),
         rebase=False,
+        manual_steps=(
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+        ),
     ),
     PartConfig(
         part_name="r_lower_leg",
@@ -132,6 +150,9 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_pos=((0.043709, 0.0701, 0.386638),),
         mesh_quat_wxyz=((0.5, 0.5, 0.5, 0.5),),
         rebase=False,
+        manual_steps=(
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+        ),
     ),
     PartConfig(
         part_name="l_upper_leg",
@@ -140,6 +161,9 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_pos=((0.0437091, -0.0701, 0.240813),),
         mesh_quat_wxyz=((0.5, 0.5, 0.5, 0.5),),
         rebase=False,
+        manual_steps=(
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+        ),
     ),
     PartConfig(
         part_name="l_lower_leg",
@@ -148,15 +172,25 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_pos=((0.0437091, -0.0701, 0.386638),),
         mesh_quat_wxyz=((0.5, 0.5, 0.5, 0.5),),
         rebase=False,
+        manual_steps=(
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+        ),
     ),
     PartConfig(
         part_name="r_upper_arm",
         position_file="right_arm_mesh.txt",
-        mesh_files=("sim_sea_2-5_r_upper_arm_prt-binary.stl", "sim_sea_2-5_r_elbow_prt-binary.stl"),
-        mesh_pos=((0.131934, 0.0, -0.0353516), (0.131934, 0.0, -0.0353516)),
-        mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0), (1.0, 0.0, 0.0, 0.0)),
+        mesh_files=("sim_sea_2-5_r_elbow_prt-binary.stl",),
+        mesh_pos=((0.131934, 0.0, -0.0353516),),
+        mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
         rebase=True,
-        delta_angle_seed_candidates=UPPER_ARM_ANGLE_GRID,
+        manual_steps=(
+            ((0.0, 0.0, 0.0), (0.0, -32.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, 0.0, -2.0)),
+            ((-0.08, 0.0015, 0.012), (0.0, 0.0, 0.0)),
+        ),
+        delta_angle_seed_candidates=_angle_seed_grid((0.0, 45.0, 90.0), (0.0, 45.0, 90.0), (0.0, 45.0, 90.0)),
+        global_optimizer="differential_evolution",
+        global_maxiter=35,
     ),
     PartConfig(
         part_name="r_forearm",
@@ -165,6 +199,12 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_pos=((0.296887, 0.0, -0.0795506),),
         mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
         rebase=True,
+        manual_steps=(
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 90.0)),
+            ((0.0, 0.0, 0.0), (0.0, 78.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, 0.0, -2.0)),
+            ((-0.05, 0.0, -0.0015), (0.0, 0.0, 0.0)),
+        ),
         # Sweep a wider x-flip family and let prior optimized results contribute
         # additional local starts in the same region.
         delta_angle_seed_candidates=_angle_seed_grid(
@@ -172,15 +212,71 @@ PARTS: tuple[PartConfig, ...] = (
         ),
         delta_angle_bounds_deg=(15.0, 8.0, 8.0),
         delta_translation_bounds_m=(0.008, 0.008, 0.008),
+        previous_angle_jitter_candidates=(
+            (-30.0, 0.0, 0.0),
+            (-20.0, 0.0, 0.0),
+            (-10.0, 0.0, 0.0),
+            (10.0, 0.0, 0.0),
+            (20.0, 0.0, 0.0),
+            (30.0, 0.0, 0.0),
+            (0.0, -10.0, 0.0),
+            (0.0, -5.0, 0.0),
+            (0.0, 5.0, 0.0),
+            (0.0, 10.0, 0.0),
+            (0.0, 0.0, -10.0),
+            (0.0, 0.0, -5.0),
+            (0.0, 0.0, 5.0),
+            (0.0, 0.0, 10.0),
+            (10.0, -5.0, 0.0),
+            (10.0, 5.0, 0.0),
+            (-10.0, -5.0, 0.0),
+            (-10.0, 5.0, 0.0),
+            (0.0, -5.0, -5.0),
+            (0.0, -5.0, 5.0),
+            (0.0, 5.0, -5.0),
+            (0.0, 5.0, 5.0),
+        ),
+        previous_offset_jitter_candidates=(
+            (0.002, 0.0, 0.0),
+            (-0.002, 0.0, 0.0),
+            (0.0, 0.002, 0.0),
+            (0.0, -0.002, 0.0),
+            (0.0, 0.0, 0.002),
+            (0.0, 0.0, -0.002),
+            (0.002, 0.002, 0.0),
+            (0.0, 0.002, -0.002),
+        ),
+        local_refine_angle_jitter_candidates=(
+            (0.0, 0.0, 0.0),
+            (5.0, 0.0, 0.0),
+            (-5.0, 0.0, 0.0),
+            (0.0, 5.0, 0.0),
+            (0.0, -5.0, 0.0),
+            (0.0, 0.0, 5.0),
+            (0.0, 0.0, -5.0),
+            (5.0, -5.0, 0.0),
+            (5.0, 5.0, 0.0),
+            (0.0, -5.0, -5.0),
+            (0.0, -5.0, 5.0),
+        ),
     ),
     PartConfig(
         part_name="l_upper_arm",
         position_file="left_arm_mesh.txt",
-        mesh_files=("sim_sea_2-5_l_upper_arm_prt-binary.stl", "sim_sea_2-5_l_elbow_prt-binary.stl"),
-        mesh_pos=((-0.131901, 0.0, -0.0353428), (-0.131901, 0.0, -0.0353428)),
-        mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0), (1.0, 0.0, 0.0, 0.0)),
+        mesh_files=("sim_sea_2-5_l_elbow_prt-binary.stl",),
+        mesh_pos=((-0.131901, 0.0, -0.0353428),),
+        mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
         rebase=True,
-        delta_angle_seed_candidates=UPPER_ARM_ANGLE_GRID,
+        manual_steps=(
+            ((0.0, 0.0, 0.0), (-270.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, -148.0, 0.0)),
+            ((0.08, 0.0015, 0.012), (0.0, 0.0, 0.0)),
+        ),
+        delta_angle_seed_candidates=_angle_seed_grid((0.0, 45.0, 90.0), (0.0, 45.0, 90.0), (0.0, 45.0, 90.0)),
+        previous_angle_grid_values_deg=((-5.0, 0.0, 5.0), (-5.0, 0.0, 5.0), (-5.0, 0.0, 5.0)),
+        previous_offset_grid_values_m=((-0.01, 0.0, 0.01), (-0.01, 0.0, 0.01), (-0.01, 0.0, 0.01)),
+        global_optimizer="differential_evolution",
+        global_maxiter=35,
     ),
     PartConfig(
         part_name="l_forearm",
@@ -189,14 +285,26 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_pos=((-0.296887, 0.0, -0.0795506),),
         mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
         rebase=True,
+        manual_steps=(
+            ((0.0, 0.0, 0.0), (0.0, 0.0, -90.0)),
+            ((0.0, 0.0, 0.0), (0.0, 102.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, 0.0, -2.0)),
+            ((0.05, -0.001, 0.0), (0.0, 0.0, 0.0)),
+        ),
     ),
+    # TODO find which geometry is used in the model and if not optimization for the front part is enough (exclude the back hulls)
     PartConfig(
         part_name="torso",
         position_file="torso.txt",
-        mesh_files=("chest_hull_1.stl", "chest_hull_2.stl", "chest_hull_3.stl"),
-        mesh_pos=((0.0, 0.0928, -0.024189), (0.0, 0.0928, -0.024189), (0.0, 0.0928, -0.024189)),
-        mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0), (1.0, 0.0, 0.0, 0.0), (1.0, 0.0, 0.0, 0.0)),
+        mesh_files=("chest_hull_3.stl",),  # "chest_hull_1.stl", "chest_hull_2.stl", 
+        mesh_pos=((0.0, 0.0928, -0.024189),),
+        mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
         rebase=True,
+        manual_steps=(
+            ((0.0, 0.0, 0.0), (0.0, 90.0, 0.0)),
+            ((0.0, 0.0, 0.0), (-4.0, 0.0, 0.0)),
+            ((0.0, 0.06, 0.068), (0.0, 0.0, 0.0)),
+        ),
     ),
     PartConfig(
         part_name="r_palm",
@@ -205,6 +313,12 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_pos=((0.00271607, -0.0015568, -0.00248235),),
         mesh_quat_wxyz=((0.701057, -0.701057, 0.0922959, 0.0922959),),
         rebase=False,
+        manual_steps=(
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 180.0)),
+            ((0.0, 0.0, 0.0), (90.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, 15.0, 0.0)),
+            ((-0.055, -0.005, 0.02), (0.0, 0.0, 0.0)),
+        ),
     ),
     PartConfig(
         part_name="l_palm",
@@ -213,8 +327,15 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_pos=((-0.00271607, -0.0015568, -0.00248235),),
         mesh_quat_wxyz=((0.701057, 0.701057, -0.0922959, 0.0922959),),
         rebase=False,
+        manual_steps=(
+            ((0.0, 0.0, 0.0), (-90.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, -15.0, 0.0)),
+            ((0.055, -0.005, 0.02), (0.0, 0.0, 0.0)),
+        ),
     ),
 )
+
+PARTS_BY_NAME: dict[str, PartConfig] = {cfg.part_name: cfg for cfg in PARTS}
 
 
 def apply_part_transform(
@@ -222,24 +343,26 @@ def apply_part_transform(
     part_name: str,
     delta_angles_deg: np.ndarray | None = None,
     delta_offsets_m: np.ndarray | None = None,
+    delta_quat_wxyz: np.ndarray | None = None,
 ) -> np.ndarray:
     """Apply the same transform pipeline as include_skin_to_mujoco_model.py, plus an optional final delta."""
-    if delta_angles_deg is None:
-        delta_angles_deg = np.zeros(3, dtype=float)
+    if delta_quat_wxyz is None:
+        if delta_angles_deg is None:
+            delta_angles_deg = np.zeros(3, dtype=float)
+        delta_quat_wxyz = euler_xyz_deg_to_quat_wxyz(delta_angles_deg)
+    else:
+        delta_quat_wxyz = normalize_quaternion_wxyz(delta_quat_wxyz)
     if delta_offsets_m is None:
         delta_offsets_m = np.zeros(3, dtype=float)
 
     out = np.empty_like(points)
-    steps = MANUAL_STEPS[part_name]
+    cfg = PARTS_BY_NAME[part_name]
+    steps = cfg.manual_steps
     for i in range(points.shape[0]):
         pos = np.array(points[i], dtype=float)
         for offsets, angles in steps:
             pos = rotate_position(pos=pos, offsets=offsets, angle_degrees=angles)
-        pos = rotate_position(
-            pos=pos,
-            offsets=delta_offsets_m.tolist(),
-            angle_degrees=delta_angles_deg.tolist(),
-        )
+        pos = apply_quaternion_transform(pos=pos, offsets=delta_offsets_m, quat_wxyz=delta_quat_wxyz)
         out[i] = pos
     return out
 
@@ -334,11 +457,22 @@ def load_previous_optimized_seeds() -> dict[str, dict[str, np.ndarray]]:
         optimized = cast(dict[str, Any], entry["optimized"])
         angle_values = optimized.get("delta_angles_deg")
         offset_values = optimized.get("delta_offsets_m")
-        if angle_values is None or offset_values is None:
+        quat_values = optimized.get("delta_quaternion_wxyz")
+        if offset_values is None:
+            continue
+
+        if quat_values is not None:
+            quat = normalize_quaternion_wxyz(np.array(quat_values, dtype=float))
+            angles = quat_wxyz_to_euler_xyz_deg(quat)
+        elif angle_values is not None:
+            angles = np.array(angle_values, dtype=float)
+            quat = euler_xyz_deg_to_quat_wxyz(angles)
+        else:
             continue
 
         seeds[part] = {
-            "angles": np.array(angle_values, dtype=float),
+            "angles": angles,
+            "quat_wxyz": quat,
             "offsets": np.array(offset_values, dtype=float),
         }
 
@@ -362,106 +496,54 @@ def build_seed_candidates(
 
     zero_offsets = np.zeros(3, dtype=float)
 
-    if polish and previous_seed is not None:
-        # In polish mode, start from the best known solution first.
-        add_candidate("previous:optimized", previous_seed["angles"], previous_seed["offsets"])
+    for idx, angle_seed in enumerate(config.delta_angle_seed_candidates):
+        add_candidate(f"configured:{idx}", np.array(angle_seed, dtype=float), zero_offsets)
 
+    if previous_seed is None or not config.include_previous_seed:
+        return candidates
 
-    # Special logic for l_upper_arm: focused grid around previous best with specified rotations and translations
-    if config.part_name == "l_upper_arm" and previous_seed is not None and not polish:
-        prev_angles = previous_seed["angles"]
-        prev_offsets = previous_seed["offsets"]
-        # Best so far
-        # rot_x_vals = [-15.0]
-        # rot_y_vals = [95.0]
-        # rot_z_vals = [170.0]
-        # trans_x_vals = [-0.04]  # moves along z
-        # trans_y_vals = [0.0]
-        # trans_z_vals = [-0.09]  # moves along x
+    prev_angles = previous_seed["angles"]
+    prev_offsets = previous_seed["offsets"]
+    add_candidate("previous:optimized", prev_angles, prev_offsets)
 
-        # Experimental
-        rot_x_vals = [-6.000012628466136]
-        rot_y_vals = [114.99998344324177]
-        rot_z_vals = [168.2978092632269]
-        trans_x_vals = [-0.07, -0.06, -0.05, -0.04, -0.03]  # moves along z
-        trans_y_vals = [-0.0032137035524437718]
-        trans_z_vals = [-0.08003560586316362]  # moves along x
+    if polish:
+        return candidates
 
-        for dx in rot_x_vals:
-            for dy in rot_y_vals:
-                for dz in rot_z_vals:
-                    for tx in trans_x_vals:
-                        for ty in trans_y_vals:
-                            for tz in trans_z_vals:
-                                # use previous best as starting point
-                                # angles = prev_angles + np.array([dx, dy, dz], dtype=float)
-                                # offsets = prev_offsets + np.array([tx, ty, tz], dtype=float)
-                                # always start from original orientation
-                                angles = np.array([dx, dy, dz], dtype=float)
-                                offsets = np.array([tx, ty, tz], dtype=float)
+    for delta_angles in config.previous_angle_jitter_candidates:
+        delta_arr = np.array(delta_angles, dtype=float)
+        add_candidate(
+            f"previous:angle_{delta_arr[0]:+.1f}_{delta_arr[1]:+.1f}_{delta_arr[2]:+.1f}",
+            prev_angles + delta_arr,
+            prev_offsets,
+        )
+
+    for delta_offsets in config.previous_offset_jitter_candidates:
+        delta_arr = np.array(delta_offsets, dtype=float)
+        add_candidate(
+            f"previous:offset_{delta_arr[0]:+.3f}_{delta_arr[1]:+.3f}_{delta_arr[2]:+.3f}",
+            prev_angles,
+            prev_offsets + delta_arr,
+        )
+
+    if (
+        config.previous_angle_grid_values_deg is not None
+        and config.previous_offset_grid_values_m is not None
+    ):
+        ax, ay, az = config.previous_angle_grid_values_deg
+        tx, ty, tz = config.previous_offset_grid_values_m
+        for dx in ax:
+            for dy in ay:
+                for dz in az:
+                    for ox in tx:
+                        for oy in ty:
+                            for oz in tz:
+                                da = np.array([dx, dy, dz], dtype=float)
+                                do = np.array([ox, oy, oz], dtype=float)
                                 add_candidate(
-                                    f"l_upper_arm:refine_rotx{dx}_roty{dy}_rotz{dz}_x{tx}_y{ty}_z{tz}",
-                                    angles,
-                                    offsets
+                                    f"previous:grid_a{dx:+.1f}_{dy:+.1f}_{dz:+.1f}_t{ox:+.3f}_{oy:+.3f}_{oz:+.3f}",
+                                    prev_angles + da,
+                                    prev_offsets + do,
                                 )
-    else:
-        for idx, angle_seed in enumerate(config.delta_angle_seed_candidates):
-            add_candidate(f"configured:{idx}", np.array(angle_seed, dtype=float), zero_offsets)
-
-    if previous_seed is not None and config.part_name == "r_forearm":
-        prev_angles = previous_seed["angles"]
-        prev_offsets = previous_seed["offsets"]
-        add_candidate("previous:optimized", prev_angles, prev_offsets)
-
-        for delta_x in (-30.0, -20.0, -10.0, 10.0, 20.0, 30.0):
-            add_candidate(
-                f"previous:x{delta_x:+.0f}",
-                prev_angles + np.array([delta_x, 0.0, 0.0], dtype=float),
-                prev_offsets,
-            )
-        for delta_y in (-10.0, -5.0, 5.0, 10.0):
-            add_candidate(
-                f"previous:y{delta_y:+.0f}",
-                prev_angles + np.array([0.0, delta_y, 0.0], dtype=float),
-                prev_offsets,
-            )
-        for delta_z in (-10.0, -5.0, 5.0, 10.0):
-            add_candidate(
-                f"previous:z{delta_z:+.0f}",
-                prev_angles + np.array([0.0, 0.0, delta_z], dtype=float),
-                prev_offsets,
-            )
-        for delta_xyz in (
-            np.array([10.0, -5.0, 0.0], dtype=float),
-            np.array([10.0, 5.0, 0.0], dtype=float),
-            np.array([-10.0, -5.0, 0.0], dtype=float),
-            np.array([-10.0, 5.0, 0.0], dtype=float),
-            np.array([0.0, -5.0, -5.0], dtype=float),
-            np.array([0.0, -5.0, 5.0], dtype=float),
-            np.array([0.0, 5.0, -5.0], dtype=float),
-            np.array([0.0, 5.0, 5.0], dtype=float),
-        ):
-            add_candidate(
-                f"previous:combo_{delta_xyz[0]:+.0f}_{delta_xyz[1]:+.0f}_{delta_xyz[2]:+.0f}",
-                prev_angles + delta_xyz,
-                prev_offsets,
-            )
-
-        for delta_offset in (
-            np.array([0.002, 0.0, 0.0], dtype=float),
-            np.array([-0.002, 0.0, 0.0], dtype=float),
-            np.array([0.0, 0.002, 0.0], dtype=float),
-            np.array([0.0, -0.002, 0.0], dtype=float),
-            np.array([0.0, 0.0, 0.002], dtype=float),
-            np.array([0.0, 0.0, -0.002], dtype=float),
-            np.array([0.002, 0.002, 0.0], dtype=float),
-            np.array([0.0, 0.002, -0.002], dtype=float),
-        ):
-            add_candidate(
-                f"previous:offset_{delta_offset[0]:+.3f}_{delta_offset[1]:+.3f}_{delta_offset[2]:+.3f}",
-                prev_angles,
-                prev_offsets + delta_offset,
-            )
 
     return candidates
 
@@ -475,21 +557,40 @@ def optimize_part(
     mesh = load_mesh(config.mesh_files, config.mesh_pos, config.mesh_quat_wxyz)
     dist_fn = build_distance_fn(mesh)
 
-    # We optimize a final perturbation applied on top of the exact manual chain.
-    angles0 = np.zeros(3, dtype=float)
+    # We optimize a final quaternion perturbation applied on top of the exact manual chain.
+    quat0 = np.array([1.0, 0.0, 0.0, 0.0], dtype=float)
+    angles0 = quat_wxyz_to_euler_xyz_deg(quat0)
     offsets0 = np.zeros(3, dtype=float)
-    x0 = np.zeros(6, dtype=float)
+    x0 = np.hstack([quat0, offsets0])
 
     angle_bounds = np.array(config.delta_angle_bounds_deg, dtype=float)
     translation_bounds = np.array(config.delta_translation_bounds_m, dtype=float)
 
+    def unpack_params(params: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        quat = normalize_quaternion_wxyz(params[:4])
+        offsets = np.array(params[4:], dtype=float)
+        angles = quat_wxyz_to_euler_xyz_deg(quat)
+        return quat, offsets, angles
+
     def mean_distance(params: np.ndarray) -> float:
-        transformed = apply_part_transform(points, config.part_name, params[:3], params[3:])
+        quat, offsets, _ = unpack_params(params)
+        transformed = apply_part_transform(
+            points,
+            config.part_name,
+            delta_offsets_m=offsets,
+            delta_quat_wxyz=quat,
+        )
         distances = dist_fn(transformed)
         return float(np.mean(distances))
 
     def distance_stats(params: np.ndarray) -> dict[str, float]:
-        transformed = apply_part_transform(points, config.part_name, params[:3], params[3:])
+        quat, offsets, _ = unpack_params(params)
+        transformed = apply_part_transform(
+            points,
+            config.part_name,
+            delta_offsets_m=offsets,
+            delta_quat_wxyz=quat,
+        )
         distances = dist_fn(transformed)
         return {
             "mean_m": float(np.mean(distances)),
@@ -497,54 +598,119 @@ def optimize_part(
             "p90_m": float(np.quantile(distances, 0.9)),
         }
 
-    def objective(params: np.ndarray, angle_center: np.ndarray, offset_center: np.ndarray) -> float:
-        transformed = apply_part_transform(points, config.part_name, params[:3], params[3:])
+    def objective(params: np.ndarray, quat_center: np.ndarray, offset_center: np.ndarray) -> float:
+        quat, offsets, _ = unpack_params(params)
+        transformed = apply_part_transform(
+            points,
+            config.part_name,
+            delta_offsets_m=offsets,
+            delta_quat_wxyz=quat,
+        )
         distances = dist_fn(transformed)
         q = np.quantile(distances, 0.9)
         trimmed = distances[distances <= q]
         mean_trimmed = float(np.mean(trimmed)) if len(trimmed) else float(np.mean(distances))
 
         # Soft regularization keeps each run near its local seed hypothesis.
-        angle_reg = np.sum(((params[:3] - angle_center) / 10.0) ** 2)
-        trans_reg = np.sum(((params[3:] - offset_center) / 0.01) ** 2)
-        return float(mean_trimmed + 0.001 * angle_reg + 0.001 * trans_reg)
+        rot_dist_deg = quaternion_geodesic_distance_deg(quat, quat_center)
+        rot_reg = (rot_dist_deg / 10.0) ** 2
+        trans_reg = np.sum(((offsets - offset_center) / 0.01) ** 2)
+        return float(mean_trimmed + 0.001 * rot_reg + 0.001 * trans_reg)
 
     initial_stats = distance_stats(x0)
     initial_mean = float(initial_stats["mean_m"])
     print(f"[{config.part_name}] initial mean distance={initial_mean:.6f} m")
 
     previous_seed = previous_seed_map.get(config.part_name)
-    if polish and previous_seed is not None:
-        # In polish mode, only use the previous optimized result as the seed
-        seed_candidates = [("previous:optimized", previous_seed["angles"], previous_seed["offsets"])]
-    else:
-        # In normal mode, use all seed candidates
-        seed_candidates = build_seed_candidates(config, previous_seed, polish=polish)
+    seed_candidates = build_seed_candidates(config, previous_seed, polish=polish)
 
-    seed_results: list[tuple[float, np.ndarray, Any, np.ndarray, np.ndarray, str]] = []
+    def run_global_optimizer(
+        x_seed: np.ndarray,
+        bounds: list[tuple[float, float]],
+        seed_quat: np.ndarray,
+        seed_offsets: np.ndarray,
+    ) -> tuple[np.ndarray, dict[str, Any] | None]:
+        mode = config.global_optimizer.lower()
+        if mode == "none" or polish:
+            return x_seed, None
 
+        if mode == "differential_evolution":
+            result_global = differential_evolution(
+                lambda p: objective(p, seed_quat, seed_offsets),
+                bounds=bounds,
+                maxiter=config.global_maxiter,
+                popsize=10,
+                polish=False,
+                rng=np.random.default_rng(42),
+            )
+            xg = np.array(result_global.x, dtype=float)
+            xg[:4] = normalize_quaternion_wxyz(xg[:4])
+            return xg, {
+                "method": "differential_evolution",
+                "success": bool(result_global.success),
+                "message": str(result_global.message),
+                "nit": int(result_global.nit),
+                "nfev": int(result_global.nfev),
+                "objective": float(result_global.fun),
+            }
+
+        if mode == "dual_annealing":
+            result_global = dual_annealing(
+                lambda p: objective(p, seed_quat, seed_offsets),
+                bounds=bounds,
+                maxiter=config.global_maxiter,
+                x0=x_seed,
+                rng=np.random.default_rng(42),
+            )
+            xg = np.array(result_global.x, dtype=float)
+            xg[:4] = normalize_quaternion_wxyz(xg[:4])
+            return xg, {
+                "method": "dual_annealing",
+                "success": bool(result_global.success),
+                "message": str(result_global.message),
+                "nit": int(result_global.nit),
+                "nfev": int(result_global.nfev),
+                "objective": float(result_global.fun),
+            }
+
+        raise ValueError(f"Unsupported global optimizer: {config.global_optimizer}")
+
+    seed_results: list[
+        tuple[float, np.ndarray, Any, np.ndarray, np.ndarray, np.ndarray, str, dict[str, Any] | None]
+    ] = []
 
     for seed_idx, (seed_label, seed_angles, seed_offsets) in enumerate(seed_candidates):
         print(f"\n[{config.part_name}] Trying seed {seed_idx}/{len(seed_candidates)}: {seed_label}")
-        print(f"    angles: {seed_angles.tolist()} offsets: {seed_offsets.tolist()}")
-        x_seed = np.hstack([seed_angles, seed_offsets])
+        print(f"    angles: {seed_angles.tolist()} offsets: {seed_offsets.tolist()}", flush=True)
+        seed_quat = euler_xyz_deg_to_quat_wxyz(seed_angles)
+        x_seed = np.hstack([seed_quat, seed_offsets])
         bounds = [
-            (seed_angles[0] - angle_bounds[0], seed_angles[0] + angle_bounds[0]),
-            (seed_angles[1] - angle_bounds[1], seed_angles[1] + angle_bounds[1]),
-            (seed_angles[2] - angle_bounds[2], seed_angles[2] + angle_bounds[2]),
+            (-1.0, 1.0),
+            (-1.0, 1.0),
+            (-1.0, 1.0),
+            (-1.0, 1.0),
             (seed_offsets[0] - translation_bounds[0], seed_offsets[0] + translation_bounds[0]),
             (seed_offsets[1] - translation_bounds[1], seed_offsets[1] + translation_bounds[1]),
             (seed_offsets[2] - translation_bounds[2], seed_offsets[2] + translation_bounds[2]),
         ]
 
+        x_start, global_summary = run_global_optimizer(x_seed, bounds, seed_quat, seed_offsets)
+        if global_summary is not None:
+            print(
+                f"[{config.part_name}] seed={seed_idx} global={global_summary['method']} done"
+                f" ({global_summary['nfev']} evals, obj={global_summary['objective']:.6f})",
+                flush=True,
+            )
+
         iteration = {"count": 0}
-        best_so_far = {"score": float("inf"), "params": x_seed.copy()}
+        best_so_far = {"score": mean_distance(x_start), "params": x_start.copy()}
 
         def callback(xk: np.ndarray) -> None:
             iteration["count"] += 1
             md = mean_distance(xk)
             print(
-                f"[{config.part_name}] seed={seed_idx} ({seed_label}) iter={iteration['count']:02d} mean_distance={md:.6f} m"
+                f"[{config.part_name}] seed={seed_idx} ({seed_label}) iter={iteration['count']:02d} mean_distance={md:.6f} m",
+                flush=True,
             )
             if md < best_so_far["score"]:
                 best_so_far["score"] = md
@@ -553,9 +719,9 @@ def optimize_part(
         primary_maxiter = 220 if polish else 120
         primary_ftol = 1e-14 if polish else 1e-10
         result = minimize(
-            lambda p: objective(p, seed_angles, seed_offsets),
-            x_seed,
-            method="L-BFGS-B",
+            lambda p: objective(p, seed_quat, seed_offsets),
+            x_start,
+            method=config.local_optimizer,
             bounds=bounds,
             callback=callback,
             options={"maxiter": primary_maxiter, "ftol": primary_ftol, "gtol": 1e-12},
@@ -564,49 +730,57 @@ def optimize_part(
         # Use best-so-far parameters, not just final iterate
         x_candidate = best_so_far["params"]
         score = best_so_far["score"]
-        seed_results.append((score, x_candidate, result, seed_angles, seed_offsets, seed_label))
+        seed_results.append(
+            (score, x_candidate, result, seed_angles, seed_quat, seed_offsets, seed_label, global_summary)
+        )
 
     seed_results.sort(key=lambda x: x[0])
-    _, x_final, result, selected_seed_angles, selected_seed_offsets, selected_seed_label = seed_results[0]
+    (
+        _,
+        x_final,
+        result,
+        selected_seed_angles,
+        selected_seed_quat,
+        selected_seed_offsets,
+        selected_seed_label,
+        selected_seed_global_summary,
+    ) = seed_results[0]
 
     fine_refinement: dict[str, Any] | None = None
-    if config.part_name == "r_forearm":
-        angle_window_local = np.array([6.0, 6.0, 6.0], dtype=float)
-        translation_window_local = np.minimum(translation_bounds, np.array([0.002, 0.002, 0.002], dtype=float))
-        angle_jitters = (
-            np.array([0.0, 0.0, 0.0], dtype=float),
-            np.array([5.0, 0.0, 0.0], dtype=float),
-            np.array([-5.0, 0.0, 0.0], dtype=float),
-            np.array([0.0, 5.0, 0.0], dtype=float),
-            np.array([0.0, -5.0, 0.0], dtype=float),
-            np.array([0.0, 0.0, 5.0], dtype=float),
-            np.array([0.0, 0.0, -5.0], dtype=float),
-            np.array([5.0, -5.0, 0.0], dtype=float),
-            np.array([5.0, 5.0, 0.0], dtype=float),
-            np.array([0.0, -5.0, -5.0], dtype=float),
-            np.array([0.0, -5.0, 5.0], dtype=float),
+    if config.local_refine_angle_jitter_candidates:
+        angle_window_local = np.minimum(
+            angle_bounds,
+            np.array(config.local_refine_angle_window_deg, dtype=float),
         )
+        translation_window_local = np.minimum(
+            translation_bounds,
+            np.array(config.local_refine_translation_window_m, dtype=float),
+        )
+        angle_jitters = tuple(np.array(j, dtype=float) for j in config.local_refine_angle_jitter_candidates)
 
         local_results: list[tuple[float, np.ndarray, Any, np.ndarray]] = []
         for local_idx, angle_jitter in enumerate(angle_jitters):
             x_seed_local = x_final.copy()
-            x_seed_local[:3] = x_seed_local[:3] + angle_jitter
+            _, _, x_final_euler = unpack_params(x_final)
+            jittered_euler = x_final_euler + angle_jitter
+            x_seed_local[:4] = euler_xyz_deg_to_quat_wxyz(jittered_euler)
 
             bounds_local = [
-                (x_seed_local[0] - angle_window_local[0], x_seed_local[0] + angle_window_local[0]),
-                (x_seed_local[1] - angle_window_local[1], x_seed_local[1] + angle_window_local[1]),
-                (x_seed_local[2] - angle_window_local[2], x_seed_local[2] + angle_window_local[2]),
-                (x_final[3] - translation_window_local[0], x_final[3] + translation_window_local[0]),
-                (x_final[4] - translation_window_local[1], x_final[4] + translation_window_local[1]),
-                (x_final[5] - translation_window_local[2], x_final[5] + translation_window_local[2]),
+                (-1.0, 1.0),
+                (-1.0, 1.0),
+                (-1.0, 1.0),
+                (-1.0, 1.0),
+                (x_final[4] - translation_window_local[0], x_final[4] + translation_window_local[0]),
+                (x_final[5] - translation_window_local[1], x_final[5] + translation_window_local[1]),
+                (x_final[6] - translation_window_local[2], x_final[6] + translation_window_local[2]),
             ]
 
             fine_maxiter = 140 if polish else 80
             fine_ftol = 1e-13 if polish else 1e-11
             result_local = minimize(
-                lambda p: objective(p, x_final[:3], x_final[3:]),
+                lambda p: objective(p, normalize_quaternion_wxyz(x_final[:4]), x_final[4:]),
                 x_seed_local,
-                method="L-BFGS-B",
+                method=config.local_optimizer,
                 bounds=bounds_local,
                 options={"maxiter": fine_maxiter, "ftol": fine_ftol, "gtol": 1e-12},
             )
@@ -635,22 +809,22 @@ def optimize_part(
 
     polish_refinement: dict[str, Any] | None = None
     if polish:
-        angle_window_polish = np.minimum(angle_bounds, np.array([2.0, 2.0, 2.0], dtype=float))
         translation_window_polish = np.minimum(translation_bounds, np.array([0.001, 0.001, 0.001], dtype=float))
         bounds_polish = [
-            (x_final[0] - angle_window_polish[0], x_final[0] + angle_window_polish[0]),
-            (x_final[1] - angle_window_polish[1], x_final[1] + angle_window_polish[1]),
-            (x_final[2] - angle_window_polish[2], x_final[2] + angle_window_polish[2]),
-            (x_final[3] - translation_window_polish[0], x_final[3] + translation_window_polish[0]),
-            (x_final[4] - translation_window_polish[1], x_final[4] + translation_window_polish[1]),
-            (x_final[5] - translation_window_polish[2], x_final[5] + translation_window_polish[2]),
+            (-1.0, 1.0),
+            (-1.0, 1.0),
+            (-1.0, 1.0),
+            (-1.0, 1.0),
+            (x_final[4] - translation_window_polish[0], x_final[4] + translation_window_polish[0]),
+            (x_final[5] - translation_window_polish[1], x_final[5] + translation_window_polish[1]),
+            (x_final[6] - translation_window_polish[2], x_final[6] + translation_window_polish[2]),
         ]
 
         polish_before = mean_distance(x_final)
         result_polish = minimize(
-            lambda p: objective(p, x_final[:3], x_final[3:]),
+            lambda p: objective(p, normalize_quaternion_wxyz(x_final[:4]), x_final[4:]),
             x_final,
-            method="L-BFGS-B",
+            method=config.local_optimizer,
             bounds=bounds_polish,
             options={"maxiter": 200, "ftol": 1e-15, "gtol": 1e-13},
         )
@@ -663,10 +837,14 @@ def optimize_part(
         polish_refinement = {
             "pre_polish_mean_distance_m": float(polish_before),
             "post_polish_mean_distance_m": float(mean_distance(x_final)),
-            "angle_window_deg": angle_window_polish.tolist(),
+            "rotation_space": "quaternion_wxyz",
             "translation_window_m": translation_window_polish.tolist(),
             "success": bool(result_polish.success),
         }
+
+    final_quat = normalize_quaternion_wxyz(x_final[:4])
+    final_offsets = x_final[4:]
+    final_angles = quat_wxyz_to_euler_xyz_deg(final_quat)
 
     final_stats = distance_stats(x_final)
     final_mean = float(final_stats["mean_m"])
@@ -677,25 +855,29 @@ def optimize_part(
         "mesh_files": list(config.mesh_files),
         "manual_steps": [
             {"offsets_m": list(step[0]), "angles_deg": list(step[1])}
-            for step in MANUAL_STEPS[config.part_name]
+            for step in config.manual_steps
         ],
         "initial": {
             "delta_angles_deg": angles0.tolist(),
+            "delta_quaternion_wxyz": quat0.tolist(),
             "delta_offsets_m": offsets0.tolist(),
             "mean_distance_m": initial_stats["mean_m"],
             "median_distance_m": initial_stats["median_m"],
             "p90_distance_m": initial_stats["p90_m"],
         },
         "optimized": {
-            "delta_angles_deg": x_final[:3].tolist(),
-            "delta_offsets_m": x_final[3:].tolist(),
+            "delta_angles_deg": final_angles.tolist(),
+            "delta_quaternion_wxyz": final_quat.tolist(),
+            "delta_offsets_m": final_offsets.tolist(),
             "mean_distance_m": final_stats["mean_m"],
             "median_distance_m": final_stats["median_m"],
             "p90_distance_m": final_stats["p90_m"],
         },
         "delta": {
-            "angles_deg": (x_final[:3] - angles0).tolist(),
-            "offsets_m": (x_final[3:] - offsets0).tolist(),
+            "angles_deg": (final_angles - angles0).tolist(),
+            "quaternion_wxyz": final_quat.tolist(),
+            "rotation_distance_deg": quaternion_geodesic_distance_deg(final_quat, quat0),
+            "offsets_m": (final_offsets - offsets0).tolist(),
             "mean_distance_m": float(final_mean - initial_mean),
             "mean_distance_improvement_pct": float((initial_mean - final_mean) / max(initial_mean, 1e-12) * 100.0),
         },
@@ -706,10 +888,14 @@ def optimize_part(
             "nit": int(result.nit),
             "nfev": int(result.nfev),
             "objective": float(result.fun),
+            "local_optimizer": config.local_optimizer,
+            "global_optimizer": config.global_optimizer,
             "seed_count": len(seed_candidates),
             "selected_seed_label": selected_seed_label,
             "selected_seed_angles_deg": selected_seed_angles.tolist(),
+            "selected_seed_quaternion_wxyz": normalize_quaternion_wxyz(selected_seed_quat).tolist(),
             "selected_seed_offsets_m": selected_seed_offsets.tolist(),
+            "selected_seed_global_stage": selected_seed_global_summary,
             "angle_bounds_deg": angle_bounds.tolist(),
             "translation_bounds_m": translation_bounds.tolist(),
             "fine_refinement": fine_refinement,
@@ -745,14 +931,24 @@ def write_reports(results: list[dict[str, Any]]) -> None:
             f"  p90 distance: {init['p90_distance_m']:.6f} -> {opt['p90_distance_m']:.6f} m"
         )
         lines.append(f"  delta angles deg (around manual): {init['delta_angles_deg']} -> {opt['delta_angles_deg']}")
+        if opt.get("delta_quaternion_wxyz") is not None:
+            lines.append(f"  delta quaternion wxyz (around manual): {opt['delta_quaternion_wxyz']}")
         lines.append(f"  delta offsets m (around manual): {init['delta_offsets_m']} -> {opt['delta_offsets_m']}")
         lines.append(f"  delta angles deg: {delta['angles_deg']}")
+        if delta.get("rotation_distance_deg") is not None:
+            lines.append(f"  delta rotation distance deg: {delta['rotation_distance_deg']}")
         lines.append(f"  delta offsets m: {delta['offsets_m']}")
         optimizer = cast(dict[str, Any], r["optimizer"])
+        lines.append(f"  local optimizer: {optimizer.get('local_optimizer', 'L-BFGS-B')}")
+        lines.append(f"  global optimizer: {optimizer.get('global_optimizer', 'none')}")
         lines.append(f"  seed count: {optimizer['seed_count']}")
         lines.append(f"  selected seed label: {optimizer['selected_seed_label']}")
         lines.append(f"  selected seed angles deg: {optimizer['selected_seed_angles_deg']}")
+        if optimizer.get("selected_seed_quaternion_wxyz") is not None:
+            lines.append(f"  selected seed quaternion wxyz: {optimizer['selected_seed_quaternion_wxyz']}")
         lines.append(f"  selected seed offsets m: {optimizer['selected_seed_offsets_m']}")
+        if optimizer.get("selected_seed_global_stage") is not None:
+            lines.append(f"  selected seed global stage: {optimizer['selected_seed_global_stage']}")
         lines.append(f"  angle bounds deg: {optimizer['angle_bounds_deg']}")
         lines.append(f"  translation bounds m: {optimizer['translation_bounds_m']}")
         if optimizer.get("fine_refinement") is not None:
@@ -770,7 +966,10 @@ def write_reports(results: list[dict[str, Any]]) -> None:
             lines.append(
                 f"  polish mean distance: {pr['pre_polish_mean_distance_m']:.6f} -> {pr['post_polish_mean_distance_m']:.6f} m"
             )
-            lines.append(f"  polish angle window deg: {pr['angle_window_deg']}")
+            if pr.get("angle_window_deg") is not None:
+                lines.append(f"  polish angle window deg: {pr['angle_window_deg']}")
+            if pr.get("rotation_space") is not None:
+                lines.append(f"  polish rotation space: {pr['rotation_space']}")
             lines.append(f"  polish translation window m: {pr['translation_window_m']}")
             lines.append(f"  polish success: {pr['success']}")
         lines.append("")
@@ -818,8 +1017,18 @@ def main() -> None:
         if selected_parts is not None and part_cfg.part_name not in selected_parts:
             continue
         print(f"\n=== Optimizing {part_cfg.part_name} ===")
-        result = optimize_part(part_cfg, previous_seed_map, polish=args.polish)
-        result_by_part[part_cfg.part_name] = result
+        new_result = optimize_part(part_cfg, previous_seed_map, polish=args.polish)
+        
+        # Only update if new result is better than existing best (including initialized values)
+        new_mean = new_result["optimized"]["mean_distance_m"]
+        if part_cfg.part_name not in result_by_part:
+            result_by_part[part_cfg.part_name] = new_result
+        else:
+            best_mean = result_by_part[part_cfg.part_name]["optimized"]["mean_distance_m"]
+            if new_mean < best_mean:
+                result_by_part[part_cfg.part_name] = new_result
+            else:
+                print(f"  mean_distance {new_mean:.6f} m >= best {best_mean:.6f} m, keeping previous result.")
 
     results = [result_by_part[part_cfg.part_name] for part_cfg in PARTS if part_cfg.part_name in result_by_part]
 

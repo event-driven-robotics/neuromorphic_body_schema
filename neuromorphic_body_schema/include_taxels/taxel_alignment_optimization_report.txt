@@ -1,17 +1,22 @@
 Taxel alignment optimization report
 
 Part: r_upper_leg
-  mean distance: 0.000798 -> 0.000764 m (4.18% improvement)
-  mean abs improvement: 0.033 mm
-  median distance: 0.000769 -> 0.000746 m
-  p90 distance: 0.001158 -> 0.001181 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [8.94131670310794e-07, -4.4481348468145994e-06, -3.2730821297399536e-07]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0004437151668547278, -6.889776501981523e-05, 0.0004232509447119137]
-  delta angles deg: [8.94131670310794e-07, -4.4481348468145994e-06, -3.2730821297399536e-07]
-  delta offsets m: [0.0004437151668547278, -6.889776501981523e-05, 0.0004232509447119137]
-  seed count: 1
+  mean distance: 0.000784 -> 0.000718 m (8.48% improvement)
+  mean abs improvement: 0.067 mm
+  median distance: 0.000778 -> 0.000699 m
+  p90 distance: 0.001085 -> 0.001125 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.30930459384172393, -0.3975155598723627, -0.36115899959471703]
+  delta quaternion wxyz (around manual): [0.9999854032437564, 0.0026882257321920256, -0.003477447836080233, -0.0031423078114639533]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0001756415935409616, -0.00019867554913076646, 0.00048783870677853824]
+  delta angles deg: [0.30930459384172393, -0.3975155598723627, -0.36115899959471703]
+  delta rotation distance deg: 0.6191506483037582
+  delta offsets m: [0.0001756415935409616, -0.00019867554913076646, 0.00048783870677853824]
+  local optimizer: L-BFGS-B
+  global optimizer: none
+  seed count: 2
   selected seed label: configured:0
   selected seed angles deg: [0.0, 0.0, 0.0]
+  selected seed quaternion wxyz: [1.0, 0.0, 0.0, 0.0]
   selected seed offsets m: [0.0, 0.0, 0.0]
   angle bounds deg: [25.0, 25.0, 25.0]
   translation bounds m: [0.03, 0.03, 0.03]
@@ -26,6 +31,8 @@ Part: r_lower_leg
   delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0006275520531449399, 6.508293593925944e-05, -9.40899197944922e-05]
   delta angles deg: [-3.000070244340953e-07, -1.0634387204404309e-05, -5.82954445012449e-07]
   delta offsets m: [0.0006275520531449399, 6.508293593925944e-05, -9.40899197944922e-05]
+  local optimizer: L-BFGS-B
+  global optimizer: none
   seed count: 1
   selected seed label: configured:0
   selected seed angles deg: [0.0, 0.0, 0.0]
@@ -43,6 +50,8 @@ Part: l_upper_leg
   delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0004387322162961897, -1.6184874208889614e-05, 0.0002552936382128203]
   delta angles deg: [-6.922970310970666e-07, -2.5940805527798235e-06, -1.4164776635446182e-07]
   delta offsets m: [0.0004387322162961897, -1.6184874208889614e-05, 0.0002552936382128203]
+  local optimizer: L-BFGS-B
+  global optimizer: none
   seed count: 1
   selected seed label: configured:0
   selected seed angles deg: [0.0, 0.0, 0.0]
@@ -60,6 +69,8 @@ Part: l_lower_leg
   delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0007031161680023687, -8.543056160927335e-06, 0.0005093367731194668]
   delta angles deg: [-8.20045049960387e-07, -1.2814487140058924e-05, -1.2583615257828433e-07]
   delta offsets m: [0.0007031161680023687, -8.543056160927335e-06, 0.0005093367731194668]
+  local optimizer: L-BFGS-B
+  global optimizer: none
   seed count: 1
   selected seed label: configured:0
   selected seed angles deg: [0.0, 0.0, 0.0]
@@ -77,6 +88,8 @@ Part: r_upper_arm
   delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0016474800920077567, 0.0022367308031235674, 0.002778001244907141]
   delta angles deg: [-9.843165940865783e-06, 3.289627663785029e-05, -1.0900801993572834e-05]
   delta offsets m: [0.0016474800920077567, 0.0022367308031235674, 0.002778001244907141]
+  local optimizer: L-BFGS-B
+  global optimizer: none
   seed count: 27
   selected seed label: configured:0
   selected seed angles deg: [0.0, 0.0, 0.0]
@@ -94,6 +107,8 @@ Part: r_forearm
   delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0031057199220143935, 0.001443368170388599, -0.019421371641341948]
   delta angles deg: [180.1567571855088, -26.247075302431096, -1.0463038627909478]
   delta offsets m: [0.0031057199220143935, 0.001443368170388599, -0.019421371641341948]
+  local optimizer: L-BFGS-B
+  global optimizer: none
   seed count: 42
   selected seed label: previous:offset_+0.002_+0.002_+0.000
   selected seed angles deg: [180.15679235783676, -26.247023269940225, -1.0462435091009268]
@@ -108,18 +123,20 @@ Part: r_forearm
   polish mode: False
 
 Part: l_upper_arm
-  mean distance: 0.004558 -> 0.001811 m (60.27% improvement)
-  mean abs improvement: 2.747 mm
-  median distance: 0.002580 -> 0.001433 m
-  p90 distance: 0.011646 -> 0.003814 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-6.000027992796843, 115.00001121994532, 168.29783018198077]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [-0.052674728365003316, -0.006387726064468978, -0.0773057440328942]
-  delta angles deg: [-6.000027992796843, 115.00001121994532, 168.29783018198077]
-  delta offsets m: [-0.052674728365003316, -0.006387726064468978, -0.0773057440328942]
-  seed count: 5
-  selected seed label: l_upper_arm:refine_rotx-6.000012628466136_roty114.99998344324177_rotz168.2978092632269_x-0.05_y-0.0032137035524437718_z-0.08003560586316362
-  selected seed angles deg: [-6.000012628466136, 114.99998344324177, 168.2978092632269]
-  selected seed offsets m: [-0.05, -0.0032137035524437718, -0.08003560586316362]
+  mean distance: 0.004572 -> 0.001389 m (69.62% improvement)
+  mean abs improvement: 3.183 mm
+  median distance: 0.002564 -> 0.001090 m
+  p90 distance: 0.011626 -> 0.002865 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [6.055924323003801, 118.42657762954727, 175.05893312219555]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [-0.04822949427478252, -0.012799120842103447, -0.07141408948386282]
+  delta angles deg: [6.055924323003801, 118.42657762954727, 175.05893312219555]
+  delta offsets m: [-0.04822949427478252, -0.012799120842103447, -0.07141408948386282]
+  local optimizer: L-BFGS-B
+  global optimizer: none
+  seed count: 729
+  selected seed label: l_upper_arm:refine_rotx5.0_roty-5.0_rotz0.0_x-0.01_y0.01_z0.01
+  selected seed angles deg: [9.399935221475086, 118.00000683670456, 171.29788459006238]
+  selected seed offsets m: [-0.04849003806799288, -0.00838654871784156, -0.06911194453002506]
   angle bounds deg: [25.0, 25.0, 25.0]
   translation bounds m: [0.03, 0.03, 0.03]
   polish mode: False
@@ -133,6 +150,8 @@ Part: l_forearm
   delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0, 0.0, 0.0]
   delta angles deg: [0.0, 0.0, 0.0]
   delta offsets m: [0.0, 0.0, 0.0]
+  local optimizer: L-BFGS-B
+  global optimizer: none
   seed count: 1
   selected seed label: configured:0
   selected seed angles deg: [0.0, 0.0, 0.0]
@@ -150,6 +169,8 @@ Part: torso
   delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0007951289963117269, 8.767112895758858e-05, 0.0027807380216535458]
   delta angles deg: [-3.6848474110737737, -0.23366248950442384, 0.3405479602523846]
   delta offsets m: [0.0007951289963117269, 8.767112895758858e-05, 0.0027807380216535458]
+  local optimizer: L-BFGS-B
+  global optimizer: none
   seed count: 1
   selected seed label: configured:0
   selected seed angles deg: [0.0, 0.0, 0.0]
@@ -167,6 +188,8 @@ Part: r_palm
   delta offsets m (around manual): [0.0, 0.0, 0.0] -> [-0.0014357560782207932, -0.002386323167025983, -0.0006020082005907207]
   delta angles deg: [1.632986183421965e-05, -6.333533032788842e-07, 6.169238369918712e-05]
   delta offsets m: [-0.0014357560782207932, -0.002386323167025983, -0.0006020082005907207]
+  local optimizer: L-BFGS-B
+  global optimizer: none
   seed count: 1
   selected seed label: configured:0
   selected seed angles deg: [0.0, 0.0, 0.0]
@@ -184,6 +207,8 @@ Part: l_palm
   delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0004022363900260073, -0.0024020398775979252, 0.0003774240869124612]
   delta angles deg: [1.592066415207435e-05, -8.412782550618261e-07, -5.84530611944901e-05]
   delta offsets m: [0.0004022363900260073, -0.0024020398775979252, 0.0003774240869124612]
+  local optimizer: L-BFGS-B
+  global optimizer: none
   seed count: 1
   selected seed label: configured:0
   selected seed angles deg: [0.0, 0.0, 0.0]
