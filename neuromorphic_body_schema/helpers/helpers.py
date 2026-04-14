@@ -86,8 +86,8 @@ MOJOCO_SKIN_PARTS = [
 # Mapping from triangle configuration basename → positions file basename.
 # Used to look up taxel2Repr for non-tactile channel filtering in the visualizer.
 POSITIONS_FILES = {
-    "right_arm":        "right_arm_mesh.txt",
-    "left_arm":         "left_arm_mesh.txt",
+    "right_arm":        "right_arm.txt",
+    "left_arm":         "left_arm.txt",
     "torso":            "torso.txt",
     "right_forearm": "right_forearm_V2.txt",
     "left_forearm":  "left_forearm_V2.txt",

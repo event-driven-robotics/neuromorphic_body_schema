@@ -536,7 +536,7 @@ def include_skin_to_mujoco_model(
                     # find the corresponding taxels
                     part = "r_upper_arm"
                     pos_of_taxels = ini_files_taxels.index(
-                        "right_arm_mesh.txt")
+                        "right_arm.txt")
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
@@ -612,7 +612,7 @@ def include_skin_to_mujoco_model(
                 elif part == "l_shoulder_3":
                     # find the corresponding taxels
                     part = "l_upper_arm"
-                    pos_of_taxels = ini_files_taxels.index("left_arm_mesh.txt")
+                    pos_of_taxels = ini_files_taxels.index("left_arm.txt")
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
@@ -858,10 +858,9 @@ def include_skin_to_mujoco_model(
                                     angle_degrees=delta_angles.tolist(),
                                 )
 
-                            # TODO possibly use cylinder as type.
                             lines.insert(
                                 line_counter,
-                                f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" type="sphere" group="{group_counter}" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.0"/>\n',
+                                f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" type="sphere" group="{group_counter}" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.5"/>\n',
                             )
                             line_counter += 1
                     line_counter -= 1  # go one line back after we added the last taxel

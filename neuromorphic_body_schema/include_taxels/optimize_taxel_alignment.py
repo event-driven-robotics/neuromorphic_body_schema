@@ -1,13 +1,32 @@
-"""
-Optimize taxel patch alignment against body meshes.
+"""Optimize taxel patch placement against MuJoCo collision meshes.
 
-This script starts from the current hand-tuned transforms used in
-include_skin_to_mujoco_model.py and refines them by minimizing mean
-point-to-surface distance to selected STL meshes.
+The optimizer refines per-part taxel placements that are initially defined by
+the manual transform chain in include_skin_to_mujoco_model.py. For each body
+part, the pipeline:
+
+1. Loads and filters tactile taxel coordinates from the positions file.
+2. Applies the fixed, hand-tuned baseline transform chain for that part.
+3. Evaluates multiple seed hypotheses around zero and any previously saved
+   optimized solution.
+4. Runs a local L-BFGS-B optimization in quaternion-plus-translation space.
+5. Optionally performs a tighter local refinement and final polish pass.
+6. Stores the best result only if it improves the previously saved solution.
+
+This module is deliberately configuration-driven: per-part behavior is defined
+in PartConfig rather than in part-specific control-flow branches.
 
 Run:
     /home/smullercleve/.virtualenvs/mujoco/bin/python \
         neuromorphic_body_schema/include_taxels/optimize_taxel_alignment.py
+        
+    /home/smullercleve/.virtualenvs/mujoco/bin/python \
+        neuromorphic_body_schema/include_taxels/optimize_taxel_alignment.py --part r_upper_arm torso
+        
+    /home/smullercleve/.virtualenvs/mujoco/bin/python \
+        neuromorphic_body_schema/include_taxels/optimize_taxel_alignment.py --polish
+    
+    /home/smullercleve/.virtualenvs/mujoco/bin/python \
+        neuromorphic_body_schema/include_taxels/optimize_taxel_alignment.py --polish --part r_upper_arm torso
 """
 
 from __future__ import annotations
@@ -16,11 +35,11 @@ import argparse
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, cast
+from typing import Any, Callable, TypeAlias, cast
 
 import numpy as np
 import trimesh
-from scipy.optimize import differential_evolution, dual_annealing, minimize
+from scipy.optimize import minimize
 from scipy.spatial import KDTree
 from scipy.spatial.transform import Rotation
 
@@ -33,36 +52,45 @@ from include_skin_to_mujoco_model import (
 )
 
 
+Vector3: TypeAlias = tuple[float, float, float]
+QuaternionWXYZ: TypeAlias = tuple[float, float, float, float]
+ManualStep: TypeAlias = tuple[Vector3, Vector3]
+SeedCandidate: TypeAlias = tuple[str, np.ndarray, np.ndarray]
+PreviousSeed: TypeAlias = dict[str, np.ndarray]
+PreviousSeedMap: TypeAlias = dict[str, PreviousSeed]
+JsonDict: TypeAlias = dict[str, Any]
+
 # PartConfig quick guide:
 # - Base seed set: delta_angle_seed_candidates (+ implicit zero translation seed).
 # - Previous-result seeding: include_previous_seed plus optional previous_*_jitter_candidates.
 # - Previous-result dense grid: previous_angle_grid_values_deg + previous_offset_grid_values_m.
-# - Global stage (optional): global_optimizer and global_maxiter.
-# - Local stage: local_optimizer (used for main optimization, local refine, and --polish).
 # - Local refine pass (optional): local_refine_angle_jitter_candidates with refine windows.
 @dataclass(frozen=True)
 class PartConfig:
+    """Configuration for optimizing one anatomical taxel patch.
+
+    Each instance fully defines the data source, target mesh, baseline manual
+    transform chain, and optimization strategy for a single body part.
+    """
+
     part_name: str
     position_file: str
     mesh_files: tuple[str, ...]
-    mesh_pos: tuple[tuple[float, float, float], ...]
-    mesh_quat_wxyz: tuple[tuple[float, float, float, float], ...]
+    mesh_pos: tuple[Vector3, ...]
+    mesh_quat_wxyz: tuple[QuaternionWXYZ, ...]
     rebase: bool
-    manual_steps: tuple[tuple[tuple[float, float, float], tuple[float, float, float]], ...] = ()
-    delta_angle_seed_candidates: tuple[tuple[float, float, float], ...] = ((0.0, 0.0, 0.0),)
-    delta_angle_bounds_deg: tuple[float, float, float] = (25.0, 25.0, 25.0)
-    delta_translation_bounds_m: tuple[float, float, float] = (0.03, 0.03, 0.03)
+    manual_steps: tuple[ManualStep, ...] = ()
+    delta_angle_seed_candidates: tuple[Vector3, ...] = ((0.0, 0.0, 0.0),)
+    delta_angle_bounds_deg: Vector3 = (25.0, 25.0, 25.0)
+    delta_translation_bounds_m: Vector3 = (0.03, 0.03, 0.03)
     include_previous_seed: bool = True
-    previous_angle_jitter_candidates: tuple[tuple[float, float, float], ...] = ()
-    previous_offset_jitter_candidates: tuple[tuple[float, float, float], ...] = ()
+    previous_angle_jitter_candidates: tuple[Vector3, ...] = ()
+    previous_offset_jitter_candidates: tuple[Vector3, ...] = ()
     previous_angle_grid_values_deg: tuple[tuple[float, ...], tuple[float, ...], tuple[float, ...]] | None = None
     previous_offset_grid_values_m: tuple[tuple[float, ...], tuple[float, ...], tuple[float, ...]] | None = None
-    local_refine_angle_jitter_candidates: tuple[tuple[float, float, float], ...] = ()
-    local_refine_angle_window_deg: tuple[float, float, float] = (6.0, 6.0, 6.0)
-    local_refine_translation_window_m: tuple[float, float, float] = (0.002, 0.002, 0.002)
-    global_optimizer: str = "none"  # one of: none, differential_evolution, dual_annealing
-    global_maxiter: int = 40
-    local_optimizer: str = "L-BFGS-B"
+    local_refine_angle_jitter_candidates: tuple[Vector3, ...] = ()
+    local_refine_angle_window_deg: Vector3 = (6.0, 6.0, 6.0)
+    local_refine_translation_window_m: Vector3 = (0.002, 0.002, 0.002)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -70,9 +98,12 @@ POSITIONS_DIR = ROOT / "neuromorphic_body_schema" / "include_taxels" / "position
 MESH_DIR = ROOT / "neuromorphic_body_schema" / "meshes" / "iCub"
 REPORT_JSON = ROOT / "neuromorphic_body_schema" / "include_taxels" / "taxel_alignment_optimization_report.json"
 REPORT_TXT = ROOT / "neuromorphic_body_schema" / "include_taxels" / "taxel_alignment_optimization_report.txt"
+LOCAL_OPTIMIZER_METHOD = "L-BFGS-B"
 
 
 def normalize_quaternion_wxyz(quat_wxyz: np.ndarray) -> np.ndarray:
+    """Return a normalized quaternion in canonical wxyz form."""
+
     quat = np.array(quat_wxyz, dtype=float)
     norm = float(np.linalg.norm(quat))
     if norm < 1e-12:
@@ -85,27 +116,37 @@ def normalize_quaternion_wxyz(quat_wxyz: np.ndarray) -> np.ndarray:
 
 
 def quat_wxyz_to_xyzw(quat_wxyz: np.ndarray) -> np.ndarray:
+    """Convert a quaternion from wxyz to scipy's xyzw convention."""
+
     q = normalize_quaternion_wxyz(quat_wxyz)
     return np.array([q[1], q[2], q[3], q[0]], dtype=float)
 
 
 def quat_xyzw_to_wxyz(quat_xyzw: np.ndarray) -> np.ndarray:
+    """Convert a quaternion from scipy's xyzw convention to wxyz."""
+
     q = np.array(quat_xyzw, dtype=float)
     return normalize_quaternion_wxyz(np.array([q[3], q[0], q[1], q[2]], dtype=float))
 
 
 def euler_xyz_deg_to_quat_wxyz(angles_deg: np.ndarray) -> np.ndarray:
+    """Convert xyz Euler angles in degrees to a normalized wxyz quaternion."""
+
     rot = Rotation.from_euler("xyz", np.array(angles_deg, dtype=float), degrees=True)
     return quat_xyzw_to_wxyz(rot.as_quat())
 
 
 def quat_wxyz_to_euler_xyz_deg(quat_wxyz: np.ndarray) -> np.ndarray:
+    """Convert a normalized wxyz quaternion to xyz Euler angles in degrees."""
+
     quat_xyzw = quat_wxyz_to_xyzw(quat_wxyz)
     rot = Rotation.from_quat(quat_xyzw)
     return np.array(rot.as_euler("xyz", degrees=True), dtype=float)
 
 
 def quaternion_geodesic_distance_deg(q1_wxyz: np.ndarray, q2_wxyz: np.ndarray) -> float:
+    """Return the shortest angular distance between two rotations in degrees."""
+
     q1 = normalize_quaternion_wxyz(q1_wxyz)
     q2 = normalize_quaternion_wxyz(q2_wxyz)
     dot = float(np.clip(np.abs(np.dot(q1, q2)), -1.0, 1.0))
@@ -117,18 +158,11 @@ def apply_quaternion_transform(
     offsets: np.ndarray,
     quat_wxyz: np.ndarray,
 ) -> np.ndarray:
+    """Apply a translation followed by a quaternion rotation to one point."""
+
     rot = Rotation.from_quat(quat_wxyz_to_xyzw(quat_wxyz))
     pos_shifted = np.array(pos, dtype=float) + np.array(offsets, dtype=float)
     return np.array(rot.apply(pos_shifted), dtype=float)
-
-
-
-def _angle_seed_grid(
-    x_values: tuple[float, ...],
-    y_values: tuple[float, ...] = (0.0,),
-    z_values: tuple[float, ...] = (0.0,),
-) -> tuple[tuple[float, float, float], ...]:
-    return tuple((x, y, z) for x in x_values for y in y_values for z in z_values)
 
 
 PARTS: tuple[PartConfig, ...] = (
@@ -178,7 +212,7 @@ PARTS: tuple[PartConfig, ...] = (
     ),
     PartConfig(
         part_name="r_upper_arm",
-        position_file="right_arm_mesh.txt",
+        position_file="right_arm.txt",
         mesh_files=("sim_sea_2-5_r_elbow_prt-binary.stl",),
         mesh_pos=((0.131934, 0.0, -0.0353516),),
         mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
@@ -188,9 +222,6 @@ PARTS: tuple[PartConfig, ...] = (
             ((0.0, 0.0, 0.0), (0.0, 0.0, -2.0)),
             ((-0.08, 0.0015, 0.012), (0.0, 0.0, 0.0)),
         ),
-        delta_angle_seed_candidates=_angle_seed_grid((0.0, 45.0, 90.0), (0.0, 45.0, 90.0), (0.0, 45.0, 90.0)),
-        global_optimizer="differential_evolution",
-        global_maxiter=35,
     ),
     PartConfig(
         part_name="r_forearm",
@@ -205,64 +236,10 @@ PARTS: tuple[PartConfig, ...] = (
             ((0.0, 0.0, 0.0), (0.0, 0.0, -2.0)),
             ((-0.05, 0.0, -0.0015), (0.0, 0.0, 0.0)),
         ),
-        # Sweep a wider x-flip family and let prior optimized results contribute
-        # additional local starts in the same region.
-        delta_angle_seed_candidates=_angle_seed_grid(
-            (130.0, 140.0, 150.0, 160.0, 170.0, 180.0, 190.0, 200.0, 210.0, 220.0, 230.0)
-        ),
-        delta_angle_bounds_deg=(15.0, 8.0, 8.0),
-        delta_translation_bounds_m=(0.008, 0.008, 0.008),
-        previous_angle_jitter_candidates=(
-            (-30.0, 0.0, 0.0),
-            (-20.0, 0.0, 0.0),
-            (-10.0, 0.0, 0.0),
-            (10.0, 0.0, 0.0),
-            (20.0, 0.0, 0.0),
-            (30.0, 0.0, 0.0),
-            (0.0, -10.0, 0.0),
-            (0.0, -5.0, 0.0),
-            (0.0, 5.0, 0.0),
-            (0.0, 10.0, 0.0),
-            (0.0, 0.0, -10.0),
-            (0.0, 0.0, -5.0),
-            (0.0, 0.0, 5.0),
-            (0.0, 0.0, 10.0),
-            (10.0, -5.0, 0.0),
-            (10.0, 5.0, 0.0),
-            (-10.0, -5.0, 0.0),
-            (-10.0, 5.0, 0.0),
-            (0.0, -5.0, -5.0),
-            (0.0, -5.0, 5.0),
-            (0.0, 5.0, -5.0),
-            (0.0, 5.0, 5.0),
-        ),
-        previous_offset_jitter_candidates=(
-            (0.002, 0.0, 0.0),
-            (-0.002, 0.0, 0.0),
-            (0.0, 0.002, 0.0),
-            (0.0, -0.002, 0.0),
-            (0.0, 0.0, 0.002),
-            (0.0, 0.0, -0.002),
-            (0.002, 0.002, 0.0),
-            (0.0, 0.002, -0.002),
-        ),
-        local_refine_angle_jitter_candidates=(
-            (0.0, 0.0, 0.0),
-            (5.0, 0.0, 0.0),
-            (-5.0, 0.0, 0.0),
-            (0.0, 5.0, 0.0),
-            (0.0, -5.0, 0.0),
-            (0.0, 0.0, 5.0),
-            (0.0, 0.0, -5.0),
-            (5.0, -5.0, 0.0),
-            (5.0, 5.0, 0.0),
-            (0.0, -5.0, -5.0),
-            (0.0, -5.0, 5.0),
-        ),
     ),
     PartConfig(
         part_name="l_upper_arm",
-        position_file="left_arm_mesh.txt",
+        position_file="left_arm.txt",
         mesh_files=("sim_sea_2-5_l_elbow_prt-binary.stl",),
         mesh_pos=((-0.131901, 0.0, -0.0353428),),
         mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
@@ -272,11 +249,6 @@ PARTS: tuple[PartConfig, ...] = (
             ((0.0, 0.0, 0.0), (0.0, -148.0, 0.0)),
             ((0.08, 0.0015, 0.012), (0.0, 0.0, 0.0)),
         ),
-        delta_angle_seed_candidates=_angle_seed_grid((0.0, 45.0, 90.0), (0.0, 45.0, 90.0), (0.0, 45.0, 90.0)),
-        previous_angle_grid_values_deg=((-5.0, 0.0, 5.0), (-5.0, 0.0, 5.0), (-5.0, 0.0, 5.0)),
-        previous_offset_grid_values_m=((-0.01, 0.0, 0.01), (-0.01, 0.0, 0.01), (-0.01, 0.0, 0.01)),
-        global_optimizer="differential_evolution",
-        global_maxiter=35,
     ),
     PartConfig(
         part_name="l_forearm",
@@ -292,11 +264,10 @@ PARTS: tuple[PartConfig, ...] = (
             ((0.05, -0.001, 0.0), (0.0, 0.0, 0.0)),
         ),
     ),
-    # TODO find which geometry is used in the model and if not optimization for the front part is enough (exclude the back hulls)
     PartConfig(
         part_name="torso",
         position_file="torso.txt",
-        mesh_files=("chest_hull_3.stl",),  # "chest_hull_1.stl", "chest_hull_2.stl", 
+        mesh_files=("chest_hull_3.stl",),
         mesh_pos=((0.0, 0.0928, -0.024189),),
         mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
         rebase=True,
@@ -333,6 +304,37 @@ PARTS: tuple[PartConfig, ...] = (
             ((0.055, -0.005, 0.02), (0.0, 0.0, 0.0)),
         ),
     ),
+    # TODO 
+    # angles: [-57.87376835295783, 9.116622968678112, -36.31680740978401]
+    # offsets: [0.34919193387265557, -0.296101520086086, -0.340801093370063]
+    PartConfig(
+        part_name="l_foot",
+        position_file="left_foot.txt",
+        mesh_files=("sim_sea_2-5_l_sole_prt-binary.stl",),
+        mesh_pos=((0.0, 0.0, 0.0),),
+        mesh_quat_wxyz=((0.0, 0.0, 0.0, 0.0),),
+        rebase=False,
+        manual_steps=(
+            ((0.0, 0.0, 0.0), (-90.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, -105.0, 0.0)),
+            ((0.0, -0.66, 0.0), (0.0, 0.0, 0.0)),
+            ((0.1, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            ((0.0, 0.0, -0.02), (0.0, 0.0, 0.0)),
+        ),
+    ),
+    PartConfig(
+        part_name="r_foot",
+        position_file="right_foot.txt",
+        mesh_files=("sim_sea_2-5_r_sole_prt-binary.stl",),
+        mesh_pos=((0.0, 0.0, 0.0),),
+        mesh_quat_wxyz=((0.0, 0.0, 0.0, 0.0),),
+        rebase=False,
+        manual_steps=(
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            # ((0.0, 0.0, 0.0), (0.0, -15.0, 0.0)),
+            # ((0.055, -0.005, 0.02), (0.0, 0.0, 0.0)),
+        ),
+    ),
 )
 
 PARTS_BY_NAME: dict[str, PartConfig] = {cfg.part_name: cfg for cfg in PARTS}
@@ -345,7 +347,13 @@ def apply_part_transform(
     delta_offsets_m: np.ndarray | None = None,
     delta_quat_wxyz: np.ndarray | None = None,
 ) -> np.ndarray:
-    """Apply the same transform pipeline as include_skin_to_mujoco_model.py, plus an optional final delta."""
+    """Apply the full per-part transform pipeline to a taxel point cloud.
+
+    The returned points include the fixed manual transform chain stored in the
+    part configuration plus an optional final optimization delta represented as
+    either Euler angles or a quaternion.
+    """
+
     if delta_quat_wxyz is None:
         if delta_angles_deg is None:
             delta_angles_deg = np.zeros(3, dtype=float)
@@ -368,6 +376,13 @@ def apply_part_transform(
 
 
 def load_taxel_points(position_file: Path, rebase: bool) -> np.ndarray:
+    """Load tactile taxel coordinates from a positions file.
+
+    The parser keeps only tactile channels according to `taxel2Repr`, drops
+    unused zero rows, and optionally rebases the coordinate system to match the
+    convention used by the original MuJoCo inclusion script.
+    """
+
     calibration = read_calibration_data(str(position_file))
     taxel2repr = read_taxel2repr_data(str(position_file))
     taxels = validate_taxel_data(calibration, taxel2repr if taxel2repr else None)
@@ -379,9 +394,11 @@ def load_taxel_points(position_file: Path, rebase: bool) -> np.ndarray:
 
 def load_mesh(
     mesh_files: tuple[str, ...],
-    mesh_pos: tuple[tuple[float, float, float], ...],
-    mesh_quat_wxyz: tuple[tuple[float, float, float, float], ...],
+    mesh_pos: tuple[Vector3, ...],
+    mesh_quat_wxyz: tuple[QuaternionWXYZ, ...],
 ) -> trimesh.Trimesh:
+    """Load one or more mesh files into the common body-part reference frame."""
+
     if not (len(mesh_files) == len(mesh_pos) == len(mesh_quat_wxyz)):
         raise ValueError("mesh_files, mesh_pos, and mesh_quat_wxyz must have the same length")
 
@@ -424,7 +441,13 @@ def load_mesh(
 
 
 def build_distance_fn(mesh: trimesh.Trimesh) -> Callable[[np.ndarray], np.ndarray]:
-    """Use trimesh proximity when possible, otherwise sampled-surface KDTree."""
+    """Build a robust point-to-mesh distance function.
+
+    Trimesh proximity queries are preferred when available. A KDTree built on a
+    dense surface sample is kept as a fallback because proximity queries can be
+    fragile for some meshes and environments.
+    """
+
     sampled = mesh.sample(120000)
     kdtree = KDTree(sampled)
 
@@ -439,7 +462,9 @@ def build_distance_fn(mesh: trimesh.Trimesh) -> Callable[[np.ndarray], np.ndarra
     return dist
 
 
-def load_previous_optimized_seeds() -> dict[str, dict[str, np.ndarray]]:
+def load_previous_optimized_seeds() -> PreviousSeedMap:
+    """Load previously saved per-part optimization results as new seed states."""
+
     if not REPORT_JSON.exists():
         return {}
 
@@ -448,7 +473,7 @@ def load_previous_optimized_seeds() -> dict[str, dict[str, np.ndarray]]:
     except Exception:
         return {}
 
-    seeds: dict[str, dict[str, np.ndarray]] = {}
+    seeds: PreviousSeedMap = {}
     for entry in raw:
         if not isinstance(entry, dict) or "part" not in entry or "optimized" not in entry:
             continue
@@ -481,10 +506,17 @@ def load_previous_optimized_seeds() -> dict[str, dict[str, np.ndarray]]:
 
 def build_seed_candidates(
     config: PartConfig,
-    previous_seed: dict[str, np.ndarray] | None,
+    previous_seed: PreviousSeed | None,
     polish: bool = False,
-) -> list[tuple[str, np.ndarray, np.ndarray]]:
-    candidates: list[tuple[str, np.ndarray, np.ndarray]] = []
+) -> list[SeedCandidate]:
+    """Construct unique seed hypotheses for one optimization run.
+
+    Seeds can come from the static part configuration, the previously saved best
+    solution, jittered variations around that solution, and an optional dense
+    grid around the previous optimum.
+    """
+
+    candidates: list[SeedCandidate] = []
     seen: set[tuple[float, ...]] = set()
 
     def add_candidate(label: str, angles: np.ndarray, offsets: np.ndarray) -> None:
@@ -550,9 +582,17 @@ def build_seed_candidates(
 
 def optimize_part(
     config: PartConfig,
-    previous_seed_map: dict[str, dict[str, np.ndarray]],
+    previous_seed_map: PreviousSeedMap,
     polish: bool = False,
-) -> dict[str, Any]:
+) -> JsonDict:
+    """Optimize one body-part taxel cloud against its target mesh.
+
+    The optimization runs in quaternion-plus-translation space around the exact
+    manual baseline transform stored in the configuration. The reported values
+    are therefore deltas around that manual baseline rather than absolute body
+    transforms.
+    """
+
     points = load_taxel_points(POSITIONS_DIR / config.position_file, config.rebase)
     mesh = load_mesh(config.mesh_files, config.mesh_pos, config.mesh_quat_wxyz)
     dist_fn = build_distance_fn(mesh)
@@ -567,12 +607,16 @@ def optimize_part(
     translation_bounds = np.array(config.delta_translation_bounds_m, dtype=float)
 
     def unpack_params(params: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """Split the optimizer state into quaternion, translation, and Euler views."""
+
         quat = normalize_quaternion_wxyz(params[:4])
         offsets = np.array(params[4:], dtype=float)
         angles = quat_wxyz_to_euler_xyz_deg(quat)
         return quat, offsets, angles
 
     def mean_distance(params: np.ndarray) -> float:
+        """Return the mean point-to-surface distance for the current parameter vector."""
+
         quat, offsets, _ = unpack_params(params)
         transformed = apply_part_transform(
             points,
@@ -584,6 +628,8 @@ def optimize_part(
         return float(np.mean(distances))
 
     def distance_stats(params: np.ndarray) -> dict[str, float]:
+        """Return summary distance statistics for report generation."""
+
         quat, offsets, _ = unpack_params(params)
         transformed = apply_part_transform(
             points,
@@ -599,6 +645,8 @@ def optimize_part(
         }
 
     def objective(params: np.ndarray, quat_center: np.ndarray, offset_center: np.ndarray) -> float:
+        """Robust objective with soft regularization around the current seed hypothesis."""
+
         quat, offsets, _ = unpack_params(params)
         transformed = apply_part_transform(
             points,
@@ -624,60 +672,7 @@ def optimize_part(
     previous_seed = previous_seed_map.get(config.part_name)
     seed_candidates = build_seed_candidates(config, previous_seed, polish=polish)
 
-    def run_global_optimizer(
-        x_seed: np.ndarray,
-        bounds: list[tuple[float, float]],
-        seed_quat: np.ndarray,
-        seed_offsets: np.ndarray,
-    ) -> tuple[np.ndarray, dict[str, Any] | None]:
-        mode = config.global_optimizer.lower()
-        if mode == "none" or polish:
-            return x_seed, None
-
-        if mode == "differential_evolution":
-            result_global = differential_evolution(
-                lambda p: objective(p, seed_quat, seed_offsets),
-                bounds=bounds,
-                maxiter=config.global_maxiter,
-                popsize=10,
-                polish=False,
-                rng=np.random.default_rng(42),
-            )
-            xg = np.array(result_global.x, dtype=float)
-            xg[:4] = normalize_quaternion_wxyz(xg[:4])
-            return xg, {
-                "method": "differential_evolution",
-                "success": bool(result_global.success),
-                "message": str(result_global.message),
-                "nit": int(result_global.nit),
-                "nfev": int(result_global.nfev),
-                "objective": float(result_global.fun),
-            }
-
-        if mode == "dual_annealing":
-            result_global = dual_annealing(
-                lambda p: objective(p, seed_quat, seed_offsets),
-                bounds=bounds,
-                maxiter=config.global_maxiter,
-                x0=x_seed,
-                rng=np.random.default_rng(42),
-            )
-            xg = np.array(result_global.x, dtype=float)
-            xg[:4] = normalize_quaternion_wxyz(xg[:4])
-            return xg, {
-                "method": "dual_annealing",
-                "success": bool(result_global.success),
-                "message": str(result_global.message),
-                "nit": int(result_global.nit),
-                "nfev": int(result_global.nfev),
-                "objective": float(result_global.fun),
-            }
-
-        raise ValueError(f"Unsupported global optimizer: {config.global_optimizer}")
-
-    seed_results: list[
-        tuple[float, np.ndarray, Any, np.ndarray, np.ndarray, np.ndarray, str, dict[str, Any] | None]
-    ] = []
+    seed_results: list[tuple[float, np.ndarray, Any, np.ndarray, np.ndarray, np.ndarray, str]] = []
 
     for seed_idx, (seed_label, seed_angles, seed_offsets) in enumerate(seed_candidates):
         print(f"\n[{config.part_name}] Trying seed {seed_idx}/{len(seed_candidates)}: {seed_label}")
@@ -694,13 +689,7 @@ def optimize_part(
             (seed_offsets[2] - translation_bounds[2], seed_offsets[2] + translation_bounds[2]),
         ]
 
-        x_start, global_summary = run_global_optimizer(x_seed, bounds, seed_quat, seed_offsets)
-        if global_summary is not None:
-            print(
-                f"[{config.part_name}] seed={seed_idx} global={global_summary['method']} done"
-                f" ({global_summary['nfev']} evals, obj={global_summary['objective']:.6f})",
-                flush=True,
-            )
+        x_start = x_seed
 
         iteration = {"count": 0}
         best_so_far = {"score": mean_distance(x_start), "params": x_start.copy()}
@@ -716,12 +705,12 @@ def optimize_part(
                 best_so_far["score"] = md
                 best_so_far["params"] = xk.copy()
 
-        primary_maxiter = 220 if polish else 120
-        primary_ftol = 1e-14 if polish else 1e-10
+        primary_maxiter = 500 if polish else 200
+        primary_ftol = 1e-16 if polish else 1e-12
         result = minimize(
             lambda p: objective(p, seed_quat, seed_offsets),
             x_start,
-            method=config.local_optimizer,
+            method=LOCAL_OPTIMIZER_METHOD,
             bounds=bounds,
             callback=callback,
             options={"maxiter": primary_maxiter, "ftol": primary_ftol, "gtol": 1e-12},
@@ -730,9 +719,7 @@ def optimize_part(
         # Use best-so-far parameters, not just final iterate
         x_candidate = best_so_far["params"]
         score = best_so_far["score"]
-        seed_results.append(
-            (score, x_candidate, result, seed_angles, seed_quat, seed_offsets, seed_label, global_summary)
-        )
+        seed_results.append((score, x_candidate, result, seed_angles, seed_quat, seed_offsets, seed_label))
 
     seed_results.sort(key=lambda x: x[0])
     (
@@ -743,7 +730,6 @@ def optimize_part(
         selected_seed_quat,
         selected_seed_offsets,
         selected_seed_label,
-        selected_seed_global_summary,
     ) = seed_results[0]
 
     fine_refinement: dict[str, Any] | None = None
@@ -775,14 +761,14 @@ def optimize_part(
                 (x_final[6] - translation_window_local[2], x_final[6] + translation_window_local[2]),
             ]
 
-            fine_maxiter = 140 if polish else 80
-            fine_ftol = 1e-13 if polish else 1e-11
+            fine_maxiter = 1000 if polish else 200
+            fine_ftol = 1e-20 if polish else 1e-15
             result_local = minimize(
                 lambda p: objective(p, normalize_quaternion_wxyz(x_final[:4]), x_final[4:]),
                 x_seed_local,
-                method=config.local_optimizer,
+                method=LOCAL_OPTIMIZER_METHOD,
                 bounds=bounds_local,
-                options={"maxiter": fine_maxiter, "ftol": fine_ftol, "gtol": 1e-12},
+                options={"maxiter": fine_maxiter, "ftol": fine_ftol, "gtol": 1e-16},
             )
             x_candidate_local = result_local.x if result_local.success else x_seed_local
             score_local = mean_distance(x_candidate_local)
@@ -824,9 +810,9 @@ def optimize_part(
         result_polish = minimize(
             lambda p: objective(p, normalize_quaternion_wxyz(x_final[:4]), x_final[4:]),
             x_final,
-            method=config.local_optimizer,
+            method=LOCAL_OPTIMIZER_METHOD,
             bounds=bounds_polish,
-            options={"maxiter": 200, "ftol": 1e-15, "gtol": 1e-13},
+            options={"maxiter": 2000, "ftol": 1e-25, "gtol": 1e-20},
         )
         x_polished = result_polish.x if result_polish.success else x_final
         polish_after = mean_distance(x_polished)
@@ -888,14 +874,12 @@ def optimize_part(
             "nit": int(result.nit),
             "nfev": int(result.nfev),
             "objective": float(result.fun),
-            "local_optimizer": config.local_optimizer,
-            "global_optimizer": config.global_optimizer,
+            "local_optimizer": LOCAL_OPTIMIZER_METHOD,
             "seed_count": len(seed_candidates),
             "selected_seed_label": selected_seed_label,
             "selected_seed_angles_deg": selected_seed_angles.tolist(),
             "selected_seed_quaternion_wxyz": normalize_quaternion_wxyz(selected_seed_quat).tolist(),
             "selected_seed_offsets_m": selected_seed_offsets.tolist(),
-            "selected_seed_global_stage": selected_seed_global_summary,
             "angle_bounds_deg": angle_bounds.tolist(),
             "translation_bounds_m": translation_bounds.tolist(),
             "fine_refinement": fine_refinement,
@@ -906,6 +890,8 @@ def optimize_part(
 
 
 def write_reports(results: list[dict[str, Any]]) -> None:
+    """Write the machine-readable JSON report and the human-readable text report."""
+
     REPORT_JSON.write_text(json.dumps(results, indent=2), encoding="utf-8")
 
     lines: list[str] = []
@@ -939,16 +925,13 @@ def write_reports(results: list[dict[str, Any]]) -> None:
             lines.append(f"  delta rotation distance deg: {delta['rotation_distance_deg']}")
         lines.append(f"  delta offsets m: {delta['offsets_m']}")
         optimizer = cast(dict[str, Any], r["optimizer"])
-        lines.append(f"  local optimizer: {optimizer.get('local_optimizer', 'L-BFGS-B')}")
-        lines.append(f"  global optimizer: {optimizer.get('global_optimizer', 'none')}")
+        lines.append(f"  local optimizer: {optimizer.get('local_optimizer', LOCAL_OPTIMIZER_METHOD)}")
         lines.append(f"  seed count: {optimizer['seed_count']}")
         lines.append(f"  selected seed label: {optimizer['selected_seed_label']}")
         lines.append(f"  selected seed angles deg: {optimizer['selected_seed_angles_deg']}")
         if optimizer.get("selected_seed_quaternion_wxyz") is not None:
             lines.append(f"  selected seed quaternion wxyz: {optimizer['selected_seed_quaternion_wxyz']}")
         lines.append(f"  selected seed offsets m: {optimizer['selected_seed_offsets_m']}")
-        if optimizer.get("selected_seed_global_stage") is not None:
-            lines.append(f"  selected seed global stage: {optimizer['selected_seed_global_stage']}")
         lines.append(f"  angle bounds deg: {optimizer['angle_bounds_deg']}")
         lines.append(f"  translation bounds m: {optimizer['translation_bounds_m']}")
         if optimizer.get("fine_refinement") is not None:
@@ -977,7 +960,9 @@ def write_reports(results: list[dict[str, Any]]) -> None:
     REPORT_TXT.write_text("\n".join(lines), encoding="utf-8")
 
 
-def load_existing_results() -> list[dict[str, Any]]:
+def load_existing_results() -> list[JsonDict]:
+    """Load previously written result entries from the JSON report, if present."""
+
     if not REPORT_JSON.exists():
         return []
 
@@ -992,6 +977,8 @@ def load_existing_results() -> list[dict[str, Any]]:
 
 
 def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments for selective optimization and polishing."""
+
     parser = argparse.ArgumentParser(description="Optimize taxel patch alignment against body meshes.")
     parser.add_argument(
         "--parts",
@@ -1006,7 +993,15 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def _result_mean_distance(result_entry: JsonDict) -> float:
+    """Extract the optimized mean distance from a stored result entry."""
+
+    return float(cast(dict[str, Any], result_entry["optimized"])["mean_distance_m"])
+
+
 def main() -> None:
+    """Run the configured optimization workflow and persist improved results."""
+
     args = parse_args()
     selected_parts = set(args.parts) if args.parts else None
     previous_seed_map = load_previous_optimized_seeds()
@@ -1018,15 +1013,16 @@ def main() -> None:
             continue
         print(f"\n=== Optimizing {part_cfg.part_name} ===")
         new_result = optimize_part(part_cfg, previous_seed_map, polish=args.polish)
-        
+
         # Only update if new result is better than existing best (including initialized values)
-        new_mean = new_result["optimized"]["mean_distance_m"]
+        new_mean = _result_mean_distance(new_result)
         if part_cfg.part_name not in result_by_part:
             result_by_part[part_cfg.part_name] = new_result
         else:
-            best_mean = result_by_part[part_cfg.part_name]["optimized"]["mean_distance_m"]
+            best_mean = _result_mean_distance(result_by_part[part_cfg.part_name])
             if new_mean < best_mean:
                 result_by_part[part_cfg.part_name] = new_result
+                print(f"  improved mean_distance {best_mean:.6f} m -> {new_mean:.6f} m, updating stored result.")
             else:
                 print(f"  mean_distance {new_mean:.6f} m >= best {best_mean:.6f} m, keeping previous result.")
 

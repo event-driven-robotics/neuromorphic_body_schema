@@ -36,59 +36,59 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.000784474492470086,
-      "median_distance_m": 0.000777915623754652,
-      "p90_distance_m": 0.0010847788248818549
+      "mean_distance_m": 0.000775426716210598,
+      "median_distance_m": 0.0007761307803924583,
+      "p90_distance_m": 0.0010793640994453393
     },
     "optimized": {
       "delta_angles_deg": [
-        0.30930459384172393,
-        -0.3975155598723627,
-        -0.36115899959471703
+        0.12363344386228278,
+        -0.4501317715191527,
+        0.20759215780860982
       ],
       "delta_quaternion_wxyz": [
-        0.9999854032437564,
-        0.0026882257321920256,
-        -0.003477447836080233,
-        -0.0031423078114639533
+        0.9999900542706291,
+        0.0010860111548345389,
+        -0.003926167396015448,
+        0.001815805378994071
       ],
       "delta_offsets_m": [
-        0.0001756415935409616,
-        -0.00019867554913076646,
-        0.00048783870677853824
+        0.00011188808585597364,
+        -0.00015045031455894345,
+        0.0008403122368320168
       ],
-      "mean_distance_m": 0.0007179154230296628,
-      "median_distance_m": 0.0006993886924465695,
-      "p90_distance_m": 0.0011249954112526666
+      "mean_distance_m": 0.0007172381414914888,
+      "median_distance_m": 0.0006999037322564166,
+      "p90_distance_m": 0.0011302429881787192
     },
     "delta": {
       "angles_deg": [
-        0.30930459384172393,
-        -0.3975155598723627,
-        -0.36115899959471703
+        0.12363344386228278,
+        -0.4501317715191527,
+        0.20759215780860982
       ],
       "quaternion_wxyz": [
-        0.9999854032437564,
-        0.0026882257321920256,
-        -0.003477447836080233,
-        -0.0031423078114639533
+        0.9999900542706291,
+        0.0010860111548345389,
+        -0.003926167396015448,
+        0.001815805378994071
       ],
-      "rotation_distance_deg": 0.6191506483037582,
+      "rotation_distance_deg": 0.5110769621531471,
       "offsets_m": [
-        0.0001756415935409616,
-        -0.00019867554913076646,
-        0.00048783870677853824
+        0.00011188808585597364,
+        -0.00015045031455894345,
+        0.0008403122368320168
       ],
-      "mean_distance_m": -6.655906944042324e-05,
-      "mean_distance_improvement_pct": 8.484542210014725
+      "mean_distance_m": -5.818857471910914e-05,
+      "mean_distance_improvement_pct": 7.504071436107925
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 39,
-      "nfev": 424,
-      "objective": 0.0006583898247828943,
+      "nit": 40,
+      "nfev": 448,
+      "objective": 0.000663586340945282,
       "local_optimizer": "L-BFGS-B",
       "global_optimizer": "none",
       "seed_count": 2,
@@ -121,8 +121,18 @@
         0.03
       ],
       "fine_refinement": null,
-      "polish_mode": false,
-      "polish_refinement": null
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.0007172381414914888,
+        "post_polish_mean_distance_m": 0.0007172381414914888,
+        "rotation_space": "quaternion_wxyz",
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": true
+      }
     }
   },
   {
@@ -151,63 +161,91 @@
         0.0,
         0.0
       ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
       "delta_offsets_m": [
         0.0,
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0008682976025775508,
-      "median_distance_m": 0.0008605507115696841,
-      "p90_distance_m": 0.0012926878000449002
+      "mean_distance_m": 0.0008837517600945398,
+      "median_distance_m": 0.0008806839131273554,
+      "p90_distance_m": 0.0012797466815562117
     },
     "optimized": {
       "delta_angles_deg": [
-        -3.000070244340953e-07,
-        -1.0634387204404309e-05,
-        -5.82954445012449e-07
+        -0.002242132224395439,
+        -0.09489024144892513,
+        0.26419354370835546
+      ],
+      "delta_quaternion_wxyz": [
+        0.9999969992755889,
+        -1.765709482920476e-05,
+        -0.0008281163855666768,
+        0.0023055045644505977
       ],
       "delta_offsets_m": [
-        0.0006275520531449399,
-        6.508293593925944e-05,
-        -9.40899197944922e-05
+        0.000583906890834199,
+        8.850855040154829e-05,
+        0.00014798656637311883
       ],
-      "mean_distance_m": 0.0007373942070940571,
-      "median_distance_m": 0.0006693490881712557,
-      "p90_distance_m": 0.0011974457734728395
+      "mean_distance_m": 0.0007164639065161963,
+      "median_distance_m": 0.0006668836824514418,
+      "p90_distance_m": 0.0011722633282055489
     },
     "delta": {
       "angles_deg": [
-        -3.000070244340953e-07,
-        -1.0634387204404309e-05,
-        -5.82954445012449e-07
+        -0.002242132224395439,
+        -0.09489024144892513,
+        0.26419354370835546
       ],
+      "quaternion_wxyz": [
+        0.9999969992755889,
+        -1.765709482920476e-05,
+        -0.0008281163855666768,
+        0.0023055045644505977
+      ],
+      "rotation_distance_deg": 0.2807248058560008,
       "offsets_m": [
-        0.0006275520531449399,
-        6.508293593925944e-05,
-        -9.40899197944922e-05
+        0.000583906890834199,
+        8.850855040154829e-05,
+        0.00014798656637311883
       ],
-      "mean_distance_m": -0.00013090339548349364,
-      "mean_distance_improvement_pct": 15.075867432422422
+      "mean_distance_m": -0.00016728785357834355,
+      "mean_distance_improvement_pct": 18.929280951072485
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 13,
-      "nfev": 154,
-      "objective": 0.0006557408517143746,
-      "seed_count": 1,
-      "selected_seed_label": "configured:0",
+      "nit": 46,
+      "nfev": 504,
+      "objective": 0.0006319503634992827,
+      "local_optimizer": "L-BFGS-B",
+      "global_optimizer": "none",
+      "seed_count": 2,
+      "selected_seed_label": "previous:optimized",
       "selected_seed_angles_deg": [
-        0.0,
-        0.0,
-        0.0
+        0.08990789774646081,
+        -0.08303225240909864,
+        0.14080434488074162
+      ],
+      "selected_seed_quaternion_wxyz": [
+        0.9999986740773726,
+        0.000785483883822247,
+        -0.0007236281919361237,
+        0.0012293172108330313
       ],
       "selected_seed_offsets_m": [
-        0.0,
-        0.0,
-        0.0
+        0.0006086434586506241,
+        5.880288267900537e-05,
+        0.00010237240366328074
       ],
+      "selected_seed_global_stage": null,
       "angle_bounds_deg": [
         25.0,
         25.0,
@@ -219,8 +257,18 @@
         0.03
       ],
       "fine_refinement": null,
-      "polish_mode": false,
-      "polish_refinement": null
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.0007164639065161963,
+        "post_polish_mean_distance_m": 0.0007164639065161963,
+        "rotation_space": "quaternion_wxyz",
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": true
+      }
     }
   },
   {
@@ -249,54 +297,81 @@
         0.0,
         0.0
       ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
       "delta_offsets_m": [
         0.0,
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0008004054674846785,
-      "median_distance_m": 0.0007853104463397306,
-      "p90_distance_m": 0.0011418223085697585
+      "mean_distance_m": 0.00078651861327524,
+      "median_distance_m": 0.0007697194924867784,
+      "p90_distance_m": 0.001116033926829972
     },
     "optimized": {
       "delta_angles_deg": [
-        -6.922970310970666e-07,
-        -2.5940805527798235e-06,
-        -1.4164776635446182e-07
+        -0.20443493508719343,
+        -0.38674500808086654,
+        -0.5640942843520916
+      ],
+      "delta_quaternion_wxyz": [
+        0.9999805675881871,
+        -0.0018006123976045086,
+        -0.0033661521342266245,
+        -0.00492861652091214
       ],
       "delta_offsets_m": [
-        0.0004387322162961897,
-        -1.6184874208889614e-05,
-        0.0002552936382128203
+        9.638482255665975e-05,
+        0.00028228509532614787,
+        3.544913837314817e-05
       ],
-      "mean_distance_m": 0.000758585927126513,
-      "median_distance_m": 0.0007284335464990011,
-      "p90_distance_m": 0.0012151733903616147
+      "mean_distance_m": 0.0007219420990154265,
+      "median_distance_m": 0.0007170192837052741,
+      "p90_distance_m": 0.0011032588667152974
     },
     "delta": {
       "angles_deg": [
-        -6.922970310970666e-07,
-        -2.5940805527798235e-06,
-        -1.4164776635446182e-07
+        -0.20443493508719343,
+        -0.38674500808086654,
+        -0.5640942843520916
       ],
+      "quaternion_wxyz": [
+        0.9999805675881871,
+        -0.0018006123976045086,
+        -0.0033661521342266245,
+        -0.00492861652091214
+      ],
+      "rotation_distance_deg": 0.71438393881526,
       "offsets_m": [
-        0.0004387322162961897,
-        -1.6184874208889614e-05,
-        0.0002552936382128203
+        9.638482255665975e-05,
+        0.00028228509532614787,
+        3.544913837314817e-05
       ],
-      "mean_distance_m": -4.1819540358165454e-05,
-      "mean_distance_improvement_pct": 5.224794439446526
+      "mean_distance_m": -6.457651425981344e-05,
+      "mean_distance_improvement_pct": 8.210424161597697
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 7,
-      "nfev": 91,
-      "objective": 0.0006905609993732862,
-      "seed_count": 1,
+      "nit": 40,
+      "nfev": 744,
+      "objective": 0.0006565728978888901,
+      "local_optimizer": "L-BFGS-B",
+      "global_optimizer": "none",
+      "seed_count": 2,
       "selected_seed_label": "configured:0",
       "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_quaternion_wxyz": [
+        1.0,
         0.0,
         0.0,
         0.0
@@ -306,6 +381,7 @@
         0.0,
         0.0
       ],
+      "selected_seed_global_stage": null,
       "angle_bounds_deg": [
         25.0,
         25.0,
@@ -317,8 +393,18 @@
         0.03
       ],
       "fine_refinement": null,
-      "polish_mode": false,
-      "polish_refinement": null
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.0007223979955915987,
+        "post_polish_mean_distance_m": 0.0007219420990154265,
+        "rotation_space": "quaternion_wxyz",
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": true
+      }
     }
   },
   {
@@ -347,54 +433,80 @@
         0.0,
         0.0
       ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
       "delta_offsets_m": [
         0.0,
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0008870050378186379,
-      "median_distance_m": 0.0008568266336812662,
-      "p90_distance_m": 0.001304626925051364
+      "mean_distance_m": 0.0008788165970029352,
+      "median_distance_m": 0.0008549228597735685,
+      "p90_distance_m": 0.001303025550014205
     },
     "optimized": {
       "delta_angles_deg": [
-        -8.20045049960387e-07,
-        -1.2814487140058924e-05,
-        -1.2583615257828433e-07
+        0.10349573341035552,
+        -0.1699765223643484,
+        -0.027396974618767087
+      ],
+      "delta_quaternion_wxyz": [
+        0.9999984637553926,
+        0.0009028148741289153,
+        -0.0014835397249632004,
+        -0.00023774364839442233
       ],
       "delta_offsets_m": [
-        0.0007031161680023687,
-        -8.543056160927335e-06,
-        0.0005093367731194668
+        0.00047816046517429203,
+        -0.00020751363256785535,
+        -9.086491059645025e-06
       ],
-      "mean_distance_m": 0.0007336939326199484,
-      "median_distance_m": 0.0006637825658612412,
-      "p90_distance_m": 0.0012115294723685185
+      "mean_distance_m": 0.0007155323301121179,
+      "median_distance_m": 0.0006635638499122958,
+      "p90_distance_m": 0.0011563878107428275
     },
     "delta": {
       "angles_deg": [
-        -8.20045049960387e-07,
-        -1.2814487140058924e-05,
-        -1.2583615257828433e-07
+        0.10349573341035552,
+        -0.1699765223643484,
+        -0.027396974618767087
       ],
+      "quaternion_wxyz": [
+        0.9999984637553926,
+        0.0009028148741289153,
+        -0.0014835397249632004,
+        -0.00023774364839442233
+      ],
+      "rotation_distance_deg": 0.20086203909457717,
       "offsets_m": [
-        0.0007031161680023687,
-        -8.543056160927335e-06,
-        0.0005093367731194668
+        0.00047816046517429203,
+        -0.00020751363256785535,
+        -9.086491059645025e-06
       ],
-      "mean_distance_m": -0.00015331110519868955,
-      "mean_distance_improvement_pct": 17.284130152825174
+      "mean_distance_m": -0.00016328426689081726,
+      "mean_distance_improvement_pct": 18.58001629096132
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 14,
-      "nfev": 147,
-      "objective": 0.000656616085571832,
-      "seed_count": 1,
+      "nit": 32,
+      "nfev": 328,
+      "objective": 0.000637591720340044,
+      "local_optimizer": "L-BFGS-B",
+      "seed_count": 2,
       "selected_seed_label": "configured:0",
       "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_quaternion_wxyz": [
+        1.0,
         0.0,
         0.0,
         0.0
@@ -421,9 +533,8 @@
   },
   {
     "part": "r_upper_arm",
-    "position_file": "right_arm_mesh.txt",
+    "position_file": "right_arm.txt",
     "mesh_files": [
-      "sim_sea_2-5_r_upper_arm_prt-binary.stl",
       "sim_sea_2-5_r_elbow_prt-binary.stl"
     ],
     "manual_steps": [
@@ -470,62 +581,88 @@
         0.0,
         0.0
       ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
       "delta_offsets_m": [
         0.0,
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0055903203642993565,
-      "median_distance_m": 0.004325777488820582,
-      "p90_distance_m": 0.012514085076112404
+      "mean_distance_m": 0.0009863043959081083,
+      "median_distance_m": 0.0007868316448207547,
+      "p90_distance_m": 0.0019487293141192954
     },
     "optimized": {
       "delta_angles_deg": [
-        -9.843165940865783e-06,
-        3.289627663785029e-05,
-        -1.0900801993572834e-05
+        0.5473920029052461,
+        -0.17598510819922963,
+        -0.360419144115736
+      ],
+      "delta_quaternion_wxyz": [
+        0.9999824882271561,
+        0.004772018662619072,
+        -0.00155075849982736,
+        -0.0031378694976783917
       ],
       "delta_offsets_m": [
-        0.0016474800920077567,
-        0.0022367308031235674,
-        0.002778001244907141
+        0.0013734713146387174,
+        -0.0005035823574439068,
+        0.000339863045058715
       ],
-      "mean_distance_m": 0.005185406423896675,
-      "median_distance_m": 0.004082117470222212,
-      "p90_distance_m": 0.011636422713047103
+      "mean_distance_m": 0.0009122327276143558,
+      "median_distance_m": 0.000772997014596983,
+      "p90_distance_m": 0.0017585775821465871
     },
     "delta": {
       "angles_deg": [
-        -9.843165940865783e-06,
-        3.289627663785029e-05,
-        -1.0900801993572834e-05
+        0.5473920029052461,
+        -0.17598510819922963,
+        -0.360419144115736
       ],
+      "quaternion_wxyz": [
+        0.9999824882271561,
+        0.004772018662619072,
+        -0.00155075849982736,
+        -0.0031378694976783917
+      ],
+      "rotation_distance_deg": 0.6781617911868252,
       "offsets_m": [
-        0.0016474800920077567,
-        0.0022367308031235674,
-        0.002778001244907141
+        0.0013734713146387174,
+        -0.0005035823574439068,
+        0.000339863045058715
       ],
-      "mean_distance_m": -0.00040491394040268174,
-      "mean_distance_improvement_pct": 7.2431258678576675
+      "mean_distance_m": -7.407166829375247e-05,
+      "mean_distance_improvement_pct": 7.510021105153175
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 16,
-      "nfev": 154,
-      "objective": 0.004310128817815387,
-      "seed_count": 27,
-      "selected_seed_label": "configured:0",
+      "nit": 43,
+      "nfev": 504,
+      "objective": 0.0007539558837798382,
+      "local_optimizer": "L-BFGS-B",
+      "seed_count": 2,
+      "selected_seed_label": "previous:optimized",
       "selected_seed_angles_deg": [
-        0.0,
-        0.0,
-        0.0
+        0.1725109006103353,
+        -0.29898386686791933,
+        -0.14612327976948702
+      ],
+      "selected_seed_quaternion_wxyz": [
+        0.9999946550465036,
+        0.0015021076275078698,
+        -0.0026110380858608484,
+        -0.0012712321635930791
       ],
       "selected_seed_offsets_m": [
-        0.0,
-        0.0,
-        0.0
+        0.001106535081564133,
+        -0.0003286010487337544,
+        0.0006635300888471016
       ],
       "angle_bounds_deg": [
         25.0,
@@ -538,8 +675,18 @@
         0.03
       ],
       "fine_refinement": null,
-      "polish_mode": false,
-      "polish_refinement": null
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.0009122327276143558,
+        "post_polish_mean_distance_m": 0.0009122327276143558,
+        "rotation_space": "quaternion_wxyz",
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": false
+      }
     }
   },
   {
@@ -697,9 +844,8 @@
   },
   {
     "part": "l_upper_arm",
-    "position_file": "left_arm_mesh.txt",
+    "position_file": "left_arm.txt",
     "mesh_files": [
-      "sim_sea_2-5_l_upper_arm_prt-binary.stl",
       "sim_sea_2-5_l_elbow_prt-binary.stl"
     ],
     "manual_steps": [
@@ -746,63 +892,91 @@
         0.0,
         0.0
       ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
       "delta_offsets_m": [
         0.0,
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.004571729504114294,
-      "median_distance_m": 0.0025637713390605447,
-      "p90_distance_m": 0.011625739139341298
+      "mean_distance_m": 0.0011678570202640279,
+      "median_distance_m": 0.0009607541891196162,
+      "p90_distance_m": 0.0022906426787647123
     },
     "optimized": {
       "delta_angles_deg": [
-        6.055924323003801,
-        118.42657762954727,
-        175.05893312219555
+        0.9892513303762491,
+        0.7491678373360873,
+        2.3335891540152267
+      ],
+      "delta_quaternion_wxyz": [
+        0.9997351812098888,
+        0.008497643032365708,
+        0.006711861709542761,
+        0.02030537925076659
       ],
       "delta_offsets_m": [
-        -0.04822949427478252,
-        -0.012799120842103447,
-        -0.07141408948386282
+        -0.0014210767292152343,
+        -0.003071713065643904,
+        0.0011794211591809756
       ],
-      "mean_distance_m": 0.001388777637154486,
-      "median_distance_m": 0.0010896193378830488,
-      "p90_distance_m": 0.0028654906656882355
+      "mean_distance_m": 0.0009092396691117837,
+      "median_distance_m": 0.0007200047796399039,
+      "p90_distance_m": 0.0017940232033473566
     },
     "delta": {
       "angles_deg": [
-        6.055924323003801,
-        118.42657762954727,
-        175.05893312219555
+        0.9892513303762491,
+        0.7491678373360873,
+        2.3335891540152267
       ],
+      "quaternion_wxyz": [
+        0.9997351812098888,
+        0.008497643032365708,
+        0.006711861709542761,
+        0.02030537925076659
+      ],
+      "rotation_distance_deg": 2.6372518703718546,
       "offsets_m": [
-        -0.04822949427478252,
-        -0.012799120842103447,
-        -0.07141408948386282
+        -0.0014210767292152343,
+        -0.003071713065643904,
+        0.0011794211591809756
       ],
-      "mean_distance_m": -0.0031829518669598076,
-      "mean_distance_improvement_pct": 69.6224889091827
+      "mean_distance_m": -0.00025861735115224416,
+      "mean_distance_improvement_pct": 22.144607316208642
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 51,
-      "nfev": 574,
-      "objective": 0.0015731525870738723,
-      "seed_count": 729,
-      "selected_seed_label": "l_upper_arm:refine_rotx5.0_roty-5.0_rotz0.0_x-0.01_y0.01_z0.01",
+      "nit": 33,
+      "nfev": 384,
+      "objective": 0.0007439128600716099,
+      "local_optimizer": "L-BFGS-B",
+      "global_optimizer": "none",
+      "seed_count": 2,
+      "selected_seed_label": "previous:optimized",
       "selected_seed_angles_deg": [
-        9.399935221475086,
-        118.00000683670456,
-        171.29788459006238
+        0.8874663261014669,
+        0.5915913864472483,
+        2.0416807406566537
+      ],
+      "selected_seed_quaternion_wxyz": [
+        0.9997986850555437,
+        0.007651220585255369,
+        0.005299586930707259,
+        0.017775335809073887
       ],
       "selected_seed_offsets_m": [
-        -0.04849003806799288,
-        -0.00838654871784156,
-        -0.06911194453002506
+        -0.0012533781347552444,
+        -0.002698315349428615,
+        0.0010912298373698997
       ],
+      "selected_seed_global_stage": null,
       "angle_bounds_deg": [
         25.0,
         25.0,
@@ -814,8 +988,18 @@
         0.03
       ],
       "fine_refinement": null,
-      "polish_mode": false,
-      "polish_refinement": null
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.0009092396691117837,
+        "post_polish_mean_distance_m": 0.0009092396691117837,
+        "rotation_space": "quaternion_wxyz",
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": true
+      }
     }
   },
   {
@@ -880,62 +1064,88 @@
         0.0,
         0.0
       ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
       "delta_offsets_m": [
         0.0,
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.001878895305747472,
-      "median_distance_m": 0.0017133468539533867,
-      "p90_distance_m": 0.0034114160855674555
+      "mean_distance_m": 0.0018757512171883636,
+      "median_distance_m": 0.0016940569595052216,
+      "p90_distance_m": 0.0034129013564265357
     },
     "optimized": {
       "delta_angles_deg": [
-        0.0,
-        0.0,
-        0.0
+        -1.1854697474390268,
+        1.8879765977079868,
+        1.460250958024672
+      ],
+      "delta_quaternion_wxyz": [
+        0.9997274265328279,
+        -0.010552671779419013,
+        0.016340933661995984,
+        0.012910756887934843
       ],
       "delta_offsets_m": [
-        0.0,
-        0.0,
-        0.0
+        0.0009804588727649103,
+        -0.0022081265943462314,
+        -0.0006188558781334389
       ],
-      "mean_distance_m": 0.001878895305747472,
-      "median_distance_m": 0.0017133468539533867,
-      "p90_distance_m": 0.0034114160855674555
+      "mean_distance_m": 0.0008277573922104131,
+      "median_distance_m": 0.0006271739193937839,
+      "p90_distance_m": 0.0015991548590486688
     },
     "delta": {
       "angles_deg": [
-        0.0,
-        0.0,
-        0.0
+        -1.1854697474390268,
+        1.8879765977079868,
+        1.460250958024672
       ],
+      "quaternion_wxyz": [
+        0.9997274265328279,
+        -0.010552671779419013,
+        0.016340933661995984,
+        0.012910756887934843
+      ],
+      "rotation_distance_deg": 2.675588252164612,
       "offsets_m": [
-        0.0,
-        0.0,
-        0.0
+        0.0009804588727649103,
+        -0.0022081265943462314,
+        -0.0006188558781334389
       ],
-      "mean_distance_m": 0.0,
-      "mean_distance_improvement_pct": 0.0
+      "mean_distance_m": -0.0010479938249779506,
+      "mean_distance_improvement_pct": 55.87061948166182
     },
     "optimizer": {
-      "success": false,
-      "status": 2,
-      "message": "ABNORMAL: ",
-      "nit": 9,
-      "nfev": 833,
-      "objective": 0.0009186006124320446,
-      "seed_count": 1,
-      "selected_seed_label": "configured:0",
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 17,
+      "nfev": 272,
+      "objective": 0.0006016810907304116,
+      "local_optimizer": "L-BFGS-B",
+      "seed_count": 2,
+      "selected_seed_label": "previous:optimized",
       "selected_seed_angles_deg": [
-        0.0,
-        0.0,
-        0.0
+        -1.2226409583277857,
+        1.7428735467847325,
+        1.4307752212745841
+      ],
+      "selected_seed_quaternion_wxyz": [
+        0.9997474660897364,
+        -0.010857167153872294,
+        0.01507360615963615,
+        0.01264564612380505
       ],
       "selected_seed_offsets_m": [
-        0.0,
-        0.0,
-        0.0
+        0.000573207681972423,
+        -0.0021279286423006713,
+        -0.0006489249428896252
       ],
       "angle_bounds_deg": [
         25.0,
@@ -948,16 +1158,24 @@
         0.03
       ],
       "fine_refinement": null,
-      "polish_mode": false,
-      "polish_refinement": null
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.0008278207838630235,
+        "post_polish_mean_distance_m": 0.0008277573922104131,
+        "rotation_space": "quaternion_wxyz",
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": true
+      }
     }
   },
   {
     "part": "torso",
     "position_file": "torso.txt",
     "mesh_files": [
-      "chest_hull_1.stl",
-      "chest_hull_2.stl",
       "chest_hull_3.stl"
     ],
     "manual_steps": [
@@ -1004,62 +1222,88 @@
         0.0,
         0.0
       ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
       "delta_offsets_m": [
         0.0,
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0027762872286799926,
-      "median_distance_m": 0.002446918297902073,
-      "p90_distance_m": 0.004776225239073036
+      "mean_distance_m": 0.0026308575232587015,
+      "median_distance_m": 0.002283175540073197,
+      "p90_distance_m": 0.004716860476005452
     },
     "optimized": {
       "delta_angles_deg": [
-        -3.6848474110737737,
-        -0.23366248950442384,
-        0.3405479602523846
+        -4.915420534137333,
+        0.23717475605278962,
+        0.030060414941621476
+      ],
+      "delta_quaternion_wxyz": [
+        0.9990779471014156,
+        -0.0428824320974586,
+        0.002056585727957772,
+        0.00035083923823810495
       ],
       "delta_offsets_m": [
-        0.0007951289963117269,
-        8.767112895758858e-05,
-        0.0027807380216535458
+        0.0007184588097402924,
+        0.001006464348454001,
+        0.0038770212556117553
       ],
-      "mean_distance_m": 0.0019194359468111238,
-      "median_distance_m": 0.0013526598473767501,
-      "p90_distance_m": 0.003395582855898457
+      "mean_distance_m": 0.0015613043571040702,
+      "median_distance_m": 0.0010060500493942945,
+      "p90_distance_m": 0.0029407189082844153
     },
     "delta": {
       "angles_deg": [
-        -3.6848474110737737,
-        -0.23366248950442384,
-        0.3405479602523846
+        -4.915420534137333,
+        0.23717475605278962,
+        0.030060414941621476
       ],
+      "quaternion_wxyz": [
+        0.9990779471014156,
+        -0.0428824320974586,
+        0.002056585727957772,
+        0.00035083923823810495
+      ],
+      "rotation_distance_deg": 4.9212895777361565,
       "offsets_m": [
-        0.0007951289963117269,
-        8.767112895758858e-05,
-        0.0027807380216535458
+        0.0007184588097402924,
+        0.001006464348454001,
+        0.0038770212556117553
       ],
-      "mean_distance_m": -0.0008568512818688688,
-      "mean_distance_improvement_pct": 30.863207272551023
+      "mean_distance_m": -0.0010695531661546313,
+      "mean_distance_improvement_pct": 40.65416529397736
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 35,
-      "nfev": 959,
-      "objective": 0.0016464333680476756,
-      "seed_count": 1,
-      "selected_seed_label": "configured:0",
+      "nit": 39,
+      "nfev": 416,
+      "objective": 0.0010908343653243378,
+      "local_optimizer": "L-BFGS-B",
+      "seed_count": 2,
+      "selected_seed_label": "previous:optimized",
       "selected_seed_angles_deg": [
-        0.0,
-        0.0,
-        0.0
+        -4.605444691035678,
+        0.031975213261543296,
+        0.11530968796412323
+      ],
+      "selected_seed_quaternion_wxyz": [
+        0.9991919311103414,
+        -0.0401795267543254,
+        0.0002383798475496867,
+        0.0010166655464949052
       ],
       "selected_seed_offsets_m": [
-        0.0,
-        0.0,
-        0.0
+        0.0005693259182533255,
+        0.0003154955549609318,
+        0.003644926652937732
       ],
       "angle_bounds_deg": [
         25.0,
@@ -1138,63 +1382,91 @@
         0.0,
         0.0
       ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
       "delta_offsets_m": [
         0.0,
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0024767221680107466,
-      "median_distance_m": 0.002487778326926678,
-      "p90_distance_m": 0.0030714229801431436
+      "mean_distance_m": 0.0024766779828761217,
+      "median_distance_m": 0.0024867012659599333,
+      "p90_distance_m": 0.003074120967504725
     },
     "optimized": {
       "delta_angles_deg": [
-        1.632986183421965e-05,
-        -6.333533032788842e-07,
-        6.169238369918712e-05
+        -1.2177851435494618,
+        0.2648498167947844,
+        -0.7471655999626245
+      ],
+      "delta_quaternion_wxyz": [
+        0.9999197659141691,
+        -0.010611656896735072,
+        0.002380358857127783,
+        -0.006495257021124065
       ],
       "delta_offsets_m": [
-        -0.0014357560782207932,
-        -0.002386323167025983,
-        -0.0006020082005907207
+        -0.001560976693208954,
+        -0.0033971940039071572,
+        -0.0009169615726272132
       ],
-      "mean_distance_m": 0.000396045472867223,
-      "median_distance_m": 0.0003998732866411989,
-      "p90_distance_m": 0.0007156460740369289
+      "mean_distance_m": 0.0003439968304822685,
+      "median_distance_m": 0.00022135043209585702,
+      "p90_distance_m": 0.0007987589954239083
     },
     "delta": {
       "angles_deg": [
-        1.632986183421965e-05,
-        -6.333533032788842e-07,
-        6.169238369918712e-05
+        -1.2177851435494618,
+        0.2648498167947844,
+        -0.7471655999626245
       ],
+      "quaternion_wxyz": [
+        0.9999197659141691,
+        -0.010611656896735072,
+        0.002380358857127783,
+        -0.006495257021124065
+      ],
+      "rotation_distance_deg": 1.4516101093900107,
       "offsets_m": [
-        -0.0014357560782207932,
-        -0.002386323167025983,
-        -0.0006020082005907207
+        -0.001560976693208954,
+        -0.0033971940039071572,
+        -0.0009169615726272132
       ],
-      "mean_distance_m": -0.0020806766951435235,
-      "mean_distance_improvement_pct": 84.00928945593769
+      "mean_distance_m": -0.002132681152393853,
+      "mean_distance_improvement_pct": 86.11055482946591
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 16,
-      "nfev": 224,
-      "objective": 0.0004274705709135745,
-      "seed_count": 1,
-      "selected_seed_label": "configured:0",
+      "nit": 44,
+      "nfev": 544,
+      "objective": 0.00025259724585067355,
+      "local_optimizer": "L-BFGS-B",
+      "global_optimizer": "none",
+      "seed_count": 2,
+      "selected_seed_label": "previous:optimized",
       "selected_seed_angles_deg": [
-        0.0,
-        0.0,
-        0.0
+        -0.925399264612055,
+        0.09789484945040704,
+        -0.1653995381322289
+      ],
+      "selected_seed_quaternion_wxyz": [
+        0.9999659956785395,
+        -0.00807429986386336,
+        0.0008659209685605036,
+        -0.0014364362887961482
       ],
       "selected_seed_offsets_m": [
-        0.0,
-        0.0,
-        0.0
+        -0.0015086454178092124,
+        -0.0027874822252456706,
+        -0.0007886821230298515
       ],
+      "selected_seed_global_stage": null,
       "angle_bounds_deg": [
         25.0,
         25.0,
@@ -1206,8 +1478,18 @@
         0.03
       ],
       "fine_refinement": null,
-      "polish_mode": false,
-      "polish_refinement": null
+      "polish_mode": true,
+      "polish_refinement": {
+        "pre_polish_mean_distance_m": 0.0003439968304822685,
+        "post_polish_mean_distance_m": 0.0003439968304822685,
+        "rotation_space": "quaternion_wxyz",
+        "translation_window_m": [
+          0.001,
+          0.001,
+          0.001
+        ],
+        "success": true
+      }
     }
   },
   {
@@ -1260,62 +1542,262 @@
         0.0,
         0.0
       ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
       "delta_offsets_m": [
         0.0,
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0025054716690429794,
-      "median_distance_m": 0.0025157227688535466,
-      "p90_distance_m": 0.003118354792748255
+      "mean_distance_m": 0.002504935465193028,
+      "median_distance_m": 0.0025121072080593375,
+      "p90_distance_m": 0.003116673004079252
     },
     "optimized": {
       "delta_angles_deg": [
-        1.592066415207435e-05,
-        -8.412782550618261e-07,
-        -5.84530611944901e-05
+        -1.1511036325511697,
+        0.08395448432343589,
+        0.5442757178157879
+      ],
+      "delta_quaternion_wxyz": [
+        0.9999379640946894,
+        -0.010048468904887546,
+        0.0006848847323097918,
+        0.004756802259758393
       ],
       "delta_offsets_m": [
-        0.0004022363900260073,
-        -0.0024020398775979252,
-        0.0003774240869124612
+        0.0010149351204570417,
+        -0.0032533868354318405,
+        -3.703163513726084e-05
       ],
-      "mean_distance_m": 0.00041982438146596495,
-      "median_distance_m": 0.00039099344894026817,
-      "p90_distance_m": 0.0007569257805820598
+      "mean_distance_m": 0.0003582803141147171,
+      "median_distance_m": 0.0002761921723420872,
+      "p90_distance_m": 0.0006973655194442567
     },
     "delta": {
       "angles_deg": [
-        1.592066415207435e-05,
-        -8.412782550618261e-07,
-        -5.84530611944901e-05
+        -1.1511036325511697,
+        0.08395448432343589,
+        0.5442757178157879
       ],
+      "quaternion_wxyz": [
+        0.9999379640946894,
+        -0.010048468904887546,
+        0.0006848847323097918,
+        0.004756802259758393
+      ],
+      "rotation_distance_deg": 1.2764136305702503,
       "offsets_m": [
-        0.0004022363900260073,
-        -0.0024020398775979252,
-        0.0003774240869124612
+        0.0010149351204570417,
+        -0.0032533868354318405,
+        -3.703163513726084e-05
       ],
-      "mean_distance_m": -0.0020856472875770147,
-      "mean_distance_improvement_pct": 83.243698715367
+      "mean_distance_m": -0.002146655151078311,
+      "mean_distance_improvement_pct": 85.6970241711553
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
-      "nit": 10,
-      "nfev": 105,
-      "objective": 0.0004270116435020613,
-      "seed_count": 1,
-      "selected_seed_label": "configured:0",
+      "nit": 59,
+      "nfev": 608,
+      "objective": 0.00030062325279568415,
+      "local_optimizer": "L-BFGS-B",
+      "global_optimizer": "none",
+      "seed_count": 2,
+      "selected_seed_label": "previous:optimized",
       "selected_seed_angles_deg": [
+        1.592066415207435e-05,
+        -8.412782550618261e-07,
+        -5.84530611944901e-05
+      ],
+      "selected_seed_quaternion_wxyz": [
+        0.9999999999998602,
+        1.3893400053403335e-07,
+        -7.3416086082524805e-09,
+        -5.100991868367745e-07
+      ],
+      "selected_seed_offsets_m": [
+        0.0004022363900260073,
+        -0.0024020398775979252,
+        0.0003774240869124612
+      ],
+      "selected_seed_global_stage": null,
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": false,
+      "polish_refinement": null
+    }
+  },
+  {
+    "part": "l_foot",
+    "position_file": "left_foot.txt",
+    "mesh_files": [
+      "sim_sea_2-5_l_sole_prt-binary.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          -90.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          -105.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          -0.66,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.1,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          -0.02
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
         0.0,
         0.0,
         0.0
       ],
-      "selected_seed_offsets_m": [
+      "delta_quaternion_wxyz": [
+        1.0,
         0.0,
         0.0,
         0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.006250381023558563,
+      "median_distance_m": 0.007063615465826119,
+      "p90_distance_m": 0.007986248006551186
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        0.3115652855373107,
+        0.7455773847281215,
+        0.587766402280364
+      ],
+      "delta_quaternion_wxyz": [
+        0.9999620739311917,
+        0.0026854511060615564,
+        0.00652018014503008,
+        0.005111389484601004
+      ],
+      "delta_offsets_m": [
+        -0.0026139847954959605,
+        -0.010218688928762404,
+        -0.012092661525866868
+      ],
+      "mean_distance_m": 0.0012461116407226393,
+      "median_distance_m": 0.0005976055222577468,
+      "p90_distance_m": 0.002785955198335467
+    },
+    "delta": {
+      "angles_deg": [
+        0.3115652855373107,
+        0.7455773847281215,
+        0.587766402280364
+      ],
+      "quaternion_wxyz": [
+        0.9999620739311917,
+        0.0026854511060615564,
+        0.00652018014503008,
+        0.005111389484601004
+      ],
+      "rotation_distance_deg": 0.9980169397901889,
+      "offsets_m": [
+        -0.0026139847954959605,
+        -0.010218688928762404,
+        -0.012092661525866868
+      ],
+      "mean_distance_m": -0.005004269382835924,
+      "mean_distance_improvement_pct": 80.06342915694468
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "nit": 40,
+      "nfev": 440,
+      "objective": 0.0006614001101503125,
+      "local_optimizer": "L-BFGS-B",
+      "seed_count": 2,
+      "selected_seed_label": "previous:optimized",
+      "selected_seed_angles_deg": [
+        1.6778145895832064,
+        0.5907707319641705,
+        0.7176106304576346
+      ],
+      "selected_seed_quaternion_wxyz": [
+        0.9998603911422947,
+        0.014608408298392257,
+        0.005246456773334595,
+        0.006186058768750008
+      ],
+      "selected_seed_offsets_m": [
+        -0.003257874505741869,
+        -0.009962970714963791,
+        -0.010092734473806951
       ],
       "angle_bounds_deg": [
         25.0,
