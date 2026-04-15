@@ -56,25 +56,6 @@ import json
 
 from neuromorphic_body_schema.helpers.helpers import (MOJOCO_SKIN_PARTS,
                                                       POSITIONS_FILES)
-def find_project_root(start_path: Path, target_dir: str = "neuromorphic_body_schema") -> Path:
-    current = start_path.resolve()
-    while current != current.parent:
-        if (current / target_dir).is_dir():
-            return current
-        current = current.parent
-    raise RuntimeError(
-        f"Could not find {target_dir} in any parent directory of {start_path}")
-
-
-project_root = find_project_root(Path(__file__))
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
-if __name__ == "__main__":
-    print(f"[DEBUG] Project root added to sys.path: {project_root}")
-    print(f"[DEBUG] sys.path: {sys.path}")
-
-from neuromorphic_body_schema.helpers.helpers import (MOJOCO_SKIN_PARTS,
-                                                      POSITIONS_FILES)
 
 # Semantic group constants for taxel site assignment
 GROUP_TORSO = 1
@@ -82,6 +63,38 @@ GROUP_RIGHT_ARM_HAND = 2
 GROUP_LEFT_ARM_HAND = 3
 GROUP_RIGHT_LEG = 4
 GROUP_LEFT_LEG = 5
+
+PART_TO_MODEL_BODY = {
+    "r_upper_leg": "r_upper_leg",
+    "r_lower_leg": "r_lower_leg",
+    "l_upper_leg": "l_upper_leg",
+    "l_lower_leg": "l_lower_leg",
+    "r_upper_arm": "r_shoulder_3",
+    "r_forearm": "r_forearm",
+    "l_upper_arm": "l_shoulder_3",
+    "l_forearm": "l_forearm",
+    "torso": "chest",
+    "r_palm": "r_hand",
+    "l_palm": "l_hand",
+    "r_foot": "r_ankle_2",
+    "l_foot": "l_ankle_2",
+}
+
+PART_TO_GROUP = {
+    "r_upper_leg": GROUP_RIGHT_LEG,
+    "r_lower_leg": GROUP_RIGHT_LEG,
+    "r_foot": GROUP_RIGHT_LEG,
+    "l_upper_leg": GROUP_LEFT_LEG,
+    "l_lower_leg": GROUP_LEFT_LEG,
+    "l_foot": GROUP_LEFT_LEG,
+    "torso": GROUP_TORSO,
+    "r_upper_arm": GROUP_RIGHT_ARM_HAND,
+    "r_forearm": GROUP_RIGHT_ARM_HAND,
+    "r_palm": GROUP_RIGHT_ARM_HAND,
+    "l_upper_arm": GROUP_LEFT_ARM_HAND,
+    "l_forearm": GROUP_LEFT_ARM_HAND,
+    "l_palm": GROUP_LEFT_ARM_HAND,
+}
 
 # Always resolve resource paths relative to this script's location
 SCRIPT_DIR = Path(__file__).parent.resolve()
@@ -132,6 +145,61 @@ def load_optimized_deltas(report_path: str) -> dict[str, tuple[np.ndarray, np.nd
         deltas[part] = (angles, offsets)
 
     return deltas
+
+
+def load_report_part_metadata(report_path: str) -> dict[str, dict[str, object]]:
+    """Load part metadata from optimizer report keyed by part name."""
+
+    if not os.path.exists(report_path):
+        return {}
+
+    with open(report_path, "r", encoding="utf-8") as file:
+        raw = json.load(file)
+
+    if not isinstance(raw, list):
+        return {}
+
+    out: dict[str, dict[str, object]] = {}
+    for entry in raw:
+        if not isinstance(entry, dict):
+            continue
+        part = entry.get("part")
+        if not isinstance(part, str):
+            continue
+
+        model_body_name = entry.get("model_body_name", PART_TO_MODEL_BODY.get(part))
+        sensor_group = entry.get("sensor_group", PART_TO_GROUP.get(part))
+        position_file = entry.get("position_file")
+        rebase = bool(entry.get("rebase", False))
+        include_to_model = bool(entry.get("include_to_model", entry.get("inlcude_to_model", True)))
+        manual_steps_raw = entry.get("manual_steps", [])
+
+        manual_steps: list[tuple[list[float], list[float]]] = []
+        if isinstance(manual_steps_raw, list):
+            for step in manual_steps_raw:
+                if not isinstance(step, dict):
+                    continue
+                offsets = step.get("offsets_m")
+                angles = step.get("angles_deg")
+                if isinstance(offsets, list) and isinstance(angles, list) and len(offsets) == 3 and len(angles) == 3:
+                    manual_steps.append((
+                        [float(offsets[0]), float(offsets[1]), float(offsets[2])],
+                        [float(angles[0]), float(angles[1]), float(angles[2])],
+                    ))
+
+        if not isinstance(model_body_name, str) or not isinstance(position_file, str) or not isinstance(sensor_group, int):
+            continue
+
+        out[part] = {
+            "model_body_name": model_body_name,
+            "sensor_group": int(sensor_group),
+            "position_file": position_file,
+            "rebase": rebase,
+            "include_to_model": include_to_model,
+            "manual_steps": manual_steps,
+        }
+
+    return out
 
 
 def rebase_coordinate_system(taxel_pos: list[tuple[np.ndarray, np.ndarray, int]]) -> list[tuple[np.ndarray, np.ndarray, int]]:
@@ -387,6 +455,7 @@ def include_skin_to_mujoco_model(
     path_to_skin: str,
     skin_parts: dict[str, str],
     optimized_deltas: dict[str, tuple[np.ndarray, np.ndarray]] | None = None,
+    report_part_metadata: dict[str, dict[str, object]] | None = None,
 ) -> None:
     """
     Integrates tactile sensor (taxel) data into a MuJoCo robot model XML file.
@@ -413,6 +482,9 @@ def include_skin_to_mujoco_model(
         optimized_deltas (dict | None): Optional per-part transform deltas from optimization,
             mapping ``part -> (delta_angles_deg, delta_offsets_m)``. If provided,
             each taxel gets this final delta after the hand-tuned transform chain.
+        report_part_metadata (dict | None): Optional metadata loaded from the
+            optimization report keyed by part name. When present, manual_steps,
+            rebase flags, body anchors, and sensor groups are read from report.
 
     Returns:
         None: The function writes output to files:
@@ -422,6 +494,14 @@ def include_skin_to_mujoco_model(
     # read the taxel positions from the skin configuration file
     if optimized_deltas is None:
         optimized_deltas = {}
+    if report_part_metadata is None:
+        report_part_metadata = {}
+
+    report_by_body: dict[str, dict[str, object]] = {}
+    for part_name, metadata in report_part_metadata.items():
+        body_name = metadata.get("model_body_name")
+        if isinstance(body_name, str):
+            report_by_body[body_name] = {"part": part_name, **metadata}
 
     # ini_files_taxels = os.listdir(path_to_skin)
     # only keep the files listed in skin_parts
@@ -479,9 +559,33 @@ def include_skin_to_mujoco_model(
     while keep_processing:
         print(lines[line_counter])
         if "<body name=" in lines[line_counter]:
-            if any(part in lines[line_counter] for part in MOJOCO_SKIN_PARTS):
+            body_name = lines[line_counter].split('name="')[1].split('"')[0]
+            add_taxels = False
+            current_manual_steps: list[tuple[list[float], list[float]]] = []
+            current_rebase = False
+            if body_name in report_by_body:
+                report_cfg = report_by_body[body_name]
+                include_to_model = bool(report_cfg.get("include_to_model", True))
+                if not include_to_model:
+                    line_counter += 1
+                    continue
+                part = cast(str, report_cfg["part"])
+                position_file = cast(str, report_cfg["position_file"])
+                pos_of_taxels = ini_files_taxels.index(position_file)
+                taxels_to_add = all_taxels[pos_of_taxels]
+                found_spot_to_add = False
+                add_taxels = True
+                sensor_group = report_cfg.get("sensor_group")
+                group_counter = int(sensor_group) if isinstance(sensor_group, int) else PART_TO_GROUP.get(part, GROUP_TORSO)
+                current_rebase = bool(report_cfg.get("rebase", False))
+                manual_steps_raw = report_cfg.get("manual_steps", [])
+                if isinstance(manual_steps_raw, list):
+                    current_manual_steps = cast(list[tuple[list[float], list[float]]], manual_steps_raw)
+                parts_to_add.append(part)
+
+            if any(part in lines[line_counter] for part in MOJOCO_SKIN_PARTS) and not add_taxels:
                 # find the part that is being added
-                part = lines[line_counter].split('name="')[1].split('"')[0]
+                part = body_name
                 if part == "r_upper_leg":
                     # find the corresponding taxels
                     pos_of_taxels = ini_files_taxels.index(
@@ -516,6 +620,24 @@ def include_skin_to_mujoco_model(
                     # find the corresponding taxels
                     pos_of_taxels = ini_files_taxels.index(
                         "left_leg_lower.txt")
+                    taxels_to_add = all_taxels[pos_of_taxels]
+                    found_spot_to_add = False
+                    add_taxels = True
+                    group_counter = GROUP_LEFT_LEG
+                    parts_to_add.append(part)
+
+                elif part == "r_ankle_2":
+                    part = "r_foot"
+                    pos_of_taxels = ini_files_taxels.index("right_foot.txt")
+                    taxels_to_add = all_taxels[pos_of_taxels]
+                    found_spot_to_add = False
+                    add_taxels = True
+                    group_counter = GROUP_RIGHT_LEG
+                    parts_to_add.append(part)
+
+                elif part == "l_ankle_2":
+                    part = "l_foot"
+                    pos_of_taxels = ini_files_taxels.index("left_foot.txt")
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
@@ -703,7 +825,7 @@ def include_skin_to_mujoco_model(
                             # add the number of whitespace to the beginning of the line
                             lines.insert(
                                 line_counter,
-                                f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" type="sphere" group="{group_counter}" pos="{finger_pos[0]} {finger_pos[1]} {finger_pos[2]}" rgba="0 1 0 0.0"/>\n',
+                                f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" type="sphere" group="{group_counter}" pos="{finger_pos[0]} {finger_pos[1]} {finger_pos[2]}" rgba="0 1 0 0.5"/>\n',
                             )
                             line_counter += 1
                             idx += 1
@@ -717,137 +839,141 @@ def include_skin_to_mujoco_model(
                                     lines[line_counter].split("<")[0]) + 4
                                 found_spot_to_add = True
                                 taxel_ids = []
-                        # rebase the coordinate system
-                        if (
-                            part == "r_upper_arm"
-                            or part == "r_forearm"
-                            or part == "l_upper_arm"
-                            or part == "l_forearm"
-                            or part == "torso"
+                        # Rebase from report metadata when available, else legacy heuristic.
+                        if current_rebase or (
+                            not current_manual_steps and (
+                                part == "r_upper_arm"
+                                or part == "r_forearm"
+                                or part == "l_upper_arm"
+                                or part == "l_forearm"
+                                or part == "torso"
+                            )
                         ):
-                            taxels_to_add = rebase_coordinate_system(
-                                taxels_to_add)
+                            taxels_to_add = rebase_coordinate_system(taxels_to_add)
                         for taxel in taxels_to_add:
                             # line_counter -= 1  # we want to add the taxels before the next body
                             pos, _, idx = cast(
                                 tuple[np.ndarray, np.ndarray, int], taxel)
                             taxel_ids.append(idx)
-                            # add the number of whitespace to the beginning of the line
-                            if part == "r_upper_arm":
-                                pos = rotate_position(
-                                    pos=pos,
-                                    offsets=[0, 0, 0],
-                                    angle_degrees=[0, -32, 0],
-                                )
-                                pos = rotate_position(
-                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2]
-                                )
-                                # pos, up-down, left-right, front-back (looking from the front)
-                                pos = rotate_position(
-                                    pos=pos,
-                                    offsets=[-0.08, 0.0015, 0.012],
-                                    angle_degrees=[0, 0, 0],
-                                )
-                            if part == "r_forearm":
-                                pos = rotate_position(
-                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, 90]
-                                )
-                                pos = rotate_position(
-                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 78, 0]
-                                )
-                                pos = rotate_position(
-                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2]
-                                )
-                                # pos, up-down, left-right, front-back (looking from the front)
-                                pos = rotate_position(
-                                    pos=pos,
-                                    offsets=[-0.05, 0, -0.0015],
-                                    angle_degrees=[0, 0, 0],
-                                )
-                            if part == "l_upper_arm":
-                                pos = rotate_position(
-                                    pos=pos,
-                                    offsets=[0, 0, 0],
-                                    angle_degrees=[-270, 0, 0],
-                                )
-                                pos = rotate_position(
-                                    pos=pos,
-                                    offsets=[0, 0, 0],
-                                    angle_degrees=[0, -148, 0],
-                                )
-                                # pos, up-down, left-right, front-back (looking from the front)
-                                pos = rotate_position(
-                                    pos=pos,
-                                    offsets=[0.08, 0.0015, 0.012],
-                                    angle_degrees=[0, 0, 0],
-                                )
-                            if part == "l_forearm":
-                                pos = rotate_position(
-                                    pos=pos,
-                                    offsets=[0, 0, 0],
-                                    angle_degrees=[0, 0, -90],
-                                )
-                                pos = rotate_position(
-                                    pos=pos,
-                                    offsets=[0, 0, 0],
-                                    angle_degrees=[0, 102, 0],
-                                )
-                                pos = rotate_position(
-                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2]
-                                )
-                                # pos, up-down, left-right, front-back (looking from the front)
-                                pos = rotate_position(
-                                    pos=pos,
-                                    offsets=[0.05, -0.001, 0],
-                                    angle_degrees=[0, 0, 0],
-                                )
-                            if part == "torso":
-                                pos = rotate_position(
-                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 90, 0]
-                                )
-                                pos = rotate_position(
-                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[-4, 0, 0]
-                                )
-                                pos = rotate_position(
-                                    pos=pos,
-                                    offsets=[0, 0.06, 0.068],
-                                    angle_degrees=[0, 0, 0],
-                                )
-                            if part == "r_palm":
-                                pos = rotate_position(
-                                    pos=pos,
-                                    offsets=[0, 0, 0],
-                                    angle_degrees=[0, 0, 180],
-                                )
-                                pos = rotate_position(
-                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[90, 0, 0]
-                                )
-                                pos = rotate_position(
-                                    pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 15, 0]
-                                )
-                                # pos, up-down, left-right, front-back (looking from the front)
-                                pos = rotate_position(
-                                    pos=pos,
-                                    offsets=[-0.055, -0.005, 0.02],
-                                    angle_degrees=[0, 0, 0],
-                                )
-                            if part == "l_palm":
-                                pos = rotate_position(
-                                    pos=pos,
-                                    offsets=[0, 0, 0],
-                                    angle_degrees=[-90, 0, 0],
-                                )
-                                pos = rotate_position(
-                                    pos=pos,
-                                    offsets=[0, 0, 0],
-                                    angle_degrees=[0, -15, 0],
-                                )
-                                # pos, up-down, left-right, front-back (looking from the front)
-                                pos = rotate_position(
-                                    pos=pos,
-                                    offsets=[0.055, -0.005, 0.02],
-                                    angle_degrees=[0, 0, 0],
-                                )
+                            # Prefer transform chain from optimizer report.
+                            if current_manual_steps:
+                                for offsets_step, angles_step in current_manual_steps:
+                                    pos = rotate_position(
+                                        pos=pos,
+                                        offsets=offsets_step,
+                                        angle_degrees=angles_step,
+                                    )
+                            else:
+                                # Legacy hard-coded transform fallback.
+                                if part == "r_upper_arm":
+                                    pos = rotate_position(
+                                        pos=pos,
+                                        offsets=[0, 0, 0],
+                                        angle_degrees=[0, -32, 0],
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2]
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos,
+                                        offsets=[-0.08, 0.0015, 0.012],
+                                        angle_degrees=[0, 0, 0],
+                                    )
+                                if part == "r_forearm":
+                                    pos = rotate_position(
+                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, 90]
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 78, 0]
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2]
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos,
+                                        offsets=[-0.05, 0, -0.0015],
+                                        angle_degrees=[0, 0, 0],
+                                    )
+                                if part == "l_upper_arm":
+                                    pos = rotate_position(
+                                        pos=pos,
+                                        offsets=[0, 0, 0],
+                                        angle_degrees=[-270, 0, 0],
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos,
+                                        offsets=[0, 0, 0],
+                                        angle_degrees=[0, -148, 0],
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos,
+                                        offsets=[0.08, 0.0015, 0.012],
+                                        angle_degrees=[0, 0, 0],
+                                    )
+                                if part == "l_forearm":
+                                    pos = rotate_position(
+                                        pos=pos,
+                                        offsets=[0, 0, 0],
+                                        angle_degrees=[0, 0, -90],
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos,
+                                        offsets=[0, 0, 0],
+                                        angle_degrees=[0, 102, 0],
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2]
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos,
+                                        offsets=[0.05, -0.001, 0],
+                                        angle_degrees=[0, 0, 0],
+                                    )
+                                if part == "torso":
+                                    pos = rotate_position(
+                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 90, 0]
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[-4, 0, 0]
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos,
+                                        offsets=[0, 0.06, 0.068],
+                                        angle_degrees=[0, 0, 0],
+                                    )
+                                if part == "r_palm":
+                                    pos = rotate_position(
+                                        pos=pos,
+                                        offsets=[0, 0, 0],
+                                        angle_degrees=[0, 0, 180],
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[90, 0, 0]
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 15, 0]
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos,
+                                        offsets=[-0.055, -0.005, 0.02],
+                                        angle_degrees=[0, 0, 0],
+                                    )
+                                if part == "l_palm":
+                                    pos = rotate_position(
+                                        pos=pos,
+                                        offsets=[0, 0, 0],
+                                        angle_degrees=[-90, 0, 0],
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos,
+                                        offsets=[0, 0, 0],
+                                        angle_degrees=[0, -15, 0],
+                                    )
+                                    pos = rotate_position(
+                                        pos=pos,
+                                        offsets=[0.055, -0.005, 0.02],
+                                        angle_degrees=[0, 0, 0],
+                                    )
 
                             # Apply optional optimized per-part refinement as final step.
                             if part in optimized_deltas:
@@ -920,6 +1046,7 @@ def include_skin_to_mujoco_model(
 
 if __name__ == "__main__":
     optimized = load_optimized_deltas(OPTIMIZATION_REPORT_JSON)
+    metadata = load_report_part_metadata(OPTIMIZATION_REPORT_JSON)
     if optimized:
         print(
             f"Loaded optimized deltas for {len(optimized)} parts from {OPTIMIZATION_REPORT_JSON}"
@@ -928,12 +1055,17 @@ if __name__ == "__main__":
         print(
             "No optimization report found or no valid deltas loaded. Using hand-tuned transforms only."
         )
+    if metadata:
+        print(f"Loaded report metadata for {len(metadata)} parts.")
+    else:
+        print("No report metadata found. Falling back to hard-coded body mapping/transform rules.")
 
     include_skin_to_mujoco_model(
         MUJOCO_MODEL,
         TAXEL_INI_PATH,
         POSITIONS_FILES,
         optimized_deltas=optimized,
+        report_part_metadata=metadata,
     )
     print("*******************")
     print("DONE")
