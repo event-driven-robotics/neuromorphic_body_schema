@@ -29,12 +29,52 @@ Reproducibility notes for the full skin/taxel alignment workflow are documented
 in ``docs/SKIN_TAXEL_ALIGNMENT_REPRODUCIBILITY.md``.
 """
 
-import os
-import re
-from typing import Sequence, cast
-import json
+import sys
+from pathlib import Path
+# Patch sys.path BEFORE any neuromorphic_body_schema imports
+def find_project_root(start_path: Path, target_dir: str = "neuromorphic_body_schema") -> Path:
+    current = start_path.resolve()
+    while current != current.parent:
+        if (current / target_dir).is_dir():
+            return current
+        current = current.parent
+    raise RuntimeError(
+        f"Could not find {target_dir} in any parent directory of {start_path}")
+
+project_root = find_project_root(Path(__file__))
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+if __name__ == "__main__":
+    print(f"[DEBUG] Project root added to sys.path: {project_root}")
+    print(f"[DEBUG] sys.path: {sys.path}")
 
 import numpy as np
+from typing import Sequence, cast
+import re
+import os
+import json
+
+from neuromorphic_body_schema.helpers.helpers import (MOJOCO_SKIN_PARTS,
+                                                      POSITIONS_FILES)
+def find_project_root(start_path: Path, target_dir: str = "neuromorphic_body_schema") -> Path:
+    current = start_path.resolve()
+    while current != current.parent:
+        if (current / target_dir).is_dir():
+            return current
+        current = current.parent
+    raise RuntimeError(
+        f"Could not find {target_dir} in any parent directory of {start_path}")
+
+
+project_root = find_project_root(Path(__file__))
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+if __name__ == "__main__":
+    print(f"[DEBUG] Project root added to sys.path: {project_root}")
+    print(f"[DEBUG] sys.path: {sys.path}")
+
+from neuromorphic_body_schema.helpers.helpers import (MOJOCO_SKIN_PARTS,
+                                                      POSITIONS_FILES)
 
 # Semantic group constants for taxel site assignment
 GROUP_TORSO = 1
@@ -43,53 +83,16 @@ GROUP_LEFT_ARM_HAND = 3
 GROUP_RIGHT_LEG = 4
 GROUP_LEFT_LEG = 5
 
-# ini files from [...]/icub-main/app/skinGui/conf/positions/*.ini
-# triangle files from [...]/icub-main/app/skinGui/conf/skinGUI/*.ini
-skin_parts = [
-    "left_arm",
-    "left_forearm_V2",
-    "left_hand_V2_1",
-    "left_leg_lower",
-    "left_leg_upper",
-    "torso",
-    "right_arm",
-    "right_forearm_V2",
-    "right_hand_V2_1",
-    "right_leg_lower",
-    "right_leg_upper",
-]
-MOJOCO_SKIN_PARTS = [
-    "r_upper_leg",
-    "r_lower_leg",
-    "l_upper_leg",
-    "l_lower_leg",
-    "chest",
-    "r_shoulder_3",
-    "r_forearm",
-    "r_hand",
-    "r_hand_thumb_3",
-    "r_hand_index_3",
-    "r_hand_middle_3",
-    "r_hand_ring_3",
-    "r_hand_little_3",
-    "l_shoulder_3",
-    "l_forearm",
-    "l_hand",
-    "l_hand_thumb_3",
-    "l_hand_index_3",
-    "l_hand_middle_3",
-    "l_hand_ring_3",
-    "l_hand_little_3",
-]
+# Always resolve resource paths relative to this script's location
+SCRIPT_DIR = Path(__file__).parent.resolve()
+PROJECT_ROOT = SCRIPT_DIR.parent
 
-MUJOCO_MODEL = "./neuromorphic_body_schema/models/icub_v2_full_body.xml"
-TAXEL_INI_PATH = "./neuromorphic_body_schema/include_taxels/positions"
-MUJOCO_MODEL_OUT = (
-    "./neuromorphic_body_schema/models/icub_v2_full_body_contact_sensors.xml"
-)
-OPTIMIZATION_REPORT_JSON = (
-    "./neuromorphic_body_schema/include_taxels/taxel_alignment_optimization_report.json"
-)
+MUJOCO_MODEL = str(PROJECT_ROOT / "models/icub_v2_full_body.xml")
+TAXEL_INI_PATH = str(SCRIPT_DIR / "positions")
+MUJOCO_MODEL_OUT = str(
+    PROJECT_ROOT / "models/icub_v2_full_body_contact_sensors.xml")
+OPTIMIZATION_REPORT_JSON = str(
+    SCRIPT_DIR / "taxel_alignment_optimization_report.json")
 
 
 def load_optimized_deltas(report_path: str) -> dict[str, tuple[np.ndarray, np.ndarray]]:
@@ -382,7 +385,7 @@ def read_triangle_data(file_path: str) -> tuple[str, list[tuple[np.ndarray, int]
 def include_skin_to_mujoco_model(
     mujoco_model: str,
     path_to_skin: str,
-    skin_parts: list,
+    skin_parts: dict[str, str],
     optimized_deltas: dict[str, tuple[np.ndarray, np.ndarray]] | None = None,
 ) -> None:
     """
@@ -406,7 +409,7 @@ def include_skin_to_mujoco_model(
     Args:
         mujoco_model (str): Path to the input MuJoCo XML model file.
         path_to_skin (str): Path to the directory containing taxel configuration .txt files.
-        skin_parts (list): List of skin part names (strings) to process (e.g., "left_arm", "right_hand_V2_1").
+        skin_parts (dict[str, str]): Dictionary mapping skin part names to their corresponding configuration files (e.g., {"left_arm": "left_arm.ini"}).
         optimized_deltas (dict | None): Optional per-part transform deltas from optimization,
             mapping ``part -> (delta_angles_deg, delta_offsets_m)``. If provided,
             each taxel gets this final delta after the hand-tuned transform chain.
@@ -420,13 +423,15 @@ def include_skin_to_mujoco_model(
     if optimized_deltas is None:
         optimized_deltas = {}
 
-    ini_files_taxels = os.listdir(path_to_skin)
+    # ini_files_taxels = os.listdir(path_to_skin)
     # only keep the files listed in skin_parts
-    ini_files_taxels = [f for f in ini_files_taxels if f.split(".")[
-        0] in skin_parts]
+    ini_files_taxels = list(skin_parts.values())
     all_taxels = []
     for taxels_ini in ini_files_taxels:
-        file_path = f"{path_to_skin}/{taxels_ini}"
+        file_path = os.path.join(path_to_skin, taxels_ini)
+        if not os.path.isfile(file_path):
+            print(f"[ERROR] Calibration file not found: {file_path}")
+            continue
         calibration = read_calibration_data(file_path)
         taxel2repr = read_taxel2repr_data(file_path)
         if taxel2repr:
@@ -441,7 +446,8 @@ def include_skin_to_mujoco_model(
                 f"[{taxels_ini}] taxel2Repr not found. Falling back to non-zero calibration filtering only."
             )
 
-        taxels = validate_taxel_data(calibration, taxel2repr if taxel2repr else None)
+        taxels = validate_taxel_data(
+            calibration, taxel2repr if taxel2repr else None)
         all_taxels.append(taxels)
 
     # now we can open the xml robot config file and start adding all the taxels
@@ -529,7 +535,8 @@ def include_skin_to_mujoco_model(
                 elif part == "r_shoulder_3":
                     # find the corresponding taxels
                     part = "r_upper_arm"
-                    pos_of_taxels = ini_files_taxels.index("right_arm.txt")
+                    pos_of_taxels = ini_files_taxels.index(
+                        "right_arm.txt")
                     taxels_to_add = all_taxels[pos_of_taxels]
                     found_spot_to_add = False
                     add_taxels = True
@@ -722,7 +729,8 @@ def include_skin_to_mujoco_model(
                                 taxels_to_add)
                         for taxel in taxels_to_add:
                             # line_counter -= 1  # we want to add the taxels before the next body
-                            pos, _, idx = cast(tuple[np.ndarray, np.ndarray, int], taxel)
+                            pos, _, idx = cast(
+                                tuple[np.ndarray, np.ndarray, int], taxel)
                             taxel_ids.append(idx)
                             # add the number of whitespace to the beginning of the line
                             if part == "r_upper_arm":
@@ -850,10 +858,9 @@ def include_skin_to_mujoco_model(
                                     angle_degrees=delta_angles.tolist(),
                                 )
 
-                            # TODO possibly use cylinder as type.
                             lines.insert(
                                 line_counter,
-                                f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" type="sphere" group="{group_counter}" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.0"/>\n',
+                                f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" type="sphere" group="{group_counter}" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.5"/>\n',
                             )
                             line_counter += 1
                     line_counter -= 1  # go one line back after we added the last taxel
@@ -899,12 +906,13 @@ def include_skin_to_mujoco_model(
     pass
 
     # now we can write the new xml file
+
     with open(MUJOCO_MODEL_OUT, "w") as file:
         file.writelines(lines)
-    pass
 
-    # write report to txt file
-    with open(f"./neuromorphic_body_schema/include_taxels/report_including_taxels.txt", "w") as file:
+    # write report to txt file (also relative to script)
+    report_path = str(SCRIPT_DIR / "report_including_taxels.txt")
+    with open(report_path, "w") as file:
         file.write(f"Part name: Nb of taxels\n")
         for part_to_add, taxel_id_list in zip(parts_to_add, taxel_ids_to_add):
             file.write(f"{part_to_add}: {len(taxel_id_list)}\n")
@@ -924,7 +932,7 @@ if __name__ == "__main__":
     include_skin_to_mujoco_model(
         MUJOCO_MODEL,
         TAXEL_INI_PATH,
-        skin_parts,
+        POSITIONS_FILES,
         optimized_deltas=optimized,
     )
     print("*******************")

@@ -73,7 +73,6 @@ def _read_results() -> dict[str, dict[str, Any]]:
 
 def _write_part_figure(part_cfg, result: dict[str, Any]) -> Path:
     part = part_cfg.part_name
-
     base_points = load_taxel_points(
         ROOT / "neuromorphic_body_schema" / "include_taxels" / "positions" / part_cfg.position_file,
         part_cfg.rebase,
@@ -85,14 +84,24 @@ def _write_part_figure(part_cfg, result: dict[str, Any]) -> Path:
     opt_angles = np.array(result["optimized"]["delta_angles_deg"], dtype=float)
     opt_offsets = np.array(result["optimized"]["delta_offsets_m"], dtype=float)
 
-    before_points = apply_part_transform(base_points, part, init_angles, init_offsets)
-    after_points = apply_part_transform(base_points, part, opt_angles, opt_offsets)
+    before_points = apply_part_transform(
+        base_points,
+        part,
+        delta_angles_deg=init_angles,
+        delta_offsets_m=init_offsets,
+    )
+    after_points = apply_part_transform(
+        base_points,
+        part,
+        delta_angles_deg=opt_angles,
+        delta_offsets_m=opt_offsets,
+    )
 
     fig = make_subplots(
         rows=1,
         cols=2,
         specs=[[{"type": "scene"}, {"type": "scene"}]],
-        subplot_titles=(f"{part}: Before", f"{part}: After"),
+        subplot_titles=(f"{part}: Manual Baseline", f"{part}: Optimized"),
         horizontal_spacing=0.03,
     )
 
