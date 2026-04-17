@@ -355,7 +355,7 @@ def optimize_foot_sole_part(
         seed_xz = np.array([seed_offsets[0], seed_offsets[2]], dtype=float)
         x_seed = np.array([seed_angle_y, seed_xz[0], seed_xz[1]], dtype=float)
 
-        print(f"\n[{config.part_name}] Trying seed {seed_idx}/{len(seed_candidates)}: {seed_label}")
+        print(f"\n[{config.part_name}] Trying seed {seed_idx+1}/{len(seed_candidates)}: {seed_label}")
         print(
             f"    angle_y_deg: {seed_angle_y:.6f} offsets_xyz: {[seed_xz[0], y_snap_offset, seed_xz[1]]}",
             flush=True,
@@ -374,7 +374,7 @@ def optimize_foot_sole_part(
             iteration["count"] += 1
             md = mean_distance(xk)
             print(
-                f"[{config.part_name}] seed={seed_idx} ({seed_label}) iter={iteration['count']:02d} mean_distance={md:.6f} m",
+                f"[{config.part_name}] seed={seed_idx+1} ({seed_label}) iter={iteration['count']:02d} mean_distance={md:.6f} m",
                 flush=True,
             )
             if md < best_so_far["score"]:
@@ -569,10 +569,10 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
         rebase=True,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 90.0)),
+            ((0.0, 0.0, 0.0), (0.0, 0.0, -90.0)),
             ((0.0, 0.0, 0.0), (0.0, 78.0, 0.0)),
             ((0.0, 0.0, 0.0), (0.0, 0.0, -2.0)),
-            ((-0.05, 0.0, -0.0015), (0.0, 0.0, 0.0)),
+            ((-0.04, 0.0, -0.0015), (0.0, 0.0, 0.0)),
         ),
     ),
     PartConfig(
@@ -1019,7 +1019,7 @@ def optimize_part(
     seed_results: list[tuple[float, np.ndarray, Any, np.ndarray, np.ndarray, np.ndarray, str]] = []
 
     for seed_idx, (seed_label, seed_angles, seed_offsets) in enumerate(seed_candidates):
-        print(f"\n[{config.part_name}] Trying seed {seed_idx}/{len(seed_candidates)}: {seed_label}")
+        print(f"\n[{config.part_name}] Trying seed {seed_idx+1}/{len(seed_candidates)}: {seed_label}")
         print(f"    angles: {seed_angles.tolist()} offsets: {seed_offsets.tolist()}", flush=True)
         seed_quat = euler_xyz_deg_to_quat_wxyz(seed_angles)
         x_seed = np.hstack([seed_quat, seed_offsets])
@@ -1042,7 +1042,7 @@ def optimize_part(
             iteration["count"] += 1
             md = mean_distance(xk)
             print(
-                f"[{config.part_name}] seed={seed_idx} ({seed_label}) iter={iteration['count']:02d} mean_distance={md:.6f} m",
+                f"[{config.part_name}] seed={seed_idx+1} ({seed_label}) iter={iteration['count']:02d} mean_distance={md:.6f} m",
                 flush=True,
             )
             if md < best_so_far["score"]:
@@ -1118,7 +1118,7 @@ def optimize_part(
             score_local = mean_distance(x_candidate_local)
             local_results.append((score_local, x_candidate_local, result_local, angle_jitter))
             print(
-                f"[{config.part_name}] fine seed={local_idx} jitter={angle_jitter.tolist()} mean_distance={score_local:.6f} m"
+                f"[{config.part_name}] fine seed={local_idx+1} jitter={angle_jitter.tolist()} mean_distance={score_local:.6f} m"
             )
 
         local_results.sort(key=lambda x: x[0])

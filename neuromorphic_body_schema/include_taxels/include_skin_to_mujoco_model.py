@@ -581,9 +581,8 @@ def include_skin_to_mujoco_model(
                 manual_steps_raw = report_cfg.get("manual_steps", [])
                 if isinstance(manual_steps_raw, list):
                     current_manual_steps = cast(list[tuple[list[float], list[float]]], manual_steps_raw)
-                parts_to_add.append(part)
 
-            if any(part in lines[line_counter] for part in MOJOCO_SKIN_PARTS) and not add_taxels:
+            if any(part in lines[line_counter] for part in MOJOCO_SKIN_PARTS) or add_taxels:
                 # find the part that is being added
                 part = body_name
                 if part == "r_upper_leg":
