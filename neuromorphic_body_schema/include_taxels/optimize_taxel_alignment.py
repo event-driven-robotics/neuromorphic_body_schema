@@ -27,6 +27,9 @@ Run:
     
     /home/smullercleve/.virtualenvs/mujoco/bin/python \
         neuromorphic_body_schema/include_taxels/optimize_taxel_alignment.py --polish --part r_upper_arm torso
+        
+    /home/smullercleve/.virtualenvs/mujoco/bin/python \
+        neuromorphic_body_schema/include_taxels/visualize_taxel_alignment.py --preview-footprint --parts l_foot
 """
 
 from __future__ import annotations
@@ -42,6 +45,8 @@ import trimesh
 from scipy.optimize import minimize
 from scipy.spatial import KDTree
 from scipy.spatial.transform import Rotation
+from shapely.geometry import GeometryCollection, MultiPoint, Point, Polygon
+from shapely.ops import unary_union
 
 from include_skin_to_mujoco_model import (
     read_calibration_data,
@@ -79,6 +84,8 @@ class PartConfig:
     mesh_pos: tuple[Vector3, ...]
     mesh_quat_wxyz: tuple[QuaternionWXYZ, ...]
     rebase: bool
+    include_to_model: bool = True
+    optimizer_method: str = "L-BFGS-B"
     manual_steps: tuple[ManualStep, ...] = ()
     delta_angle_seed_candidates: tuple[Vector3, ...] = ((0.0, 0.0, 0.0),)
     delta_angle_bounds_deg: Vector3 = (25.0, 25.0, 25.0)
@@ -99,6 +106,45 @@ MESH_DIR = ROOT / "neuromorphic_body_schema" / "meshes" / "iCub"
 REPORT_JSON = ROOT / "neuromorphic_body_schema" / "include_taxels" / "taxel_alignment_optimization_report.json"
 REPORT_TXT = ROOT / "neuromorphic_body_schema" / "include_taxels" / "taxel_alignment_optimization_report.txt"
 LOCAL_OPTIMIZER_METHOD = "L-BFGS-B"
+SOLE_2D_OPTIMIZER_METHOD = "sole-2d"
+
+GROUP_TORSO = 1
+GROUP_RIGHT_ARM_HAND = 2
+GROUP_LEFT_ARM_HAND = 3
+GROUP_RIGHT_LEG = 4
+GROUP_LEFT_LEG = 5
+
+PART_MODEL_BODY: dict[str, str] = {
+    "r_upper_leg": "r_upper_leg",
+    "r_lower_leg": "r_lower_leg",
+    "l_upper_leg": "l_upper_leg",
+    "l_lower_leg": "l_lower_leg",
+    "r_upper_arm": "r_shoulder_3",
+    "r_forearm": "r_forearm",
+    "l_upper_arm": "l_shoulder_3",
+    "l_forearm": "l_forearm",
+    "torso": "chest",
+    "r_palm": "r_hand",
+    "l_palm": "l_hand",
+    "r_foot": "r_ankle_2",
+    "l_foot": "l_ankle_2",
+}
+
+PART_SENSOR_GROUP: dict[str, int] = {
+    "r_upper_leg": GROUP_RIGHT_LEG,
+    "r_lower_leg": GROUP_RIGHT_LEG,
+    "r_foot": GROUP_RIGHT_LEG,
+    "l_upper_leg": GROUP_LEFT_LEG,
+    "l_lower_leg": GROUP_LEFT_LEG,
+    "l_foot": GROUP_LEFT_LEG,
+    "torso": GROUP_TORSO,
+    "r_upper_arm": GROUP_RIGHT_ARM_HAND,
+    "r_forearm": GROUP_RIGHT_ARM_HAND,
+    "r_palm": GROUP_RIGHT_ARM_HAND,
+    "l_upper_arm": GROUP_LEFT_ARM_HAND,
+    "l_forearm": GROUP_LEFT_ARM_HAND,
+    "l_palm": GROUP_LEFT_ARM_HAND,
+}
 
 
 def normalize_quaternion_wxyz(quat_wxyz: np.ndarray) -> np.ndarray:
@@ -163,6 +209,298 @@ def apply_quaternion_transform(
     rot = Rotation.from_quat(quat_wxyz_to_xyzw(quat_wxyz))
     pos_shifted = np.array(pos, dtype=float) + np.array(offsets, dtype=float)
     return np.array(rot.apply(pos_shifted), dtype=float)
+
+
+def build_bottom_contact_footprint_xz(mesh: trimesh.Trimesh, bottom_slice_height_m: float = 0.002) -> Any:
+    """Return a strict XZ footprint for the sole contact patch of a mesh."""
+
+    vertices = np.asarray(mesh.vertices, dtype=float)
+    faces = np.asarray(mesh.faces, dtype=int)
+    min_y = float(np.min(vertices[:, 1]))
+    slice_limit = min_y + bottom_slice_height_m
+
+    bottom_face_mask = np.all(vertices[faces][:, :, 1] <= slice_limit, axis=1)
+    bottom_faces = faces[bottom_face_mask]
+    if len(bottom_faces) == 0:
+        return MultiPoint(vertices[:, [0, 2]]).convex_hull
+
+    projected_triangles: list[Polygon] = []
+    for face in bottom_faces:
+        polygon = Polygon(vertices[face][:, [0, 2]])
+        if polygon.is_valid and polygon.area > 0.0:
+            projected_triangles.append(polygon)
+
+    if not projected_triangles:
+        return MultiPoint(vertices[bottom_faces.reshape(-1), :][:, [0, 2]]).convex_hull
+
+    footprint = unary_union(projected_triangles)
+    if isinstance(footprint, GeometryCollection) and len(footprint.geoms) == 0:
+        return MultiPoint(vertices[bottom_faces.reshape(-1), :][:, [0, 2]]).convex_hull
+    return footprint
+
+
+def build_point_hull_xz(points: np.ndarray) -> Any:
+    """Return the XZ convex hull of a point cloud."""
+
+    return MultiPoint(np.asarray(points, dtype=float)[:, [0, 2]]).convex_hull
+
+
+def sole_surface_y(mesh: trimesh.Trimesh) -> float:
+    """Return the Y level of the lowest sole surface."""
+
+    return float(np.min(np.asarray(mesh.vertices, dtype=float)[:, 1]))
+
+
+def _foot_boundary_distance_mean(hull: Any, footprint: Any) -> float:
+    """Return the mean distance from taxel-hull vertices to the sole boundary."""
+
+    if hull.is_empty:
+        return 0.0
+    if hull.geom_type == "Polygon":
+        coords = np.asarray(hull.exterior.coords[:-1], dtype=float)
+    elif hull.geom_type == "LineString":
+        coords = np.asarray(hull.coords, dtype=float)
+    else:
+        coords = np.asarray([hull.coords[0]], dtype=float)
+    if len(coords) == 0:
+        return 0.0
+    distances = [float(footprint.boundary.distance(Point(x, z))) for x, z in coords]
+    return float(np.mean(distances))
+
+
+def optimize_foot_sole_part(
+    config: PartConfig,
+    points: np.ndarray,
+    mesh: trimesh.Trimesh,
+    previous_seed_map: PreviousSeedMap,
+    polish: bool = False,
+) -> JsonDict:
+    """Optimize a flat foot sole with exact Y snap and 2D XZ plus Y-rotation fitting."""
+
+    if config.optimizer_method != SOLE_2D_OPTIMIZER_METHOD:
+        raise ValueError(f"Unsupported foot optimizer method: {config.optimizer_method}")
+
+    baseline_points = apply_part_transform(points, config.part_name)
+    footprint = build_bottom_contact_footprint_xz(mesh)
+    footprint_area = max(float(footprint.area), 1e-12)
+    footprint_scale = max(float(np.sqrt(footprint_area)), 1e-6)
+    footprint_centroid = np.array([footprint.centroid.x, footprint.centroid.y], dtype=float)
+    dist_fn = build_distance_fn(mesh)
+
+    y_target = sole_surface_y(mesh)
+    y_snap_offset = float(y_target - np.mean(baseline_points[:, 1]))
+
+    quat0 = np.array([1.0, 0.0, 0.0, 0.0], dtype=float)
+    angles0 = quat_wxyz_to_euler_xyz_deg(quat0)
+    offsets0 = np.zeros(3, dtype=float)
+    x0 = np.hstack([quat0, offsets0])
+
+    def transform_with_foot_params(y_angle_deg: float, tx: float, tz: float) -> np.ndarray:
+        return apply_part_transform(
+            points,
+            config.part_name,
+            delta_angles_deg=np.array([0.0, y_angle_deg, 0.0], dtype=float),
+            delta_offsets_m=np.array([tx, y_snap_offset, tz], dtype=float),
+        )
+
+    def mean_distance_full(y_angle_deg: float, tx: float, tz: float) -> float:
+        transformed = transform_with_foot_params(y_angle_deg, tx, tz)
+        distances = dist_fn(transformed)
+        return float(np.mean(distances))
+
+    def mean_distance(params: np.ndarray) -> float:
+        return mean_distance_full(float(params[0]), float(params[1]), float(params[2]))
+
+    def distance_stats(params: np.ndarray) -> dict[str, float]:
+        transformed = transform_with_foot_params(float(params[0]), float(params[1]), float(params[2]))
+        abs_distances = dist_fn(transformed)
+        return {
+            "mean_m": float(np.mean(abs_distances)),
+            "median_m": float(np.median(abs_distances)),
+            "p90_m": float(np.quantile(abs_distances, 0.9)),
+        }
+
+    def objective(params: np.ndarray, angle_center: float, xz_center: np.ndarray) -> float:
+        y_angle_deg = float(params[0])
+        tx = float(params[1])
+        tz = float(params[2])
+        transformed = transform_with_foot_params(y_angle_deg, tx, tz)
+        hull = build_point_hull_xz(transformed)
+
+        symmetric_diff_ratio = float(footprint.symmetric_difference(hull).area / footprint_area)
+        hull_centroid = np.array([hull.centroid.x, hull.centroid.y], dtype=float)
+        centroid_penalty = float(np.sum(((hull_centroid - footprint_centroid) / footprint_scale) ** 2))
+        boundary_penalty = _foot_boundary_distance_mean(hull, footprint) / footprint_scale
+
+        angle_reg = ((y_angle_deg - angle_center) / 8.0) ** 2
+        xz_reg = float(np.sum((((np.array([tx, tz], dtype=float) - xz_center) / 0.01) ** 2)))
+
+        return float(symmetric_diff_ratio + 0.5 * centroid_penalty + 0.35 * boundary_penalty + 0.001 * angle_reg + 0.001 * xz_reg)
+
+    initial_stats = distance_stats(np.array([0.0, 0.0, 0.0], dtype=float))
+    initial_mean = float(initial_stats["mean_m"])
+    print(
+        f"[{config.part_name}] initial mean distance={initial_mean:.6f} m | y_snap_offset={y_snap_offset:.6f} m"
+    )
+
+    previous_seed = previous_seed_map.get(config.part_name)
+    seed_candidates = build_seed_candidates(config, previous_seed, polish=polish)
+    seed_results: list[tuple[float, np.ndarray, Any, float, np.ndarray, str]] = []
+
+    translation_bounds = np.array(config.delta_translation_bounds_m, dtype=float)
+    angle_bound_y = float(config.delta_angle_bounds_deg[1])
+
+    for seed_idx, (seed_label, seed_angles, seed_offsets) in enumerate(seed_candidates):
+        seed_angle_y = float(seed_angles[1])
+        seed_xz = np.array([seed_offsets[0], seed_offsets[2]], dtype=float)
+        x_seed = np.array([seed_angle_y, seed_xz[0], seed_xz[1]], dtype=float)
+
+        print(f"\n[{config.part_name}] Trying seed {seed_idx+1}/{len(seed_candidates)}: {seed_label}")
+        print(
+            f"    angle_y_deg: {seed_angle_y:.6f} offsets_xyz: {[seed_xz[0], y_snap_offset, seed_xz[1]]}",
+            flush=True,
+        )
+
+        bounds = [
+            (seed_angle_y - angle_bound_y, seed_angle_y + angle_bound_y),
+            (seed_xz[0] - translation_bounds[0], seed_xz[0] + translation_bounds[0]),
+            (seed_xz[1] - translation_bounds[2], seed_xz[1] + translation_bounds[2]),
+        ]
+
+        iteration = {"count": 0}
+        best_so_far = {"score": mean_distance(x_seed), "params": x_seed.copy()}
+
+        def callback(xk: np.ndarray) -> None:
+            iteration["count"] += 1
+            md = mean_distance(xk)
+            print(
+                f"[{config.part_name}] seed={seed_idx+1} ({seed_label}) iter={iteration['count']:02d} mean_distance={md:.6f} m",
+                flush=True,
+            )
+            if md < best_so_far["score"]:
+                best_so_far["score"] = md
+                best_so_far["params"] = xk.copy()
+
+        primary_maxiter = 800 if polish else 300
+        primary_ftol = 1e-16 if polish else 1e-12
+        result = minimize(
+            lambda p: objective(p, seed_angle_y, seed_xz),
+            x_seed,
+            method=LOCAL_OPTIMIZER_METHOD,
+            bounds=bounds,
+            callback=callback,
+            options={"maxiter": primary_maxiter, "ftol": primary_ftol, "gtol": 1e-12},
+        )
+
+        x_candidate = best_so_far["params"]
+        score = best_so_far["score"]
+        seed_results.append((score, x_candidate, result, seed_angle_y, seed_xz, seed_label))
+
+    seed_results.sort(key=lambda item: item[0])
+    _, x_final, result, selected_seed_angle_y, selected_seed_xz, selected_seed_label = seed_results[0]
+
+    polish_refinement: dict[str, Any] | None = None
+    if polish:
+        # Second-stage foot polish: tighter local window around best 2D solution.
+        polish_angle_window = min(angle_bound_y, 2.0)
+        polish_translation_window_x = min(float(translation_bounds[0]), 0.003)
+        polish_translation_window_z = min(float(translation_bounds[2]), 0.003)
+
+        bounds_polish = [
+            (float(x_final[0]) - polish_angle_window, float(x_final[0]) + polish_angle_window),
+            (float(x_final[1]) - polish_translation_window_x, float(x_final[1]) + polish_translation_window_x),
+            (float(x_final[2]) - polish_translation_window_z, float(x_final[2]) + polish_translation_window_z),
+        ]
+
+        polish_before = mean_distance(x_final)
+        result_polish = minimize(
+            lambda p: objective(p, float(x_final[0]), np.array([float(x_final[1]), float(x_final[2])], dtype=float)),
+            x_final,
+            method=LOCAL_OPTIMIZER_METHOD,
+            bounds=bounds_polish,
+            options={"maxiter": 1200, "ftol": 1e-20, "gtol": 1e-16},
+        )
+        x_polished = result_polish.x if result_polish.success else x_final
+        polish_after = mean_distance(x_polished)
+        if polish_after < polish_before:
+            x_final = x_polished
+            result = result_polish
+
+        polish_refinement = {
+            "pre_polish_mean_distance_m": float(polish_before),
+            "post_polish_mean_distance_m": float(mean_distance(x_final)),
+            "angle_window_deg": [0.0, float(polish_angle_window), 0.0],
+            "translation_window_m": [float(polish_translation_window_x), 0.0, float(polish_translation_window_z)],
+            "rotation_space": "y_axis_only",
+            "success": bool(result_polish.success),
+        }
+
+    final_angles = np.array([0.0, float(x_final[0]), 0.0], dtype=float)
+    final_quat = euler_xyz_deg_to_quat_wxyz(final_angles)
+    final_offsets = np.array([float(x_final[1]), y_snap_offset, float(x_final[2])], dtype=float)
+    final_stats = distance_stats(x_final)
+    final_mean = float(final_stats["mean_m"])
+
+    return {
+        "part": config.part_name,
+        "model_body_name": PART_MODEL_BODY[config.part_name],
+        "sensor_group": PART_SENSOR_GROUP[config.part_name],
+        "position_file": config.position_file,
+        "rebase": bool(config.rebase),
+        "include_to_model": bool(config.include_to_model),
+        "mesh_files": list(config.mesh_files),
+        "manual_steps": [
+            {"offsets_m": list(step[0]), "angles_deg": list(step[1])}
+            for step in config.manual_steps
+        ],
+        "initial": {
+            "delta_angles_deg": angles0.tolist(),
+            "delta_quaternion_wxyz": quat0.tolist(),
+            "delta_offsets_m": offsets0.tolist(),
+            "mean_distance_m": initial_stats["mean_m"],
+            "median_distance_m": initial_stats["median_m"],
+            "p90_distance_m": initial_stats["p90_m"],
+        },
+        "optimized": {
+            "delta_angles_deg": final_angles.tolist(),
+            "delta_quaternion_wxyz": final_quat.tolist(),
+            "delta_offsets_m": final_offsets.tolist(),
+            "mean_distance_m": final_stats["mean_m"],
+            "median_distance_m": final_stats["median_m"],
+            "p90_distance_m": final_stats["p90_m"],
+        },
+        "delta": {
+            "angles_deg": (final_angles - angles0).tolist(),
+            "quaternion_wxyz": final_quat.tolist(),
+            "rotation_distance_deg": quaternion_geodesic_distance_deg(final_quat, quat0),
+            "offsets_m": (final_offsets - offsets0).tolist(),
+            "mean_distance_m": float(final_mean - initial_mean),
+            "mean_distance_improvement_pct": float((initial_mean - final_mean) / max(initial_mean, 1e-12) * 100.0),
+        },
+        "optimizer": {
+            "success": bool(result.success),
+            "status": int(result.status),
+            "message": str(result.message),
+            "nit": int(result.nit),
+            "nfev": int(result.nfev),
+            "objective": float(result.fun),
+            "optimizer_method": config.optimizer_method,
+            "solver": LOCAL_OPTIMIZER_METHOD,
+            "seed_count": len(seed_candidates),
+            "selected_seed_label": selected_seed_label,
+            "selected_seed_angles_deg": [0.0, float(selected_seed_angle_y), 0.0],
+            "selected_seed_quaternion_wxyz": euler_xyz_deg_to_quat_wxyz(np.array([0.0, float(selected_seed_angle_y), 0.0], dtype=float)).tolist(),
+            "selected_seed_offsets_m": [float(selected_seed_xz[0]), y_snap_offset, float(selected_seed_xz[1])],
+            "angle_bounds_deg": [0.0, angle_bound_y, 0.0],
+            "translation_bounds_m": [float(translation_bounds[0]), 0.0, float(translation_bounds[2])],
+            "fine_refinement": None,
+            "polish_mode": bool(polish),
+            "polish_refinement": polish_refinement,
+            "sole_surface_y_m": y_target,
+            "y_snap_offset_m": y_snap_offset,
+            "footprint_area_m2": footprint_area,
+        },
+    }
 
 
 PARTS: tuple[PartConfig, ...] = (
@@ -231,10 +569,10 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
         rebase=True,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 90.0)),
+            ((0.0, 0.0, 0.0), (0.0, 0.0, -90.0)),
             ((0.0, 0.0, 0.0), (0.0, 78.0, 0.0)),
             ((0.0, 0.0, 0.0), (0.0, 0.0, -2.0)),
-            ((-0.05, 0.0, -0.0015), (0.0, 0.0, 0.0)),
+            ((-0.04, 0.0, -0.0015), (0.0, 0.0, 0.0)),
         ),
     ),
     PartConfig(
@@ -598,6 +936,9 @@ def optimize_part(
 
     points = load_taxel_points(POSITIONS_DIR / config.position_file, config.rebase)
     mesh = load_mesh(config.mesh_files, config.mesh_pos, config.mesh_quat_wxyz)
+    if config.optimizer_method == SOLE_2D_OPTIMIZER_METHOD:
+        return optimize_foot_sole_part(config, points, mesh, previous_seed_map, polish=polish)
+
     dist_fn = build_distance_fn(mesh)
 
     # We optimize a final quaternion perturbation applied on top of the exact manual chain.
@@ -678,7 +1019,7 @@ def optimize_part(
     seed_results: list[tuple[float, np.ndarray, Any, np.ndarray, np.ndarray, np.ndarray, str]] = []
 
     for seed_idx, (seed_label, seed_angles, seed_offsets) in enumerate(seed_candidates):
-        print(f"\n[{config.part_name}] Trying seed {seed_idx}/{len(seed_candidates)}: {seed_label}")
+        print(f"\n[{config.part_name}] Trying seed {seed_idx+1}/{len(seed_candidates)}: {seed_label}")
         print(f"    angles: {seed_angles.tolist()} offsets: {seed_offsets.tolist()}", flush=True)
         seed_quat = euler_xyz_deg_to_quat_wxyz(seed_angles)
         x_seed = np.hstack([seed_quat, seed_offsets])
@@ -701,7 +1042,7 @@ def optimize_part(
             iteration["count"] += 1
             md = mean_distance(xk)
             print(
-                f"[{config.part_name}] seed={seed_idx} ({seed_label}) iter={iteration['count']:02d} mean_distance={md:.6f} m",
+                f"[{config.part_name}] seed={seed_idx+1} ({seed_label}) iter={iteration['count']:02d} mean_distance={md:.6f} m",
                 flush=True,
             )
             if md < best_so_far["score"]:
@@ -777,7 +1118,7 @@ def optimize_part(
             score_local = mean_distance(x_candidate_local)
             local_results.append((score_local, x_candidate_local, result_local, angle_jitter))
             print(
-                f"[{config.part_name}] fine seed={local_idx} jitter={angle_jitter.tolist()} mean_distance={score_local:.6f} m"
+                f"[{config.part_name}] fine seed={local_idx+1} jitter={angle_jitter.tolist()} mean_distance={score_local:.6f} m"
             )
 
         local_results.sort(key=lambda x: x[0])
@@ -840,7 +1181,11 @@ def optimize_part(
 
     return {
         "part": config.part_name,
+        "model_body_name": PART_MODEL_BODY[config.part_name],
+        "sensor_group": PART_SENSOR_GROUP[config.part_name],
         "position_file": config.position_file,
+        "rebase": bool(config.rebase),
+        "include_to_model": bool(config.include_to_model),
         "mesh_files": list(config.mesh_files),
         "manual_steps": [
             {"offsets_m": list(step[0]), "angles_deg": list(step[1])}
@@ -877,7 +1222,8 @@ def optimize_part(
             "nit": int(result.nit),
             "nfev": int(result.nfev),
             "objective": float(result.fun),
-            "local_optimizer": LOCAL_OPTIMIZER_METHOD,
+            "optimizer_method": config.optimizer_method,
+            "solver": LOCAL_OPTIMIZER_METHOD,
             "seed_count": len(seed_candidates),
             "selected_seed_label": selected_seed_label,
             "selected_seed_angles_deg": selected_seed_angles.tolist(),
@@ -928,7 +1274,8 @@ def write_reports(results: list[dict[str, Any]]) -> None:
             lines.append(f"  delta rotation distance deg: {delta['rotation_distance_deg']}")
         lines.append(f"  delta offsets m: {delta['offsets_m']}")
         optimizer = cast(dict[str, Any], r["optimizer"])
-        lines.append(f"  local optimizer: {optimizer.get('local_optimizer', LOCAL_OPTIMIZER_METHOD)}")
+        lines.append(f"  optimizer method: {optimizer.get('optimizer_method', LOCAL_OPTIMIZER_METHOD)}")
+        lines.append(f"  solver: {optimizer.get('solver', LOCAL_OPTIMIZER_METHOD)}")
         lines.append(f"  seed count: {optimizer['seed_count']}")
         lines.append(f"  selected seed label: {optimizer['selected_seed_label']}")
         lines.append(f"  selected seed angles deg: {optimizer['selected_seed_angles_deg']}")
@@ -1002,6 +1349,36 @@ def _result_mean_distance(result_entry: JsonDict) -> float:
     return float(cast(dict[str, Any], result_entry["optimized"])["mean_distance_m"])
 
 
+def _upgrade_result_entry_schema(entry: JsonDict) -> JsonDict:
+    """Backfill newly introduced report fields on legacy entries."""
+
+    part = entry.get("part")
+    if not isinstance(part, str) or part not in PARTS_BY_NAME:
+        return entry
+
+    cfg = PARTS_BY_NAME[part]
+
+    if "model_body_name" not in entry:
+        entry["model_body_name"] = PART_MODEL_BODY[part]
+    if "sensor_group" not in entry:
+        entry["sensor_group"] = PART_SENSOR_GROUP[part]
+    if "position_file" not in entry:
+        entry["position_file"] = cfg.position_file
+    if "rebase" not in entry:
+        entry["rebase"] = bool(cfg.rebase)
+    if "inlcude_to_model" not in entry:
+        entry["inlcude_to_model"] = bool(cfg.include_to_model)
+    if "mesh_files" not in entry:
+        entry["mesh_files"] = list(cfg.mesh_files)
+    if "manual_steps" not in entry:
+        entry["manual_steps"] = [
+            {"offsets_m": list(step[0]), "angles_deg": list(step[1])}
+            for step in cfg.manual_steps
+        ]
+
+    return entry
+
+
 def main() -> None:
     """Run the configured optimization workflow and persist improved results."""
 
@@ -1009,6 +1386,7 @@ def main() -> None:
     selected_parts = set(args.parts) if args.parts else None
     previous_seed_map = load_previous_optimized_seeds()
     existing_results = load_existing_results()
+    existing_results = [_upgrade_result_entry_schema(entry) for entry in existing_results]
     result_by_part = {cast(str, entry["part"]): entry for entry in existing_results}
 
     for part_cfg in PARTS:
@@ -1020,13 +1398,14 @@ def main() -> None:
         # Only update if new result is better than existing best (including initialized values)
         new_mean = _result_mean_distance(new_result)
         if part_cfg.part_name not in result_by_part:
-            result_by_part[part_cfg.part_name] = new_result
+            result_by_part[part_cfg.part_name] = _upgrade_result_entry_schema(new_result)
         else:
             best_mean = _result_mean_distance(result_by_part[part_cfg.part_name])
             if new_mean < best_mean:
-                result_by_part[part_cfg.part_name] = new_result
+                result_by_part[part_cfg.part_name] = _upgrade_result_entry_schema(new_result)
                 print(f"  improved mean_distance {best_mean:.6f} m -> {new_mean:.6f} m, updating stored result.")
             else:
+                result_by_part[part_cfg.part_name] = _upgrade_result_entry_schema(result_by_part[part_cfg.part_name])
                 print(f"  mean_distance {new_mean:.6f} m >= best {best_mean:.6f} m, keeping previous result.")
 
     results = [result_by_part[part_cfg.part_name] for part_cfg in PARTS if part_cfg.part_name in result_by_part]

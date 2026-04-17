@@ -62,8 +62,10 @@ SKIN_PARTS = [
 MOJOCO_SKIN_PARTS = [
     "r_upper_leg",
     "r_lower_leg",
+    "r_ankle_2",
     "l_upper_leg",
     "l_lower_leg",
+    "l_ankle_2",
     "chest",
     "r_shoulder_3",
     "r_forearm",
@@ -98,6 +100,8 @@ POSITIONS_FILES = {
     "left_leg_upper":   "left_leg_upper.txt",
     "right_leg_lower":  "right_leg_lower.txt",
     "left_leg_lower":   "left_leg_lower.txt",
+    "right_foot":       "right_foot.txt",
+    "left_foot":        "left_foot.txt",
 }
 
 # Deterministic remap from skinGUI triangle patch IDs to taxel2Repr module IDs.
