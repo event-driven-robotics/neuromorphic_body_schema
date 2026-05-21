@@ -1,0 +1,1273 @@
+<mujoco model="iCub">
+
+  <compiler autolimits="true" angle="radian" meshdir="../meshes_improved" inertiafromgeom="auto" />
+
+  <option timestep="0.001" integrator="implicitfast" cone="elliptic"/>
+
+  <asset>
+    <!-- ===== TORSO / NECK / HEAD MESHES ===== -->
+    <mesh name="sim_sea_2-5_root_link" file="sim_sea_2-5_root_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_ibbbbeba_torso_1" file="sim_ibbbbeba_torso_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_ibbbbeba_torso_2" file="sim_ibbbbeba_torso_2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_ibbbbeba_chest" file="sim_ibbbbeba_chest.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_ibbbbeba_neck_1" file="sim_ibbbbeba_neck_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_ibbbbeba_neck_2" file="sim_ibbbbeba_neck_2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_ibbbbeba_neck_3" file="sim_ibbbbeba_neck_3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_ibbbbeba_head" file="sim_ibbbbeba_head.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_ibbbbeba_eyes_1" file="sim_ibbbbeba_eyes_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_ibbbbeba_l_eye_2" file="sim_ibbbbeba_l_eye_2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_ibbbbeba_r_eye_2" file="sim_ibbbbeba_r_eye_2.stl" scale="0.001 0.001 0.001"/>
+    <!-- ===== END TORSO / NECK / HEAD MESHES ===== -->
+
+    <!-- ===== LEFT ARM MESHES ===== -->
+    <mesh name="sim_sea_2-5_l_shoulder_1" file="sim_sea_2-5_l_shoulder_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_l_shoulder_2" file="sim_sea_2-5_l_shoulder_2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_l_upper_arm" file="sim_sea_2-5_l_upper_arm.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_l_elbow" file="sim_sea_2-5_l_elbow.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_l_elbow_prosup" file="sim_sea_2-5_l_elbow_prosup.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_l_forearm" file="sim_sea_2-5_l_forearm.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_l_wrist_pitch" file="sim_sea_2-5_l_wrist_pitch.stl" scale="0.001 0.001 0.001"/>
+    <!-- Left hand: palm + finger segments -->
+    <mesh name="col_LeftHandPalm." file="col_LeftHandPalm.stl"/>
+    <mesh name="full_LeftTopCover" file="full_LeftTopCover.stl"/>
+    <mesh name="full_LeftThumb0" file="full_LeftThumb0.stl"/>
+    <mesh name="col_LeftThumb0" file="col_LeftThumb0.stl"/>
+    <mesh name="full_LeftThumb1" file="full_LeftThumb1.stl"/>
+    <mesh name="col_LeftThumb1" file="col_LeftThumb1.stl"/>
+    <mesh name="full_LeftThumb2" file="full_LeftThumb2.stl"/>
+    <mesh name="col_LeftThumb2" file="col_LeftThumb2.stl"/>
+    <mesh name="full_LeftThumb3" file="full_LeftThumb3.stl"/>
+    <mesh name="col_LeftThumb3" file="col_LeftThumb3.stl"/>
+    <mesh name="full_LeftIndex0" file="full_LeftIndex0.stl"/>
+    <mesh name="col_LeftIndex0" file="col_LeftIndex0.stl"/>
+    <mesh name="full_LeftIndex1" file="full_LeftIndex1.stl"/>
+    <mesh name="col_LeftIndex1" file="col_LeftIndex1.stl"/>
+    <mesh name="full_LeftIndex2" file="full_LeftIndex2.stl"/>
+    <mesh name="col_LeftIndex2" file="col_LeftIndex2.stl"/>
+    <mesh name="full_LeftIndex3" file="full_LeftIndex3.stl"/>
+    <mesh name="col_LeftIndex3" file="col_LeftIndex3.stl"/>
+    <mesh name="full_LeftMiddle0" file="full_LeftMiddle0.stl"/>
+    <mesh name="col_LeftMiddle0" file="col_LeftMiddle0.stl"/>
+    <mesh name="full_LeftMiddle1" file="full_LeftMiddle1.stl"/>
+    <mesh name="col_LeftMiddle1" file="col_LeftMiddle1.stl"/>
+    <mesh name="full_LeftMiddle2" file="full_LeftMiddle2.stl"/>
+    <mesh name="col_LeftMiddle2" file="col_LeftMiddle2.stl"/>
+    <mesh name="full_LeftMiddle3" file="full_LeftMiddle3.stl"/>
+    <mesh name="col_LeftMiddle3" file="col_LeftMiddle3.stl"/>
+    <mesh name="full_LeftRing0" file="full_LeftRing0.stl"/>
+    <mesh name="col_LeftRing0" file="col_LeftRing0.stl"/>
+    <mesh name="full_LeftRing1" file="full_LeftRing1.stl"/>
+    <mesh name="col_LeftRing1" file="col_LeftRing1.stl"/>
+    <mesh name="full_LeftRing2" file="full_LeftRing2.stl"/>
+    <mesh name="col_LeftRing2" file="col_LeftRing2.stl"/>
+    <mesh name="full_LeftRing3" file="full_LeftRing3.stl"/>
+    <mesh name="col_LeftRing3" file="col_LeftRing3.stl"/>
+    <mesh name="full_LeftLittle0" file="full_LeftLittle0.stl"/>
+    <mesh name="col_LeftLittle0" file="col_LeftLittle0.stl"/>
+    <mesh name="full_LeftLittle1" file="full_LeftLittle1.stl"/>
+    <mesh name="col_LeftLittle1" file="col_LeftLittle1.stl"/>
+    <mesh name="full_LeftLittle2" file="full_LeftLittle2.stl"/>
+    <mesh name="col_LeftLittle2" file="col_LeftLittle2.stl"/>
+    <mesh name="full_LeftLittle3" file="full_LeftLittle3.stl"/>
+    <mesh name="col_LeftLittle3" file="col_LeftLittle3.stl"/>
+    <!-- ===== END LEFT ARM MESHES ===== -->
+
+    <!-- ===== RIGHT ARM MESHES ===== -->
+    <mesh name="sim_sea_2-5_r_shoulder_1" file="sim_sea_2-5_r_shoulder_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_r_shoulder_2" file="sim_sea_2-5_r_shoulder_2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_r_upper_arm" file="sim_sea_2-5_r_upper_arm.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_r_elbow" file="sim_sea_2-5_r_elbow.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_r_elbow_prosup" file="sim_sea_2-5_r_elbow_prosup.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_r_forearm" file="sim_sea_2-5_r_forearm.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_r_wrist_pitch" file="sim_sea_2-5_r_wrist_pitch.stl" scale="0.001 0.001 0.001"/>
+    <!-- Right hand: palm + finger segments -->
+    <mesh name="full_RightHandPalm" file="full_RightHandPalm.stl"/>
+    <mesh name="full_RightTopCover" file="full_RightTopCover.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="col_RightHandPalm" file="col_RightHandPalm.stl"/>
+    <mesh name="full_RightThumb0" file="full_RightThumb0.stl"/>
+    <mesh name="col_RightThumb0" file="col_RightThumb0.stl"/>
+    <mesh name="full_RightThumb1" file="full_RightThumb1.stl"/>
+    <mesh name="col_RightThumb1" file="col_RightThumb1.stl"/>
+    <mesh name="full_RightThumb2" file="full_RightThumb2.stl"/>
+    <mesh name="col_RightThumb2" file="col_RightThumb2.stl"/>
+    <mesh name="full_RightThumb3" file="full_RightThumb3.stl"/>
+    <mesh name="col_RightThumb3" file="col_RightThumb3.stl"/>
+    <mesh name="full_RightIndex0" file="full_RightIndex0.stl"/>
+    <mesh name="col_RightIndex0" file="col_RightIndex0.stl"/>
+    <mesh name="full_RightIndex1" file="full_RightIndex1.stl"/>
+    <mesh name="col_RightIndex1" file="col_RightIndex1.stl"/>
+    <mesh name="full_RightIndex2" file="full_RightIndex2.stl"/>
+    <mesh name="col_RightIndex2" file="col_RightIndex2.stl"/>
+    <mesh name="full_RightIndex3" file="full_RightIndex3.stl"/>
+    <mesh name="col_RightIndex3" file="col_RightIndex3.stl"/>
+    <mesh name="full_RightMiddle0" file="full_RightMiddle0.stl"/>
+    <mesh name="col_RightMiddle0" file="col_RightMiddle0.stl"/>
+    <mesh name="full_RightMiddle1" file="full_RightMiddle1.stl"/>
+    <mesh name="col_RightMiddle1" file="col_RightMiddle1.stl"/>
+    <mesh name="full_RightMiddle2" file="full_RightMiddle2.stl"/>
+    <mesh name="col_RightMiddle2" file="col_RightMiddle2.stl"/>
+    <mesh name="full_RightMiddle3" file="full_RightMiddle3.stl"/>
+    <mesh name="col_RightMiddle3" file="col_RightMiddle3.stl"/>
+    <mesh name="full_RightRing0" file="full_RightRing0.stl"/>
+    <mesh name="col_RightRing0" file="col_RightRing0.stl"/>
+    <mesh name="full_RightRing1" file="full_RightRing1.stl"/>
+    <mesh name="col_RightRing1" file="col_RightRing1.stl"/>
+    <mesh name="full_RightRing2" file="full_RightRing2.stl"/>
+    <mesh name="col_RightRing2" file="col_RightRing2.stl"/>
+    <mesh name="full_RightRing3" file="full_RightRing3.stl"/>
+    <mesh name="col_RightRing3" file="col_RightRing3.stl"/>
+    <mesh name="full_RightLittle0" file="full_RightLittle0.stl"/>
+    <mesh name="col_RightLittle0" file="col_RightLittle0.stl"/>
+    <mesh name="full_RightLittle1" file="full_RightLittle1.stl"/>
+    <mesh name="col_RightLittle1" file="col_RightLittle1.stl"/>
+    <mesh name="full_RightLittle2" file="full_RightLittle2.stl"/>
+    <mesh name="col_RightLittle2" file="col_RightLittle2.stl"/>
+    <mesh name="full_RightLittle3" file="full_RightLittle3.stl"/>
+    <mesh name="col_RightLittle3" file="col_RightLittle3.stl"/>
+    <!-- ===== END RIGHT ARM MESHES ===== -->
+
+    <!-- ===== LEFT LEG MESHES ===== -->
+    <mesh name="sim_sea_2-5_l_hip_1" file="sim_sea_2-5_l_hip_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_l_hip_2" file="sim_sea_2-5_l_hip_2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_l_upper_thigh" file="sim_sea_2-5_l_upper_thigh.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_l_thigh" file="sim_sea_2-5_l_thigh.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_l_shank" file="sim_sea_2-5_l_shank.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_l_ankle" file="sim_sea_2-5_l_ankle.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_l_foot" file="sim_sea_2-5_l_foot.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_l_sole" file="sim_sea_2-5_l_sole.stl" scale="0.001 0.001 0.001"/>
+    <!-- ===== END LEFT LEG MESHES ===== -->
+
+    <!-- ===== RIGHT LEG MESHES ===== -->
+    <mesh name="sim_sea_2-5_r_hip_1" file="sim_sea_2-5_r_hip_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_r_hip_2" file="sim_sea_2-5_r_hip_2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_r_upper_thigh" file="sim_sea_2-5_r_upper_thigh.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_r_thigh" file="sim_sea_2-5_r_thigh.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_r_shank" file="sim_sea_2-5_r_shank.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_r_ankle" file="sim_sea_2-5_r_ankle.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_r_foot" file="sim_sea_2-5_r_foot.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="sim_sea_2-5_r_sole" file="sim_sea_2-5_r_sole.stl" scale="0.001 0.001 0.001"/>
+    <!-- ===== END RIGHT LEG MESHES ===== -->
+
+  </asset>
+
+  <worldbody>
+    <!-- ===== ROOT LINK (PELVIS / BASE) ===== -->
+    <body name="root_link">
+
+      <freejoint name="root_link_freejoint"/>
+      <inertial pos="0.024882092934029494 0.00010394706346346644 -0.044080600119273776" mass="5.0914344301464478" fullinertia="0.024912371962375592 0.013967889601452045 0.020211175934323752 -1.5545783532020801e-05 0.001709675630665086 5.9348835333723743e-06"/>
+      <geom name="root_link_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_root_link"/>
+
+      <!-- ===== TORSO / NECK / HEAD ===== -->
+      <body name="torso_1" pos="-8.3266726846886741e-17 1.9073487735164804e-10 3.8163916471489756e-16" quat="0.5 0.50000000000000011 -0.5 0.50000000000000011">
+
+        <joint damping="0.83" frictionloss="0.56" armature="0.0827" name="torso_pitch" type="hinge" axis="-6.1619087592756799e-16 9.9189248355289172e-17 1" range="-0.3490658503988659 1.2217304763960306"/>
+        <geom name="torso_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_ibbbbeba_torso_1"/>
+        <body name="torso_2" pos="0.032000000000000028 -2.7755575615628914e-17 3.2260373727837335e-18" quat="0.70710678118654757 0.70710678118654757 1.5700924586836571e-16 -3.9252311467081517e-17">
+          <inertial pos="0.036410112277072984 -8.303402519331055e-05 -0.00097439963115759573" mass="0.41050563512581734" fullinertia="0.00040320355040279537 0.00079705442527608795 0.00057992549752005512 6.6740113845371156e-07 -4.8520729718901308e-06 -3.898066028858139e-07"/>
+          <joint damping="3.44" frictionloss="1.79" armature="0.0827" name="torso_roll" type="hinge" axis="-5.6046012221147688e-17 -1.956893277243928e-30 1" range="-0.52359877559829882 0.52359877559829882"/>
+          <geom name="torso_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_ibbbbeba_torso_2"/>
+
+          <body name="chest" pos="1.3881107205385788e-16 -9.3875748336797848e-17 -0.0054975000000000197" quat="0.50000000000000056 0.49999999999999967 -0.50000000000000233 -0.4999999999999975">
+
+            <inertial pos="-0.00032751292905536185 0.034831648639214979 -0.12269226165300759" mass="5.6604000000000001" fullinertia="0.02559313720635091 0.019909630439574402 0.030822396571942374 0.00016420136021866593 2.1463341527403439e-05 0.00072101676698123687"/>
+            <joint damping="3.44" frictionloss="1.5" armature="0.0827" name="torso_yaw" type="hinge" axis="-1.6772106946427544e-30 3.9611264300712235e-15 1" range="-0.87266462599716477 0.87266462599716477"/>
+            <geom name="chest_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_ibbbbeba_chest"/>
+
+            <!-- ===== NECK ===== -->
+            <body name="neck_1" pos="-2.0352104724025257e-16 0.00318966680861121 -0.17430000000000001" quat="0.499999999999998 -0.49999999999999978 0.50000000000000022 -0.50000000000000211">
+
+              <inertial pos="0.0065023539793250349 0.039518679792927808 0.0026014659916752535" mass="0.25534343767750867" fullinertia="0.00019798417360695282 0.00012383997644700237 0.00012095454069594683 -1.4555380320348726e-05 -7.2311109169902623e-07 -5.1096010118861105e-06"/>
+              <geom name="neck_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_ibbbbeba_neck_1"/>
+
+              <body name="neck_2" pos="0.0084999999999999624 0.048999999999999988 -2.2857632775440816e-17">
+
+                <inertial pos="-0.010977928205999249 0.009386283323872039 -0.00093823465697298407" mass="0.28642676508636794" fullinertia="0.00011953188556536284 0.00030128272561672143 0.00023568465937350773 1.7771098117175229e-06 5.3954109160013564e-06 -9.460474688082119e-07"/>
+                <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="neck_pitch" type="hinge" axis="-4.0083232784869946e-15 -7.7019286803331393e-16 1" range="-0.69813170079773179 0.38397243543875248"/>
+                <geom name="neck_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_ibbbbeba_neck_2"/>
+
+                <body name="neck_3" pos="-7.9103390504542404e-16 0.010999999999995735 -9.4013405707746422e-16" quat="0.49999999999998301 0.49999999999998079 0.5000000000000171 0.50000000000001921">
+
+                  <inertial pos="0.035983837396983236 1.7734356458080158e-07 -0.01213205049500291" mass="0.25184532314534547" fullinertia="0.00011780903025976943 0.00023311140808557584 0.00015955059310931427 5.049921042673817e-09 -8.0324219354940108e-05 -1.3431429243561901e-08"/>
+                  <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="neck_roll" type="hinge" axis="-7.1939915686037799e-14 -4.2973321950814203e-15 1" range="-0.3490658503988659 0.3490658503988659"/>
+                  <geom name="neck_3_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_ibbbbeba_neck_3"/>
+
+                  <!-- ===== HEAD ===== -->
+                  <body name="head" pos="1.9428902930940239e-16 1.8633770479962874e-18 3.4694469519536142e-17" quat="0.50000000000000167 -0.49999999999999872 0.50000000000000133 -0.49999999999999872">
+
+                    <inertial pos="-0.001479098013392373 0.0018091064734635602 0.099467562702259413" mass="1.4770000000000001" fullinertia="0.006794371608590451 0.0052091777228603624 0.0065104605610129991 -0.00024492445488399797 1.0256064780848998e-05 -0.00053900750473134958"/>
+                    <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="neck_yaw" type="hinge" axis="2.2134828515262416e-15 -2.4049417291211234e-15 1" range="-0.87266462599716477 0.87266462599716477"/>
+                    <geom name="head_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_ibbbbeba_head"/>
+
+                    <!-- ===== EYES ===== -->
+                    <!-- Eye kinematics: 3 controls matching the real robot:
+                         eyes_tilt    — shared joint: both eyes up/down
+                         eyes_version — tendon: both pan joints same direction (left/right)
+                         eyes_vergence— tendon: pan joints opposite (converge/diverge) -->
+                    <body name="eyes_tilt_frame" pos="-1.0796948793380746e-15 -0.050999999999999893 0.080500000000004179" quat="0.50000000000000056 -0.50000000000000122 -0.49999999999999795 0.50000000000000022">
+
+                      <inertial pos="0.025497789207087659 -0.0033958563479350862 2.0365854709798623e-05" mass="0.12520983293325325" fullinertia="0.00011591103263164086 0.00014642778212463163 5.3791912643300031e-05 7.2506161246476881e-06 4.434067599909774e-08 -9.6249926899058797e-09"/>
+                      <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="eyes_tilt" type="hinge" axis="-1.2199853548663342e-15 1.109200193312732e-15 1" range="-0.52359877559829882 0.52359877559829882"/>
+                      <geom name="eyes_tilt_frame_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_ibbbbeba_eyes_1"/>
+                      <!-- add pupils and the camera to the eyes -->
+
+                      <body name="l_eye" pos="-1.0408340855860843e-17 -2.2204460492503131e-16 -0.033999999999999891" quat="0.70710678118654713 -0.70710678118654791 1.5619900837703961e-16 -1.4311357999249969e-15">
+
+                        <inertial pos="-0.002473105295527564 -4.2985501242757962e-05 -8.9615389811684154e-05" mass="0.032765574195516171" fullinertia="5.4735871960248944e-06 4.990156851857279e-06 5.506147082154016e-06 2.1292975557038578e-08 7.3432924917824534e-09 1.2664730333292342e-10"/>
+                        <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_eye_pan_joint" type="hinge" axis="-9.1256278437740225e-16 9.8430010304146034e-16 1" range="-0.78539816339744828 0.78539816339744828"/>
+                        <geom name="l_eye_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_ibbbbeba_l_eye_2"/>
+                        <site name="l_eye_pupil" pos="-0.0165514 0.0000584 0.0002186" quat="0.7071068 0 0.7071068 0" type="cylinder" rgba="0 0 0 1" size="0.0075 0.003"/>
+                        <body name="l_eye_camera" pos="-0.0165514 0.0000584 0.0002186" quat="0.5 -0.5 0.5 -0.5">
+                          <camera name="l_eye_camera" fovy="42.4608673089277"/>
+                        </body>
+
+                        <body name="l_eye_pan" pos="0 0 0"/>
+
+                      </body><!-- end l_eye -->
+
+                      <body name="r_eye" pos="6.2450045135165055e-17 1.6653345369377348e-16 0.033999999999999996" quat="0.70710678118654702 -0.70710678118654813 8.1274602995367376e-13 8.1223170441325468e-13">
+
+                        <inertial pos="-0.0024576331360505535 -3.3937309364115431e-05 9.8683739251509417e-06" mass="0.03297185160196596" fullinertia="5.5404896215231717e-06 5.0415485432989589e-06 5.5243768925880302e-06 -2.0279044519064358e-08 -7.045457936385396e-10 2.8893296504989874e-08"/>
+                        <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_eye_pan_joint" type="hinge" axis="6.0490147481746967e-16 5.053215498074298e-16 1" range="-0.78539816339744828 0.78539816339744828"/>
+                        <geom name="r_eye_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_ibbbbeba_r_eye_2"/>
+                        <site name="r_eye_pupil" pos="-0.0165455 0.0000219 -0.0002387" quat="0.7071068 0 0.7071068 0" type="cylinder" rgba="0 0 0 1" size="0.0075 0.003"/>
+                        <body name="r_eye_camera" pos="-0.0165455 0.0000219 -0.0002387" quat="0.5 -0.5 0.5 -0.5">
+                          <camera name="r_eye_camera" fovy="42.4608673089277"/>
+                        </body>
+
+                        <body name="r_eye_pan" pos="0 0 0"/>
+
+                      </body><!-- end r_eye -->
+
+                    </body><!-- end eyes_tilt_frame -->
+                    <!-- ===== END EYES ===== -->
+
+                    <site name="head_imu_0" pos="0.0054999999999990794 -0.0034499999999997701 0.16898200000000405" quat="3.749399456654644e-33 6.123233995736766e-17 1 6.123233995736766e-17"/>
+                    <site name="imu_frame" pos="0.0054999999999990794 -0.0034499999999997701 0.16898200000000405" quat="3.749399456654644e-33 6.123233995736766e-17 1 6.123233995736766e-17"/>
+
+                  </body><!-- end head -->
+                  <!-- ===== END HEAD ===== -->
+
+                </body><!-- end neck_3 -->
+
+              </body><!-- end neck_2 -->
+
+            </body><!-- end neck_1 -->
+            <!-- ===== END NECK ===== -->
+
+            <!-- ===== LEFT ARM ===== -->
+            <body name="l_shoulder_1" pos="-0.21926516256761877 -0.034562970454674984 -0.14329999999999937" quat="0.68301270189222141 0.68301270189221863 0.18301270189221749 0.18301270189221627">
+
+              <inertial pos="0.11127231408795926 -3.3357829892030096e-05 0.023323154747420916" mass="0.11488218980496621" fullinertia="2.2467636197317768e-05 2.2971219736107667e-05 1.0013904687210685e-05 -1.7706350487858432e-08 3.5595088939911128e-06 6.5759691382341665e-08"/>
+              <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_shoulder_pitch" type="hinge" axis="-0.96592582628906831 -6.5476681247410877e-16 -0.25881904510252096" range="-1.6667894356545847 0.17453292519943295"/>
+              <geom name="l_shoulder_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_l_shoulder_1"/>
+
+              <body name="l_shoulder_2" pos="0.10963258125912732 -3.1918911957973251e-16 0.02937596171125037" quat="0.70710678118654802 -0.18301270189221874 6.5225602696727947e-16 0.68301270189221885">
+
+                <inertial pos="0.0184282320310169 0.00026839865268097864 -0.0080432924870827427" mass="0.23816200000000001" fullinertia="0.00015962087866204782 0.00022257378875790643 0.00012005552267111342 1.1970063142883855e-07 -1.2968671744828194e-05 1.2011243148053497e-06"/>
+                <joint damping="1.14" frictionloss="0.25" armature="0.0827" name="l_shoulder_roll" type="hinge" axis="-0.25881904510252118 1.332267629550188e-15 0.9659258262890682" range="0 2.8064894372068823"/>
+                <geom name="l_shoulder_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="-0.10963258128380474 -1.2650817893380464e-14 -0.029375961619134947" mesh="sim_sea_2-5_l_shoulder_2"/>
+
+                <body name="l_shoulder_3" pos="0.077080880937871299 -1.2652205672036843e-14 0.020653759799182027" quat="0.10355339059327243 0.60355339059327473 0.079459311298946317 0.78656609248549259">
+
+                  <inertial pos="0.0072590380549977544 1.5888640742565441e-05 -0.027057227110649059" mass="0.35913012600767952" fullinertia="0.000175878173225547 0.00019780687060676823 0.00011827754817882328 -1.6144587880143445e-07 -4.0627463200848882e-05 1.8702839228120678e-07"/>
+                  <joint damping="1.14" frictionloss="0.25" armature="0.0827" name="l_shoulder_yaw" type="hinge" axis="-4.4408920985006242e-16 1.6930901125533629e-15 1" range="-0.64577182323790194 1.3962634015954636"/>
+                  <geom name="l_shoulder_3_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0.014999999999999934 -4.0758438291099496e-16 6.9388939039072284e-18" mesh="sim_sea_2-5_l_upper_arm"/>
+
+                  <body name="l_upper_arm" pos="6.6526645303710552e-15 -1.3235183782267491e-15 -0.19330000000000097" quat="1.3667418804885736e-15 -0.60876142900870911 -1.1887167456084294e-15 -0.79335334029124405">
+
+                    <inertial pos="0.21278310836101627 0.00018874910238075011 0.066207290371164212" mass="0.74679893710119871" fullinertia="0.00050973119939136868 0.00067086035411558637 0.00060120199594273366 -6.9076721050377758e-07 1.200484498747878e-05 3.1183289133424881e-06"/>
+                    <geom name="l_upper_arm_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_l_elbow"/>
+
+                    <body name="l_elbow_1" pos="0.25939045753681134 7.4035655938090743e-18 0.085032606327476432">
+
+                      <inertial pos="0.0067391715040404643 -0.0036978150789871793 -0.0046576962445246534" mass="0.26790294861834985" fullinertia="8.1335227791582343e-05 5.8682321474472928e-05 9.684688617705993e-05 -7.3715943928064531e-06 1.0450493860053936e-05 3.9318971845073773e-06"/>
+                      <joint damping="1.14" frictionloss="0.25" armature="0.0827" name="l_elbow" type="hinge" axis="6.6118253891004446e-17 -1 1.3093913576570101e-16" range="0.26179938779914941 1.8500490071139892"/>
+                      <geom name="l_elbow_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="-0.25939045753681134 -2.7755575615628914e-17 -0.085032606327476418" mesh="sim_sea_2-5_l_elbow_prosup"/>
+
+                      <body name="l_forearm" pos="-0.25842453171052249 -5.5511151231257827e-17 -0.084773787282373836">
+
+                        <inertial pos="0.337338142176485 -0.00068612704970959183 0.084874297985601019" mass="0.63618467885390551" fullinertia="0.00037144715731077162 0.00067422941924361046 0.00055711527234163227 4.3456236682998923e-06 -0.00010587144697598791 4.0522217826026601e-06"/>
+                        <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_wrist_prosup" type="hinge" axis="0.96592582628906842 9.9644709521884082e-17 0.25881904510252046" range="-1.0471975511965976 1.0471975511965976"/>
+                        <geom name="l_forearm_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_l_forearm"/>
+
+                        <body name="l_wrist_1" pos="0.39975806246799395 7.0372063685272758e-06 0.1071148500061294">
+
+                          <inertial pos="-0.00042461447924385665 -0.0011777454985608087 0.0020067798827987787" mass="0.03621521570719094" fullinertia="5.5677433552924101e-06 5.2883758157951447e-06 1.875791083539094e-06 3.0836186596077796e-08 9.4215288410780414e-07 -1.5892448331185324e-07"/>
+                          <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_wrist_pitch" type="hinge" axis="0.25881904510252102 -2.1305893218932183e-15 -0.9659258262890682" range="-1.3962634015954636 0.43633231299858238"/>
+                          <geom name="l_wrist_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="-0.39975806246799395 -7.0372063685280814e-06 -0.1071148500061294" mesh="sim_sea_2-5_l_wrist_pitch"/>
+
+                          <!-- ===== LEFT HAND ===== -->
+                          <body name="l_hand" pos="-7.7645713530194449e-05 -7.0372063681391865e-06 0.00028977774788388477">
+
+                            <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_wrist_yaw" type="hinge" axis="-1.7907602501370155e-16 1 -2.2697404488546911e-15" range="-0.3490658503988659 0.43633231299858238"/>
+                            <geom name="l_hand_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="-0.0027160673998021302 -0.0015567999999999999 -0.00248235390708518" quat="0.70105738778503957 0.70105738778847004 -0.092295931814842719 0.092295931815294385" mesh="col_LeftHandPalm."/>
+                            <body name="l_hand_dh_frame" pos="0.05765456340604469 -0.025049827428688422 0.013693853172480175" quat="0.70105738464997869 -0.70105738464997724 -0.092295955641257296 -0.092295955641256658"/>
+
+                            <!-- Left Thumb -->
+                            <body name="l_hand_thumb_0" pos="0.031849212758223999 -0.0040568000000587596 0.019202696417893801" quat="-0.016224896872312329 0.78754465875640844 0.038260585120456755 0.61485469081074384">
+
+                              <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_thumb_0_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                              <geom name="l_hand_thumb_0_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 1 0 0" mesh="col_LeftThumb0"/>
+
+                              <body name="l_hand_thumb_1" pos="0.021100000000000001 0.0048999999999999998 -3.00038465791102e-19" quat="0.70710678118654635 0.70710678118654879 0 0">
+
+                                <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_thumb_1_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                <geom name="l_hand_thumb_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="2.6099842719785679e-30 1.6155445744325867e-15 1 1.6155445744325867e-15" mesh="col_LeftThumb1"/>
+
+                                <body name="l_hand_thumb_2" pos="0.025999999999999999 0 0">
+
+                                  <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_thumb_2_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                  <geom name="l_hand_thumb_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 0 0 1" mesh="col_LeftThumb2"/>
+
+                                  <body name="l_hand_thumb_3" pos="0.021999999999999999 0 0">
+
+                                    <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_thumb_3_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                    <geom name="l_hand_thumb_3_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 0 1 0" mesh="col_LeftThumb3"/>
+
+                                    <body name="l_hand_thumb_tip" pos="0.016799999999999999 0 0" quat="0.70710678118654757 -0.70710678118654757 0 0"/>
+
+                                  </body>
+
+                                </body>
+
+                              </body>
+
+                            </body><!-- end l_hand_thumb_0 -->
+
+                            <!-- Left Index -->
+                            <body name="l_hand_index_0" pos="0.052558434428492798 0.0051431999998716102 0.039473341148956197" quat="0.66593931301176035 0.7273475833068167 -0.11427372944564576 0.1201325900900381">
+
+                              <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_index_0_joint" type="hinge" axis="0 0 -1" range="-0.3490658503988659 0"/>
+                              <geom name="l_hand_index_0_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="col_LeftIndex0"/>
+
+                              <body name="l_hand_index_1" pos="0.014800000000000001 -0.00175 1.07156594925393e-19" quat="0.70710678118654635 0.70710678118654879 0 0">
+
+                                <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_index_1_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                <geom name="l_hand_index_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 0 0 1" mesh="col_LeftIndex1"/>
+
+                                <body name="l_hand_index_2" pos="0.025899999999999999 0 0">
+
+                                  <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_index_2_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                  <geom name="l_hand_index_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 0 0 1" mesh="col_LeftIndex2"/>
+
+                                  <body name="l_hand_index_3" pos="0.021999999999999999 0 0">
+
+                                    <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_index_3_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                    <geom name="l_hand_index_3_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="2.6099842719785679e-30 1.6155445744325867e-15 1 1.6155445744325867e-15" mesh="col_LeftIndex3"/>
+
+                                    <body name="l_hand_index_tip" pos="0.016799999999999999 0 0" quat="0.70710678118654757 -0.70710678118654757 0 0"/>
+
+                                  </body>
+
+                                </body>
+
+                              </body>
+
+                            </body><!-- end l_hand_index_0 -->
+
+                            <!-- Left Middle -->
+                            <body name="l_hand_middle_0" pos="0.057540451023297197 0.0060431999999521601 0.023777975251693801" quat="0.70105738778503957 0.70105738778847004 -0.092295931814842719 0.092295931815294385">
+
+                              <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_middle_0_joint" type="hinge" axis="0 0 1" range="0 0.3490658503988659"/>
+                              <geom name="l_hand_middle_0_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.1423625238904153e-15 0.70710678118654635 0.70710678118654879 1.1423625238904192e-15" mesh="col_LeftMiddle0"/>
+
+                              <body name="l_hand_middle_1" pos="0.015299999999999999 -0.0022000000000000001 1.34711147906209e-19" quat="0.70710678118654635 0.70710678118654879 0 0">
+
+                                <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_middle_1_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                <geom name="l_hand_middle_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 0 0 1" mesh="col_LeftMiddle1"/>
+
+                                <body name="l_hand_middle_2" pos="0.0258 0 0">
+
+                                  <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_middle_2_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                  <geom name="l_hand_middle_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 0 0 1" mesh="col_LeftMiddle2"/>
+                                  <body name="l_hand_middle_3" pos="0.024 0 0">
+
+                                    <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_middle_3_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                    <geom name="l_hand_middle_3_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 0 0 1" mesh="col_LeftMiddle3"/>
+
+                                    <body name="l_hand_middle_tip" pos="0.016799999999999999 0 0" quat="0.70710678118654757 -0.70710678118654757 0 0"/>
+
+                                  </body>
+
+                                </body>
+
+                              </body>
+
+                            </body><!-- end l_hand_middle_0 -->
+
+                            <!-- Left Ring -->
+                            <body name="l_hand_ring_0" pos="0.060691084202185497 0.0054432000000276598 0.0086582262269189903" quat="0.69865691938879615 0.7099514301995612 -0.085133700467999618 0.024489360799736952">
+
+                              <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_ring_0_joint" type="hinge" axis="0 0 -1" range="0 0.3490658503988659"/>
+                              <geom name="l_hand_ring_0_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="col_LeftRing0"/>
+
+                              <body name="l_hand_ring_1" pos="0.014800000000000001 -0.00175 1.07156594925393e-19" quat="0.70710678118654635 0.70710678118654879 0 0">
+
+                                <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_ring_1_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                <geom name="l_hand_ring_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.1423625238904153e-15 1.1423625238904192e-15 0.70710678118654879 0.70710678118654635" mesh="col_LeftRing1"/>
+
+                                <body name="l_hand_ring_2" pos="0.025899999999999999 0 0">
+
+                                  <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_ring_2_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                  <geom name="l_hand_ring_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 0 0 1" mesh="col_LeftRing2"/>
+
+                                  <body name="l_hand_ring_3" pos="0.021999999999999999 0 0">
+
+                                    <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_ring_3_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                    <geom name="l_hand_ring_3_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="2.6099842719785679e-30 1.6155445744325867e-15 1 1.6155445744325867e-15" mesh="col_LeftRing3"/>
+
+                                    <body name="l_hand_ring_tip" pos="0.016799999999999999 0 0" quat="0.70710678118654757 -0.70710678118654757 0 0"/>
+
+                                  </body>
+
+                                </body>
+
+                              </body>
+
+                            </body><!-- end l_hand_ring_0 -->
+
+                            <!-- Left Little (Pinky) -->
+                            <body name="l_hand_little_0" pos="0.063629004519289795 0.0044432000001201604 -0.010110927302490099" quat="0.69865691938879615 0.7099514301995612 -0.085133700467999618 0.024489360799736952">
+
+                              <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_little_0_joint" type="hinge" axis="0 0 -1" range="0 0.3490658503988659"/>
+                              <geom name="l_hand_little_0_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="0.50000000000000255 -0.4999999999999975 -0.50000000000000089 -0.49999999999999928" mesh="col_LeftLittle0"/>
+
+                              <body name="l_hand_little_1" pos="0.014800000000000001 0.00175 -1.07156594925393e-19" quat="0.70710678118654635 0.70710678118654879 0 0">
+
+                                <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_little_1_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                <geom name="l_hand_little_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.1423625238904153e-15 -0.70710678118654879 0.70710678118654635 1.1423625238904192e-15" mesh="col_LeftLittle1"/>
+
+                                <body name="l_hand_little_2" pos="0.021899999999999999 0 0">
+
+                                  <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_little_2_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                  <geom name="l_hand_little_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 0 0 1" mesh="col_LeftLittle2"/>
+
+                                  <body name="l_hand_little_3" pos="0.019 0 0">
+
+                                    <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="l_hand_little_3_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                    <geom name="l_hand_little_3_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="2.6099842719785679e-30 1.6155445744325867e-15 1 1.6155445744325867e-15" mesh="col_LeftLittle3"/>
+
+                                    <body name="l_hand_little_tip" pos="0.016799999999999999 0 0" quat="0.70710678118654757 -0.70710678118654757 0 0"/>
+
+                                  </body>
+
+                                </body>
+
+                              </body>
+
+                            </body><!-- end l_hand_little_0 -->
+
+                          </body><!-- end l_hand -->
+                          <!-- ===== END LEFT HAND ===== -->
+
+                        </body><!-- end l_wrist_1 -->
+
+                        <body name="l_forearm_dh_frame" pos="0.39975806246799456 7.0372063685243011e-06 0.10711485000612656" quat="0.092295955641257893 0.70105738464997791 0.7010573846499778 0.092295955641256491"/>
+
+                      </body><!-- end l_forearm -->
+
+                    </body><!-- end l_elbow_1 -->
+
+                  </body><!-- end l_upper_arm -->
+
+                  <site name="l_arm_ft_imu" pos="0.014999999999999934 -4.0758438291099496e-16 6.9388939039072284e-18"/>
+                  <site name="l_arm_ft" pos="0.014999999999999934 -4.0758438291099496e-16 6.9388939039072284e-18"/>
+
+                </body><!-- end l_shoulder_3 -->
+
+              </body><!-- end l_shoulder_2 -->
+
+            </body><!-- end l_shoulder_1 -->
+            <!-- ===== END LEFT ARM ===== -->
+
+            <!-- ===== RIGHT ARM ===== -->
+            <body name="r_shoulder_1" pos="0.21926516256761822 -0.034562970454677822 -0.14330000000000001" quat="0.68301270189222008 0.6830127018922173 -0.18301270189222216 -0.18301270189222141">
+
+              <inertial pos="-0.11127353650774183 3.1870556723391445e-05 0.023318604341796077" mass="0.11486201283439874" fullinertia="2.2454071569384383e-05 2.2958228380565333e-05 1.0011560428370035e-05 -1.6517278775186836e-08 -3.5562590527465844e-06 -6.1333682192839779e-08"/>
+              <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_shoulder_pitch" type="hinge" axis="-0.96592582628906831 6.6464055600709058e-17 0.25881904510252113" range="-1.6667894356545847 0.17453292519943295"/>
+              <geom name="r_shoulder_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_r_shoulder_1"/>
+
+              <body name="r_shoulder_2" pos="-0.1096325812591268 2.7755575615628914e-16 0.029375961711252167" quat="0.70710678118654791 -0.18301270189221899 -2.7755575615628914e-17 -0.68301270189221885">
+
+                <inertial pos="-0.018369759237411229 0.00027152364580612339 -0.0080769236995342393" mass="0.23816207621727728" fullinertia="0.00015862610683540726 0.00020652584409512013 0.0001049558381015555 -1.1209148717714814e-07 1.025736584300981e-05 1.1978518893562941e-06"/>
+                <joint damping="1.14" frictionloss="0.25" armature="0.0827" name="r_shoulder_roll" type="hinge" axis="-0.25881904510252046 3.6082248300317578e-16 -0.96592582628906842" range="0 2.8064894372068823" />
+                <geom name="r_shoulder_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0.1096325812838068 5.733434560480061e-15 -0.029375961619135402" mesh="sim_sea_2-5_r_shoulder_2"/>
+
+                <body name="r_shoulder_3" pos="-0.0770808809378703 5.7874711967276227e-15 0.020653759799181805" quat="0.78656609248549281 -0.079459311298946372 -0.60355339059327429 0.10355339059327257">
+
+                  <inertial pos="0.0072725016068778551 -6.6558223219550735e-06 -0.027057227110656813" mass="0.35913012600763977" fullinertia="0.00017590804925406216 0.0001977456254175914 0.0001182461790177776 3.5012656350946284e-07 -4.0448063318274211e-05 -2.7925725088352678e-07"/>
+                  <joint damping="1.14" frictionloss="0.25" armature="0.0827" name="r_shoulder_yaw" type="hinge" axis="-1.9428902930940242e-16 2.2898349882893858e-15 -1" range="-0.64577182323790194 1.3962634015954636"/>
+                  <geom name="r_shoulder_3_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0.015000000000000369 7.1483374775027691e-16 -6.9388939039072284e-18" mesh="sim_sea_2-5_r_upper_arm"/>
+
+                  <body name="r_upper_arm" pos="-4.4617087802123478e-15 4.6503356720961669e-16 -0.19330000000000014" quat="0.79335334029122817 1.2087124204426559e-16 0.60876142900872976 -1.3634134773488611e-16">
+
+                    <inertial pos="-0.21271987352914651 0.00012620027418069985 0.066225554531494771" mass="0.74510370870960629" fullinertia="0.00050952731094605066 0.00066848702305050134 0.00059925417100115119 1.1929191495541721e-06 -1.1742609735665085e-05 1.133628807880581e-06"/>
+                    <geom name="r_upper_arm_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_r_elbow"/>
+
+                    <body name="r_elbow_1" pos="-0.259390457536811 7.7438055967605594e-17 0.085032606327479082">
+
+                      <inertial pos="-0.0067391717234346338 -0.0036978155396708962 -0.0046576970419776459" mass="0.26790294784312713" fullinertia="8.1334392874367117e-05 5.8694736260234824e-05 9.6835299153889124e-05 7.3697403805863919e-06 -1.0453597108567128e-05 3.9249757214834924e-06"/>
+                      <joint damping="1.14" frictionloss="0.25" armature="0.0827" name="r_elbow" type="hinge" axis="7.9020387348183797e-17 1 -9.4081839655688155e-16" range="0.26179938779914941 1.8500490071139892"/>
+                      <geom name="r_elbow_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0.259390457536811 -1.0061396160665481e-16 -0.085032606327479027" mesh="sim_sea_2-5_r_elbow_prosup"/>
+
+                      <body name="r_forearm" pos="0.25842453171052215 -1.2836953722228372e-16 -0.084773787282376181">
+
+                        <inertial pos="-0.33732610063031404 -0.00032785260320171888 0.084877975255134838" mass="0.63470049703886533" fullinertia="0.00037004395631677362 0.00067227892503421427 0.00055363697010761548 -1.6541853418417088e-06 0.00010537999822305896 1.1455994649114264e-06"/>
+                        <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_wrist_prosup" type="hinge" axis="0.9659258262890682 -2.5064847754428603e-16 -0.25881904510252118" range="-1.0471975511965976 1.0471975511965976"/>
+                        <geom name="r_forearm_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_r_forearm"/>
+
+                        <body name="r_wrist_1" pos="-0.39975806246799378 7.0372063685660522e-06 0.10711485000612944">
+
+                          <inertial pos="0.0003518903149810626 -0.0011762435965868752 0.0017348282083149839" mass="0.036261456008169296" fullinertia="5.5772176480363574e-06 5.2984495731234552e-06 1.8772411732688105e-06 -3.1046177265103001e-08 -9.4455386158388485e-07 -1.5968475051413321e-07"/>
+                          <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_wrist_pitch" type="hinge" axis="0.25881904510252107 -1.8871654943821214e-15 0.9659258262890682" range="-1.3962634015954636 0.43633231299858238"/>
+                          <geom name="r_wrist_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0.39975806246799411 -7.037206368560876e-06 -0.10711485000612947" mesh="sim_sea_2-5_r_wrist_pitch"/>
+
+                          <!-- ===== RIGHT HAND ===== -->
+                          <body name="r_hand" pos="2.2204460492503131e-16 -7.0372063686575554e-06 -2.0816681711721685e-16">
+
+                            <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_wrist_yaw" type="hinge" axis="-8.3300089234714488e-17 -1 -1.4933855335700813e-15" range="-0.3490658503988659 0.43633231299858238"/>
+                            <geom name="r_hand_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0.0027160673997911702 -0.0015567999999875101 -0.00248235390712302" quat="0.70105738778503002 -0.70105738778847959 0.092295931814770193 0.092295931815366911" mesh="col_RightHandPalm"/>
+                            <body name="r_hand_dh_frame" pos="-0.057654563406045412 -0.025049827428687797 0.013693853172479398" quat="0.092295955641257976 0.092295955641256533 -0.70105738464997847 0.70105738464997736"/>
+
+                            <!-- Right Thumb -->
+                            <body name="r_hand_thumb_0" pos="-0.0318492127582281 -0.0040567999999359099 0.019202696417879601" quat="0.038260585122283544 0.61485469081058541 -0.016224896867743088 0.78754465875653756">
+
+                              <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_thumb_0_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                              <geom name="r_hand_thumb_0_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="-7.3123010772031166e-14 -0.70710678118481629 0.70710678118827874 -7.3123010771673112e-14" mesh="col_RightThumb0"/>
+                              <body name="r_hand_thumb_1" pos="0.021100000000000001 0.0048999999999999998 -3.00038465791102e-19" quat="0.70710678118654635 -0.70710678118654879 0 0">
+
+                                <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_thumb_1_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                <geom name="r_hand_thumb_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 1 0 0" mesh="col_RightThumb1"/>
+
+                                <body name="r_hand_thumb_2" pos="0.025999999999999999 0 0">
+
+                                  <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_thumb_2_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                  <geom name="r_hand_thumb_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 1 0 0" mesh="col_RightThumb2"/>
+
+                                  <body name="r_hand_thumb_3" pos="0.021999999999999999 0 0">
+
+                                    <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_thumb_3_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                    <geom name="r_hand_thumb_3_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 0 0 1" mesh="col_RightThumb3"/>
+
+                                    <body name="r_hand_thumb_tip" pos="0.016799999999999999 0 0" quat="0.70710678118654757 -0.70710678118654757 0 0"/>
+
+                                  </body>
+
+                                </body>
+
+                              </body>
+
+                            </body><!-- end r_hand_thumb_0 -->
+
+                            <!-- Right Index -->
+                            <body name="r_hand_index_0" pos="-0.052558434428522198 0.0051432000001294404 0.039473341148855" quat="0.12013259008966636 0.11427372944607216 -0.72734758330351068 0.66593931301536535">
+
+                              <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_index_0_joint" type="hinge" axis="0 0 1" range="-0.3490658503988659 0"/>
+                              <geom name="r_hand_index_0_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="2.6099842719785679e-30 1.6155445744325867e-15 1 1.6155445744325867e-15" mesh="col_RightIndex0"/>
+
+                              <body name="r_hand_index_1" pos="0.014800000000000001 0.00175 -1.07156594925393e-19" quat="0.70710678118654635 0.70710678118654879 0 0">
+
+                                <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_index_1_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                <geom name="r_hand_index_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 1 0 0" mesh="col_RightIndex1"/>
+
+                                <body name="r_hand_index_2" pos="0.025899999999999999 0 0">
+
+                                  <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_index_2_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                  <geom name="r_hand_index_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 1 0 0" mesh="col_RightIndex2"/>
+
+                                  <body name="r_hand_index_3" pos="0.021999999999999999 0 0">
+
+                                    <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_index_3_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                    <geom name="r_hand_index_3_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="2.6099842719785679e-30 1.6155445744325867e-15 1 1.6155445744325867e-15" mesh="col_RightIndex3"/>
+
+                                    <body name="r_hand_index_tip" pos="0.016799999999999999 0 0" quat="0.70710678118654757 -0.70710678118654757 0 0"/>
+
+                                  </body>
+
+                                </body>
+
+                              </body>
+
+                            </body><!-- end r_hand_index_0 -->
+
+                            <!-- Right Middle -->
+                            <body name="r_hand_middle_0" pos="-0.057540451023328998 0.0060432000000478596 0.023777975251584101" quat="0.092295931814771442 0.092295931815367854 -0.7010573877850298 0.70105738778847948">
+
+                              <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_middle_0_joint" type="hinge" axis="0 0 1" range="0 0"/>
+                              <geom name="r_hand_middle_0_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0.0035000000000000001" mesh="col_RightMiddle0"/>
+
+                              <body name="r_hand_middle_1" pos="0.015299999999999999 0.0022000000000000001 -1.34711147906209e-19" quat="0.70710678118654635 0.70710678118654879 0 0">
+
+                                <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_middle_1_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                <geom name="r_hand_middle_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 1 0 0" mesh="col_RightMiddle1"/>
+
+                                <body name="r_hand_middle_2" pos="0.0258 0 0">
+
+                                  <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_middle_2_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                  <geom name="r_hand_middle_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 0 0 1" mesh="col_RightMiddle2"/>
+
+                                  <body name="r_hand_middle_3" pos="0.024 0 0">
+
+                                    <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_middle_3_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                    <geom name="r_hand_middle_3_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 0 0 1" mesh="col_RightMiddle3"/>
+
+                                    <body name="r_hand_middle_tip" pos="0.016799999999999999 0 0" quat="0.70710678118654757 -0.70710678118654757 0 0"/>
+
+                                  </body>
+
+                                </body>
+
+                              </body>
+
+                            </body><!-- end r_hand_middle_0 -->
+
+                            <!-- Right Ring -->
+                            <body name="r_hand_ring_0" pos="-0.060691084202215702 0.0054431999999717097 0.0086582262268149399" quat="0.085133700467926676 0.024489360799805026 -0.69865691938879393 0.70995143019957008">
+
+                              <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_ring_0_joint" type="hinge" axis="0 0 1" range="0 0.3490658503988659"/>
+                              <geom name="r_hand_ring_0_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="2.6099842719785679e-30 1.6155445744325867e-15 1 1.6155445744325867e-15" mesh="col_RightRing0"/>
+
+                              <body name="r_hand_ring_1" pos="0.014800000000000001 0.00175 -1.07156594925393e-19" quat="0.70710678118654635 0.70710678118654879 0 0">
+
+                                <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_ring_1_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                <geom name="r_hand_ring_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="col_RightRing1"/>
+
+                                <body name="r_hand_ring_2" pos="0.025899999999999999 0 0">
+
+                                  <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_ring_2_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                  <geom name="r_hand_ring_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 1 0 0" mesh="col_RightRing2"/>
+
+                                  <body name="r_hand_ring_3" pos="0.021999999999999999 0 0">
+
+                                    <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_ring_3_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                    <geom name="r_hand_ring_3_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="2.6099842719785679e-30 1.6155445744325867e-15 1 1.6155445744325867e-15" mesh="col_RightRing3"/>
+
+                                    <body name="r_hand_ring_tip" pos="0.016799999999999999 0 0" quat="0.70710678118654757 -0.70710678118654757 0 0"/>
+
+                                  </body>
+
+                                </body>
+
+                              </body>
+
+                            </body><!-- end r_hand_ring_0 -->
+
+                            <!-- Right Little (Pinky) -->
+                            <body name="r_hand_little_0" pos="-0.063629004519317203 0.0044431999998786097 -0.010110927302584701" quat="0.085133700467926676 0.024489360799805026 -0.69865691938879393 0.70995143019957008">
+
+                              <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_little_0_joint" type="hinge" axis="0 0 1" range="0 0.3490658503988659"/>
+                              <geom name="r_hand_little_0_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0.0038" mesh="col_RightLittle0"/>
+
+                              <body name="r_hand_little_1" pos="0.014800000000000001 -0.00175 1.07156594925393e-19" quat="0.70710678118654635 0.70710678118654879 0 0">
+
+                                <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_little_1_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                <geom name="r_hand_little_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 1 0 0" mesh="col_RightLittle1"/>
+
+                                <body name="r_hand_little_2" pos="0.021899999999999999 0 0">
+
+                                  <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_little_2_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                  <geom name="r_hand_little_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="1.6155445744325867e-15 1 0 0" mesh="col_RightLittle2"/>
+
+                                  <body name="r_hand_little_3" pos="0.019 0 0">
+
+                                    <joint damping="0.65" frictionloss="0.25" armature="0.0827" name="r_hand_little_3_joint" type="hinge" axis="0 0 1" range="0 1.5707963267948966"/>
+                                    <geom name="r_hand_little_3_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" quat="2.6099842719785679e-30 1.6155445744325867e-15 1 1.6155445744325867e-15" mesh="col_RightLittle3"/>
+
+                                    <body name="r_hand_little_tip" pos="0.016799999999999999 0 0" quat="0.70710678118654757 -0.70710678118654757 0 0"/>
+
+                                  </body>
+
+                                </body>
+
+                              </body>
+
+                            </body><!-- end r_hand_little_0 -->
+
+                          </body><!-- end r_hand -->
+                          <!-- ===== END RIGHT HAND ===== -->
+
+                        </body><!-- end r_wrist_1 -->
+
+                        <body name="r_forearm_dh_frame" pos="-0.39975806246799384 7.037206368566053e-06 0.10711485000612925" quat="0.7010573846499778 -0.092295955641256824 0.092295955641258226 -0.70105738464997791"/>
+
+                      </body><!-- end r_forearm -->
+
+                    </body><!-- end r_elbow_1 -->
+
+                  </body><!-- end r_upper_arm -->
+
+                  <site name="r_arm_ft_imu" pos="0.015000000000000369 7.1483374775027691e-16 -6.9388939039072284e-18"/>
+                  <site name="r_arm_ft" pos="0.015000000000000369 7.1483374775027691e-16 -6.9388939039072284e-18"/>
+
+                </body><!-- end r_shoulder_3 -->
+
+              </body><!-- end r_shoulder_2 -->
+
+            </body><!-- end r_shoulder_1 -->
+            <!-- ===== END RIGHT ARM ===== -->
+
+            <!-- Chest IMU sensor frames -->
+            <site name="chest_ems_gyro_eb1" pos="-0.069201580437189589 0.06352579418231738 -0.11504839530807805" quat="0.092196870609334278 0.092395038829503548 -0.701044332977378 -0.70107042231850258"/>
+            <site name="chest_ems_gyro_eb2" pos="-0.016037056350662649 0.065347871312365816 -0.13805921017073078" quat="0.70105701391827713 -0.70105775537036796 -0.09229313969664675 0.092298771584377659"/>
+            <site name="chest_ems_gyro_eb3" pos="0.018641713614234157 0.077078694946849019 -0.11502127484380319" quat="0.091964803293096892 0.092136984410912656 0.70093432128644084 0.70124484190733372"/>
+            <site name="chest_ems_gyro_eb4" pos="0.066578362315813003 0.051805369378126451 -0.13805921010947644" quat="0.7010577542964489 -0.70105701516879926 0.092298770003831951 -0.092293139935823471"/>
+
+          </body><!-- end chest -->
+
+        </body><!-- end torso_2 -->
+
+      </body><!-- end torso_1 -->
+      <!-- ===== END TORSO / NECK / HEAD ===== -->
+
+      <!-- ===== LEFT LEG ===== -->
+      <body name="l_hip_1" pos="0.006451533137039854 -0.026000000000000096 -0.11991347391416343" quat="2.0596337842826493e-15 -2.0005932844312774e-13 4.1204895172236465e-28 1">
+
+        <inertial pos="-0.00051078706648465672 0.038092326710011316 -8.2186301431891318e-05" mass="0.91972458923569078" fullinertia="0.00057898247541269881 0.00040453865942625863 0.00057331540350842353 -9.6451445616575394e-07 -1.0602774533070296e-06 1.1850150722728091e-06"/>
+        <joint damping="1.5" frictionloss="0.5" armature="0.186" name="l_hip_pitch" type="hinge" axis="8.0089681817760083e-15 -1 -8.0089681817759641e-15" range="-0.78539816339744828 2.3387411976724017"/>
+        <geom name="l_hip_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_l_hip_1"/>
+
+        <body name="l_hip_2" pos="-1.9073494866850282e-10 0.044100000000000236 5.5511151231257827e-16">
+
+          <inertial pos="-0.0011062770838719121 1.7303838524274084e-05 -0.044573037388836202" mass="0.41598700771524383" fullinertia="0.00030782835992693375 0.00047574114751984097 0.00027982801704398491 -6.7287577896284235e-08 6.741704738712886e-06 2.8935516085320513e-07"/>
+          <joint damping="1.14" frictionloss="0.25" armature="0.0827" name="l_hip_roll" type="hinge" axis="1 -2.9066477930907238e-14 -1.169636963795261e-14" range="-0.3490658503988659 2.0943951023931953"/>
+          <geom name="l_hip_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_l_hip_2"/>
+
+          <body name="l_hip_3" pos="-0.00083013838853712718 7.5175409661759618e-05 -0.074299999999999478" quat="4.0580352286079769e-15 -1 -5.6029676968363112e-15 -8.2350439666343682e-15">
+
+            <inertial pos="-0.00012293551581426393 -0.00028228840838542824 0.0087177202396629405" mass="0.12621177707937786" fullinertia="3.2644874557680481e-05 3.2793820694355766e-05 5.6995692366897849e-05 4.4146339668221497e-09 -3.3233781399974375e-08 2.6790052235190105e-07"/>
+            <geom name="l_hip_3_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_l_upper_thigh"/>
+
+            <body name="l_upper_leg" pos="-2.0816681711721685e-17 -8.3266726846886741e-17 0.014399999713897826" quat="4.7241690433830258e-15 1 5.7443404709815328e-15 -1.6653345369378827e-16">
+
+              <inertial pos="0.0033868767228099131 0.00010177760273596959 -0.078915368352882737" mass="1.8084" fullinertia="0.0079952881292207033 0.008006319584722317 0.0018055577718713413 -4.9061582031144391e-06 -0.00016891084965843132 -0.0001533469718730683"/>
+              <joint damping="1.14" frictionloss="0.25" armature="0.0827" name="l_hip_yaw" type="hinge" axis="7.7494714150234617e-16 -2.040607882094711e-14 1" range="-1.3962634015954636 1.3962634015954636"/>
+              <geom name="l_upper_leg_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_l_thigh"/>
+
+              <body name="l_lower_leg" pos="2.7755575615628914e-17 -1.907324159722279e-10 -0.14582499999999851">
+
+                <inertial pos="0.00099972406815278247 0.0034969286467724518 -0.088566338464659097" mass="1.4723999999999999" fullinertia="0.0058450335758128986 0.0054190152225416129 0.001946877788949547 8.6480289374164224e-05 -0.00029818499521721507 -0.00030646327645888073"/>
+                <joint damping="1.14" frictionloss="0.25" armature="0.0827" name="l_knee" type="hinge" axis="1.7019517803789784e-14 -1 1.0624352005446662e-13" range="-2.1642082724729685 0.069813170079773182"/>
+                <geom name="l_lower_leg_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_l_shank"/>
+
+                <body name="l_ankle_1" pos="-1.8735013540549517e-16 3.1363800445660672e-15 -0.20050000000000029">
+
+                  <inertial pos="0.015153079035375466 0.00090206662320095599 4.2885482945176356e-05" mass="0.67979999999999996" fullinertia="0.00039995470378778272 0.00052590965212467844 0.0005823573582790833 3.9613501659284631e-05 3.3450520238310161e-06 -1.4722037399061899e-06"/>
+                  <joint damping="1.14" frictionloss="0.25" armature="0.0827" name="l_ankle_pitch" type="hinge" axis="-1.7552765002815832e-14 1 -7.9734636904382633e-14" range="-0.87266462599716477 0.3490658503988659"/>
+                  <geom name="l_ankle_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_l_ankle"/>
+
+                  <body name="l_ankle_2" pos="-1.9073683604764469e-10 -2.9712343696530752e-14 1.1102230246251565e-16">
+
+                    <inertial pos="0.0011446221516383595 3.612241451150799e-06 -0.038519685980271223" mass="0.2651217577323905" fullinertia="0.0001509366258955291 0.0003272218481229712 0.00024828462425540148 4.9457073228090988e-08 -4.2997530137965816e-06 -4.7460594084177241e-08"/>
+                    <joint damping="1.14" frictionloss="0.25" armature="0.0827" name="l_ankle_roll" type="hinge" axis="1 -1.9663419506723497e-14 2.2258856109442809e-14" range="-0.43633231299858238 0.43633231299858238"/>
+                    <geom name="l_ankle_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_l_foot"/>
+
+                    <body name="l_foot" pos="-0.0034999999999986778 -8.3266726846886741e-17 -0.060500000000001775" quat="9.1650611418836638e-15 1 -8.2256006817981458e-16 1.5548519907929979e-14">
+
+                      <geom name="l_foot_vis_0" type="mesh" contype="0" conaffinity="0" group="2" pos="0 0 0" mesh="sim_sea_2-5_l_sole"/>
+                      <inertial pos="0.033666831177098594 -0.0053735512656766238 -0.0011649017206464274" mass="0.38296810796363512" fullinertia="0.00027384554417691505 0.0012124202599321028 0.0014171184999755588 -5.7927279185804828e-05 7.6497158653251709e-06 -3.6953258349722163e-07"/>
+                      <geom name="l_foot_col_0" type="box" contype="2" conaffinity="1" group="0" size="0.080000000000000002 0.035999999999999997 0.00050000000000000001" pos="0.029999999999999999 -0.0050000000000000001 0.014"/>
+
+                      <body name="l_sole" pos="0.0034999999999999684 -5.5511151231257827e-17 0.0040000000000000036" quat="8.276882722183526e-15 1 2.0161198332517944e-15 2.7755575615608696e-17"/>
+
+                      <body name="l_foot_dh_frame" pos="0 0 0.0040000000000000001" quat="0.70710548251123628 0 0.70710807985947355 0"/>
+
+                    </body><!-- end l_foot -->
+
+                    <site name="l_foot_ft_gyro_3b13" pos="0.0040001250640892688 -0.00860000000000017 -0.045281999999999267" quat="0.70710678118654613 1.2235829236261837e-15 -1.3805921694945583e-15 0.70710678118654891"/>
+
+                    <site name="l_foot_ft" pos="0 0 0"/>
+
+                  </body><!-- end l_ankle_2 -->
+
+                </body><!-- end l_ankle_1 -->
+
+                <site name="l_lower_leg_ems_gyro_eb7" pos="0.044503325457968562 0.011818500000001231 -0.088300628735899112" quat="5.3781363228772288e-14 0.77988448309288705 -5.4012968121946471e-14 0.62592347218405242"/>
+
+              </body><!-- end l_lower_leg -->
+
+              <site name="l_upper_leg_ems_gyro_eb6" pos="-0.01308099999999985 -0.040407157999998583 -0.087978999999999002" quat="0.49773421216318181 -0.50225556590739184 0.49773418186496599 0.50225559704253697"/>
+              <site name="l_upper_leg_ems_gyro_eb10" pos="-0.013079000000000174 0.040407158000000568 -0.03565500000000052" quat="0.49773417622966887 0.50225560283349779 -0.49773421779847798 0.50225556011643113"/>
+              <body name="l_upper_leg_back_contact" pos="-0.051256688758094894 -1.5265566588595902e-16 0.014600000000000113" quat="0.64580741681112586 -0.28798054524732547 0.64580738352695388 0.2879805711030935"/>
+              <body name="l_upper_leg_dh_frame" pos="-7.6327832942979512e-17 2.3175905639050143e-15 -0.14582499999999962" quat="0.70710678118655323 0.7071067811865418 -1.599892608776879e-15 -1.4249473958047453e-15"/>
+
+            </body><!-- end l_upper_leg -->
+
+          </body><!-- end l_hip_3 -->
+
+          <site name="l_upper_leg_ft_gyro_3b12" pos="0.0066699866755525125 -0.0085248245903380426 -0.059281999999999585" quat="0.70710678118654258 1.3372943049494294e-15 -1.4943035508711105e-15 0.70710678118655246"/>
+          <site name="l_leg_ft" pos="0 0 0"/>
+
+        </body><!-- end l_hip_2 -->
+
+      </body><!-- end l_hip_1 -->
+      <!-- ===== END LEFT LEG ===== -->
+
+      <!-- ===== RIGHT LEG ===== -->
+      <body name="r_hip_1" pos="0.0064515331370399512 0.026000000000001008 -0.11991347391416399" quat="2.0596337842826284e-15 -3.7328512265505588e-13 -5.5511151230509469e-17 1">
+
+        <inertial pos="-0.00051451078895551478 -0.03807529070250517 -7.0293936995202699e-05" mass="0.91997768711080841" fullinertia="0.000580025038922901 0.00040426818322957729 0.00057474058523943245 1.110547754826002e-06 -7.6947364823985434e-07 -1.2685236383551438e-06"/>
+        <joint damping="1.5" frictionloss="0.5" armature="0.186" name="r_hip_pitch" type="hinge" axis="8.1750632790338727e-15 -1 -8.1750632790337923e-15" range="-0.78539816339744828 2.3387411976724017"/>
+        <geom name="r_hip_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_r_hip_1"/>
+
+        <body name="r_hip_2" pos="-1.9073565643568102e-10 -0.044099999999999348 -1.1934897514720433e-15">
+
+          <inertial pos="-0.00093147174103809516 8.1186626832152609e-06 -0.044808156907763103" mass="0.41324199271253426" fullinertia="0.00030389144293460017 0.00046913951014507921 0.0002771083820071718 7.1249641679222354e-08 3.3401022413838791e-06 -4.7659692347151278e-08"/>
+          <joint damping="1.14" frictionloss="0.25" armature="0.0827" name="r_hip_roll" type="hinge" axis="-1 2.6163525606402277e-14 3.3084227166665015e-14" range="-0.3490658503988659 2.0943951023931953"/>
+          <geom name="r_hip_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_r_hip_2"/>
+
+          <body name="r_hip_3" pos="-0.0009362846202413469 1.3891854213077259e-05 -0.074299999999999922" quat="1.8375891793576109e-15 -1 5.8375518343737147e-15 -1.1836546746444191e-15">
+
+            <inertial pos="-0.00012293551581423617 -0.00028228840838542824 0.0087177202396628573" mass="0.12621177707937786" fullinertia="3.2644874557675276e-05 3.2793820694349904e-05 5.6995692366897686e-05 4.41463396659658e-09 -3.3233781400688715e-08 2.6790052235233087e-07"/>
+            <geom name="r_hip_3_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_r_upper_thigh"/>
+
+            <body name="r_upper_leg" pos="-6.654399253847032e-15 -1.4849232954361469e-15 0.0143999997138958" quat="1.3934999695075495e-15 -1 1.6911044701502796e-15 -3.4743896332890902e-15">
+
+              <inertial pos="0.0033999817429844273 -2.9106680502571924e-05 -0.078953837582519282" mass="1.8035000000000001" fullinertia="0.0079883161466707802 0.0080010536810077339 0.001802634149311544 6.7714456829071414e-06 -0.00016874459648962036 0.00016005739117311949"/>
+              <joint damping="1.14" frictionloss="0.25" armature="0.0827" name="r_hip_yaw" type="hinge" axis="2.0806495153093351e-14 -1.5268127249500356e-14 -1" range="-1.3962634015954636 1.3962634015954636"/>
+              <geom name="r_upper_leg_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_r_thigh"/>
+
+              <body name="r_lower_leg" pos="-4.8572257327350599e-17 1.9073422008464291e-10 -0.14582500000000001">
+
+                <inertial pos="0.0012363724375026378 -0.0035131124035756157 -0.088793362217088792" mass="1.472" fullinertia="0.0058498378410099389 0.0054230817058153798 0.0019453692759247086 -7.1069878140717673e-05 -0.00033783873474497241 0.00029266467660332809"/>
+                <joint damping="1.14" frictionloss="0.25" armature="0.0827" name="r_knee" type="hinge" axis="1.4934554061540765e-14 -1 -1.5350925835905035e-14" range="-2.1642082724729685 0.069813170079773182"/>
+                <geom name="r_lower_leg_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_r_shank"/>
+
+                <body name="r_ankle_1" pos="4.7184478546569153e-16 -9.0205620750793969e-16 -0.20049999999999985">
+
+                  <inertial pos="0.015143632873313193 -0.00086855458575726963 4.2858748891871912e-05" mass="0.68030000000000002" fullinertia="0.0004007327721921029 0.00052603865385296867 0.00058326194531199596 -3.9178004773932168e-05 3.3446939565730657e-06 9.7482870488777027e-07"/>
+                  <joint damping="1.14" frictionloss="0.25" armature="0.0827" name="r_ankle_pitch" type="hinge" axis="-1.6922193422825768e-14 1 1.5473390515819732e-14" range="-0.87266462599716477 0.3490658503988659"/>
+                  <geom name="r_ankle_1_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_r_ankle"/>
+
+                  <body name="r_ankle_2" pos="-1.9073465723495886e-10 1.2503886814840826e-14 9.9920072216264089e-16">
+
+                    <inertial pos="0.0011446221516383664 3.612241451150799e-06 -0.038519685980271334" mass="0.2651217577323905" fullinertia="0.00015093662589554113 0.00032722184812298156 0.00024828462425542397 4.945707322786223e-08 -4.2997530137971753e-06 -4.7460594096733141e-08"/>
+                    <joint damping="1.14" frictionloss="0.25" armature="0.0827" name="r_ankle_roll" type="hinge" axis="-1 1.0494425887568333e-14 -3.1421671379366152e-14" range="-0.43633231299858238 0.43633231299858238"/>
+                    <geom name="r_ankle_2_col_0" type="mesh" contype="2" conaffinity="1" group="0" pos="0 0 0" mesh="sim_sea_2-5_r_foot"/>
+
+                    <body name="r_foot" pos="-0.0034999999999998921 -3.1918911957973251e-16 -0.060500000000000442" quat="1.4494131660084403e-14 -1 -9.2794385125169974e-16 -2.4268776003393745e-16">
+
+                      <geom name="r_foot_vis_0" type="mesh" contype="0" conaffinity="0" group="2" pos="0 0 0" mesh="sim_sea_2-5_r_sole"/>
+                      <inertial pos="0.033600092301140062 0.0053718814775582926 -0.0011478444586517922" mass="0.38286630238196906" fullinertia="0.00027359874075180175 0.0012094588364918698 0.0014143927173667606 5.7875879446520142e-05 7.8032479413051091e-06 3.7458458851760339e-07"/>
+                      <geom name="r_foot_col_0" type="box" contype="2" conaffinity="1" group="0" size="0.080000000000000002 0.035999999999999997 0.00050000000000000001" pos="0.029999999999999999 0.0050000000000000001 0.014"/>
+
+                      <body name="r_sole" pos="0.0034999999999999754 2.7755575615628914e-17 0.0040000000000000036" quat="2.0596337842826497e-15 -1 -2.0298880319506431e-15 -1.3877787807814405e-16"/>
+
+                      <body name="r_foot_dh_frame" pos="0 0 0.0040000000000000001" quat="0.70710548251123628 0 0.70710807985947355 0"/>
+
+                    </body><!-- end r_foot -->
+
+                    <site name="r_foot_ft_gyro_3b14" pos="0.0040001250640892827 -0.0086000000000002047 -0.0452819999999996" quat="0.70710678118654613 1.5473370020276271e-15 -1.5473370020275989e-15 0.70710678118654891"/>
+                    <site name="r_foot_ft" pos="0 0 0"/>
+
+                  </body><!-- end r_ankle_2 -->
+
+                </body><!-- end r_ankle_1 -->
+
+                <site name="r_lower_leg_ems_gyro_eb9" pos="0.044503325457968687 0.014343499999999537 -0.088300628735899223" quat="1.128985918077755e-14 -0.77988448309288128 -1.1742258849496515e-14 -0.62592347218405964"/>
+
+              </body><!-- end r_lower_leg -->
+
+              <site name="r_upper_leg_ems_gyro_eb8" pos="-0.013079000000000167 0.040407157999999922 -0.035654999999999881" quat="0.49999999999999911 0.50000000000000089 0.49999999999999911 -0.50000000000000089"/>
+              <site name="r_upper_leg_ems_gyro_eb11" pos="-0.013080999999999843 -0.040407158000000304 -0.08797900000000014" quat="0.49999999999999906 0.500000000000001 0.49999999999999906 -0.500000000000001"/>
+              <body name="r_upper_leg_back_contact" pos="-0.051199831979806189 3.7470027081099033e-16 0.014599999999999919" quat="0.70710678118654757 5.6690744441428827e-16 0.70710678118654757 -5.6690744441428827e-16"/>
+              <body name="r_upper_leg_dh_frame" pos="-1.3877787807814457e-17 -5.4123372450476381e-16 -0.14582500000000004" quat="0.70710678118654624 0.70710678118654879 -1.5794341096976361e-15 -1.5614981425938665e-15"/>
+
+            </body><!-- end r_upper_leg -->
+
+          </body><!-- end r_hip_3 -->
+
+          <site name="r_upper_leg_ft_gyro_3b11" pos="0.0065638404438482928 -0.0085861081457869054 -0.059281999999999585" quat="0.70710678118654613 1.4920331519677492e-15 -1.6103362563011887e-15 0.70710678118654891"/>
+          <site name="r_leg_ft" pos="0 0 0"/>
+
+        </body><!-- end r_hip_2 -->
+
+      </body><!-- end r_hip_1 -->
+      <!-- ===== END RIGHT LEG ===== -->
+
+      <!-- Pelvis sensor frames -->
+      <site name="root_link_ems_gyro_eb5" pos="0.049330756097839851 -0.012577064000000082 -0.11569073437071034" quat="-0.60181502315205271 -1.0623432464800362e-15 -0.7986355100472895 9.749373919724259e-16"/>
+      <body name="base_link" pos="0 0 0"/>
+      <site name="root_link_imu_frame" pos="0.085154999999999981 -0.011000000000000022 -0.11230899999999999" quat="0.35355335746584221 -0.61237245482192504 0.61237245482192482 -0.3535533574658421"/>
+
+    </body>    <!-- end root_link -->
+    <!-- ===== END ROOT LINK ===== -->
+
+  </worldbody>
+
+  <!-- =========================================================================
+       TENDONS
+       Finger coupling for both hands.
+       Each tendon links joints that are mechanically coupled by a single motor.
+       ========================================================================= -->
+
+  <!-- ===== EYE TENDONS ===== -->
+  <!-- Three real-robot controls:
+       1. eyes_tilt    : both eyes up/down together (single shared joint, no tendon needed)
+       2. eyes_version : both pan joints move in the same direction (left/right together)
+       3. eyes_vergence: pan joints move in opposite directions (converge/diverge)
+       Relation to individual joints: l_eye_pan = version + vergence/2
+                                      r_eye_pan = version - vergence/2
+       Sign of vergence: positive → eyes converge (inward); verify in sim and flip if needed. -->
+  <tendon>
+    <!-- Both eyes pan left/right together -->
+    <fixed name="eyes_version_tendon">
+      <joint coef="1.0" joint="l_eye_pan_joint"/>
+      <joint coef="1.0" joint="r_eye_pan_joint"/>
+    </fixed>
+  </tendon>
+
+  <tendon>
+    <!-- Eyes converge/diverge symmetrically:
+         positive vergence = left eye pans +, right eye pans - (converging) -->
+    <fixed name="eyes_vergence_tendon">
+      <joint coef="1.0" joint="l_eye_pan_joint"/>
+      <joint coef="-1.0" joint="r_eye_pan_joint"/>
+    </fixed>
+  </tendon>
+  <!-- ===== END EYE TENDONS ===== -->
+
+  <!-- ===== RIGHT HAND TENDONS ===== -->
+  <tendon>
+    <!-- r_pinky: little + ring fingers flex together via a shared motor -->
+    <fixed name="r_pinky_tendon">
+      <joint coef="0.5" joint="r_hand_little_1_joint"/>
+      <joint coef="0.5" joint="r_hand_little_2_joint"/>
+      <joint coef="0.5" joint="r_hand_little_3_joint"/>
+      <joint coef="0.5" joint="r_hand_ring_1_joint"/>
+      <joint coef="0.5" joint="r_hand_ring_2_joint"/>
+      <joint coef="0.5" joint="r_hand_ring_3_joint"/>
+    </fixed>
+  </tendon>
+
+  <tendon>
+    <!-- r_middle_distal: middle finger distal phalanges coupled -->
+    <fixed name="r_middle_distal_tendon">
+      <joint coef="1" joint="r_hand_middle_2_joint"/>
+      <joint coef="1" joint="r_hand_middle_3_joint"/>
+    </fixed>
+  </tendon>
+
+  <tendon>
+    <!-- r_index_distal: index finger distal phalanges coupled -->
+    <fixed name="r_index_distal_tendon">
+      <joint coef="1" joint="r_hand_index_2_joint"/>
+      <joint coef="1" joint="r_hand_index_3_joint"/>
+    </fixed>
+  </tendon>
+
+  <tendon>
+    <!-- r_thumb_distal: thumb distal phalanges coupled -->
+    <fixed name="r_thumb_distal_tendon">
+      <joint coef="1" joint="r_hand_thumb_2_joint"/>
+      <joint coef="1" joint="r_hand_thumb_3_joint"/>
+    </fixed>
+  </tendon>
+
+  <tendon>
+    <!-- r_hand_finger: spreads/closes index and couples ring+little via a single DOF -->
+    <fixed name="r_hand_finger_tendon">
+      <joint coef="1" joint="r_hand_index_0_joint"/>
+      <joint coef="0" joint="r_hand_middle_0_joint"/>
+      <joint coef="-1" joint="r_hand_ring_0_joint"/>
+      <joint coef="-1" joint="r_hand_little_0_joint"/>
+    </fixed>
+  </tendon>
+  <!-- ===== END RIGHT HAND TENDONS ===== -->
+
+  <!-- ===== LEFT HAND TENDONS ===== -->
+  <tendon>
+    <!-- l_pinky: little + ring fingers flex together via a shared motor -->
+    <fixed name="l_pinky_tendon">
+      <joint coef="0.5" joint="l_hand_little_1_joint"/>
+      <joint coef="0.5" joint="l_hand_little_2_joint"/>
+      <joint coef="0.5" joint="l_hand_little_3_joint"/>
+      <joint coef="0.5" joint="l_hand_ring_1_joint"/>
+      <joint coef="0.5" joint="l_hand_ring_2_joint"/>
+      <joint coef="0.5" joint="l_hand_ring_3_joint"/>
+    </fixed>
+  </tendon>
+
+  <tendon>
+    <!-- l_middle_distal: middle finger distal phalanges coupled -->
+    <fixed name="l_middle_distal_tendon">
+      <joint coef="1" joint="l_hand_middle_2_joint"/>
+      <joint coef="1" joint="l_hand_middle_3_joint"/>
+    </fixed>
+  </tendon>
+
+  <tendon>
+    <!-- l_index_distal: index finger distal phalanges coupled -->
+    <fixed name="l_index_distal_tendon">
+      <joint coef="1" joint="l_hand_index_2_joint"/>
+      <joint coef="1" joint="l_hand_index_3_joint"/>
+    </fixed>
+  </tendon>
+
+  <tendon>
+    <!-- l_thumb_distal: thumb distal phalanges coupled -->
+    <fixed name="l_thumb_distal_tendon">
+      <joint coef="1" joint="l_hand_thumb_2_joint"/>
+      <joint coef="1" joint="l_hand_thumb_3_joint"/>
+    </fixed>
+  </tendon>
+
+  <tendon>
+    <!-- l_hand_finger: spreads/closes index and couples ring+little via a single DOF -->
+    <fixed name="l_hand_finger_tendon">
+      <joint coef="1" joint="l_hand_index_0_joint"/>
+      <joint coef="0" joint="l_hand_middle_0_joint"/>
+      <joint coef="-1" joint="l_hand_ring_0_joint"/>
+      <joint coef="-1" joint="l_hand_little_0_joint"/>
+    </fixed>
+  </tendon>
+  <!-- ===== END LEFT HAND TENDONS ===== -->
+
+  <!-- =========================================================================
+       ACTUATORS — position controllers (kp = proportional stiffness gain)
+       ========================================================================= -->
+  <actuator>
+
+    <!-- Torso -->
+    <position name="torso_pitch" kp="470.0" joint="torso_pitch" ctrlrange="-0.3839724354387525 1.4660765716752369" />
+    <position name="torso_roll" kp="990.0" joint="torso_roll" ctrlrange="-0.6806784082777885 0.6806784082777885"/>
+    <position name="torso_yaw" kp="975.0" joint="torso_yaw" ctrlrange="-1.0297442586766545 1.0297442586766545"/>
+    <!-- End Torso -->
+
+    <!-- Neck -->
+    <position name="neck_pitch" kp="195.0" joint="neck_pitch" ctrlrange="-0.698132 0.383972" />
+    <position name="neck_roll" kp="460.0" joint="neck_roll" ctrlrange="-0.349066 0.349066" />
+    <position name="neck_yaw" kp="195.0" joint="neck_yaw" ctrlrange="-0.872665 0.872665" />
+    <!-- End Neck -->
+
+    <!-- Eyes -->
+    <!-- Tilt: shared joint rotates both eyes up/down together -->
+    <position name="eyes_tilt" kp="10.0" joint="eyes_tilt" ctrlrange="-0.52359877559829882 0.52359877559829882" />
+    <!-- Version: both eyes pan left/right in sync -->
+    <position name="eyes_version" kp="5.0" tendon="eyes_version_tendon" ctrlrange="-0.78539816339744828 0.78539816339744828" />
+    <!-- Vergence: eyes converge (positive) or diverge (negative) -->
+    <position name="eyes_vergence" kp="5.0" tendon="eyes_vergence_tendon" ctrlrange="-0.78539816339744828 0.78539816339744828" />
+    <!-- End Eyes -->
+
+    <!-- Shoulders -->
+    <!-- Left -->
+    <position name="l_shoulder_pitch" kp="800.0" joint="l_shoulder_pitch" ctrlrange="-1.6667894356545847 0.08726646259971647"/>
+    <position name="l_shoulder_roll" kp="200.0" joint="l_shoulder_roll" ctrlrange="0 2.8064894372068823" />
+    <position name="l_shoulder_yaw" kp="200.0" joint="l_shoulder_yaw" ctrlrange="-0.6457718232379019 1.7453292519943295"/>
+    <!-- Right -->
+    <position name="r_shoulder_pitch" kp="800.0" joint="r_shoulder_pitch" ctrlrange="-1.6667894356545847 0.08726646259971647"/>
+    <position name="r_shoulder_roll" kp="200.0" joint="r_shoulder_roll" ctrlrange="0 2.8064894372068823"/>
+    <position name="r_shoulder_yaw" kp="200.0" joint="r_shoulder_yaw" ctrlrange="-0.6457718232379019 1.7453292519943295"/>
+    <!-- End Shoulders -->
+
+    <!-- Elbows -->
+    <!-- Left -->
+    <position name="l_elbow" kp="200.0" joint="l_elbow" ctrlrange="0.09599310885968812 1.8500490071139892" />
+    <!-- Right -->
+    <position name="r_elbow" kp="200.0" joint="r_elbow" ctrlrange="0.09599310885968812 1.8500490071139892"/>
+    <!-- End Elbows -->
+
+    <!-- Wrists -->
+    <!-- Left -->
+    <position name="l_wrist_prosup" kp="195.0" joint="l_wrist_prosup" ctrlrange="-0.8726646259971648 0.8726646259971648" />
+    <position name="l_wrist_pitch" kp="100.0" joint="l_wrist_pitch" ctrlrange="-1.1344640137963142 0.17453292519943295" />
+    <position name="l_wrist_yaw" kp="105.0" joint="l_wrist_yaw" ctrlrange="-0.4363323129985824 0.4363323129985824" />
+    <!-- Right -->
+    <position name="r_wrist_prosup" kp="195.0" joint="r_wrist_prosup" ctrlrange="-0.8726646259971648 0.8726646259971648" />
+    <position name="r_wrist_pitch" kp="100.0" joint="r_wrist_pitch" ctrlrange="-1.1344640137963142 0.17453292519943295" />
+    <position name="r_wrist_yaw" kp="105.0" joint="r_wrist_yaw" ctrlrange="-0.4363323129985824 0.4363323129985824" />
+    <!-- End Wrists -->
+
+    <!-- Hands -->
+    <!-- Left -->
+    <position name="l_hand_finger" kp="25.0" tendon="l_hand_finger_tendon" ctrlrange="0 1.046666667"/>
+    <position name="l_thumb_oppose" kp="25.0" joint="l_hand_thumb_0_joint" ctrlrange="0 1.5708"/>
+    <position name="l_thumb_proximal" kp="20.0" joint="l_hand_thumb_1_joint" ctrlrange="0 1.5708"/>
+    <position name="l_thumb_distal" kp="20.0" tendon="l_thumb_distal_tendon" ctrlrange="0 2.965555556"/>
+    <position name="l_index_proximal" kp="20.0" joint="l_hand_index_1_joint" ctrlrange="0 1.5708"/>
+    <position name="l_index_distal" kp="20.0" tendon="l_index_distal_tendon" ctrlrange="0 2.965555556"/>
+    <position name="l_middle_proximal" kp="20.0" joint="l_hand_middle_1_joint" ctrlrange="0 1.5708"/>
+    <position name="l_middle_distal" kp="25.0" tendon="l_middle_distal_tendon" ctrlrange="0 2.965555556"/>
+    <position name="l_pinky" kp="15.0" tendon="l_pinky_tendon" ctrlrange="0 4.36"/>
+    <!-- Right -->
+    <position name="r_hand_finger" kp="25.0" tendon="r_hand_finger_tendon" ctrlrange="0 1.046666667"/>
+    <position name="r_thumb_oppose" kp="25.0" joint="r_hand_thumb_0_joint" ctrlrange="0 1.5708"/>
+    <position name="r_thumb_proximal" kp="20.0" joint="r_hand_thumb_1_joint" ctrlrange="0 1.5708"/>
+    <position name="r_thumb_distal" kp="20.0" tendon="r_thumb_distal_tendon" ctrlrange="0 2.965555556"/>
+    <position name="r_index_proximal" kp="20.0" joint="r_hand_index_1_joint" ctrlrange="0 1.5708"/>
+    <position name="r_index_distal" kp="20.0" tendon="r_index_distal_tendon" ctrlrange="0 2.965555556"/>
+    <position name="r_middle_proximal" kp="20.0" joint="r_hand_middle_1_joint" ctrlrange="0 1.5708"/>
+    <position name="r_middle_distal" kp="25.0" tendon="r_middle_distal_tendon" ctrlrange="0 2.965555556"/>
+    <position name="r_pinky" kp="25.0" tendon="r_pinky_tendon" ctrlrange="0 4.36"/>
+    <!-- End Hands -->
+
+    <!-- Hip -->
+    <!-- Left -->
+    <position name="l_hip_pitch_motor" kp="200.0" joint="l_hip_pitch" ctrlrange="-0.785398 2.33874" />
+    <position name="l_hip_roll_motor" kp="50.0" joint="l_hip_roll" ctrlrange="-0.349066 2.0944" />
+    <position name="l_hip_yaw_motor" kp="10.0" joint="l_hip_yaw" ctrlrange="-1.39626 1.39626" />
+    <!-- Right -->
+    <position name="r_hip_pitch_motor" kp="200.0" joint="r_hip_pitch" ctrlrange="-0.785398 2.33874" />
+    <position name="r_hip_roll_motor" kp="50.0" joint="r_hip_roll" ctrlrange="-0.349066 2.0944" />
+    <position name="r_hip_yaw_motor" kp="10.0" joint="r_hip_yaw" ctrlrange="-1.39626 1.39626" />
+    <!-- End Hip -->
+
+    <!-- Knees -->
+    <!-- Left -->
+    <position name="l_knee_motor" kp="200.0" joint="l_knee" ctrlrange="-2.16421 0.0698132" />
+    <!-- Right -->
+    <position name="r_knee_motor" kp="200.0" joint="r_knee" ctrlrange="-2.16421 0.0698132" />
+    <!-- End Knees -->
+
+    <!-- Ankles -->
+    <!-- Left -->
+    <position name="l_ankle_pitch_motor" kp="220.0" joint="l_ankle_pitch" ctrlrange="-0.872665 0.349066" />
+    <position name="l_ankle_roll_motor" kp="100.0" joint="l_ankle_roll" ctrlrange="-0.436332 0.436332" />
+
+    <position name="r_ankle_pitch_motor" kp="220.0" joint="r_ankle_pitch" ctrlrange="-0.872665 0.349066" />
+    <position name="r_ankle_roll_motor" kp="100.0" joint="r_ankle_roll" ctrlrange="-0.436332 0.436332" />
+    <!-- End Ankles -->
+
+  </actuator>
+
+  <!-- =========================================================================
+       SENSORS — joint position/velocity encoders + hand actuator encoders
+       ========================================================================= -->
+  <sensor>
+
+    <!-- Torso -->
+    <jointpos name="enc_torso_pitch" joint="torso_pitch"/>
+    <jointvel name="enc_vel_torso_pitch" joint="torso_pitch"/>
+    <jointpos name="enc_torso_roll" joint="torso_roll"/>
+    <jointvel name="enc_vel_torso_roll" joint="torso_roll"/>
+    <jointpos name="enc_torso_yaw" joint="torso_yaw"/>
+    <jointvel name="enc_vel_torso_yaw" joint="torso_yaw"/>
+    <!-- End Torso -->
+
+    <!-- Neck -->
+    <jointpos name="enc_neck_pitch" joint="neck_pitch"/>
+    <jointvel name="enc_vel_neck_pitch" joint="neck_pitch"/>
+    <jointpos name="enc_neck_roll" joint="neck_roll"/>
+    <jointvel name="enc_vel_neck_roll" joint="neck_roll"/>
+    <jointpos name="enc_neck_yaw" joint="neck_yaw"/>
+    <jointvel name="enc_vel_neck_yaw" joint="neck_yaw"/>
+    <!-- End Neck -->
+
+    <!-- Eyes -->
+    <jointpos name="enc_eyes_tilt" joint="eyes_tilt"/>
+    <jointvel name="enc_vel_eyes_tilt" joint="eyes_tilt"/>
+    <jointpos name="enc_l_eye_pan" joint="l_eye_pan_joint"/>
+    <jointvel name="enc_vel_l_eye_pan" joint="l_eye_pan_joint"/>
+    <jointpos name="enc_r_eye_pan" joint="r_eye_pan_joint"/>
+    <jointvel name="enc_vel_r_eye_pan" joint="r_eye_pan_joint"/>
+    <!-- End Eyes -->
+
+    <!-- Left Arm -->
+    <jointpos name="enc_l_shoulder_pitch" joint="l_shoulder_pitch"/>
+    <jointvel name="enc_vel_l_shoulder_pitch" joint="l_shoulder_pitch"/>
+    <jointpos name="enc_l_shoulder_roll" joint="l_shoulder_roll"/>
+    <jointvel name="enc_vel_l_shoulder_roll" joint="l_shoulder_roll"/>
+    <jointpos name="enc_l_shoulder_yaw" joint="l_shoulder_yaw"/>
+    <jointvel name="enc_vel_l_shoulder_yaw" joint="l_shoulder_yaw"/>
+    <jointpos name="enc_l_elbow" joint="l_elbow"/>
+    <jointvel name="enc_vel_l_elbow" joint="l_elbow"/>
+    <jointpos name="enc_l_wrist_prosup" joint="l_wrist_prosup"/>
+    <jointvel name="enc_vel_l_wrist_prosup" joint="l_wrist_prosup"/>
+    <jointpos name="enc_l_wrist_pitch" joint="l_wrist_pitch"/>
+    <jointvel name="enc_vel_l_wrist_pitch" joint="l_wrist_pitch"/>
+    <jointpos name="enc_l_wrist_yaw" joint="l_wrist_yaw"/>
+    <jointvel name="enc_vel_l_wrist_yaw" joint="l_wrist_yaw"/>
+    <!-- End Left Arm -->
+
+    <!-- Right Arm -->
+    <jointpos name="enc_r_shoulder_pitch" joint="r_shoulder_pitch"/>
+    <jointvel name="enc_vel_r_shoulder_pitch" joint="r_shoulder_pitch"/>
+    <jointpos name="enc_r_shoulder_roll" joint="r_shoulder_roll"/>
+    <jointvel name="enc_vel_r_shoulder_roll" joint="r_shoulder_roll"/>
+    <jointpos name="enc_r_shoulder_yaw" joint="r_shoulder_yaw"/>
+    <jointvel name="enc_vel_r_shoulder_yaw" joint="r_shoulder_yaw"/>
+    <jointpos name="enc_r_elbow" joint="r_elbow"/>
+    <jointvel name="enc_vel_r_elbow" joint="r_elbow"/>
+    <jointpos name="enc_r_wrist_prosup" joint="r_wrist_prosup"/>
+    <jointvel name="enc_vel_r_wrist_prosup" joint="r_wrist_prosup"/>
+    <jointpos name="enc_r_wrist_pitch" joint="r_wrist_pitch"/>
+    <jointvel name="enc_vel_r_wrist_pitch" joint="r_wrist_pitch"/>
+    <jointpos name="enc_r_wrist_yaw" joint="r_wrist_yaw"/>
+    <jointvel name="enc_vel_r_wrist_yaw" joint="r_wrist_yaw"/>
+    <!-- End Right Arm -->
+
+    <!-- Left Leg -->
+    <jointpos name="enc_l_hip_pitch" joint="l_hip_pitch"/>
+    <jointvel name="enc_vel_l_hip_pitch" joint="l_hip_pitch"/>
+    <jointpos name="enc_l_hip_roll" joint="l_hip_roll"/>
+    <jointvel name="enc_vel_l_hip_roll" joint="l_hip_roll"/>
+    <jointpos name="enc_l_hip_yaw" joint="l_hip_yaw"/>
+    <jointvel name="enc_vel_l_hip_yaw" joint="l_hip_yaw"/>
+    <jointpos name="enc_l_knee" joint="l_knee"/>
+    <jointvel name="enc_vel_l_knee" joint="l_knee"/>
+    <jointpos name="enc_l_ankle_pitch" joint="l_ankle_pitch"/>
+    <jointvel name="enc_vel_l_ankle_pitch" joint="l_ankle_pitch"/>
+    <jointpos name="enc_l_ankle_roll" joint="l_ankle_roll"/>
+    <jointvel name="enc_vel_l_ankle_roll" joint="l_ankle_roll"/>
+    <!-- End Left Leg -->
+
+    <!-- Right Leg -->
+    <jointpos name="enc_r_hip_pitch" joint="r_hip_pitch"/>
+    <jointvel name="enc_vel_r_hip_pitch" joint="r_hip_pitch"/>
+    <jointpos name="enc_r_hip_roll" joint="r_hip_roll"/>
+    <jointvel name="enc_vel_r_hip_roll" joint="r_hip_roll"/>
+    <jointpos name="enc_r_hip_yaw" joint="r_hip_yaw"/>
+    <jointvel name="enc_vel_r_hip_yaw" joint="r_hip_yaw"/>
+    <jointpos name="enc_r_knee" joint="r_knee"/>
+    <jointvel name="enc_vel_r_knee" joint="r_knee"/>
+    <jointpos name="enc_r_ankle_pitch" joint="r_ankle_pitch"/>
+    <jointvel name="enc_vel_r_ankle_pitch" joint="r_ankle_pitch"/>
+    <jointpos name="enc_r_ankle_roll" joint="r_ankle_roll"/>
+    <jointvel name="enc_vel_r_ankle_roll" joint="r_ankle_roll"/>
+    <!-- End Right Leg -->
+
+    <!-- Left Hand — motor encoders (tendon side) -->
+    <actuatorpos name="enc_l_hand_finger" actuator="l_hand_finger"/>
+    <actuatorvel name="enc_vel_l_hand_finger" actuator="l_hand_finger"/>
+    <actuatorpos name="enc_l_thumb_oppose" actuator="l_thumb_oppose"/>
+    <actuatorvel name="enc_vel_l_thumb_oppose" actuator="l_thumb_oppose"/>
+    <actuatorpos name="enc_l_thumb_proximal" actuator="l_thumb_proximal"/>
+    <actuatorvel name="enc_vel_l_thumb_proximal" actuator="l_thumb_proximal"/>
+    <actuatorpos name="enc_l_thumb_distal" actuator="l_thumb_distal"/>
+    <actuatorvel name="enc_vel_l_thumb_distal" actuator="l_thumb_distal"/>
+    <actuatorpos name="enc_l_index_proximal" actuator="l_index_proximal"/>
+    <actuatorvel name="enc_vel_l_index_proximal" actuator="l_index_proximal"/>
+    <actuatorpos name="enc_l_index_distal" actuator="l_index_distal"/>
+    <actuatorvel name="enc_vel_l_index_distal" actuator="l_index_distal"/>
+    <actuatorpos name="enc_l_middle_proximal" actuator="l_middle_proximal"/>
+    <actuatorvel name="enc_vel_l_middle_proximal" actuator="l_middle_proximal"/>
+    <actuatorpos name="enc_l_middle_distal" actuator="l_middle_distal"/>
+    <actuatorvel name="enc_vel_l_middle_distal" actuator="l_middle_distal"/>
+    <actuatorpos name="enc_l_pinky" actuator="l_pinky"/>
+    <actuatorvel name="enc_vel_l_pinky" actuator="l_pinky"/>
+    <!-- End Left Hand -->
+
+    <!-- Right Hand — motor encoders (tendon side) -->
+    <actuatorvel name="enc_vel_r_hand_finger" actuator="r_hand_finger"/>
+    <actuatorpos name="enc_r_hand_finger" actuator="r_hand_finger"/>
+    <actuatorpos name="enc_r_thumb_oppose" actuator="r_thumb_oppose"/>
+    <actuatorvel name="enc_vel_r_thumb_oppose" actuator="r_thumb_oppose"/>
+    <actuatorpos name="enc_r_thumb_proximal" actuator="r_thumb_proximal"/>
+    <actuatorvel name="enc_vel_r_thumb_proximal" actuator="r_thumb_proximal"/>
+    <actuatorpos name="enc_r_thumb_distal" actuator="r_thumb_distal"/>
+    <actuatorvel name="enc_vel_r_thumb_distal" actuator="r_thumb_distal"/>
+    <actuatorpos name="enc_r_index_proximal" actuator="r_index_proximal"/>
+    <actuatorvel name="enc_vel_r_index_proximal" actuator="r_index_proximal"/>
+    <actuatorpos name="enc_r_index_distal" actuator="r_index_distal"/>
+    <actuatorvel name="enc_vel_r_index_distal" actuator="r_index_distal"/>
+    <actuatorpos name="enc_r_middle_proximal" actuator="r_middle_proximal"/>
+    <actuatorvel name="enc_vel_r_middle_proximal" actuator="r_middle_proximal"/>
+    <actuatorpos name="enc_r_middle_distal" actuator="r_middle_distal"/>
+    <actuatorvel name="enc_vel_r_middle_distal" actuator="r_middle_distal"/>
+    <actuatorpos name="enc_r_pinky" actuator="r_pinky"/>
+    <actuatorvel name="enc_vel_r_pinky" actuator="r_pinky"/>
+    <!-- End Right Hand -->
+
+  </sensor>
+
+</mujoco>

@@ -96,6 +96,10 @@ PART_TO_GROUP = {
     "l_palm": GROUP_LEFT_ARM_HAND,
 }
 
+ICUB_HEAD_COLOR = []  # white
+ICUB_SKIN_COLOR = []  # purple
+ICUB_METAL_PARTS_COLOR = []  # metallic gray
+
 # Always resolve resource paths relative to this script's location
 SCRIPT_DIR = Path(__file__).parent.resolve()
 PROJECT_ROOT = SCRIPT_DIR.parent

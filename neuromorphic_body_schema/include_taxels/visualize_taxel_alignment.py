@@ -157,7 +157,7 @@ def _write_part_figure(part_cfg, result: dict[str, Any]) -> Path:
         rows=1,
         cols=2,
         specs=[[{"type": "scene"}, {"type": "scene"}]],
-        subplot_titles=(f"{part}: Manual Baseline", f"{part}: Optimized"),
+        subplot_titles=(f"{part}: Zero Baseline", f"{part}: Optimized"),
         horizontal_spacing=0.03,
     )
 
@@ -215,7 +215,7 @@ def _write_footprint_preview(part_cfg) -> Path:
         rows=1,
         cols=2,
         specs=[[{"type": "scene"}, {"type": "xy"}]],
-        subplot_titles=(f"{part}: Manual Baseline 3D", f"{part}: Detected Sole Footprint (XZ)"),
+        subplot_titles=(f"{part}: Zero Baseline 3D", f"{part}: Detected Sole Footprint (XZ)"),
         horizontal_spacing=0.06,
     )
 
@@ -272,7 +272,7 @@ def _write_footprint_preview(part_cfg) -> Path:
     )
 
     fig.update_layout(
-        title=f"Footprint Preview | {part} | current manual baseline and detected sole footprint",
+        title=f"Footprint Preview | {part} | current zero baseline and detected sole footprint",
         template="plotly_white",
         height=760,
         width=1500,
