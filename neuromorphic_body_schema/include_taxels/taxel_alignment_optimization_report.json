@@ -1,5 +1,1625 @@
 [
   {
+    "part": "r_upper_leg",
+    "model_body_name": "r_upper_leg",
+    "sensor_group": 4,
+    "position_file": "right_leg_upper.txt",
+    "rebase": false,
+    "include_to_model": true,
+    "mesh_files": [
+      "sim_sea_2-5_r_thigh.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          90.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          90.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.24
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.05,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.075,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0029089346251474297,
+      "median_distance_m": 0.0030513168041627703,
+      "p90_distance_m": 0.004606274130250864,
+      "inside_fraction": 0.0
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0029089346251474297,
+      "median_distance_m": 0.0030513168041627703,
+      "p90_distance_m": 0.004606274130250864,
+      "inside_fraction": 0.0
+    },
+    "delta": {
+      "angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_distance_deg": 0.0,
+      "offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0,
+      "mean_distance_improvement_pct": 0.0,
+      "inside_fraction": 0.0
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "baseline_only",
+      "nit": 0,
+      "nfev": 0,
+      "objective": 0.0029089346251474297,
+      "optimizer_method": "L-BFGS-B",
+      "solver": "baseline-only",
+      "seed_count": 0,
+      "selected_seed_label": "baseline-only",
+      "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": false,
+      "polish_refinement": null,
+      "body_property": "cylindrical",
+      "strategy_name": "standard_cylindrical",
+      "inside_penalty_weight": 20.0,
+      "distance_focus_enabled": false
+    }
+  },
+  {
+    "part": "r_lower_leg",
+    "model_body_name": "r_lower_leg",
+    "sensor_group": 4,
+    "position_file": "right_leg_lower.txt",
+    "rebase": false,
+    "include_to_model": true,
+    "mesh_files": [
+      "sim_sea_2-5_r_shank.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          90.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          90.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.39
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.075,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.05,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0036359700388607363,
+      "median_distance_m": 0.003978222814772878,
+      "p90_distance_m": 0.005713747236395583,
+      "inside_fraction": 0.0
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0036359700388607363,
+      "median_distance_m": 0.003978222814772878,
+      "p90_distance_m": 0.005713747236395583,
+      "inside_fraction": 0.0
+    },
+    "delta": {
+      "angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_distance_deg": 0.0,
+      "offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0,
+      "mean_distance_improvement_pct": 0.0,
+      "inside_fraction": 0.0
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "baseline_only",
+      "nit": 0,
+      "nfev": 0,
+      "objective": 0.0036359700388607363,
+      "optimizer_method": "L-BFGS-B",
+      "solver": "baseline-only",
+      "seed_count": 0,
+      "selected_seed_label": "baseline-only",
+      "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": false,
+      "polish_refinement": null,
+      "body_property": "curved_surface",
+      "strategy_name": "curved_surface_balanced",
+      "inside_penalty_weight": 60.0,
+      "distance_focus_enabled": false
+    }
+  },
+  {
+    "part": "l_upper_leg",
+    "model_body_name": "l_upper_leg",
+    "sensor_group": 5,
+    "position_file": "left_leg_upper.txt",
+    "rebase": false,
+    "include_to_model": true,
+    "mesh_files": [
+      "sim_sea_2-5_l_thigh.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          90.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          90.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.24
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.05,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          -0.075,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.003500081946956984,
+      "median_distance_m": 0.003718028783209613,
+      "p90_distance_m": 0.005436382023959102,
+      "inside_fraction": 0.0
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.003500081946956984,
+      "median_distance_m": 0.003718028783209613,
+      "p90_distance_m": 0.005436382023959102,
+      "inside_fraction": 0.0
+    },
+    "delta": {
+      "angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_distance_deg": 0.0,
+      "offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0,
+      "mean_distance_improvement_pct": 0.0,
+      "inside_fraction": 0.0
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "baseline_only",
+      "nit": 0,
+      "nfev": 0,
+      "objective": 0.003500081946956984,
+      "optimizer_method": "L-BFGS-B",
+      "solver": "baseline-only",
+      "seed_count": 0,
+      "selected_seed_label": "baseline-only",
+      "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": false,
+      "polish_refinement": null,
+      "body_property": "cylindrical",
+      "strategy_name": "standard_cylindrical",
+      "inside_penalty_weight": 20.0,
+      "distance_focus_enabled": false
+    }
+  },
+  {
+    "part": "l_lower_leg",
+    "model_body_name": "l_lower_leg",
+    "sensor_group": 5,
+    "position_file": "left_leg_lower.txt",
+    "rebase": false,
+    "include_to_model": true,
+    "mesh_files": [
+      "sim_sea_2-5_l_shank.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          90.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          90.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.39
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          -0.075,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.05,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          -0.002
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.003978841753401305,
+      "median_distance_m": 0.004153911823624779,
+      "p90_distance_m": 0.0062325401338511775,
+      "inside_fraction": 0.0
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.003978841753401305,
+      "median_distance_m": 0.004153911823624779,
+      "p90_distance_m": 0.0062325401338511775,
+      "inside_fraction": 0.0
+    },
+    "delta": {
+      "angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_distance_deg": 0.0,
+      "offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0,
+      "mean_distance_improvement_pct": 0.0,
+      "inside_fraction": 0.0
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "baseline_only",
+      "nit": 0,
+      "nfev": 0,
+      "objective": 0.003978841753401305,
+      "optimizer_method": "L-BFGS-B",
+      "solver": "baseline-only",
+      "seed_count": 0,
+      "selected_seed_label": "baseline-only",
+      "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": false,
+      "polish_refinement": null,
+      "body_property": "curved_surface",
+      "strategy_name": "curved_surface_z_stabilized",
+      "inside_penalty_weight": 80.0,
+      "distance_focus_enabled": false
+    }
+  },
+  {
+    "part": "r_upper_arm",
+    "model_body_name": "r_shoulder_3",
+    "sensor_group": 2,
+    "position_file": "right_arm.txt",
+    "rebase": true,
+    "include_to_model": true,
+    "mesh_files": [
+      "sim_sea_2-5_r_elbow.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          -33.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          -0.08,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.01
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0017240540515789115,
+      "median_distance_m": 0.0016556003353205967,
+      "p90_distance_m": 0.0031151133980517635,
+      "inside_fraction": 0.0
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0017240540515789115,
+      "median_distance_m": 0.0016556003353205967,
+      "p90_distance_m": 0.0031151133980517635,
+      "inside_fraction": 0.0
+    },
+    "delta": {
+      "angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_distance_deg": 0.0,
+      "offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0,
+      "mean_distance_improvement_pct": 0.0,
+      "inside_fraction": 0.0
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "baseline_only",
+      "nit": 0,
+      "nfev": 0,
+      "objective": 0.0017240540515789115,
+      "optimizer_method": "L-BFGS-B",
+      "solver": "baseline-only",
+      "seed_count": 0,
+      "selected_seed_label": "baseline-only",
+      "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": false,
+      "polish_refinement": null,
+      "body_property": "cylindrical",
+      "strategy_name": "standard_cylindrical",
+      "inside_penalty_weight": 20.0,
+      "distance_focus_enabled": false
+    }
+  },
+  {
+    "part": "r_forearm",
+    "model_body_name": "r_forearm",
+    "sensor_group": 2,
+    "position_file": "right_forearm_V2.txt",
+    "rebase": true,
+    "include_to_model": true,
+    "mesh_files": [
+      "sim_sea_2-5_r_forearm.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          -90.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          76.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          -0.05,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0016850458122148549,
+      "median_distance_m": 0.0017460143899999453,
+      "p90_distance_m": 0.002937461468333875,
+      "inside_fraction": 0.0
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0016850458122148549,
+      "median_distance_m": 0.0017460143899999453,
+      "p90_distance_m": 0.002937461468333875,
+      "inside_fraction": 0.0
+    },
+    "delta": {
+      "angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_distance_deg": 0.0,
+      "offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0,
+      "mean_distance_improvement_pct": 0.0,
+      "inside_fraction": 0.0
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "baseline_only",
+      "nit": 0,
+      "nfev": 0,
+      "objective": 0.0016850458122148549,
+      "optimizer_method": "L-BFGS-B",
+      "solver": "baseline-only",
+      "seed_count": 0,
+      "selected_seed_label": "baseline-only",
+      "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": false,
+      "polish_refinement": null,
+      "body_property": "cylindrical",
+      "strategy_name": "cylindrical_asymmetric_patch",
+      "inside_penalty_weight": 20.0,
+      "distance_focus_enabled": false
+    }
+  },
+  {
+    "part": "l_upper_arm",
+    "model_body_name": "l_shoulder_3",
+    "sensor_group": 3,
+    "position_file": "left_arm.txt",
+    "rebase": true,
+    "include_to_model": true,
+    "mesh_files": [
+      "sim_sea_2-5_l_elbow.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          130.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          -18.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          90.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          20.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          -16.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.08,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.01
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.001601852725500849,
+      "median_distance_m": 0.0014319869014264356,
+      "p90_distance_m": 0.002834934228069847,
+      "inside_fraction": 0.0
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.001601852725500849,
+      "median_distance_m": 0.0014319869014264356,
+      "p90_distance_m": 0.002834934228069847,
+      "inside_fraction": 0.0
+    },
+    "delta": {
+      "angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_distance_deg": 0.0,
+      "offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0,
+      "mean_distance_improvement_pct": 0.0,
+      "inside_fraction": 0.0
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "baseline_only",
+      "nit": 0,
+      "nfev": 0,
+      "objective": 0.001601852725500849,
+      "optimizer_method": "L-BFGS-B",
+      "solver": "baseline-only",
+      "seed_count": 0,
+      "selected_seed_label": "baseline-only",
+      "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": false,
+      "polish_refinement": null,
+      "body_property": "cylindrical",
+      "strategy_name": "standard_cylindrical",
+      "inside_penalty_weight": 20.0,
+      "distance_focus_enabled": false
+    }
+  },
+  {
+    "part": "l_forearm",
+    "model_body_name": "l_forearm",
+    "sensor_group": 3,
+    "position_file": "left_forearm_V2.txt",
+    "rebase": true,
+    "include_to_model": true,
+    "mesh_files": [
+      "sim_sea_2-5_l_forearm.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          -90.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          102.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.05,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.002089769936774634,
+      "median_distance_m": 0.0018540397306914176,
+      "p90_distance_m": 0.003666135757728774,
+      "inside_fraction": 0.0
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.002089769936774634,
+      "median_distance_m": 0.0018540397306914176,
+      "p90_distance_m": 0.003666135757728774,
+      "inside_fraction": 0.0
+    },
+    "delta": {
+      "angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_distance_deg": 0.0,
+      "offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0,
+      "mean_distance_improvement_pct": 0.0,
+      "inside_fraction": 0.0
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "baseline_only",
+      "nit": 0,
+      "nfev": 0,
+      "objective": 0.002089769936774634,
+      "optimizer_method": "L-BFGS-B",
+      "solver": "baseline-only",
+      "seed_count": 0,
+      "selected_seed_label": "baseline-only",
+      "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": false,
+      "polish_refinement": null,
+      "body_property": "cylindrical",
+      "strategy_name": "standard_cylindrical",
+      "inside_penalty_weight": 20.0,
+      "distance_focus_enabled": false
+    }
+  },
+  {
+    "part": "torso",
+    "model_body_name": "chest",
+    "sensor_group": 1,
+    "position_file": "torso.txt",
+    "rebase": true,
+    "include_to_model": true,
+    "mesh_files": [
+      "sim_ibbbbeba_chest.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          90.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          -90.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "angles_deg": [
+          5.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          -0.14
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "offsets_m": [
+          0.0,
+          0.02,
+          0.0
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.005361590146059872,
+      "median_distance_m": 0.005396430138179968,
+      "p90_distance_m": 0.007605370803524147,
+      "inside_fraction": 0.0
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.005361590146059872,
+      "median_distance_m": 0.005396430138179968,
+      "p90_distance_m": 0.007605370803524147,
+      "inside_fraction": 0.0
+    },
+    "delta": {
+      "angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_distance_deg": 0.0,
+      "offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0,
+      "mean_distance_improvement_pct": 0.0,
+      "inside_fraction": 0.0
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "baseline_only",
+      "nit": 0,
+      "nfev": 0,
+      "objective": 0.005361590146059872,
+      "optimizer_method": "L-BFGS-B",
+      "solver": "baseline-only",
+      "seed_count": 0,
+      "selected_seed_label": "baseline-only",
+      "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "angle_bounds_deg": [
+        8.0,
+        8.0,
+        8.0
+      ],
+      "translation_bounds_m": [
+        0.01,
+        0.01,
+        0.01
+      ],
+      "fine_refinement": null,
+      "polish_mode": false,
+      "polish_refinement": null,
+      "body_property": "curved_surface",
+      "strategy_name": "curved_surface_balanced",
+      "inside_penalty_weight": 60.0,
+      "distance_focus_enabled": false
+    }
+  },
+  {
     "part": "r_palm",
     "model_body_name": "r_hand",
     "sensor_group": 2,
@@ -88,9 +1708,9 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0012328604903866882,
-      "median_distance_m": 0.0011264106469785634,
-      "p90_distance_m": 0.0020598926874558533,
+      "mean_distance_m": 0.001234051715896779,
+      "median_distance_m": 0.001116618787507013,
+      "p90_distance_m": 0.0020568413658177682,
       "inside_fraction": 0.0
     },
     "optimized": {
@@ -110,9 +1730,9 @@
         -0.0035747998874664302,
         0.0
       ],
-      "mean_distance_m": 0.0012328604903866882,
-      "median_distance_m": 0.0011264106469785634,
-      "p90_distance_m": 0.0020598926874558533,
+      "mean_distance_m": 0.001234051715896779,
+      "median_distance_m": 0.001116618787507013,
+      "p90_distance_m": 0.0020568413658177682,
       "inside_fraction": 0.0
     },
     "delta": {
@@ -374,6 +1994,278 @@
       "body_property": "flat_surface",
       "strategy_name": "flat_surface_yaw_tight",
       "inside_penalty_weight": 0.0,
+      "distance_focus_enabled": false
+    }
+  },
+  {
+    "part": "l_foot",
+    "model_body_name": "l_ankle_2",
+    "sensor_group": 5,
+    "position_file": "left_foot.txt",
+    "rebase": false,
+    "include_to_model": false,
+    "mesh_files": [
+      "sim_sea_2-5_l_sole.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.006
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0010909776981090028,
+      "median_distance_m": 0.0010600847248250713,
+      "p90_distance_m": 0.0012247134526161508,
+      "inside_fraction": 0.0
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0010909776981090028,
+      "median_distance_m": 0.0010600847248250713,
+      "p90_distance_m": 0.0012247134526161508,
+      "inside_fraction": 0.0
+    },
+    "delta": {
+      "angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_distance_deg": 0.0,
+      "offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0,
+      "mean_distance_improvement_pct": 0.0,
+      "inside_fraction": 0.0
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "baseline_only",
+      "nit": 0,
+      "nfev": 0,
+      "objective": 0.0010909776981090028,
+      "optimizer_method": "sole-2d",
+      "solver": "baseline-only",
+      "seed_count": 0,
+      "selected_seed_label": "baseline-only",
+      "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": false,
+      "polish_refinement": null,
+      "body_property": "flat_surface",
+      "strategy_name": "flat_surface_edge_guarded",
+      "inside_penalty_weight": 30.0,
+      "distance_focus_enabled": false
+    }
+  },
+  {
+    "part": "r_foot",
+    "model_body_name": "r_ankle_2",
+    "sensor_group": 4,
+    "position_file": "right_foot.txt",
+    "rebase": false,
+    "include_to_model": false,
+    "mesh_files": [
+      "sim_sea_2-5_r_sole.stl"
+    ],
+    "manual_steps": [
+      {
+        "offsets_m": [
+          0.0,
+          0.0,
+          0.006
+        ],
+        "angles_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "initial": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.001086315606295745,
+      "median_distance_m": 0.0010659649802630055,
+      "p90_distance_m": 0.0012006157640542484,
+      "inside_fraction": 0.0
+    },
+    "optimized": {
+      "delta_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "delta_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.001086315606295745,
+      "median_distance_m": 0.0010659649802630055,
+      "p90_distance_m": 0.0012006157640542484,
+      "inside_fraction": 0.0
+    },
+    "delta": {
+      "angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_distance_deg": 0.0,
+      "offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_distance_m": 0.0,
+      "mean_distance_improvement_pct": 0.0,
+      "inside_fraction": 0.0
+    },
+    "optimizer": {
+      "success": true,
+      "status": 0,
+      "message": "baseline_only",
+      "nit": 0,
+      "nfev": 0,
+      "objective": 0.001086315606295745,
+      "optimizer_method": "sole-2d",
+      "solver": "baseline-only",
+      "seed_count": 0,
+      "selected_seed_label": "baseline-only",
+      "selected_seed_angles_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "selected_seed_offsets_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "angle_bounds_deg": [
+        25.0,
+        25.0,
+        25.0
+      ],
+      "translation_bounds_m": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "fine_refinement": null,
+      "polish_mode": false,
+      "polish_refinement": null,
+      "body_property": "flat_surface",
+      "strategy_name": "flat_surface_edge_guarded",
+      "inside_penalty_weight": 30.0,
       "distance_focus_enabled": false
     }
   }

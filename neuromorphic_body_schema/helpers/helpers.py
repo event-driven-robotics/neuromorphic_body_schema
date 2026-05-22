@@ -33,8 +33,10 @@ import numpy as np
 
 # Model and configuration paths
 _PACKAGE_DIR = Path(__file__).parent.parent
+# MODEL_PATH = str(_PACKAGE_DIR / "models" /
+#                  "icub_v2_full_body_contact_sensors.xml")
 MODEL_PATH = str(_PACKAGE_DIR / "models" /
-                 "icub_v2_full_body_contact_sensors.xml")
+                 "icub_v2_full_body_improved_contact_sensors.xml")
 # Prefer the current folder name in this repository (skinGUI), but keep a
 # fallback for earlier naming variants.
 _triangle_ini_dir = _PACKAGE_DIR / "skinGUI"

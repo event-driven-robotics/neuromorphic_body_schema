@@ -2152,6 +2152,106 @@ def load_existing_results() -> list[JsonDict]:
     return [entry for entry in raw if isinstance(entry, dict) and "part" in entry]
 
 
+def build_baseline_result_entry(config: PartConfig) -> JsonDict:
+    """Build a deterministic zero-delta report entry for one part.
+
+    This is used to keep the persisted optimization report complete even when a
+    run only optimizes a subset of parts. The entry captures the manual baseline
+    transform chain with no optimized refinement applied.
+    """
+
+    points = load_taxel_points(POSITIONS_DIR / config.position_file, config.rebase)
+    mesh = load_mesh(config.mesh_files, config.mesh_pos, config.mesh_quat_wxyz)
+    baseline_points = apply_part_transform(points, config.part_name)
+    body_property, strategy = resolve_strategy_for_part(config.part_name)
+    use_distance_focus = bool(
+        config.distance_focus_to_initial_patch and strategy.allow_distance_focus
+    )
+    dist_fn = build_distance_fn(
+        mesh,
+        focus_reference_points=baseline_points if use_distance_focus else None,
+        focus_radius_m=config.distance_focus_radius_m,
+        focus_min_samples=config.distance_focus_min_samples,
+    )
+
+    abs_distances = np.asarray(dist_fn(baseline_points), dtype=float)
+    mean_distance = float(np.mean(abs_distances))
+    median_distance = float(np.median(abs_distances))
+    p90_distance = float(np.quantile(abs_distances, 0.9))
+    inside_penalty_weight = max(
+        float(config.inside_penalty_weight), float(strategy.inside_penalty_weight)
+    )
+
+    zero_angles = np.zeros(3, dtype=float)
+    zero_offsets = np.zeros(3, dtype=float)
+    zero_quat = np.array([1.0, 0.0, 0.0, 0.0], dtype=float)
+
+    return {
+        "part": config.part_name,
+        "model_body_name": PART_MODEL_BODY[config.part_name],
+        "sensor_group": PART_SENSOR_GROUP[config.part_name],
+        "position_file": config.position_file,
+        "rebase": bool(config.rebase),
+        "include_to_model": bool(config.include_to_model),
+        "mesh_files": list(config.mesh_files),
+        "manual_steps": [
+            {"offsets_m": list(step[0]), "angles_deg": list(step[1])}
+            for step in config.manual_steps
+        ],
+        "initial": {
+            "delta_angles_deg": zero_angles.tolist(),
+            "delta_quaternion_wxyz": zero_quat.tolist(),
+            "delta_offsets_m": zero_offsets.tolist(),
+            "mean_distance_m": mean_distance,
+            "median_distance_m": median_distance,
+            "p90_distance_m": p90_distance,
+            "inside_fraction": 0.0,
+        },
+        "optimized": {
+            "delta_angles_deg": zero_angles.tolist(),
+            "delta_quaternion_wxyz": zero_quat.tolist(),
+            "delta_offsets_m": zero_offsets.tolist(),
+            "mean_distance_m": mean_distance,
+            "median_distance_m": median_distance,
+            "p90_distance_m": p90_distance,
+            "inside_fraction": 0.0,
+        },
+        "delta": {
+            "angles_deg": zero_angles.tolist(),
+            "quaternion_wxyz": zero_quat.tolist(),
+            "rotation_distance_deg": 0.0,
+            "offsets_m": zero_offsets.tolist(),
+            "mean_distance_m": 0.0,
+            "mean_distance_improvement_pct": 0.0,
+            "inside_fraction": 0.0,
+        },
+        "optimizer": {
+            "success": True,
+            "status": 0,
+            "message": "baseline_only",
+            "nit": 0,
+            "nfev": 0,
+            "objective": mean_distance,
+            "optimizer_method": config.optimizer_method,
+            "solver": "baseline-only",
+            "seed_count": 0,
+            "selected_seed_label": "baseline-only",
+            "selected_seed_angles_deg": zero_angles.tolist(),
+            "selected_seed_quaternion_wxyz": zero_quat.tolist(),
+            "selected_seed_offsets_m": zero_offsets.tolist(),
+            "angle_bounds_deg": list(config.delta_angle_bounds_deg),
+            "translation_bounds_m": list(config.delta_translation_bounds_m),
+            "fine_refinement": None,
+            "polish_mode": False,
+            "polish_refinement": None,
+            "body_property": body_property,
+            "strategy_name": strategy.name,
+            "inside_penalty_weight": inside_penalty_weight,
+            "distance_focus_enabled": use_distance_focus,
+        },
+    }
+
+
 def parse_args() -> argparse.Namespace:
     """Parse command-line arguments for selective optimization and polishing."""
 
@@ -2228,7 +2328,7 @@ def main() -> None:
     validate_body_property_coverage({cfg.part_name for cfg in PARTS})
     selected_parts = set(args.parts) if args.parts else None
     previous_seed_map = {} if args.fresh_start else load_previous_optimized_seeds()
-    existing_results = [] if args.fresh_start else load_existing_results()
+    existing_results = load_existing_results()
     existing_results = [_upgrade_result_entry_schema(
         entry) for entry in existing_results]
     result_by_part = {cast(str, entry["part"])                      : entry for entry in existing_results}
@@ -2265,6 +2365,16 @@ def main() -> None:
                     result_by_part[part_cfg.part_name])
                 print(
                     f"  mean_distance {new_mean:.6f} m >= best {best_mean:.6f} m, keeping previous result.")
+
+    for part_cfg in PARTS:
+        if part_cfg.part_name in result_by_part:
+            continue
+        baseline_entry = build_baseline_result_entry(part_cfg)
+        result_by_part[part_cfg.part_name] = _upgrade_result_entry_schema(
+            baseline_entry)
+        print(
+            f"  seeded canonical baseline entry for missing part: {part_cfg.part_name}"
+        )
 
     results = [result_by_part[part_cfg.part_name]
                for part_cfg in PARTS if part_cfg.part_name in result_by_part]

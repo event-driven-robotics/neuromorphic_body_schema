@@ -141,3 +141,74 @@ Expected result at time of writing:
 - Keep `include_taxels` generation and `helpers/ed_skin.py` masking semantics aligned.
 - If arm geometry files are updated upstream, re-check whether `ARM_PATCH_ID_REMAP` is still needed.
 - Prefer deterministic mapping over count-only reconciliation when a stable geometry-to-positions relationship is known.
+
+## Strict Report Validation
+
+Phase 1 of the report-first migration adds a strict validation gate to
+`include_skin_to_mujoco_model.py`.
+
+Command:
+
+```bash
+cd /home/smullercleve/code/neuromorphic_body_schema
+/home/smullercleve/.virtualenvs/mujoco/bin/python \
+    neuromorphic_body_schema/include_taxels/include_skin_to_mujoco_model.py \
+    --strict-report
+```
+
+Current behavior:
+
+- validates that the optimization report is a JSON list of per-part entries
+- validates required fields for each part entry
+- validates `optimized.delta_angles_deg` and `optimized.delta_offsets_m` shape
+- validates `manual_steps[*].offsets_m` and `manual_steps[*].angles_deg` shape
+- validates that referenced `positions/*.txt` files exist
+- validates report completeness against the expected body-part set
+
+Current limitation:
+
+- the report still uses the legacy top-level list format rather than a versioned
+    manifest object
+- strict validation therefore enforces entry schema and completeness, but not a
+    top-level `schema_version` yet
+- adding a top-level schema object remains part of the next optimizer/report
+    migration step
+
+## Canonical Report Completeness
+
+Phase 2 changes the optimizer write path so a partial run still writes a
+complete canonical report.
+
+Current behavior:
+
+- existing report entries are preserved even when `--fresh-start` is used
+- `--fresh-start` now resets optimization seeds only; it does not intentionally
+    discard previously stored report entries
+- if a configured part is still missing after the run, the optimizer writes a
+    deterministic zero-delta baseline entry for that part
+
+Practical consequence:
+
+- running a command such as
+    `/home/smullercleve/.virtualenvs/mujoco/bin/python neuromorphic_body_schema/include_taxels/optimize_taxel_alignment.py --parts r_palm --fresh-start --overwrite-results`
+    now updates `r_palm` while keeping the persisted report complete for all
+    configured parts
+- after that run, `include_skin_to_mujoco_model.py --strict-report` is expected
+    to pass instead of failing on missing parts
+
+## Report-Driven Body Insertion
+
+Phase 3 and the legacy-fallback removal make non-finger body taxel insertion
+fully report-driven.
+
+Current behavior:
+
+- `include_skin_to_mujoco_model.py` now expects report-provided `manual_steps`
+    for every non-finger body patch that is inserted
+- `rebase` is applied only when explicitly declared by the report metadata
+- legacy hard-coded per-part transform chains are no longer used as a fallback
+
+Intentional exception:
+
+- finger taxels remain manually inserted for now because there is no canonical
+    finger positions file available yet to define a report-driven placement basis
