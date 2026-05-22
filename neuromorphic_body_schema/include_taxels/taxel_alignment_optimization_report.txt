@@ -1,32 +1,32 @@
 Taxel alignment optimization report
 
 Part: r_palm
-  mean distance: 0.001042 -> 0.000629 m (39.67% improvement)
-  mean abs improvement: 0.414 mm
-  median distance: 0.000421 -> 0.000322 m
-  p90 distance: 0.002565 -> 0.001900 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.0, 25.0, 0.0]
-  delta quaternion wxyz (around manual): [0.9762960071199334, 0.0, 0.21643961393810288, 0.0]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.004151954834578031, 0.026179199897122384, -0.019684584730334936]
-  delta angles deg: [0.0, 25.0, 0.0]
-  delta rotation distance deg: 25.000000000000004
-  delta offsets m: [0.004151954834578031, 0.026179199897122384, -0.019684584730334936]
+  mean distance: 0.001233 -> 0.001233 m (0.00% improvement)
+  mean abs improvement: 0.000 mm
+  median distance: 0.001126 -> 0.001126 m
+  p90 distance: 0.002060 -> 0.002060 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.0, 0.0, 0.0]
+  delta quaternion wxyz (around manual): [1.0, 0.0, 0.0, 0.0]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0, -0.0035747998874664302, 0.0]
+  delta angles deg: [0.0, 0.0, 0.0]
+  delta rotation distance deg: 0.0
+  delta offsets m: [0.0, -0.0035747998874664302, 0.0]
   optimizer method: L-BFGS-B
   solver: L-BFGS-B
   seed count: 1
   selected seed label: configured:0
   selected seed angles deg: [0.0, 0.0, 0.0]
   selected seed quaternion wxyz: [1.0, 0.0, 0.0, 0.0]
-  selected seed offsets m: [0.0, 0.026179199897122384, 0.0]
+  selected seed offsets m: [0.0, -0.0035747998874664302, 0.0]
   angle bounds deg: [0.0, 25.0, 0.0]
   translation bounds m: [0.03, 0.0, 0.03]
   polish mode: False
 
 Part: l_palm
-  mean distance: 0.000864 -> 0.000864 m (0.00% improvement)
+  mean distance: 0.000866 -> 0.000866 m (0.00% improvement)
   mean abs improvement: 0.000 mm
-  median distance: 0.000850 -> 0.000850 m
-  p90 distance: 0.001328 -> 0.001328 m
+  median distance: 0.000852 -> 0.000852 m
+  p90 distance: 0.001338 -> 0.001338 m
   delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.0, 0.0, 0.0]
   delta quaternion wxyz (around manual): [1.0, 0.0, 0.0, 0.0]
   delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0, -0.0016697999123513694, 0.0]

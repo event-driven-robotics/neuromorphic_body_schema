@@ -287,6 +287,13 @@ def _build_part_to_body_property_map() -> dict[str, str]:
 
 PART_TO_BODY_PROPERTY: dict[str, str] = _build_part_to_body_property_map()
 
+# Contact-side convention for palm patches in the hand local frame:
+# y < 0 is palm surface, y > 0 is dorsal/back-of-hand.
+PALM_CONTACT_SIDE_OVERRIDES: dict[str, str] = {
+    "r_palm": "min_y",
+    "l_palm": "min_y",
+}
+
 
 def validate_body_property_coverage(part_names: set[str]) -> None:
     """Ensure BODY_PARTS_PROPERTIES covers exactly the configured optimization parts."""
@@ -548,9 +555,22 @@ def optimize_palm_surface_part(
     baseline_points = apply_part_transform(points, config.part_name)
     min_footprint = _build_contact_footprint_xz(mesh, use_max_y=False)
     max_footprint = _build_contact_footprint_xz(mesh, use_max_y=True)
-    min_outside = _foot_point_outside_penalty_xz(baseline_points, min_footprint)
-    max_outside = _foot_point_outside_penalty_xz(baseline_points, max_footprint)
-    use_max_y = max_outside < min_outside
+    side_override = PALM_CONTACT_SIDE_OVERRIDES.get(config.part_name)
+    if side_override is None:
+        min_outside = _foot_point_outside_penalty_xz(baseline_points, min_footprint)
+        max_outside = _foot_point_outside_penalty_xz(baseline_points, max_footprint)
+        use_max_y = max_outside < min_outside
+        contact_side_selection = "heuristic"
+    elif side_override == "min_y":
+        use_max_y = False
+        contact_side_selection = "override:min_y"
+    elif side_override == "max_y":
+        use_max_y = True
+        contact_side_selection = "override:max_y"
+    else:
+        raise ValueError(
+            f"Invalid palm contact side override for {config.part_name}: {side_override}"
+        )
     footprint = max_footprint if use_max_y else min_footprint
 
     vertices = np.asarray(mesh.vertices, dtype=float)
@@ -622,7 +642,7 @@ def optimize_palm_surface_part(
     initial_stats = distance_stats(np.array([0.0, 0.0, 0.0], dtype=float))
     initial_mean = float(initial_stats["mean_m"])
     print(
-        f"[{config.part_name}] initial mean distance={initial_mean:.6f} m | y_snap_offset={y_snap_offset:.6f} m | contact_side={'max_y' if use_max_y else 'min_y'}"
+        f"[{config.part_name}] initial mean distance={initial_mean:.6f} m | y_snap_offset={y_snap_offset:.6f} m | contact_side={'max_y' if use_max_y else 'min_y'} ({contact_side_selection})"
     )
 
     previous_seed = previous_seed_map.get(config.part_name)
@@ -786,6 +806,7 @@ def optimize_palm_surface_part(
             "y_snap_offset_m": y_snap_offset,
             "footprint_area_m2": footprint_area,
             "contact_side": "max_y" if use_max_y else "min_y",
+            "contact_side_selection": contact_side_selection,
             "body_property": body_property,
             "strategy_name": strategy.name,
             "inside_penalty_weight": inside_penalty_weight,

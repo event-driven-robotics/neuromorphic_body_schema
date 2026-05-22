@@ -88,62 +88,62 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.001042470981485235,
-      "median_distance_m": 0.0004213202058340483,
-      "p90_distance_m": 0.0025646299356148253,
-      "inside_fraction": 0.5454545454545454
+      "mean_distance_m": 0.0012328604903866882,
+      "median_distance_m": 0.0011264106469785634,
+      "p90_distance_m": 0.0020598926874558533,
+      "inside_fraction": 0.0
     },
     "optimized": {
       "delta_angles_deg": [
         0.0,
-        25.0,
+        0.0,
         0.0
       ],
       "delta_quaternion_wxyz": [
-        0.9762960071199334,
+        1.0,
         0.0,
-        0.21643961393810288,
+        0.0,
         0.0
       ],
       "delta_offsets_m": [
-        0.004151954834578031,
-        0.026179199897122384,
-        -0.019684584730334936
+        0.0,
+        -0.0035747998874664302,
+        0.0
       ],
-      "mean_distance_m": 0.0006288773318627186,
-      "median_distance_m": 0.0003221987228197757,
-      "p90_distance_m": 0.0018997165894842677,
-      "inside_fraction": 0.7727272727272727
+      "mean_distance_m": 0.0012328604903866882,
+      "median_distance_m": 0.0011264106469785634,
+      "p90_distance_m": 0.0020598926874558533,
+      "inside_fraction": 0.0
     },
     "delta": {
       "angles_deg": [
         0.0,
-        25.0,
+        0.0,
         0.0
       ],
       "quaternion_wxyz": [
-        0.9762960071199334,
+        1.0,
         0.0,
-        0.21643961393810288,
+        0.0,
         0.0
       ],
-      "rotation_distance_deg": 25.000000000000004,
+      "rotation_distance_deg": 0.0,
       "offsets_m": [
-        0.004151954834578031,
-        0.026179199897122384,
-        -0.019684584730334936
+        0.0,
+        -0.0035747998874664302,
+        0.0
       ],
-      "mean_distance_m": -0.00041359364962251645,
-      "mean_distance_improvement_pct": 39.674356118120336,
-      "inside_fraction": 0.2272727272727273
+      "mean_distance_m": 0.0,
+      "mean_distance_improvement_pct": 0.0,
+      "inside_fraction": 0.0
     },
     "optimizer": {
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
-      "nit": 18,
-      "nfev": 92,
-      "objective": 1000189.3216851802,
+      "nit": 15,
+      "nfev": 84,
+      "objective": 1018992.1622169329,
       "optimizer_method": "L-BFGS-B",
       "solver": "L-BFGS-B",
       "seed_count": 1,
@@ -161,7 +161,7 @@
       ],
       "selected_seed_offsets_m": [
         0.0,
-        0.026179199897122384,
+        -0.0035747998874664302,
         0.0
       ],
       "angle_bounds_deg": [
@@ -177,10 +177,11 @@
       "fine_refinement": null,
       "polish_mode": false,
       "polish_refinement": null,
-      "surface_y_m": 0.021179199897122383,
-      "y_snap_offset_m": 0.026179199897122384,
-      "footprint_area_m2": 0.0011639950201027317,
-      "contact_side": "max_y",
+      "surface_y_m": -0.008574799887466431,
+      "y_snap_offset_m": -0.0035747998874664302,
+      "footprint_area_m2": 5.022134161312451e-08,
+      "contact_side": "min_y",
+      "contact_side_selection": "override:min_y",
       "body_property": "flat_surface",
       "strategy_name": "flat_surface_planar",
       "inside_penalty_weight": 0.0,
@@ -276,9 +277,9 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0008636147893924724,
-      "median_distance_m": 0.0008496849070852873,
-      "p90_distance_m": 0.001327936366831785,
+      "mean_distance_m": 0.0008663103834059043,
+      "median_distance_m": 0.0008517502968192488,
+      "p90_distance_m": 0.0013380030400866692,
       "inside_fraction": 1.0
     },
     "optimized": {
@@ -298,9 +299,9 @@
         -0.0016697999123513694,
         0.0
       ],
-      "mean_distance_m": 0.0008636147893924724,
-      "median_distance_m": 0.0008496849070852873,
-      "p90_distance_m": 0.001327936366831785,
+      "mean_distance_m": 0.0008663103834059043,
+      "median_distance_m": 0.0008517502968192488,
+      "p90_distance_m": 0.0013380030400866692,
       "inside_fraction": 1.0
     },
     "delta": {
@@ -329,9 +330,9 @@
       "success": false,
       "status": 2,
       "message": "ABNORMAL: ",
-      "nit": 6,
-      "nfev": 416,
-      "objective": 5.2674357308629975,
+      "nit": 7,
+      "nfev": 384,
+      "objective": 5.27085753337413,
       "optimizer_method": "L-BFGS-B",
       "solver": "L-BFGS-B",
       "seed_count": 1,
@@ -369,6 +370,7 @@
       "y_snap_offset_m": -0.0016697999123513694,
       "footprint_area_m2": 0.003994768120626196,
       "contact_side": "min_y",
+      "contact_side_selection": "override:min_y",
       "body_property": "flat_surface",
       "strategy_name": "flat_surface_yaw_tight",
       "inside_penalty_weight": 0.0,
