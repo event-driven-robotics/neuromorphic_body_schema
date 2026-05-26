@@ -1,6 +1,6 @@
 <mujoco model="iCub">
 
-  <include file="iCub_v2_full_body_improved.xml"/>
+  <include file="icub_v2_full_body_improved_contact_sensors.xml"/>
 
   <option
     cone="elliptic"
@@ -35,6 +35,9 @@
 
   <visual>
 
+    <!-- Reduce near-plane clipping so close inspection of hand geometry does not get sliced -->
+    <map znear="0.0001" zfar="50"/>
+
     <!-- Headlight: warm fill, no specular blow-out -->
     <headlight
       diffuse="0.55 0.55 0.55"
@@ -45,7 +48,7 @@
     <rgba haze="0.12 0.18 0.26 1"/>
 
     <!-- Default camera angle: slightly raised, looking at standing robot -->
-    <global azimuth="140" elevation="-18" offwidth="1280" offheight="720"/>
+    <global azimuth="185" elevation="-18" offwidth="1280" offheight="720"/>
 
     <!-- Shadow quality -->
     <quality shadowsize="4096"/>

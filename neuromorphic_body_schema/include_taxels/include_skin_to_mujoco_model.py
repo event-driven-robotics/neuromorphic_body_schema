@@ -54,6 +54,7 @@ from typing import Sequence, cast
 import re
 import os
 import json
+import xml.etree.ElementTree as ET
 
 from neuromorphic_body_schema.helpers.helpers import POSITIONS_FILES
 
@@ -111,12 +112,21 @@ FINGER_BODY_TO_PART_GROUP = {
 
 ICUB_HEAD_COLOR = [1, 1, 1, 1]  # white
 ICUB_SKIN_COLOR = [0.57647, 0.1176, 0.7882, 1]  # purple
-ICUB_METAL_PARTS_COLOR = [0.9, 0.9, 0.9, 1]  # metallic gray
-ICUB_BLACK_PARTS_COLOR = [0.0, 0.0, 0.0, 1.0]  # black
+ICUB_METAL_PARTS_COLOR = [0.62, 0.64, 0.67, 1]  # plain steel-like metallic gray
+ICUB_BLACK_PARTS_COLOR = [0.08, 0.08, 0.08, 1.0]  # near-black to retain lighting detail
+
+ICUB_MATERIAL_METAL = "icub_mat_metal_steel"
+ICUB_MATERIAL_HEAD = "icub_mat_head_white_plastic"
+ICUB_MATERIAL_SKIN_FABRIC = "icub_mat_skin_fabric"
+ICUB_MATERIAL_SKIN_PLASTIC = "icub_mat_skin_plastic"
+ICUB_MATERIAL_BLACK = "icub_mat_black_plastic"
+ICUB_MATERIAL_COL_INVISIBLE = "icub_mat_collision_invisible"
 
 HEAD_BODY_NAMES = {"head", "eyes_tilt_frame", "l_eye", "r_eye"}
 PALM_BODY_NAMES = {"r_hand", "l_hand"}
 FINGERTIP_BODY_NAMES = set(FINGER_BODY_TO_PART_GROUP.keys())
+# Feet are skin-colored in appearance but are smooth plastic, not fabric.
+SKIN_PLASTIC_BODY_NAMES = {"l_foot", "r_foot"}
 # Taxel sites for feet live in l_ankle_2/r_ankle_2, but the visible foot mesh
 # sits in l_foot/r_foot — remap so the foot body gets skin color, not ankle.
 _SKIN_COLOR_BODY_REMAP = {"l_ankle_2": "l_foot", "r_ankle_2": "r_foot"}
@@ -314,13 +324,13 @@ def validate_optimization_report(report_path: str) -> list[dict[str, object]]:
     return entries
 
 
-def load_optimized_deltas(report_path: str) -> dict[str, tuple[np.ndarray, np.ndarray]]:
+def load_optimized_deltas(report_path: str) -> dict[str, tuple[np.ndarray, np.ndarray, np.ndarray | None]]:
     """Load optimized delta transforms from the optimizer JSON report.
 
     Returns a mapping:
-        part_name -> (delta_angles_deg[3], delta_offsets_m[3])
+        part_name -> (delta_angles_deg[3], delta_offsets_m[3], delta_quaternion_wxyz[4] | None)
     """
-    deltas: dict[str, tuple[np.ndarray, np.ndarray]] = {}
+    deltas: dict[str, tuple[np.ndarray, np.ndarray, np.ndarray | None]] = {}
     if not os.path.exists(report_path):
         return deltas
 
@@ -332,6 +342,7 @@ def load_optimized_deltas(report_path: str) -> dict[str, tuple[np.ndarray, np.nd
 
         angle_values = optimized.get("delta_angles_deg")
         offset_values = optimized.get("delta_offsets_m")
+        quat_values = optimized.get("delta_quaternion_wxyz")
         if angle_values is None or offset_values is None:
             continue
 
@@ -340,7 +351,13 @@ def load_optimized_deltas(report_path: str) -> dict[str, tuple[np.ndarray, np.nd
         if angles.shape != (3,) or offsets.shape != (3,):
             continue
 
-        deltas[part] = (angles, offsets)
+        quat: np.ndarray | None = None
+        if quat_values is not None:
+            quat_arr = np.array(quat_values, dtype=float)
+            if quat_arr.shape == (4,):
+                quat = quat_arr
+
+        deltas[part] = (angles, offsets, quat)
 
     return deltas
 
@@ -424,7 +441,120 @@ def parse_args() -> argparse.Namespace:
         default=OPTIMIZATION_REPORT_JSON,
         help="Path to the optimization report JSON file.",
     )
+    parser.add_argument(
+        "--style-mode",
+        choices=["material", "rgba"],
+        default="material",
+        help="Visual styling mode for geoms: material (default) or legacy rgba.",
+    )
+    parser.add_argument(
+        "--taxel-site-size",
+        type=float,
+        default=0.002,
+        help="MuJoCo site sphere radius in meters for inserted taxels (default: 0.002).",
+    )
+    parser.add_argument(
+        "--apply-anchor-body-transform",
+        action="store_true",
+        help="Experimentally apply the anchor body's local pos/quat to inserted taxels in addition to the optimizer transform chain.",
+    )
+    parser.add_argument(
+        "--use-frozen-report-points",
+        action="store_true",
+        help="Experimentally precompute final report taxel coordinates once per part and insert those coordinates verbatim.",
+    )
     return parser.parse_args()
+
+
+def load_body_local_transforms(model_path: str) -> dict[str, tuple[np.ndarray, np.ndarray]]:
+    """Load body-local pos/quaternion transforms from a MuJoCo XML file."""
+
+    tree = ET.parse(model_path)
+    root = tree.getroot()
+
+    transforms: dict[str, tuple[np.ndarray, np.ndarray]] = {}
+    for body in root.iter("body"):
+        name = body.attrib.get("name")
+        if not name:
+            continue
+        pos = np.array(
+            [float(v) for v in body.attrib.get("pos", "0 0 0").split()],
+            dtype=float,
+        )
+        quat = np.array(
+            [float(v) for v in body.attrib.get("quat", "1 0 0 0").split()],
+            dtype=float,
+        )
+        transforms[name] = (pos, quat)
+    return transforms
+
+
+def load_frozen_report_points(
+    report_path: str,
+    path_to_skin: str,
+) -> dict[str, list[tuple[int, np.ndarray]]]:
+    """Precompute final per-part taxel coordinates from the report once."""
+
+    frozen: dict[str, list[tuple[int, np.ndarray]]] = {}
+    if not os.path.exists(report_path):
+        return frozen
+
+    for entry in _parse_report_json(report_path):
+        part = entry.get("part")
+        position_file = entry.get("position_file")
+        manual_steps_raw = entry.get("manual_steps", [])
+        optimized = entry.get("optimized")
+        include_to_model = bool(entry.get("include_to_model", entry.get("inlcude_to_model", True)))
+        if not include_to_model:
+            continue
+        if not isinstance(part, str) or not isinstance(position_file, str) or not isinstance(optimized, dict):
+            continue
+
+        file_path = os.path.join(path_to_skin, position_file)
+        if not os.path.isfile(file_path):
+            continue
+
+        calibration = read_calibration_data(file_path)
+        taxel2repr = read_taxel2repr_data(file_path)
+        taxels = validate_taxel_data(calibration, taxel2repr if taxel2repr else None)
+        if bool(entry.get("rebase", False)):
+            taxels = rebase_coordinate_system(taxels)
+
+        manual_steps: list[tuple[list[float], list[float]]] = []
+        if isinstance(manual_steps_raw, list):
+            for step in manual_steps_raw:
+                if not isinstance(step, dict):
+                    continue
+                offsets = step.get("offsets_m")
+                angles = step.get("angles_deg")
+                if isinstance(offsets, list) and isinstance(angles, list) and len(offsets) == 3 and len(angles) == 3:
+                    manual_steps.append((
+                        [float(offsets[0]), float(offsets[1]), float(offsets[2])],
+                        [float(angles[0]), float(angles[1]), float(angles[2])],
+                    ))
+
+        delta_offsets = np.array(optimized.get("delta_offsets_m", [0.0, 0.0, 0.0]), dtype=float)
+        quat_values = optimized.get("delta_quaternion_wxyz")
+        angle_values = optimized.get("delta_angles_deg", [0.0, 0.0, 0.0])
+        delta_quat = None
+        if isinstance(quat_values, list) and len(quat_values) == 4:
+            delta_quat = np.array(quat_values, dtype=float)
+        delta_angles = np.array(angle_values, dtype=float)
+
+        part_points: list[tuple[int, np.ndarray]] = []
+        for pos_raw, _, idx in taxels:
+            pos = np.array(pos_raw, dtype=float)
+            for offsets_step, angles_step in manual_steps:
+                pos = rotate_position(pos=pos, offsets=offsets_step, angle_degrees=angles_step)
+            if delta_quat is not None:
+                pos = apply_quaternion_transform(pos=pos, offsets=delta_offsets.tolist(), quat_wxyz=delta_quat.tolist())
+            else:
+                pos = rotate_position(pos=pos, offsets=delta_offsets.tolist(), angle_degrees=delta_angles.tolist())
+            part_points.append((int(idx), np.array(pos, dtype=float)))
+
+        frozen[part] = part_points
+
+    return frozen
 
 
 def rebase_coordinate_system(taxel_pos: list[tuple[np.ndarray, np.ndarray, int]]) -> list[tuple[np.ndarray, np.ndarray, int]]:
@@ -525,6 +655,46 @@ def rotate_position(
     pos = np.dot(rotation_matrix, pos)
 
     return np.round(pos, 12)
+
+
+def _normalize_quaternion_wxyz(quat_wxyz: Sequence[float]) -> np.ndarray:
+    """Normalize a quaternion in wxyz convention with stable identity fallback."""
+
+    q = np.array(quat_wxyz, dtype=float)
+    norm = float(np.linalg.norm(q))
+    if norm <= 1e-12:
+        return np.array([1.0, 0.0, 0.0, 0.0], dtype=float)
+    return q / norm
+
+
+def _quat_wxyz_to_xyzw(quat_wxyz: Sequence[float]) -> np.ndarray:
+    """Convert quaternion from wxyz to xyzw convention."""
+
+    q = _normalize_quaternion_wxyz(quat_wxyz)
+    return np.array([q[1], q[2], q[3], q[0]], dtype=float)
+
+
+def apply_quaternion_transform(
+    pos: np.ndarray,
+    offsets: Sequence[float],
+    quat_wxyz: Sequence[float],
+) -> np.ndarray:
+    """Apply translation then quaternion rotation to match optimizer transform convention."""
+
+    qx, qy, qz, qw = _quat_wxyz_to_xyzw(quat_wxyz)
+
+    # Build the equivalent rotation matrix from xyzw components.
+    rot = np.array(
+        [
+            [1.0 - 2.0 * (qy * qy + qz * qz), 2.0 * (qx * qy - qz * qw), 2.0 * (qx * qz + qy * qw)],
+            [2.0 * (qx * qy + qz * qw), 1.0 - 2.0 * (qx * qx + qz * qz), 2.0 * (qy * qz - qx * qw)],
+            [2.0 * (qx * qz - qy * qw), 2.0 * (qy * qz + qx * qw), 1.0 - 2.0 * (qx * qx + qy * qy)],
+        ],
+        dtype=float,
+    )
+
+    shifted = np.array(pos, dtype=float) + np.array(offsets, dtype=float)
+    return np.round(rot @ shifted, 12)
 
 
 def read_calibration_data(file_path: str) -> np.ndarray:
@@ -688,14 +858,41 @@ def _set_geom_rgba(line: str, rgba_value: str) -> str:
     return line.replace("/>", f' rgba="{rgba_value}"/>', 1)
 
 
+def _set_geom_material(line: str, material_name: str) -> str:
+    """Set or inject a material attribute on a single-line <geom .../> tag."""
+    if "<geom" not in line:
+        return line
+    if 'material="' in line:
+        return re.sub(r'material="[^"]*"', f'material="{material_name}"', line, count=1)
+    return line.replace("/>", f' material="{material_name}"/>', 1)
+
+
+def _remove_geom_attr(line: str, attr_name: str) -> str:
+    """Remove one XML attribute from a single-line <geom .../> tag if present."""
+    if "<geom" not in line:
+        return line
+    return re.sub(rf'\s+{attr_name}="[^"]*"', "", line, count=1)
+
+
+def _set_rgba_alpha(rgba_value: str, alpha: float) -> str:
+    """Return an RGBA string with the same RGB values and a replaced alpha."""
+    parts = rgba_value.split()
+    if len(parts) != 4:
+        return rgba_value
+    parts[3] = str(alpha)
+    return " ".join(parts)
+
+
 def apply_body_part_colors(
     lines: list[str],
     skin_body_names: set[str],
     head_body_names: set[str],
     palm_body_names: set[str],
     fingertip_body_names: set[str],
+    skin_plastic_body_names: set[str],
+    style_mode: str,
 ) -> list[str]:
-    """Color geoms by enclosing body name or mesh asset name using head/skin/metal categories."""
+    """Style geoms by enclosing body using either material- or rgba-based assignment."""
     skin_mesh_names = load_skin_mesh_names(OPTIMIZATION_REPORT_JSON)
     colored_lines = list(lines)
     body_stack: list[str] = []
@@ -704,6 +901,15 @@ def apply_body_part_colors(
     metal_rgba = _format_rgba(ICUB_METAL_PARTS_COLOR)
     black_rgba = _format_rgba(ICUB_BLACK_PARTS_COLOR)
 
+    # Build a name index so we can detect paired *_col_0 <-> *_vis_0 geoms.
+    geom_names: set[str] = set()
+    for line in colored_lines:
+        if "<geom" not in line:
+            continue
+        name_match = re.search(r'\bname="([^"]+)"', line)
+        if name_match:
+            geom_names.add(name_match.group(1))
+
     for idx, line in enumerate(colored_lines):
         open_match = re.search(r'<body\s+name="([^"]+)"', line)
         if open_match:
@@ -711,17 +917,51 @@ def apply_body_part_colors(
 
         if "<geom" in line and body_stack:
             current_body = body_stack[-1]
+            name_match = re.search(r'\bname="([^"]+)"', line)
+            geom_name = name_match.group(1) if name_match else None
             mesh_match = re.search(r'\bmesh="([^"]+)"', line)
             geom_mesh = mesh_match.group(1) if mesh_match else None
+
+            material_name = ICUB_MATERIAL_METAL
             if current_body in palm_body_names or current_body in fingertip_body_names:
                 rgba_value = black_rgba
+                material_name = ICUB_MATERIAL_BLACK
             elif current_body in head_body_names:
                 rgba_value = head_rgba
+                material_name = ICUB_MATERIAL_HEAD
+            elif current_body in skin_plastic_body_names:
+                rgba_value = skin_rgba
+                material_name = ICUB_MATERIAL_SKIN_PLASTIC
             elif current_body in skin_body_names or (geom_mesh is not None and geom_mesh in skin_mesh_names):
                 rgba_value = skin_rgba
+                material_name = ICUB_MATERIAL_SKIN_FABRIC
             else:
                 rgba_value = metal_rgba
-            colored_lines[idx] = _set_geom_rgba(line, rgba_value)
+                material_name = ICUB_MATERIAL_METAL
+
+            # If both visual and collision geoms exist for the same segment,
+            # keep visual geoms opaque and make collision geoms transparent.
+            force_invisible_col = False
+            if geom_name is not None and geom_name.endswith("_col_0"):
+                vis_name = f"{geom_name[:-6]}_vis_0"
+                if vis_name in geom_names:
+                    rgba_value = _set_rgba_alpha(rgba_value, 0.0)
+                    force_invisible_col = True
+            elif geom_name is not None and geom_name.endswith("_vis_0"):
+                col_name = f"{geom_name[:-6]}_col_0"
+                if col_name in geom_names:
+                    rgba_value = _set_rgba_alpha(rgba_value, 1.0)
+            else:
+                rgba_value = _set_rgba_alpha(rgba_value, 1.0)
+
+            if style_mode == "material":
+                if force_invisible_col:
+                    material_name = ICUB_MATERIAL_COL_INVISIBLE
+                styled = _set_geom_material(line, material_name)
+                styled = _remove_geom_attr(styled, "rgba")
+                colored_lines[idx] = styled
+            else:
+                colored_lines[idx] = _set_geom_rgba(line, rgba_value)
 
         close_count = line.count("</body")
         for _ in range(close_count):
@@ -735,8 +975,12 @@ def include_skin_to_mujoco_model(
     mujoco_model: str,
     path_to_skin: str,
     skin_parts: dict[str, str],
-    optimized_deltas: dict[str, tuple[np.ndarray, np.ndarray]] | None = None,
+    optimized_deltas: dict[str, tuple[np.ndarray, np.ndarray, np.ndarray | None]] | None = None,
     report_part_metadata: dict[str, dict[str, object]] | None = None,
+    style_mode: str = "material",
+    taxel_site_size: float = 0.002,
+    apply_anchor_body_transform: bool = False,
+    frozen_report_points: dict[str, list[tuple[int, np.ndarray]]] | None = None,
 ) -> None:
     """
     Integrates tactile sensor (taxel) data into a MuJoCo robot model XML file.
@@ -766,6 +1010,8 @@ def include_skin_to_mujoco_model(
         report_part_metadata (dict | None): Optional metadata loaded from the
             optimization report keyed by part name. When present, manual_steps,
             rebase flags, body anchors, and sensor groups are read from report.
+        taxel_site_size (float): Radius of each inserted taxel site sphere in
+            meters. This affects only UI appearance, not site center position.
 
     Returns:
         None: The function writes output to files:
@@ -777,6 +1023,10 @@ def include_skin_to_mujoco_model(
         optimized_deltas = {}
     if report_part_metadata is None:
         report_part_metadata = {}
+    if frozen_report_points is None:
+        frozen_report_points = {}
+
+    body_local_transforms = load_body_local_transforms(mujoco_model) if apply_anchor_body_transform else {}
 
     report_by_body: dict[str, dict[str, object]] = {}
     for part_name, metadata in report_part_metadata.items():
@@ -840,6 +1090,8 @@ def include_skin_to_mujoco_model(
         head_body_names=HEAD_BODY_NAMES,
         palm_body_names=PALM_BODY_NAMES,
         fingertip_body_names=FINGERTIP_BODY_NAMES,
+        skin_plastic_body_names=SKIN_PLASTIC_BODY_NAMES,
+        style_mode=style_mode,
     )
 
     # TODO ensure the right order!
@@ -871,6 +1123,7 @@ def include_skin_to_mujoco_model(
             add_taxels = False
             current_manual_steps: list[tuple[list[float], list[float]]] = []
             current_rebase = False
+            current_body_transform: tuple[np.ndarray, np.ndarray] | None = None
             part = body_name
             if body_name in report_by_body:
                 report_cfg = report_by_body[body_name]
@@ -897,6 +1150,7 @@ def include_skin_to_mujoco_model(
                 manual_steps_raw = report_cfg.get("manual_steps", [])
                 if isinstance(manual_steps_raw, list):
                     current_manual_steps = cast(list[tuple[list[float], list[float]]], manual_steps_raw)
+                current_body_transform = body_local_transforms.get(body_name)
                 parts_to_add.append(part)
 
             finger_cfg = FINGER_BODY_TO_PART_GROUP.get(body_name)
@@ -923,7 +1177,7 @@ def include_skin_to_mujoco_model(
                         taxel_ids.append(idx)
                         lines.insert(
                             line_counter,
-                            f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" type="sphere" group="{group_counter}" pos="{finger_pos[0]} {finger_pos[1]} {finger_pos[2]}" rgba="0 1 0 0.5"/>\n',
+                            f'{" "*identation}<site name="{part}_taxel_{idx}" size="{taxel_site_size}" type="sphere" group="{group_counter}" pos="{finger_pos[0]} {finger_pos[1]} {finger_pos[2]}" rgba="0 1 0 0.5"/>\n',
                         )
                         line_counter += 1
                         idx += 1
@@ -941,12 +1195,24 @@ def include_skin_to_mujoco_model(
                         raise ValueError(
                             f"Missing report-driven manual_steps for non-finger part: {part}"
                         )
+                    if part in frozen_report_points:
+                        for idx, pos in frozen_report_points[part]:
+                            taxel_ids.append(idx)
+                            lines.insert(
+                                line_counter,
+                                f'{" "*identation}<site name="{part}_taxel_{idx}" size="{taxel_site_size}" type="sphere" group="{group_counter}" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.5"/>\n',
+                            )
+                            line_counter += 1
+                        line_counter -= 1
+                        taxel_ids_to_add.append(taxel_ids)
+                        continue
                     # Rebase only when explicitly declared by the report.
                     if current_rebase:
                         taxels_to_add = rebase_coordinate_system(taxels_to_add)
                     for taxel in taxels_to_add:
                         pos, _, idx = cast(
                             tuple[np.ndarray, np.ndarray, int], taxel)
+                        pos = np.array(pos, dtype=float)
                         taxel_ids.append(idx)
                         for offsets_step, angles_step in current_manual_steps:
                             pos = rotate_position(
@@ -957,16 +1223,31 @@ def include_skin_to_mujoco_model(
 
                         # Apply optional optimized per-part refinement as final step.
                         if part in optimized_deltas:
-                            delta_angles, delta_offsets = optimized_deltas[part]
-                            pos = rotate_position(
+                            delta_angles, delta_offsets, delta_quat = optimized_deltas[part]
+                            if delta_quat is not None:
+                                pos = apply_quaternion_transform(
+                                    pos=pos,
+                                    offsets=delta_offsets.tolist(),
+                                    quat_wxyz=delta_quat.tolist(),
+                                )
+                            else:
+                                pos = rotate_position(
+                                    pos=pos,
+                                    offsets=delta_offsets.tolist(),
+                                    angle_degrees=delta_angles.tolist(),
+                                )
+
+                        if current_body_transform is not None:
+                            body_pos, body_quat = current_body_transform
+                            pos = apply_quaternion_transform(
                                 pos=pos,
-                                offsets=delta_offsets.tolist(),
-                                angle_degrees=delta_angles.tolist(),
+                                offsets=body_pos.tolist(),
+                                quat_wxyz=body_quat.tolist(),
                             )
 
                         lines.insert(
                             line_counter,
-                            f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" type="sphere" group="{group_counter}" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.5"/>\n',
+                            f'{" "*identation}<site name="{part}_taxel_{idx}" size="{taxel_site_size}" type="sphere" group="{group_counter}" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.5"/>\n',
                         )
                         line_counter += 1
                 line_counter -= 1  # go one line back after we added the last taxel
@@ -1074,12 +1355,20 @@ if __name__ == "__main__":
             "No report metadata found. Non-finger body taxels cannot be inserted; only manual finger routing remains available."
         )
 
+    frozen_points = load_frozen_report_points(report_path, TAXEL_INI_PATH) if args.use_frozen_report_points else {}
+    if args.use_frozen_report_points:
+        print(f"Loaded frozen report points for {len(frozen_points)} parts.")
+
     include_skin_to_mujoco_model(
         MUJOCO_MODEL,
         TAXEL_INI_PATH,
         POSITIONS_FILES,
         optimized_deltas=optimized,
         report_part_metadata=metadata,
+        style_mode=args.style_mode,
+        taxel_site_size=float(args.taxel_site_size),
+        apply_anchor_body_transform=bool(args.apply_anchor_body_transform),
+        frozen_report_points=frozen_points,
     )
     print("*******************")
     print("DONE")

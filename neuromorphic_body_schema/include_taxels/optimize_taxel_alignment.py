@@ -40,6 +40,7 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Callable, TypeAlias, cast
 
+import mujoco
 import numpy as np
 import trimesh
 from scipy.optimize import minimize
@@ -55,6 +56,14 @@ from include_skin_to_mujoco_model import (
     rotate_position,
     validate_taxel_data,
 )
+
+# MuJoCo C-extension symbols are resolved dynamically for editor type-checking stability.
+MjModel = getattr(mujoco, "MjModel")
+MjData = getattr(mujoco, "MjData")
+mj_forward = getattr(mujoco, "mj_forward")
+mj_name2id = getattr(mujoco, "mj_name2id")
+mjtObj = getattr(mujoco, "mjtObj")
+mjtGeom = getattr(mujoco, "mjtGeom")
 
 
 Vector3: TypeAlias = tuple[float, float, float]
@@ -83,15 +92,13 @@ class PartConfig:
     part_name: str
     position_file: str
     mesh_files: tuple[str, ...]
-    mesh_pos: tuple[Vector3, ...]
-    mesh_quat_wxyz: tuple[QuaternionWXYZ, ...]
     rebase: bool
     include_to_model: bool = True
     optimizer_method: str = "L-BFGS-B"
     manual_steps: tuple[ManualStep, ...] = ()
     delta_angle_seed_candidates: tuple[Vector3, ...] = ((0.0, 0.0, 0.0),)
-    delta_angle_bounds_deg: Vector3 = (25.0, 25.0, 25.0)
-    delta_translation_bounds_m: Vector3 = (0.03, 0.03, 0.03)
+    delta_angle_bounds_deg: Vector3 = (10.0, 10.0, 10.0)
+    delta_translation_bounds_m: Vector3 = (0.02, 0.02, 0.02)
     include_previous_seed: bool = True
     previous_angle_jitter_candidates: tuple[Vector3, ...] = ()
     previous_offset_jitter_candidates: tuple[Vector3, ...] = ()
@@ -111,6 +118,7 @@ class PartConfig:
 ROOT = Path(__file__).resolve().parents[2]
 POSITIONS_DIR = ROOT / "neuromorphic_body_schema" / "include_taxels" / "positions"
 MESH_DIR = ROOT / "neuromorphic_body_schema" / "meshes_improved"
+MODEL_XML = ROOT / "neuromorphic_body_schema" / "models" / "icub_v2_full_body_improved.xml"
 REPORT_JSON = ROOT / "neuromorphic_body_schema" / \
     "include_taxels" / "taxel_alignment_optimization_report.json"
 REPORT_TXT = ROOT / "neuromorphic_body_schema" / \
@@ -893,10 +901,13 @@ def optimize_foot_sole_part(
         return float(np.mean(penalties)) if penalties else 0.0
 
     def boundary_distances_xy(points_world: np.ndarray) -> np.ndarray:
+        boundary = footprint.boundary
+        if boundary is None:
+            return np.zeros(points_world.shape[0], dtype=float)
         distances: list[float] = []
         for x, y in np.asarray(points_world, dtype=float)[:, [0, 1]]:
             distances.append(
-                float(footprint.boundary.distance(Point(float(x), float(y))))
+                float(boundary.distance(Point(float(x), float(y))))
             )
         return np.array(distances, dtype=float)
 
@@ -1145,136 +1156,98 @@ PARTS: tuple[PartConfig, ...] = (
         part_name="r_upper_leg",
         position_file="right_leg_upper.txt",
         mesh_files=("sim_sea_2-5_r_thigh.stl",),
-        mesh_pos=((0.043709, 0.0701, 0.240813),),
-        mesh_quat_wxyz=((0.5, 0.5, 0.5, 0.5),),
         rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 90.0)),
+            # rotation
             ((0.0, 0.0, 0.0), (0.0, 90.0, 0.0)),
-            ((0.0, 0.0, 0.24), (0.0, 0.0, 0.0)),
-            ((0.05, 0.0, 0.0), (0.0, 0.0, 0.0)),
-            ((0.0, 0.075, 0.0), (0.0, 0.0, 0.0)),
-        ),  # TODO polish
+            ((0.0, 0.0, 0.0), (0.0, 90.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, 0.0, -120.0)),
+            ((0.0, 0.0, 0.0), (0.0, 180.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, 0.0, -70.0)),
+            # translation
+            ((0.0, 0.0, -0.04), (0.0, 0.0, 0.0)),
+        ),
     ),
     PartConfig(
         part_name="r_lower_leg",
         position_file="right_leg_lower.txt",
         mesh_files=("sim_sea_2-5_r_shank.stl",),
-        mesh_pos=((0.043709, 0.0701, 0.386638),),
-        mesh_quat_wxyz=((0.5, 0.5, 0.5, 0.5),),
         rebase=False,
         manual_steps=(
+            # rotation
             ((0.0, 0.0, 0.0), (0.0, 0.0, 90.0)),
-            ((0.0, 0.0, 0.0), (0.0, 90.0, 0.0)),
-            ((0.0, 0.0, 0.39), (0.0, 0.0, 0.0)),
-            ((0.0, 0.075, 0.0), (0.0, 0.0, 0.0)),
-            ((0.05, 0.0, 0.0), (0.0, 0.0, 0.0)),
-        ),  # TODO polish
+            ((0.0, 0.0, 0.0), (0.0, 0.0, -100.0)),
+            ((0.0, 0.0, 0.0), (0.0, 10.0, 0.0)),
+            # translation
+            ((0.0, 0.0, -0.085), (0.0, 0.0, 0.0)),
+            ((0.0, -0.002, 0.0), (0.0, 0.0, 0.0)),
+            ((0.005, 0.0, 0.0), (0.0, 0.0, 0.0)),
+        ),
     ),
     PartConfig(
         part_name="l_upper_leg",
         position_file="left_leg_upper.txt",
         mesh_files=("sim_sea_2-5_l_thigh.stl",),
-        mesh_pos=((0.0437091, -0.0701, 0.240813),),
-        mesh_quat_wxyz=((0.5, 0.5, 0.5, 0.5),),
         rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 90.0)),
-            ((0.0, 0.0, 0.0), (0.0, 90.0, 0.0)),
-            ((0.0, 0.0, 0.24), (0.0, 0.0, 0.0)),
-            ((0.05, 0.0, 0.0), (0.0, 0.0, 0.0)),
-            ((0.0, -0.075, 0.0), (0.0, 0.0, 0.0)),
-        ),  # TODO polish
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+        ),
     ),
     PartConfig(
         part_name="l_lower_leg",
         position_file="left_leg_lower.txt",
         mesh_files=("sim_sea_2-5_l_shank.stl",),
-        mesh_pos=((0.0437091, -0.0701, 0.386638),),
-        mesh_quat_wxyz=((0.5, 0.5, 0.5, 0.5),),
         rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 90.0)),
-            ((0.0, 0.0, 0.0), (0.0, 90.0, 0.0)),
-            ((0.0, 0.0, 0.39), (0.0, 0.0, 0.0)),
-            ((0.0, -0.075, 0.0), (0.0, 0.0, 0.0)),
-            ((0.05, 0.0, 0.0), (0.0, 0.0, 0.0)),
-            ((0.0, 0.0, -0.002), (0.0, 0.0, 0.0)),
-        ),  # TODO polish
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+        ),
     ),
     PartConfig(
         part_name="r_upper_arm",
         position_file="right_arm.txt",
         mesh_files=("sim_sea_2-5_r_elbow.stl",),
-        mesh_pos=((0.131934, 0.0, -0.0353516),),
-        mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
-        rebase=True,
+        rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, -33.0, 0.0)),
-            ((-0.08, 0.0, 0.0), (0.0, 0.0, 0.0)),
-            ((0.0, 0.0, 0.01), (0.0, 0.0, 0.0)),
-        ),  # TODO polish
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+        ),
     ),
     PartConfig(
         part_name="r_forearm",
         position_file="right_forearm_V2.txt",
         mesh_files=("sim_sea_2-5_r_forearm.stl",),
-        mesh_pos=((0.296887, 0.0, -0.0795506),),
-        mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
-        rebase=True,
+        rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, -90.0)),
-            ((0.0, 0.0, 0.0), (0.0, 76.0, 0.0)),
-            ((-0.05, 0.0, 0.0), (0.0, 0.0, 0.0)),
-            # ((0.0, 0.0, -0.002), (0.0, 0.0, 0.0)),
-        ),  # TODO polish
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+        ),
     ),
     PartConfig(
         part_name="l_upper_arm",
         position_file="left_arm.txt",
         mesh_files=("sim_sea_2-5_l_elbow.stl",),
-        mesh_pos=((-0.131901, 0.0, -0.0353428),),
-        mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
-        rebase=True,
+        rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 130.0)),
-            ((0.0, 0.0, 0.0), (0.0, -18.0, 0.0)),
-            ((0.0, 0.0, 0.0), (90.0, 0.0, 0.0)),
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 20.0)),
-            ((0.0, 0.0, 0.0), (0.0, -16.0, 0.0)),
-            ((0.08, 0.0, 0.0), (0.0, 0.0, 0.0)),
-            ((0.0, 0.0, 0.01), (0.0, 0.0, 0.0)),
-        ),  # TODO polish
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+        ),
     ),
     PartConfig(
         part_name="l_forearm",
         position_file="left_forearm_V2.txt",
         mesh_files=("sim_sea_2-5_l_forearm.stl",),
-        mesh_pos=((-0.296887, 0.0, -0.0795506),),
-        mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
-        rebase=True,
+        rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, -90.0)),
-            ((0.0, 0.0, 0.0), (0.0, 102.0, 0.0)),
-            ((0.05, 0.0, 0.0), (0.0, 0.0, 0.0)),
-        ),  # TODO polish
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+        ),
     ),
     PartConfig(
         part_name="torso",
         position_file="torso.txt",
         mesh_files=("sim_ibbbbeba_chest.stl",),
-        mesh_pos=((0.0, 0.0928, -0.024189),),
-        mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
-        rebase=True,
+        rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 90.0)),
-            ((0.0, 0.0, 0.0), (0.0, -90.0, 0.0)),
-            ((0.0, 0.0, 0.0), (5.0, 0.0, 0.0)),
-            ((0.0, 0.0, -0.14), (0.0, 0.0, 0.0)),
-            ((0.0, 0.02, 0.0), (0.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
         ),
-        delta_angle_bounds_deg=(8.0, 8.0, 8.0),
-        delta_translation_bounds_m=(0.01, 0.01, 0.01),
+        delta_angle_bounds_deg=(10.0, 10.0, 10.0),
+        delta_translation_bounds_m=(0.02, 0.02, 0.02),
         distance_focus_to_initial_patch=True,
         distance_focus_radius_m=0.07,
         distance_focus_min_samples=6000,
@@ -1284,61 +1257,171 @@ PARTS: tuple[PartConfig, ...] = (
         part_name="r_palm",
         position_file="right_hand_V2_1.txt",
         mesh_files=("col_RightHandPalm.stl",),
-        mesh_pos=((0.00271607, -0.0015568, -0.00248235),),
-        mesh_quat_wxyz=((0.701057, -0.701057, 0.0922959, 0.0922959),),
         rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (90.0, 0.0, 0.0)),
-            ((0.0, 0.0, 0.0), (0.0, 190.0, 0.0)),
-            ((-0.05, 0.0, 0.0), (0.0, 0.0, 0.0)),
-            ((0.0, -0.005, 0.0), (0.0, 0.0, 0.0)),
-            ((0.0, 0.0, 0.013), (0.0, 0.0, 0.0)),
-        ),  # TODO polish
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+        ),
     ),
     PartConfig(
         part_name="l_palm",
         position_file="left_hand_V2_1.txt",
         mesh_files=("col_LeftHandPalm.stl",),
-        mesh_pos=((-0.00271607, -0.0015568, -0.00248235),),
-        mesh_quat_wxyz=((0.701057, 0.701057, -0.0922959, 0.0922959),),
         rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (90.0, 0.0, 0.0)),
-            ((0.0, 0.0, 0.0), (0.0, -15.0, 0.0)),
-            ((0.05, 0.0, 0.0), (0.0, 0.0, 0.0)),
-            ((0.0, 0.0, 0.01), (0.0, 0.0, 0.0)),
-            ((0.0, -0.007, 0.0), (0.0, 0.0, 0.0)),
-        ),  # TODO polish
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+        ),
     ),
     PartConfig(
         part_name="l_foot",
         position_file="left_foot.txt",
         mesh_files=("sim_sea_2-5_l_sole.stl",),
-        mesh_pos=((0.0, 0.0, 0.0),),
-        mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
         rebase=False,
         include_to_model=False,
         optimizer_method=SOLE_2D_OPTIMIZER_METHOD,
         manual_steps=(
-            ((0.0, 0.0, 0.006), (0.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
         ),
     ),
     PartConfig(
         part_name="r_foot",
         position_file="right_foot.txt",
         mesh_files=("sim_sea_2-5_r_sole.stl",),
-        mesh_pos=((0.0, 0.0, 0.0),),
-        mesh_quat_wxyz=((1.0, 0.0, 0.0, 0.0),),
         rebase=False,
         include_to_model=False,
         optimizer_method=SOLE_2D_OPTIMIZER_METHOD,
         manual_steps=(
-            ((0.0, 0.0, 0.006), (0.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
         ),
     ),
 )
 
 PARTS_BY_NAME: dict[str, PartConfig] = {cfg.part_name: cfg for cfg in PARTS}
+
+_MJ_MODEL_CACHE: Any = None
+_MJ_DATA_CACHE: Any = None
+_MESH_TRANSFORM_CACHE: dict[tuple[str, str], tuple[np.ndarray, np.ndarray]] = {}
+
+
+def _load_mj_model_data() -> tuple[Any, Any]:
+    """Lazily load and forward the reference model used for frame resolution."""
+
+    global _MJ_MODEL_CACHE, _MJ_DATA_CACHE
+    if _MJ_MODEL_CACHE is None or _MJ_DATA_CACHE is None:
+        _MJ_MODEL_CACHE = MjModel.from_xml_path(str(MODEL_XML))
+        _MJ_DATA_CACHE = MjData(_MJ_MODEL_CACHE)
+        mj_forward(_MJ_MODEL_CACHE, _MJ_DATA_CACHE)
+    return _MJ_MODEL_CACHE, _MJ_DATA_CACHE
+
+
+def _is_descendant_or_self(model: Any, body_id: int, ancestor_id: int) -> bool:
+    """Return True when body_id is identical to, or inside, ancestor_id subtree."""
+
+    current = int(body_id)
+    while current >= 0:
+        if current == ancestor_id:
+            return True
+        parent = int(model.body_parentid[current])
+        if parent == current:
+            break
+        current = parent
+    return False
+
+
+def _quat_wxyz_from_rotation_matrix(rotation_matrix: np.ndarray) -> np.ndarray:
+    """Convert 3x3 rotation matrix to normalized quaternion in wxyz order."""
+
+    quat_xyzw = Rotation.from_matrix(rotation_matrix).as_quat()
+    quat_wxyz = np.array(
+        [quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]], dtype=float
+    )
+    norm = np.linalg.norm(quat_wxyz)
+    if norm <= 1e-12:
+        return np.array([1.0, 0.0, 0.0, 0.0], dtype=float)
+    return quat_wxyz / norm
+
+
+def resolve_mesh_transform_from_model(part_name: str, mesh_file: str) -> tuple[np.ndarray, np.ndarray] | None:
+    """Resolve a mesh transform in the part anchor-body frame from the MuJoCo model.
+
+    Returns (pos_xyz, quat_wxyz) in the local frame of PART_MODEL_BODY[part_name].
+    """
+
+    cache_key = (part_name, mesh_file)
+    if cache_key in _MESH_TRANSFORM_CACHE:
+        pos_cached, quat_cached = _MESH_TRANSFORM_CACHE[cache_key]
+        return pos_cached.copy(), quat_cached.copy()
+
+    try:
+        model, data = _load_mj_model_data()
+        anchor_body_name = PART_MODEL_BODY[part_name]
+        anchor_id = int(mj_name2id(model, mjtObj.mjOBJ_BODY, anchor_body_name))
+
+        mesh_name = Path(mesh_file).stem
+        mesh_id = int(mj_name2id(model, mjtObj.mjOBJ_MESH, mesh_name))
+
+        mesh_geom_type = int(mjtGeom.mjGEOM_MESH)
+        geom_ids: list[int] = []
+        for geom_id in range(int(model.ngeom)):
+            if int(model.geom_type[geom_id]) != mesh_geom_type:
+                continue
+            if int(model.geom_dataid[geom_id]) != mesh_id:
+                continue
+            geom_ids.append(geom_id)
+        if not geom_ids:
+            return None
+
+        preferred = [
+            gid
+            for gid in geom_ids
+            if _is_descendant_or_self(model, int(model.geom_bodyid[gid]), anchor_id)
+        ]
+        candidates = preferred if preferred else geom_ids
+        same_body_candidates = [
+            gid for gid in candidates if int(model.geom_bodyid[gid]) == anchor_id
+        ]
+        if same_body_candidates:
+            candidates = same_body_candidates
+
+        # Prefer direct XML-local geom pose when a matching geom is attached to
+        # the anchor body itself. This keeps optimization in the same local
+        # frame used for taxel insertion.
+        if same_body_candidates:
+            selected_id = int(same_body_candidates[0])
+            local_pos = np.array(model.geom_pos[selected_id], dtype=float)
+            local_quat = normalize_quaternion_wxyz(
+                np.array(model.geom_quat[selected_id], dtype=float)
+            )
+            _MESH_TRANSFORM_CACHE[cache_key] = (local_pos.copy(), local_quat.copy())
+            return local_pos, local_quat
+
+        anchor_pos = np.array(data.xpos[anchor_id], dtype=float)
+        anchor_rot = np.array(data.xmat[anchor_id], dtype=float).reshape(3, 3)
+
+        best_score = float("inf")
+        best_pos: np.ndarray | None = None
+        best_quat: np.ndarray | None = None
+
+        for geom_id in candidates:
+            geom_pos_world = np.array(data.geom_xpos[geom_id], dtype=float)
+            geom_rot_world = np.array(data.geom_xmat[geom_id], dtype=float).reshape(3, 3)
+
+            rel_pos = anchor_rot.T @ (geom_pos_world - anchor_pos)
+            rel_rot = anchor_rot.T @ geom_rot_world
+            rel_quat = _quat_wxyz_from_rotation_matrix(rel_rot)
+            score = float(np.linalg.norm(rel_pos))
+
+            if score < best_score:
+                best_score = score
+                best_pos = rel_pos
+                best_quat = rel_quat
+
+        if best_pos is None or best_quat is None:
+            return None
+
+        _MESH_TRANSFORM_CACHE[cache_key] = (best_pos.copy(), best_quat.copy())
+        return best_pos, best_quat
+    except Exception:
+        return None
 
 
 def apply_part_transform(
@@ -1378,6 +1461,55 @@ def apply_part_transform(
     return out
 
 
+def apply_manual_steps_with_euler_delta(
+    points: np.ndarray,
+    manual_steps: list[dict[str, Any]] | tuple[ManualStep, ...],
+    delta_angles_deg: np.ndarray | None = None,
+    delta_offsets_m: np.ndarray | None = None,
+) -> np.ndarray:
+    """Apply the same per-taxel transform chain used by XML insertion.
+
+    This mirrors include_skin_to_mujoco_model.py exactly: each point is run
+    through all manual rotate_position steps and then one final delta step
+    expressed as Euler XYZ degrees plus offsets.
+    """
+
+    if delta_angles_deg is None:
+        delta_angles_deg = np.zeros(3, dtype=float)
+    if delta_offsets_m is None:
+        delta_offsets_m = np.zeros(3, dtype=float)
+
+    steps: list[tuple[np.ndarray, np.ndarray]] = []
+    for step in manual_steps:
+        if isinstance(step, dict):
+            offsets = np.array(step.get("offsets_m", [0.0, 0.0, 0.0]), dtype=float)
+            angles = np.array(step.get("angles_deg", [0.0, 0.0, 0.0]), dtype=float)
+        else:
+            offsets_raw, angles_raw = step
+            offsets = np.array(offsets_raw, dtype=float)
+            angles = np.array(angles_raw, dtype=float)
+        if offsets.shape != (3,) or angles.shape != (3,):
+            raise ValueError("manual_steps entries must provide 3D offsets and 3D angles")
+        steps.append((offsets, angles))
+
+    out = np.empty_like(points)
+    for i in range(points.shape[0]):
+        pos = np.array(points[i], dtype=float)
+        for offsets_step, angles_step in steps:
+            pos = rotate_position(
+                pos=pos,
+                offsets=offsets_step.tolist(),
+                angle_degrees=angles_step.tolist(),
+            )
+        pos = rotate_position(
+            pos=pos,
+            offsets=np.array(delta_offsets_m, dtype=float).tolist(),
+            angle_degrees=np.array(delta_angles_deg, dtype=float).tolist(),
+        )
+        out[i] = pos
+    return out
+
+
 def load_taxel_points(position_file: Path, rebase: bool) -> np.ndarray:
     """Load tactile taxel coordinates from a positions file.
 
@@ -1398,15 +1530,10 @@ def load_taxel_points(position_file: Path, rebase: bool) -> np.ndarray:
 
 
 def load_mesh(
+    part_name: str,
     mesh_files: tuple[str, ...],
-    mesh_pos: tuple[Vector3, ...],
-    mesh_quat_wxyz: tuple[QuaternionWXYZ, ...],
 ) -> trimesh.Trimesh:
     """Load one or more mesh files into the common body-part reference frame."""
-
-    if not (len(mesh_files) == len(mesh_pos) == len(mesh_quat_wxyz)):
-        raise ValueError(
-            "mesh_files, mesh_pos, and mesh_quat_wxyz must have the same length")
 
     meshes: list[trimesh.Trimesh] = []
     for mesh_file in mesh_files:
@@ -1428,18 +1555,25 @@ def load_mesh(
     # The palm collision meshes in this repo are already in meters.
     scales = []
     scaled_meshes: list[trimesh.Trimesh] = []
-    for mesh_file, mesh, pos, quat in zip(mesh_files, meshes, mesh_pos, mesh_quat_wxyz):
+    for mesh_file, mesh in zip(mesh_files, meshes):
         mesh_local = mesh.copy()
         # Auto-detect mm-exported meshes by raw coordinate magnitude.
         max_abs = float(np.max(np.abs(mesh_local.vertices)))
         scale = 0.001 if max_abs > 2.0 else 1.0
         mesh_local.apply_scale(scale)
 
+        resolved = resolve_mesh_transform_from_model(part_name, mesh_file)
+        if resolved is None:
+            raise RuntimeError(
+                f"Could not resolve mesh transform from model for part={part_name}, mesh={mesh_file}. "
+                "Fix mesh/body naming in icub_v2_full_body_improved.xml instead of using manual fallback transforms."
+            )
+        pos_arr, quat_arr = resolved
+
         # Apply geom orientation/translation from the MuJoCo model body frame.
-        rot4 = trimesh.transformations.quaternion_matrix(
-            np.array(quat, dtype=float))
+        rot4 = trimesh.transformations.quaternion_matrix(quat_arr)
         mesh_local.apply_transform(rot4)
-        mesh_local.apply_translation(np.array(pos, dtype=float))
+        mesh_local.apply_translation(pos_arr)
 
         scales.append(scale)
         scaled_meshes.append(mesh_local)
@@ -1568,6 +1702,17 @@ def build_seed_candidates(
 
     zero_offsets = np.zeros(3, dtype=float)
 
+    if polish:
+        if previous_seed is None:
+            raise RuntimeError(
+                f"Polish mode requires an existing optimized seed in {REPORT_JSON} for part '{config.part_name}'. "
+                "Run optimize_taxel_alignment.py without --polish first to write baseline best results."
+            )
+        prev_angles = previous_seed["angles"]
+        prev_offsets = previous_seed["offsets"]
+        add_candidate("previous:optimized", prev_angles, prev_offsets)
+        return candidates
+
     for idx, angle_seed in enumerate(config.delta_angle_seed_candidates):
         add_candidate(f"configured:{idx}", np.array(
             angle_seed, dtype=float), zero_offsets)
@@ -1578,9 +1723,6 @@ def build_seed_candidates(
     prev_angles = previous_seed["angles"]
     prev_offsets = previous_seed["offsets"]
     add_candidate("previous:optimized", prev_angles, prev_offsets)
-
-    if polish:
-        return candidates
 
     for delta_angles in config.previous_angle_jitter_candidates:
         delta_arr = np.array(delta_angles, dtype=float)
@@ -1636,7 +1778,7 @@ def optimize_part(
 
     points = load_taxel_points(
         POSITIONS_DIR / config.position_file, config.rebase)
-    mesh = load_mesh(config.mesh_files, config.mesh_pos, config.mesh_quat_wxyz)
+    mesh = load_mesh(config.part_name, config.mesh_files)
     body_property, strategy = resolve_strategy_for_part(config.part_name)
     use_flat_surface_optimizer = bool(
         config.optimizer_method == SOLE_2D_OPTIMIZER_METHOD
@@ -2161,7 +2303,7 @@ def build_baseline_result_entry(config: PartConfig) -> JsonDict:
     """
 
     points = load_taxel_points(POSITIONS_DIR / config.position_file, config.rebase)
-    mesh = load_mesh(config.mesh_files, config.mesh_pos, config.mesh_quat_wxyz)
+    mesh = load_mesh(config.part_name, config.mesh_files)
     baseline_points = apply_part_transform(points, config.part_name)
     body_property, strategy = resolve_strategy_for_part(config.part_name)
     use_distance_focus = bool(

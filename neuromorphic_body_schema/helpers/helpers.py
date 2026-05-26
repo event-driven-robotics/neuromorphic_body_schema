@@ -35,8 +35,10 @@ import numpy as np
 _PACKAGE_DIR = Path(__file__).parent.parent
 # MODEL_PATH = str(_PACKAGE_DIR / "models" /
 #                  "icub_v2_full_body_contact_sensors.xml")
+# MODEL_PATH = str(_PACKAGE_DIR / "models" /
+#                  "icub_v2_full_body_improved_contact_sensors.xml")
 MODEL_PATH = str(_PACKAGE_DIR / "models" /
-                 "icub_v2_full_body_improved_contact_sensors.xml")
+                 "scene.xml")
 # Prefer the current folder name in this repository (skinGUI), but keep a
 # fallback for earlier naming variants.
 _triangle_ini_dir = _PACKAGE_DIR / "skinGUI"
@@ -217,10 +219,13 @@ def init_POV(viewer):
         mujoco.viewer.Viewer: The configured viewer instance with the updated camera settings.
     """
 
-    viewer.cam.azimuth = -4.5
-    viewer.cam.distance = 2
-    viewer.cam.elevation = -16
-    viewer.cam.lookat = np.array([0, -0.25, 1])
+    # Rotate startup camera around world Z by +45deg for iso-like view,
+    # while preserving distance/elevation/look-at from current defaults.
+    viewer.cam.azimuth -= 45.0
+    # viewer.cam.azimuth = -4.5
+    # viewer.cam.distance = 2
+    # viewer.cam.elevation = -16
+    # viewer.cam.lookat = np.array([0, -0.25, 1])
 
     # Example: Only show groups 0 and 2, hide others
     viewer.opt.sitegroup[:] = 0  # Hide all groups
