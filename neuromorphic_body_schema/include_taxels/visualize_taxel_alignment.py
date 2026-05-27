@@ -25,7 +25,6 @@ from shapely.ops import unary_union
 
 from optimize_taxel_alignment import (
     PARTS,
-    PART_MODEL_BODY,
     REPORT_JSON,
     ROOT,
     _load_mj_model_data,
@@ -43,16 +42,9 @@ CONTACT_MODEL_XML = (
     / "models"
     / "icub_v2_full_body_improved_contact_sensors.xml"
 )
-MODEL_XML = ROOT / "neuromorphic_body_schema" / "models" / "icub_v2_full_body_improved.xml"
 
-MjModel = getattr(mujoco, "MjModel")
-MjData = getattr(mujoco, "MjData")
-mj_forward = getattr(mujoco, "mj_forward")
 mj_name2id = getattr(mujoco, "mj_name2id")
 mjtObj = getattr(mujoco, "mjtObj")
-
-_WORLD_MODEL_CACHE: Any = None
-_WORLD_DATA_CACHE: Any = None
 
 
 def _polygon_xy_coords(geom: Any) -> tuple[np.ndarray, np.ndarray]:
@@ -140,39 +132,6 @@ def _taxel_trace(points: np.ndarray, color: str, name: str, scene_name: str) -> 
     )
 
 
-def _load_world_model_data() -> tuple[Any, Any]:
-    global _WORLD_MODEL_CACHE, _WORLD_DATA_CACHE
-    if _WORLD_MODEL_CACHE is None or _WORLD_DATA_CACHE is None:
-        _WORLD_MODEL_CACHE = MjModel.from_xml_path(str(MODEL_XML))
-        _WORLD_DATA_CACHE = MjData(_WORLD_MODEL_CACHE)
-        mj_forward(_WORLD_MODEL_CACHE, _WORLD_DATA_CACHE)
-    return _WORLD_MODEL_CACHE, _WORLD_DATA_CACHE
-
-
-def _body_world_transform(part: str) -> tuple[np.ndarray, np.ndarray]:
-    model, data = _load_world_model_data()
-    body_name = PART_MODEL_BODY[part]
-    body_id = int(mj_name2id(model, mjtObj.mjOBJ_BODY, body_name))
-    pos = np.array(data.xpos[body_id], dtype=float)
-    rot = np.array(data.xmat[body_id], dtype=float).reshape(3, 3)
-    return pos, rot
-
-
-def _points_to_world(points: np.ndarray, part: str) -> np.ndarray:
-    pos, rot = _body_world_transform(part)
-    return (rot @ np.asarray(points, dtype=float).T).T + pos
-
-
-def _mesh_to_world(mesh: Any, part: str) -> Any:
-    pos, rot = _body_world_transform(part)
-    mesh_world = mesh.copy()
-    transform = np.eye(4, dtype=float)
-    transform[:3, :3] = rot
-    transform[:3, 3] = pos
-    mesh_world.apply_transform(transform)
-    return mesh_world
-
-
 def _load_compiled_mesh(part_name: str, mesh_files: tuple[str, ...]) -> Any:
     """Load MuJoCo compiled mesh geometry in the same local frame used by the simulator."""
 
@@ -249,7 +208,7 @@ def _manual_steps_from_report(result: dict[str, Any]) -> list[dict[str, Any]]:
     return steps
 
 
-def _read_contact_model_sites(part: str, world_frame: bool = False) -> np.ndarray | None:
+def _read_contact_model_sites(part: str) -> np.ndarray | None:
     if not CONTACT_MODEL_XML.exists():
         return None
     try:
@@ -277,18 +236,10 @@ def _read_contact_model_sites(part: str, world_frame: bool = False) -> np.ndarra
     if not indexed_positions:
         return None
     indexed_positions.sort(key=lambda item: item[0])
-    points = np.vstack([pos for _, pos in indexed_positions])
-    if world_frame:
-        return _points_to_world(points, part)
-    return points
+    return np.vstack([pos for _, pos in indexed_positions])
 
 
-def _write_part_figure(
-    part: str,
-    result: dict[str, Any],
-    world_frame: bool = False,
-    use_compiled_mesh: bool = False,
-) -> Path:
+def _write_part_figure(part: str, result: dict[str, Any]) -> Path:
     position_file = result.get("position_file")
     if not isinstance(position_file, str):
         raise ValueError(f"Missing or invalid position_file in report for part: {part}")
@@ -306,7 +257,7 @@ def _write_part_figure(
         ROOT / "neuromorphic_body_schema" / "include_taxels" / "positions" / position_file,
         rebase,
     )
-    mesh = _load_compiled_mesh(part, mesh_files) if use_compiled_mesh else load_mesh(part, mesh_files)
+    mesh = _load_compiled_mesh(part, mesh_files)
 
     init_angles = np.array(result["initial"]["delta_angles_deg"], dtype=float)
     init_offsets = np.array(result["initial"]["delta_offsets_m"], dtype=float)
@@ -326,12 +277,7 @@ def _write_part_figure(
         delta_offsets_m=opt_offsets,
     )
 
-    if world_frame:
-        mesh = _mesh_to_world(mesh, part)
-        before_points = _points_to_world(before_points, part)
-        after_points = _points_to_world(after_points, part)
-
-    model_sites = _read_contact_model_sites(part, world_frame=world_frame)
+    model_sites = _read_contact_model_sites(part)
     consistency_note = ""
     if model_sites is None:
         consistency_note = " | model check: n/a"
@@ -367,8 +313,7 @@ def _write_part_figure(
         title=(
             f"Taxel Alignment | {part} | mean distance: "
             f"{before_md:.6f} -> {after_md:.6f} m ({improve_pct:.2f}% better)"
-            f" | frame={'world' if world_frame else 'local'}"
-            f" | mesh={'compiled' if use_compiled_mesh else 'raw-stl'}"
+            f" | mesh=compiled"
             f"{consistency_note}"
         ),
         template="plotly_white",
@@ -399,7 +344,7 @@ def _write_footprint_preview(part_cfg) -> Path:
         part_cfg.rebase,
     )
     baseline_points = apply_manual_steps_with_euler_delta(base_points, list(part_cfg.manual_steps))
-    mesh = load_mesh(part_cfg.part_name, part_cfg.mesh_files)
+    mesh = _load_compiled_mesh(part_cfg.part_name, part_cfg.mesh_files)
 
     mesh_footprint = _project_mesh_footprint_xz(mesh)
     taxel_footprint = _project_points_hull_xz(baseline_points)
@@ -518,16 +463,6 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Show the current manual baseline and detected XZ footprint before running optimization.",
     )
-    parser.add_argument(
-        "--world-frame",
-        action="store_true",
-        help="Render mesh and taxels in MuJoCo world coordinates instead of anchor-body local coordinates.",
-    )
-    parser.add_argument(
-        "--use-compiled-mesh",
-        action="store_true",
-        help="Render the compiled MuJoCo mesh geometry instead of the raw STL-derived mesh.",
-    )
     return parser.parse_args()
 
 
@@ -560,12 +495,7 @@ def main() -> None:
             if part not in result_map:
                 print(f"[warn] Missing optimized result for part: {part}")
                 continue
-            output = _write_part_figure(
-                part,
-                result_map[part],
-                world_frame=bool(args.world_frame),
-                use_compiled_mesh=bool(args.use_compiled_mesh),
-            )
+            output = _write_part_figure(part, result_map[part])
             generated.append((part, output))
             print(f"[ok] wrote {output}")
 

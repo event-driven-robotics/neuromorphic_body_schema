@@ -1,16 +1,16 @@
 Taxel alignment optimization report
 
 Part: r_upper_leg
-  mean distance: 0.004936 -> 0.001225 m (75.18% improvement)
-  mean abs improvement: 3.711 mm
-  median distance: 0.003853 -> 0.001065 m
-  p90 distance: 0.010081 -> 0.002218 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [2.6787203889405293, -3.432039088986881, 0.10517770719256662]
-  delta quaternion wxyz (around manual): [0.999277373729875, 0.023391101942408406, -0.029916075243044796, 0.0016171405307202884]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.003361857192329072, -0.0017602551625866124, -0.0011357856097632543]
-  delta angles deg: [2.6787203889405293, -3.432039088986881, 0.10517770719256662]
-  delta rotation distance deg: 4.356629771492074
-  delta offsets m: [0.003361857192329072, -0.0017602551625866124, -0.0011357856097632543]
+  mean distance: 0.008261 -> 0.004040 m (51.10% improvement)
+  mean abs improvement: 4.222 mm
+  median distance: 0.004035 -> 0.001798 m
+  p90 distance: 0.021229 -> 0.008184 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [6.143325878247532, -6.581818886234233, 1.4442088110625428]
+  delta quaternion wxyz (around manual): [0.9967986603948028, 0.05421477183999309, -0.05664439669001932, 0.015639740186078978]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [-0.0006792710844916184, -0.0011396035300274253, -0.01]
+  delta angles deg: [6.143325878247532, -6.581818886234233, 1.4442088110625428]
+  delta rotation distance deg: 9.17169128322645
+  delta offsets m: [-0.0006792710844916184, -0.0011396035300274253, -0.01]
   optimizer method: L-BFGS-B
   solver: L-BFGS-B
   seed count: 1
@@ -18,8 +18,8 @@ Part: r_upper_leg
   selected seed angles deg: [0.0, 0.0, 0.0]
   selected seed quaternion wxyz: [1.0, 0.0, 0.0, 0.0]
   selected seed offsets m: [0.0, 0.0, 0.0]
-  angle bounds deg: [10.0, 10.0, 10.0]
-  translation bounds m: [0.02, 0.02, 0.02]
+  angle bounds deg: [5.0, 5.0, 5.0]
+  translation bounds m: [0.01, 0.01, 0.01]
   polish mode: False
 
 Part: r_lower_leg

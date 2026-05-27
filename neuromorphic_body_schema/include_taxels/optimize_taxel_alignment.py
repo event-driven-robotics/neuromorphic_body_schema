@@ -126,6 +126,10 @@ REPORT_TXT = ROOT / "neuromorphic_body_schema" / \
 LOCAL_OPTIMIZER_METHOD = "L-BFGS-B"
 SOLE_2D_OPTIMIZER_METHOD = "sole-2d"
 SOLE_2D_SOLVER = "Powell"
+SEARCH_SPACE_SCALE = 0.5
+INTRUSION_PENALTY_SCALE = 4.0
+INTRUSION_FRACTION_EQUIV_DEPTH_M = 0.002
+INTRUSION_QUADRATIC_SCALE_M = 0.002
 
 GROUP_TORSO = 1
 GROUP_RIGHT_ARM_HAND = 2
@@ -165,6 +169,18 @@ PART_SENSOR_GROUP: dict[str, int] = {
     "l_palm": GROUP_LEFT_ARM_HAND,
 }
 
+
+def _scaled_angle_bounds(config: PartConfig) -> np.ndarray:
+    """Return per-axis rotation bounds scaled for stricter exploration."""
+
+    return np.array(config.delta_angle_bounds_deg, dtype=float) * float(SEARCH_SPACE_SCALE)
+
+
+def _scaled_translation_bounds(config: PartConfig) -> np.ndarray:
+    """Return per-axis translation bounds scaled for stricter exploration."""
+
+    return np.array(config.delta_translation_bounds_m, dtype=float) * float(SEARCH_SPACE_SCALE)
+
 BODY_PARTS_PROPERTIES = {
     'cylindrical': [
         "r_upper_leg",
@@ -203,6 +219,15 @@ class StrategyProfile:
     angle_reg_scale_deg: float = 10.0
     foot_edge_margin_m: float = 0.0
     foot_edge_margin_weight: float = 0.0
+    density_balance_enabled: bool = False
+    density_balance_neighbors: int = 8
+    clearance_target_m: float = 0.0
+    clearance_mean_weight: float = 0.0
+    clearance_penalty_weight: float = 0.0
+    clearance_balance_weight: float = 0.0
+    min_clearance_m: float = 0.0
+    min_clearance_penalty_weight: float = 0.0
+    tilt_plane_penalty_weight: float = 0.0
 
 
 BODY_PROPERTY_STRATEGIES: dict[str, StrategyProfile] = {
@@ -657,8 +682,8 @@ def optimize_palm_surface_part(
     seed_candidates = build_seed_candidates(config, previous_seed, polish=polish)
     seed_results: list[tuple[float, np.ndarray, Any, float, np.ndarray, str]] = []
 
-    translation_bounds = np.array(config.delta_translation_bounds_m, dtype=float)
-    angle_bound_y = float(config.delta_angle_bounds_deg[1])
+    translation_bounds = _scaled_translation_bounds(config)
+    angle_bound_y = float(_scaled_angle_bounds(config)[1])
     translation_bounds_xz = np.array([
         float(translation_bounds[0]),
         float(translation_bounds[2]),
@@ -970,9 +995,8 @@ def optimize_foot_sole_part(
     seed_results: list[tuple[float, np.ndarray,
                              Any, float, np.ndarray, str]] = []
 
-    translation_bounds = np.array(
-        config.delta_translation_bounds_m, dtype=float)
-    angle_bound_z = float(config.delta_angle_bounds_deg[2])
+    translation_bounds = _scaled_translation_bounds(config)
+    angle_bound_z = float(_scaled_angle_bounds(config)[2])
     translation_bounds_xy = np.array([
         float(translation_bounds[0]),
         float(translation_bounds[1]),
@@ -1157,15 +1181,10 @@ PARTS: tuple[PartConfig, ...] = (
         position_file="right_leg_upper.txt",
         mesh_files=("sim_sea_2-5_r_thigh.stl",),
         rebase=False,
+        include_previous_seed=False,
         manual_steps=(
             # rotation
-            ((0.0, 0.0, 0.0), (0.0, 90.0, 0.0)),
-            ((0.0, 0.0, 0.0), (0.0, 90.0, 0.0)),
-            ((0.0, 0.0, 0.0), (0.0, 0.0, -120.0)),
-            ((0.0, 0.0, 0.0), (0.0, 180.0, 0.0)),
-            ((0.0, 0.0, 0.0), (0.0, 0.0, -70.0)),
-            # translation
-            ((0.0, 0.0, -0.04), (0.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
         ),
     ),
     PartConfig(
@@ -1175,13 +1194,7 @@ PARTS: tuple[PartConfig, ...] = (
         rebase=False,
         manual_steps=(
             # rotation
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 90.0)),
-            ((0.0, 0.0, 0.0), (0.0, 0.0, -100.0)),
-            ((0.0, 0.0, 0.0), (0.0, 10.0, 0.0)),
-            # translation
-            ((0.0, 0.0, -0.085), (0.0, 0.0, 0.0)),
-            ((0.0, -0.002, 0.0), (0.0, 0.0, 0.0)),
-            ((0.005, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
         ),
     ),
     PartConfig(
@@ -1635,6 +1648,83 @@ def build_distance_fn(
     return dist
 
 
+def build_density_balancing_weights(points: np.ndarray, neighbors: int = 8) -> np.ndarray:
+    """Return per-point weights that reduce bias from locally dense taxel regions.
+
+    Points in sparse neighborhoods get larger weights; points in dense clusters get
+    smaller weights. Weights are normalized to have mean 1.0.
+    """
+
+    pts = np.asarray(points, dtype=float)
+    n = int(pts.shape[0])
+    if n == 0:
+        return np.array([], dtype=float)
+    if n == 1:
+        return np.ones(1, dtype=float)
+
+    k = max(2, min(int(neighbors) + 1, n))
+    tree = KDTree(pts)
+    distances, _ = tree.query(pts, k=k)
+    distances = np.asarray(distances, dtype=float)
+
+    local_scale = np.mean(distances[:, 1:], axis=1)
+    eps = 1e-12
+    mean_scale = float(np.mean(local_scale))
+    raw_weights = local_scale / max(mean_scale, eps)
+    clipped = np.clip(raw_weights, 0.25, 4.0)
+    normalized = clipped / max(float(np.mean(clipped)), eps)
+    return normalized.astype(float)
+
+
+def mean_absolute_nearest_surface_distance(distances: np.ndarray) -> float:
+    """Return plain mean absolute nearest-surface distance across all taxels."""
+
+    d = np.asarray(distances, dtype=float)
+    if d.size == 0:
+        return 0.0
+    return float(np.mean(np.abs(d)))
+
+
+def weighted_signed_clearance_plane_metrics(
+    signed_clearance: np.ndarray,
+    patch_points: np.ndarray,
+    weights: np.ndarray,
+) -> tuple[float, float]:
+    """Return weighted RMS of clearance-plane residual and slope magnitude.
+
+    The fitted model is d ~= a*u + b*v + c where (u, v) are patch-centered
+    in-plane coordinates derived from PCA of patch points.
+    """
+
+    d = np.asarray(signed_clearance, dtype=float)
+    p = np.asarray(patch_points, dtype=float)
+    w = np.asarray(weights, dtype=float)
+    n = int(d.shape[0])
+
+    if n < 3 or p.shape[0] != n:
+        return 0.0, 0.0
+
+    w_sum = float(np.sum(w))
+    if w_sum <= 1e-12:
+        return 0.0, 0.0
+
+    centered = p - np.average(p, axis=0, weights=w)
+    cov = (centered * w[:, None]).T @ centered / max(w_sum, 1e-12)
+    eigvals, eigvecs = np.linalg.eigh(cov)
+    order = np.argsort(eigvals)[::-1]
+    basis = eigvecs[:, order[:2]]
+    uv = centered @ basis
+
+    A = np.column_stack((uv[:, 0], uv[:, 1], np.ones(n, dtype=float)))
+    Aw = A * np.sqrt(w)[:, None]
+    dw = d * np.sqrt(w)
+    coeff, *_ = np.linalg.lstsq(Aw, dw, rcond=None)
+    residual = d - (A @ coeff)
+    rms_residual = float(np.sqrt(np.average(residual ** 2, weights=w)))
+    slope_mag = float(np.sqrt(coeff[0] ** 2 + coeff[1] ** 2))
+    return rms_residual, slope_mag
+
+
 def load_previous_optimized_seeds() -> PreviousSeedMap:
     """Load previously saved per-part optimization results as new seed states."""
 
@@ -1821,15 +1911,27 @@ def optimize_part(
         float(config.inside_penalty_weight), float(strategy.inside_penalty_weight)
     )
 
+    point_weights = np.ones(points.shape[0], dtype=float)
+    if strategy.density_balance_enabled:
+        point_weights = build_density_balancing_weights(
+            points,
+            neighbors=int(strategy.density_balance_neighbors),
+        )
+        print(
+            f"[{config.part_name}] density balancing enabled: neighbors={int(strategy.density_balance_neighbors)}",
+            flush=True,
+        )
+
+    baseline_patch_points = apply_part_transform(points, config.part_name)
+
     # We optimize a final quaternion perturbation applied on top of the exact manual chain.
     quat0 = np.array([1.0, 0.0, 0.0, 0.0], dtype=float)
     angles0 = quat_wxyz_to_euler_xyz_deg(quat0)
     offsets0 = np.zeros(3, dtype=float)
     x0 = np.hstack([quat0, offsets0])
 
-    angle_bounds = np.array(config.delta_angle_bounds_deg, dtype=float)
-    translation_bounds = np.array(
-        config.delta_translation_bounds_m, dtype=float)
+    angle_bounds = _scaled_angle_bounds(config)
+    translation_bounds = _scaled_translation_bounds(config)
 
     def unpack_params(params: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Split the optimizer state into quaternion, translation, and Euler views."""
@@ -1850,12 +1952,16 @@ def optimize_part(
             delta_quat_wxyz=quat,
         )
         distances = dist_fn(transformed)
-        return float(np.mean(distances))
+        return mean_absolute_nearest_surface_distance(distances)
 
     def inside_mask(points_world: np.ndarray) -> np.ndarray:
         """Return inside-mesh mask, or all-false when containment queries are unavailable."""
 
-        if inside_penalty_weight <= 0.0:
+        if (
+            inside_penalty_weight <= 0.0
+            and float(strategy.clearance_penalty_weight) <= 0.0
+            and float(strategy.clearance_balance_weight) <= 0.0
+        ):
             return np.zeros(points_world.shape[0], dtype=bool)
         try:
             return np.asarray(mesh.contains(points_world), dtype=bool)
@@ -1875,10 +1981,10 @@ def optimize_part(
         distances = dist_fn(transformed)
         inside = inside_mask(transformed)
         return {
-            "mean_m": float(np.mean(distances)),
+            "mean_m": mean_absolute_nearest_surface_distance(distances),
             "median_m": float(np.median(distances)),
             "p90_m": float(np.quantile(distances, 0.9)),
-            "inside_fraction": float(np.mean(inside)),
+            "inside_fraction": float(np.average(inside.astype(float), weights=point_weights)),
         }
 
     def objective(
@@ -1897,38 +2003,8 @@ def optimize_part(
             delta_quat_wxyz=quat,
         )
         distances = dist_fn(transformed)
-        q = np.quantile(distances, float(strategy.trim_quantile))
-        trimmed = distances[distances <= q]
-        mean_trimmed = float(np.mean(trimmed)) if len(
-            trimmed) else float(np.mean(distances))
-
-        inside_depth = 0.0
-        if inside_penalty_weight > 0.0:
-            inside = inside_mask(transformed)
-            if np.any(inside):
-                inside_depth = float(np.mean(distances[inside]))
-
-        # Soft regularization keeps each run near its local seed hypothesis.
-        rot_dist_deg = quaternion_geodesic_distance_deg(quat, quat_center)
-        rot_reg = (rot_dist_deg / float(strategy.rotation_reg_scale_deg)) ** 2
-
-        trans_axis_weights = np.array(
-            strategy.translation_axis_weights, dtype=float)
-        trans_reg = float(np.sum(
-            (((offsets - offset_center) * trans_axis_weights) / float(strategy.translation_reg_scale_m)) ** 2
-        ))
-
-        angle_axis_weights = np.array(strategy.angle_axis_weights, dtype=float)
-        angle_reg = float(np.sum(
-            (((angles - angle_center) * angle_axis_weights) / float(strategy.angle_reg_scale_deg)) ** 2
-        ))
-        return float(
-            mean_trimmed
-            + inside_penalty_weight * inside_depth
-            + 0.001 * rot_reg
-            + 0.001 * trans_reg
-            + 0.001 * angle_reg
-        )
+        # Simplified objective: minimize plain mean absolute nearest-surface distance.
+        return mean_absolute_nearest_surface_distance(distances)
 
     initial_stats = distance_stats(x0)
     initial_mean = float(initial_stats["mean_m"])
@@ -2122,6 +2198,17 @@ def optimize_part(
 
     final_stats = distance_stats(x_final)
     final_mean = float(final_stats["mean_m"])
+    accepted_vs_initial = final_mean < initial_mean
+    if not accepted_vs_initial:
+        print(
+            f"[{config.part_name}] optimized mean_distance={final_mean:.6f} m is not better than initial={initial_mean:.6f} m; reverting to initial baseline."
+        )
+        x_final = x0.copy()
+        final_quat = normalize_quaternion_wxyz(x_final[:4])
+        final_offsets = x_final[4:]
+        final_angles = quat_wxyz_to_euler_xyz_deg(final_quat)
+        final_stats = distance_stats(x_final)
+        final_mean = float(final_stats["mean_m"])
 
     return {
         "part": config.part_name,
@@ -2185,6 +2272,17 @@ def optimize_part(
             "strategy_name": strategy.name,
             "inside_penalty_weight": inside_penalty_weight,
             "distance_focus_enabled": use_distance_focus,
+            "density_balance_enabled": bool(strategy.density_balance_enabled),
+            "density_balance_neighbors": int(strategy.density_balance_neighbors),
+            "clearance_target_m": float(strategy.clearance_target_m),
+            "clearance_mean_weight": float(strategy.clearance_mean_weight),
+            "clearance_penalty_weight": float(strategy.clearance_penalty_weight),
+            "clearance_balance_weight": float(strategy.clearance_balance_weight),
+            "min_clearance_m": float(strategy.min_clearance_m),
+            "min_clearance_penalty_weight": float(strategy.min_clearance_penalty_weight),
+            "tilt_plane_penalty_weight": float(strategy.tilt_plane_penalty_weight),
+            "objective_distance_mode": "mean_absolute_nearest_surface_all_taxels",
+            "accepted_vs_initial": bool(accepted_vs_initial),
         },
     }
 
