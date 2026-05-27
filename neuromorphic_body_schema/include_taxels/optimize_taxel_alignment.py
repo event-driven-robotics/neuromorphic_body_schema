@@ -1546,7 +1546,50 @@ def load_mesh(
     part_name: str,
     mesh_files: tuple[str, ...],
 ) -> trimesh.Trimesh:
-    """Load one or more mesh files into the common body-part reference frame."""
+    """Load target mesh in part-local frame, preferring MuJoCo compiled geometry.
+
+    This keeps optimizer distance evaluation aligned with what MuJoCo actually
+    simulates and what the visualizer renders. If compiled mesh lookup fails,
+    we fall back to raw STL loading for robustness.
+    """
+
+    model, _ = _load_mj_model_data()
+    compiled_meshes: list[trimesh.Trimesh] = []
+
+    for mesh_file in mesh_files:
+        mesh_name = Path(mesh_file).stem
+        mesh_id = int(mj_name2id(model, mjtObj.mjOBJ_MESH, mesh_name))
+        if mesh_id < 0:
+            raise RuntimeError(f"Compiled MuJoCo mesh not found for asset: {mesh_name}")
+
+        vert_start = int(model.mesh_vertadr[mesh_id])
+        vert_count = int(model.mesh_vertnum[mesh_id])
+        face_start = int(model.mesh_faceadr[mesh_id])
+        face_count = int(model.mesh_facenum[mesh_id])
+
+        vertices = np.array(model.mesh_vert[vert_start:vert_start + vert_count], dtype=float)
+        faces = np.array(model.mesh_face[face_start:face_start + face_count], dtype=int)
+
+        resolved = resolve_mesh_transform_from_model(part_name, mesh_file)
+        if resolved is None:
+            raise RuntimeError(
+                f"Could not resolve compiled mesh transform from model for part={part_name}, mesh={mesh_file}"
+            )
+        pos_arr, quat_arr = resolved
+        rot = Rotation.from_quat(quat_wxyz_to_xyzw(quat_arr)).as_matrix()
+
+        mesh_local = trimesh.Trimesh(vertices=vertices.copy(), faces=faces.copy(), process=False)
+        mesh_local.vertices = (rot @ mesh_local.vertices.T).T + pos_arr
+        compiled_meshes.append(mesh_local)
+
+    if compiled_meshes:
+        if len(compiled_meshes) == 1:
+            return compiled_meshes[0]
+        return trimesh.util.concatenate(compiled_meshes)
+
+    print(
+        f"[warn] Falling back to raw STL target meshes for part={part_name}; compiled mesh target unavailable."
+    )
 
     meshes: list[trimesh.Trimesh] = []
     for mesh_file in mesh_files:
