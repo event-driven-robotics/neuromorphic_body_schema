@@ -978,7 +978,7 @@ def include_skin_to_mujoco_model(
     optimized_deltas: dict[str, tuple[np.ndarray, np.ndarray, np.ndarray | None]] | None = None,
     report_part_metadata: dict[str, dict[str, object]] | None = None,
     style_mode: str = "material",
-    taxel_site_size: float = 0.002,
+    taxel_site_size: float = 0.08,
     apply_anchor_body_transform: bool = False,
     frozen_report_points: dict[str, list[tuple[int, np.ndarray]]] | None = None,
 ) -> None:

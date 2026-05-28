@@ -47,6 +47,8 @@ python neuromorphic_body_schema/include_taxels/align_geom_to_anchor.py \
 
 - `optimize_taxel_alignment.py`
   - Main optimization pipeline.
+  - Uses MuJoCo compiled mesh geometry as optimization target (same representation as simulator and visualizer).
+  - Core distance metric is mean absolute nearest-surface distance across all taxels.
   - Produces and updates:
     - `taxel_alignment_optimization_report.json`
     - `taxel_alignment_optimization_report.txt`
@@ -82,6 +84,22 @@ python neuromorphic_body_schema/include_taxels/align_geom_to_anchor.py \
 
 - `optimization_report_as_single_source_of_truth.md`
   - Design notes for report-driven workflow.
+
+## Alignment Consistency (Important)
+
+The current workflow is intentionally consistent across optimization, visualization, and XML insertion:
+
+1. `optimize_taxel_alignment.py` evaluates distances against MuJoCo compiled meshes.
+2. `visualize_taxel_alignment.py` renders MuJoCo compiled meshes.
+3. `include_skin_to_mujoco_model.py` inserts taxel sites from the same report transform chain.
+
+This avoids the old mismatch class where optimization was computed on raw STL geometry but validation/simulation used compiled MuJoCo geometry.
+
+Report distance interpretation:
+
+1. `initial.mean_distance_m` and `optimized.mean_distance_m` are mean absolute nearest-surface distances over all taxels.
+2. Lower is better for this metric.
+3. If additional diagnostic fields are present, compare runs primarily using this distance metric.
 
 ## Recommended Workflow
 

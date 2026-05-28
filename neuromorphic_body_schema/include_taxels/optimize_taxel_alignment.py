@@ -1221,7 +1221,15 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_files=("sim_sea_2-5_r_elbow.stl",),
         rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            # rotation
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 90.0)),
+            ((0.0, 0.0, 0.0), (-53.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, 90.0, 0.0)),
+            # translation
+            ((0.022, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            ((0.0, 0.0, -0.01), (0.0, 0.0, 0.0)),
+            ((0.0, 0.03, 0.0), (0.0, 0.0, 0.0)),
+            
         ),
     ),
     PartConfig(
@@ -1230,7 +1238,13 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_files=("sim_sea_2-5_r_forearm.stl",),
         rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            # rotation
+            ((0.0, 0.0, 0.0), (0.0, 0.0, -90.0)),
+            ((0.0, 0.0, 0.0), (0.0, 16.0, 0.0)),
+            # translation
+            ((-0.4, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.11), (0.0, 0.0, 0.0)),
+            
         ),
     ),
     PartConfig(
@@ -1239,7 +1253,7 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_files=("sim_sea_2-5_l_elbow.stl",),
         rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            ((0.015, 0.0, 0.0), (0.0, 0.0, 0.0)),
         ),
     ),
     PartConfig(
@@ -1248,7 +1262,13 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_files=("sim_sea_2-5_l_forearm.stl",),
         rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            # rotation
+            ((0.0, 0.0, 0.0), (180.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, 0.0, 90.0)),
+            ((0.0, 0.0, 0.0), (0.0, -16.0, 0.0)),
+            # translation
+            ((0.4, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.11), (0.0, 0.0, 0.0)),
         ),
     ),
     PartConfig(
@@ -1257,10 +1277,14 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_files=("sim_ibbbbeba_chest.stl",),
         rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            # rotation
+            ((0.0, 0.0, 0.0), (0.0, 0.0, -90.0)),
+            ((0.0, 0.0, 0.0), (0.0, 90.0, 0.0)),
+            # translation
+            ((0.0, 0.0, -0.2), (0.0, 0.0, 0.0)),
         ),
-        delta_angle_bounds_deg=(10.0, 10.0, 10.0),
-        delta_translation_bounds_m=(0.02, 0.02, 0.02),
+        # delta_angle_bounds_deg=(10.0, 10.0, 10.0),
+        # delta_translation_bounds_m=(0.02, 0.02, 0.02),
         distance_focus_to_initial_patch=True,
         distance_focus_radius_m=0.07,
         distance_focus_min_samples=6000,
@@ -1292,7 +1316,7 @@ PARTS: tuple[PartConfig, ...] = (
         include_to_model=False,
         optimizer_method=SOLE_2D_OPTIMIZER_METHOD,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            ((0.0, 0.0, -0.08), (0.0, 0.0, 0.0)),  # TODO still WIP
         ),
     ),
     PartConfig(
@@ -1303,7 +1327,7 @@ PARTS: tuple[PartConfig, ...] = (
         include_to_model=False,
         optimizer_method=SOLE_2D_OPTIMIZER_METHOD,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            ((0.0, 0.0, -0.08), (0.0, 0.0, 0.0)),  # TODO still WIP
         ),
     ),
 )
