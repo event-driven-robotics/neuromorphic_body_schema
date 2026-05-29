@@ -450,8 +450,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--taxel-site-size",
         type=float,
-        default=0.002,
-        help="MuJoCo site sphere radius in meters for inserted taxels (default: 0.002).",
+        default=0.005,
+        help="MuJoCo site sphere radius in meters for inserted taxels (default: 0.005).",
     )
     parser.add_argument(
         "--apply-anchor-body-transform",
@@ -1372,4 +1372,3 @@ if __name__ == "__main__":
     )
     print("*******************")
     print("DONE")
-    pass
