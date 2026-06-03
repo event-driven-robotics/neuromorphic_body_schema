@@ -84,69 +84,57 @@ def get_2d_triangle_indices(part):
     # The GUI code uses patch_id and config_type to build the mask and order
     # Here, we just return the patch_id list in draw order
     patch_ids = [tri[1] for tri in triangles]
+    return patch_ids
 
-        def main():
-            for part in POSITIONS_FILES.keys():
-                print(f"\n=== Checking part: {part} ===")
-                # --- 3D/2D Taxel Identity Check ---
-                try:
-                    taxel_pos_3d = get_3d_taxel_positions(POSITIONS_FILES[part])
-                except Exception as e:
-                    print(f"[ERROR] Could not load 3D taxel positions for {part}: {e}")
-                    continue
-                try:
-                    taxel_pos_2d = get_2d_taxel_positions(part)
-                except Exception as e:
-                    print(f"[ERROR] Could not load 2D taxel positions for {part}: {e}")
-                    continue
-                n3d = len(taxel_pos_3d)
-                n2d = len(taxel_pos_2d)
-                print(f"3D tactile count: {n3d}, 2D GUI tactile count: {n2d}")
-                if n3d != n2d:
-                    print(f"[MISMATCH] Number of tactile taxels differs! 3D: {n3d}, 2D: {n2d}")
-                else:
-                    print("Taxel count matches.")
-                    # Optionally, check for order or position mismatches (by index)
-                    mismatches = 0
-                    for i, (p3d, p2d) in enumerate(zip(taxel_pos_3d, taxel_pos_2d)):
-                        # Here, just check if both are present; for spatial check, project 3D to 2D
-                        if p3d is None or p2d is None:
-                            print(f"[MISMATCH] Taxel {i} missing in one of the layouts.")
-                            mismatches += 1
-                    if mismatches == 0:
-                        print("Taxel order preserved (by index). [Note: This does not guarantee spatial correspondence]")
-                    else:
-                        print(f"[WARNING] {mismatches} taxel(s) missing in one of the layouts.")
-                print("[INFO] For a true spatial check, consider projecting 3D positions to 2D and comparing to GUI layout.")
+def build_triangle_adjacency(triangles):
+    """Build an undirected edge set from triangles of vertex indices."""
+    edges = set()
+    for tri in triangles:
+        if len(tri) < 3:
+            continue
+        a, b, c = tri[0], tri[1], tri[2]
+        edges.add(tuple(sorted((a, b))))
+        edges.add(tuple(sorted((b, c))))
+        edges.add(tuple(sorted((c, a))))
+    return edges
 
-                # --- Topology check (Euler characteristic, edge connectivity) ---
-                try:
-                    idx_map_3d = list(range(n3d))
-                    patch_ids_2d = get_2d_triangle_indices(part)
-                    num_vertices_3d = n3d
-                    num_vertices_2d = n2d
-                    edges_3d = build_triangle_adjacency([idx_map_3d])
-                    edges_2d = build_triangle_adjacency([patch_ids_2d])
-                    chi_3d = euler_characteristic(num_vertices_3d, edges_3d, len(idx_map_3d))
-                    chi_2d = euler_characteristic(num_vertices_2d, edges_2d, len(patch_ids_2d))
-                    print(f"3D: V={num_vertices_3d}, E={len(edges_3d)}, F={len(idx_map_3d)}, chi={chi_3d}")
-                    print(f"2D: V={num_vertices_2d}, E={len(edges_2d)}, F={len(patch_ids_2d)}, chi={chi_2d}")
-                    if chi_3d == chi_2d:
-                        print("Euler characteristic matches: likely same topology.")
-                    else:
-                        print("WARNING: Euler characteristic mismatch!")
-                    if edges_3d == edges_2d:
-                        print("Edge connectivity matches exactly.")
-                    else:
-                        print("Edge connectivity differs.")
-                except Exception as e:
-                    print(f"[ERROR] Topology check failed for {part}: {e}")
-            print("WARNING: Euler characteristic mismatch!")
-        # Optionally, compare edge sets for exact match
-        if edges_3d == edges_2d:
-            print("Edge connectivity matches exactly.")
-        else:
-            print("Edge connectivity differs.")
+
+def euler_characteristic(num_vertices, edges, num_faces):
+    """Compute Euler characteristic chi = V - E + F."""
+    return num_vertices - len(edges) + num_faces
+
+
+def main():
+    for part in POSITIONS_FILES.keys():
+        print(f"\n=== Checking part: {part} ===")
+        try:
+            taxel_pos_3d = get_3d_taxel_positions(POSITIONS_FILES[part])
+            taxel_pos_2d = get_2d_taxel_positions(part)
+        except Exception as e:
+            print(f"[ERROR] Failed loading taxel data for {part}: {e}")
+            continue
+
+        n3d = len(taxel_pos_3d)
+        n2d = len(taxel_pos_2d)
+        print(f"3D tactile count: {n3d}, 2D GUI tactile count: {n2d}")
+        if n3d != n2d:
+            print(f"[MISMATCH] Number of tactile taxels differs! 3D: {n3d}, 2D: {n2d}")
+
+        try:
+            patch_ids_2d = get_2d_triangle_indices(part)
+            # Placeholder 3D triangles based on contiguous tactile indices.
+            triangles_3d = [list(range(min(3, n3d)))] if n3d >= 3 else []
+            triangles_2d = [patch_ids_2d[i:i + 3] for i in range(0, len(patch_ids_2d), 3)]
+            triangles_2d = [tri for tri in triangles_2d if len(tri) == 3]
+
+            edges_3d = build_triangle_adjacency(triangles_3d)
+            edges_2d = build_triangle_adjacency(triangles_2d)
+            chi_3d = euler_characteristic(n3d, edges_3d, len(triangles_3d))
+            chi_2d = euler_characteristic(n2d, edges_2d, len(triangles_2d))
+            print(f"3D: V={n3d}, E={len(edges_3d)}, F={len(triangles_3d)}, chi={chi_3d}")
+            print(f"2D: V={n2d}, E={len(edges_2d)}, F={len(triangles_2d)}, chi={chi_2d}")
+        except Exception as e:
+            print(f"[ERROR] Topology check failed for {part}: {e}")
 
 if __name__ == "__main__":
     main()

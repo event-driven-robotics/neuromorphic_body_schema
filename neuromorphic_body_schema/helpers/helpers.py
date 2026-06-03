@@ -33,8 +33,12 @@ import numpy as np
 
 # Model and configuration paths
 _PACKAGE_DIR = Path(__file__).parent.parent
+# MODEL_PATH = str(_PACKAGE_DIR / "models" /
+#                  "icub_v2_full_body_contact_sensors.xml")
+# MODEL_PATH = str(_PACKAGE_DIR / "models" /
+#                  "icub_v2_full_body_improved_contact_sensors.xml")
 MODEL_PATH = str(_PACKAGE_DIR / "models" /
-                 "icub_v2_full_body_contact_sensors.xml")
+                 "scene.xml")
 # Prefer the current folder name in this repository (skinGUI), but keep a
 # fallback for earlier naming variants.
 _triangle_ini_dir = _PACKAGE_DIR / "skinGUI"
@@ -215,6 +219,8 @@ def init_POV(viewer):
         mujoco.viewer.Viewer: The configured viewer instance with the updated camera settings.
     """
 
+    # Use deterministic camera defaults so startup POV does not depend on
+    # viewer-internal initial values across MuJoCo/Python versions.
     viewer.cam.azimuth = -4.5
     viewer.cam.distance = 2
     viewer.cam.elevation = -16

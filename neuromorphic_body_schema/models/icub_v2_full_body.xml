@@ -8,110 +8,110 @@
         <geom friction="1.0 0.005 0.0001"/>
         <position kp="10" ctrllimited="true"/>
     </default>
-   
+
     <asset>
-        <mesh name="sim_sea_2-5_root_link_prt-binary"               file="sim_sea_2-5_root_link_prt-binary.stl"         scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_r_hip_1_prt-binary"                 file="sim_sea_2-5_r_hip_1_prt-binary.stl"           scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_r_hip_2_prt-binary"                 file="sim_sea_2-5_r_hip_2_prt-binary.stl"           scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_r_upper_thigh_prt-binary"           file="sim_sea_2-5_r_upper_thigh_prt-binary.stl"     scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_r_thigh_prt-binary"                 file="sim_sea_2-5_r_thigh_prt-binary.stl"           scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_r_shank_prt-binary"                 file="sim_sea_2-5_r_shank_prt-binary.stl"           scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_r_ankle_prt-binary"                 file="sim_sea_2-5_r_ankle_prt-binary.stl"           scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_r_foot_prt-binary"                  file="sim_sea_2-5_r_foot_prt-binary.stl"            scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_r_sole_prt-binary"                  file="sim_sea_2-5_r_sole_prt-binary.stl"            scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_l_hip_1_prt-binary"                 file="sim_sea_2-5_l_hip_1_prt-binary.stl"           scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_l_hip_2_prt-binary"                 file="sim_sea_2-5_l_hip_2_prt-binary.stl"           scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_l_upper_thigh_prt-binary"           file="sim_sea_2-5_l_upper_thigh_prt-binary.stl"     scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_l_thigh_prt-binary"                 file="sim_sea_2-5_l_thigh_prt-binary.stl"           scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_l_shank_prt-binary"                 file="sim_sea_2-5_l_shank_prt-binary.stl"           scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_l_ankle_prt-binary"                 file="sim_sea_2-5_l_ankle_prt-binary.stl"           scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_l_foot_prt-binary"                  file="sim_sea_2-5_l_foot_prt-binary.stl"            scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_l_sole_prt-binary"                  file="sim_sea_2-5_l_sole_prt-binary.stl"            scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_lap_belt_1_prt-binary"              file="sim_sea_2-5_lap_belt_1_prt-binary.stl"        scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_lap_belt_2_prt-binary"              file="sim_sea_2-5_lap_belt_2_prt-binary.stl"        scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_chest_bb_prt-binary"                file="sim_sea_2-5_chest_bb_prt-binary.stl"          scale="0.001 0.001 0.001"/>
-        <mesh name="chest_hull_1"                                   file="chest_hull_1.stl"                             scale="0.001 0.001 0.001"/>
-        <mesh name="chest_hull_2"                                   file="chest_hull_2.stl"                             scale="0.001 0.001 0.001"/>
-        <mesh name="chest_hull_3"                                   file="chest_hull_3.stl"                             scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_r_shoulder_1_prt-binary"            file="sim_sea_2-5_r_shoulder_1_prt-binary.stl"      scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_r_shoulder_2_prt-binary"            file="sim_sea_2-5_r_shoulder_2_prt-binary.stl"      scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_r_upper_arm_prt-binary"             file="sim_sea_2-5_r_upper_arm_prt-binary.stl"       scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_r_elbow_prt-binary"                 file="sim_sea_2-5_r_elbow_prt-binary.stl"           scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_r_elbow_prosup_prt-binary"          file="sim_sea_2-5_r_elbow_prosup_prt-binary.stl"    scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_r_forearm_prt-binary"               file="sim_sea_2-5_r_forearm_prt-binary.stl"         scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_r_wrist_pitch_prt-binary"           file="sim_sea_2-5_r_wrist_pitch_prt-binary.stl"     scale="0.001 0.001 0.001"/>
-        <mesh name="col_RightHandPalm"                              file="col_RightHandPalm.stl"/>
-        <mesh name="col_RightThumb0"                                file="col_RightThumb0.stl"/>
-        <mesh name="col_RightThumb1"                                file="col_RightThumb1.stl"/>
-        <mesh name="col_RightThumb2"                                file="col_RightThumb2.stl"/>
-        <mesh name="col_RightThumb3"                                file="col_RightThumb3.stl"/>
-        <mesh name="col_RightIndex0"                                file="col_RightIndex0.stl"/>
-        <mesh name="col_RightIndex1"                                file="col_RightIndex1.stl"/>
-        <mesh name="col_RightIndex2"                                file="col_RightIndex2.stl"/>
-        <mesh name="col_RightIndex3"                                file="col_RightIndex3.stl"/>
-        <mesh name="col_RightMiddle0"                               file="col_RightMiddle0.stl"/>
-        <mesh name="col_RightMiddle1"                               file="col_RightMiddle1.stl"/>
-        <mesh name="col_RightMiddle2"                               file="col_RightMiddle2.stl"/>
-        <mesh name="col_RightMiddle3"                               file="col_RightMiddle3.stl"/>
-        <mesh name="col_RightRing0"                                 file="col_RightRing0.stl"/>
-        <mesh name="col_RightRing1"                                 file="col_RightRing1.stl"/>
-        <mesh name="col_RightRing2"                                 file="col_RightRing2.stl"/>
-        <mesh name="col_RightRing3"                                 file="col_RightRing3.stl"/>
-        <mesh name="col_RightLittle0"                               file="col_RightLittle0.stl"/>
-        <mesh name="col_RightLittle1"                               file="col_RightLittle1.stl"/>
-        <mesh name="col_RightLittle2"                               file="col_RightLittle2.stl"/>
-        <mesh name="col_RightLittle3"                               file="col_RightLittle3.stl"/>
-        <mesh name="sim_sea_2-5_l_shoulder_1_prt-binary"            file="sim_sea_2-5_l_shoulder_1_prt-binary.stl"      scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_l_shoulder_2_prt-binary"            file="sim_sea_2-5_l_shoulder_2_prt-binary.stl"      scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_l_upper_arm_prt-binary"             file="sim_sea_2-5_l_upper_arm_prt-binary.stl"       scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_l_elbow_prt-binary"                 file="sim_sea_2-5_l_elbow_prt-binary.stl"           scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_l_elbow_prosup_prt-binary"          file="sim_sea_2-5_l_elbow_prosup_prt-binary.stl"    scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_l_forearm_prt-binary"               file="sim_sea_2-5_l_forearm_prt-binary.stl"         scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_l_wrist_pitch_prt-binary"           file="sim_sea_2-5_l_wrist_pitch_prt-binary.stl"     scale="0.001 0.001 0.001"/>
-        <mesh name="col_LeftHandPalm"                               file="col_LeftHandPalm.stl"/>
-        <mesh name="col_LeftThumb0"                                 file="col_LeftThumb0.stl"/>
-        <mesh name="col_LeftThumb1"                                 file="col_LeftThumb1.stl"/>
-        <mesh name="col_LeftThumb2"                                 file="col_LeftThumb2.stl"/>
-        <mesh name="col_LeftThumb3"                                 file="col_LeftThumb3.stl"/>
-        <mesh name="col_LeftIndex0"                                 file="col_LeftIndex0.stl"/>
-        <mesh name="col_LeftIndex1"                                 file="col_LeftIndex1.stl"/>
-        <mesh name="col_LeftIndex2"                                 file="col_LeftIndex2.stl"/>
-        <mesh name="col_LeftIndex3"                                 file="col_LeftIndex3.stl"/>
-        <mesh name="col_LeftMiddle0"                                file="col_LeftMiddle0.stl"/>
-        <mesh name="col_LeftMiddle1"                                file="col_LeftMiddle1.stl"/>
-        <mesh name="col_LeftMiddle2"                                file="col_LeftMiddle2.stl"/>
-        <mesh name="col_LeftMiddle3"                                file="col_LeftMiddle3.stl"/>
-        <mesh name="col_LeftRing0"                                  file="col_LeftRing0.stl"/>
-        <mesh name="col_LeftRing1"                                  file="col_LeftRing1.stl"/>
-        <mesh name="col_LeftRing2"                                  file="col_LeftRing2.stl"/>	
-        <mesh name="col_LeftRing3"                                  file="col_LeftRing3.stl"/>
-        <mesh name="col_LeftLittle0"                                file="col_LeftLittle0.stl"/>
-        <mesh name="col_LeftLittle1"                                file="col_LeftLittle1.stl"/>
-        <mesh name="col_LeftLittle2"                                file="col_LeftLittle2.stl"/>
-        <mesh name="col_LeftLittle3"                                file="col_LeftLittle3.stl"/>
-        <mesh name="sim_sea_2-5_neck_1_prt-binary"                  file="sim_sea_2-5_neck_1_prt-binary.stl"            scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_neck_2_prt-binary"                  file="sim_sea_2-5_neck_2_prt-binary.stl"            scale="0.001 0.001 0.001"/>
-        <mesh name="sim_sea_2-5_head_prt-binary"                    file="sim_sea_2-5_head_prt-binary.stl"              scale="0.001 0.001 0.001"/>
-        
+        <mesh name="sim_sea_2-5_root_link_prt-binary" file="sim_sea_2-5_root_link_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_r_hip_1_prt-binary" file="sim_sea_2-5_r_hip_1_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_r_hip_2_prt-binary" file="sim_sea_2-5_r_hip_2_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_r_upper_thigh_prt-binary" file="sim_sea_2-5_r_upper_thigh_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_r_thigh_prt-binary" file="sim_sea_2-5_r_thigh_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_r_shank_prt-binary" file="sim_sea_2-5_r_shank_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_r_ankle_prt-binary" file="sim_sea_2-5_r_ankle_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_r_foot_prt-binary" file="sim_sea_2-5_r_foot_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_r_sole_prt-binary" file="sim_sea_2-5_r_sole_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_l_hip_1_prt-binary" file="sim_sea_2-5_l_hip_1_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_l_hip_2_prt-binary" file="sim_sea_2-5_l_hip_2_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_l_upper_thigh_prt-binary" file="sim_sea_2-5_l_upper_thigh_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_l_thigh_prt-binary" file="sim_sea_2-5_l_thigh_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_l_shank_prt-binary" file="sim_sea_2-5_l_shank_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_l_ankle_prt-binary" file="sim_sea_2-5_l_ankle_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_l_foot_prt-binary" file="sim_sea_2-5_l_foot_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_l_sole_prt-binary" file="sim_sea_2-5_l_sole_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_lap_belt_1_prt-binary" file="sim_sea_2-5_lap_belt_1_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_lap_belt_2_prt-binary" file="sim_sea_2-5_lap_belt_2_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_chest_bb_prt-binary" file="sim_sea_2-5_chest_bb_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="chest_hull_1" file="chest_hull_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="chest_hull_2" file="chest_hull_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="chest_hull_3" file="chest_hull_3.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_r_shoulder_1_prt-binary" file="sim_sea_2-5_r_shoulder_1_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_r_shoulder_2_prt-binary" file="sim_sea_2-5_r_shoulder_2_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_r_upper_arm_prt-binary" file="sim_sea_2-5_r_upper_arm_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_r_elbow_prt-binary" file="sim_sea_2-5_r_elbow_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_r_elbow_prosup_prt-binary" file="sim_sea_2-5_r_elbow_prosup_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_r_forearm_prt-binary" file="sim_sea_2-5_r_forearm_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_r_wrist_pitch_prt-binary" file="sim_sea_2-5_r_wrist_pitch_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="col_RightHandPalm" file="col_RightHandPalm.stl"/>
+        <mesh name="col_RightThumb0" file="col_RightThumb0.stl"/>
+        <mesh name="col_RightThumb1" file="col_RightThumb1.stl"/>
+        <mesh name="col_RightThumb2" file="col_RightThumb2.stl"/>
+        <mesh name="col_RightThumb3" file="col_RightThumb3.stl"/>
+        <mesh name="col_RightIndex0" file="col_RightIndex0.stl"/>
+        <mesh name="col_RightIndex1" file="col_RightIndex1.stl"/>
+        <mesh name="col_RightIndex2" file="col_RightIndex2.stl"/>
+        <mesh name="col_RightIndex3" file="col_RightIndex3.stl"/>
+        <mesh name="col_RightMiddle0" file="col_RightMiddle0.stl"/>
+        <mesh name="col_RightMiddle1" file="col_RightMiddle1.stl"/>
+        <mesh name="col_RightMiddle2" file="col_RightMiddle2.stl"/>
+        <mesh name="col_RightMiddle3" file="col_RightMiddle3.stl"/>
+        <mesh name="col_RightRing0" file="col_RightRing0.stl"/>
+        <mesh name="col_RightRing1" file="col_RightRing1.stl"/>
+        <mesh name="col_RightRing2" file="col_RightRing2.stl"/>
+        <mesh name="col_RightRing3" file="col_RightRing3.stl"/>
+        <mesh name="col_RightLittle0" file="col_RightLittle0.stl"/>
+        <mesh name="col_RightLittle1" file="col_RightLittle1.stl"/>
+        <mesh name="col_RightLittle2" file="col_RightLittle2.stl"/>
+        <mesh name="col_RightLittle3" file="col_RightLittle3.stl"/>
+        <mesh name="sim_sea_2-5_l_shoulder_1_prt-binary" file="sim_sea_2-5_l_shoulder_1_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_l_shoulder_2_prt-binary" file="sim_sea_2-5_l_shoulder_2_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_l_upper_arm_prt-binary" file="sim_sea_2-5_l_upper_arm_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_l_elbow_prt-binary" file="sim_sea_2-5_l_elbow_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_l_elbow_prosup_prt-binary" file="sim_sea_2-5_l_elbow_prosup_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_l_forearm_prt-binary" file="sim_sea_2-5_l_forearm_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_l_wrist_pitch_prt-binary" file="sim_sea_2-5_l_wrist_pitch_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="col_LeftHandPalm" file="col_LeftHandPalm.stl"/>
+        <mesh name="col_LeftThumb0" file="col_LeftThumb0.stl"/>
+        <mesh name="col_LeftThumb1" file="col_LeftThumb1.stl"/>
+        <mesh name="col_LeftThumb2" file="col_LeftThumb2.stl"/>
+        <mesh name="col_LeftThumb3" file="col_LeftThumb3.stl"/>
+        <mesh name="col_LeftIndex0" file="col_LeftIndex0.stl"/>
+        <mesh name="col_LeftIndex1" file="col_LeftIndex1.stl"/>
+        <mesh name="col_LeftIndex2" file="col_LeftIndex2.stl"/>
+        <mesh name="col_LeftIndex3" file="col_LeftIndex3.stl"/>
+        <mesh name="col_LeftMiddle0" file="col_LeftMiddle0.stl"/>
+        <mesh name="col_LeftMiddle1" file="col_LeftMiddle1.stl"/>
+        <mesh name="col_LeftMiddle2" file="col_LeftMiddle2.stl"/>
+        <mesh name="col_LeftMiddle3" file="col_LeftMiddle3.stl"/>
+        <mesh name="col_LeftRing0" file="col_LeftRing0.stl"/>
+        <mesh name="col_LeftRing1" file="col_LeftRing1.stl"/>
+        <mesh name="col_LeftRing2" file="col_LeftRing2.stl"/>
+        <mesh name="col_LeftRing3" file="col_LeftRing3.stl"/>
+        <mesh name="col_LeftLittle0" file="col_LeftLittle0.stl"/>
+        <mesh name="col_LeftLittle1" file="col_LeftLittle1.stl"/>
+        <mesh name="col_LeftLittle2" file="col_LeftLittle2.stl"/>
+        <mesh name="col_LeftLittle3" file="col_LeftLittle3.stl"/>
+        <mesh name="sim_sea_2-5_neck_1_prt-binary" file="sim_sea_2-5_neck_1_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_neck_2_prt-binary" file="sim_sea_2-5_neck_2_prt-binary.stl" scale="0.001 0.001 0.001"/>
+        <mesh name="sim_sea_2-5_head_prt-binary" file="sim_sea_2-5_head_prt-binary.stl" scale="0.001 0.001 0.001"/>
+
         <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="512"/>
         <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2" width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>
         <texture name="texgeom" type="cube" builtin="flat" mark="cross" width="127" height="1278" rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" markrgb="1 1 1" random="0.01"/>
         <material name="matplane" reflectance="0.3" texture="texplane" texrepeat="1 1" texuniform="true"/>
         <material name="matgeom" texture="texgeom" texuniform="true" rgba="0.8 0.6 .4 1"/>
     </asset>
-    
+
     <visual>
         <map force="0.1" zfar="30"/>
         <rgba haze="0.15 0.25 0.35 1"/>
         <quality shadowsize="2048"/>
         <global offwidth="800" offheight="800"/>
     </visual>
-    
+
     <worldbody>
         <geom name="floor" pos="0 0 0" size="0 0 0.25" type="plane" material="matplane" condim="3"/>
         <light directional="false" diffuse=".2 .2 .2" specular="0 0 0" pos="0 0 5" dir="0 0 -1" castshadow="false"/>
         <light mode="targetbodycom" target="torso_1" directional="false" diffuse=".8 .8 .8" specular="0.3 0.3 0.3" pos="0 0 4.0" dir="0 0 -1" attenuation="3 0 0"/>
-        
+
         <body name="icub" pos="0.0 0.0 0.63" mocap="true">
             <inertial pos="0.0248821 0.000103947 -0.0440806" quat="-0.110211 -0.1112 -0.697807 0.698966" mass="5.09143" diaginertia="0.0254684 0.0196552 0.0139679"/>
             <geom pos="-0.0364 0 0.032" quat="0.5 0.5 -0.5 -0.5" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_root_link_prt-binary"/>
@@ -189,7 +189,7 @@
                     <inertial pos="-0.000113508 0.0361525 0.0570963" quat="0.706739 0.707474 -0.000124378 0.000167074" mass="0.425685" diaginertia="0.000829234 0.000604802 0.000436517"/>
                     <joint name="torso_roll" pos="0 0 0" axis="0 0 -1" range="-0.4014257279586958 0.4014257279586958" damping="42.5"/>
                     <geom pos="0 0.1433 0.0386531" type="mesh" rgba="0.9 0.9 0.9 1" mesh="sim_sea_2-5_lap_belt_2_prt-binary"/>
-                    <body name="chest" pos="0 0.05 0.0628421" >
+                    <body name="chest" pos="0 0.05 0.0628421">
                         <inertial pos="0.000188619 0.073091 -0.0472381" quat="0.715214 -0.0122675 0.00447107 0.698784" mass="7.638" diaginertia="0.0440944 0.0430339 0.0260442"/>
                         <joint name="torso_yaw" pos="0 0 0" axis="0 -1 0" range="-0.7504915783575618 0.7504915783575618" damping="27.5"/>
                         <geom pos="0 0.0928 -0.024189" type="mesh" rgba="0.57647 0.1176 0.7882 1" mesh="chest_hull_1" contype="0" conaffinity="0"/>
@@ -239,7 +239,7 @@
                                                                 <body name="r_hand_thumb_3" pos="0.022 0 0">
                                                                     <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                                     <joint name="r_hand_thumb_3_joint" pos="0 0 0" axis="0 0 1" range="0.0 1.5707963267948966" stiffness="3"/>
-                                                                    <geom quat="0 0 0 1" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightThumb3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
+                                                                    <geom quat="0 0 0 1" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightThumb3" friction="3.5 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
                                                                 </body>
                                                             </body>
                                                         </body>
@@ -259,7 +259,7 @@
                                                                 <body name="r_hand_index_3" pos="0.022 0 0">
                                                                     <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                                     <joint name="r_hand_index_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3"/>
-                                                                    <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightIndex3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
+                                                                    <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightIndex3" friction="3.5 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
                                                                 </body>
                                                             </body>
                                                         </body>
@@ -279,7 +279,7 @@
                                                                 <body name="r_hand_middle_3" pos="0.024 0 0">
                                                                     <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                                     <joint name="r_hand_middle_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3"/>
-                                                                    <geom quat="0 0 0 1" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightMiddle3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
+                                                                    <geom quat="0 0 0 1" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightMiddle3" friction="3.5 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
                                                                 </body>
                                                             </body>
                                                         </body>
@@ -299,7 +299,7 @@
                                                                 <body name="r_hand_ring_3" pos="0.022 0 0">
                                                                     <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                                     <joint name="r_hand_ring_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3" frictionloss="1"/>
-                                                                    <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightRing3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
+                                                                    <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightRing3" friction="3.5 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
                                                                 </body>
                                                             </body>
                                                         </body>
@@ -319,7 +319,7 @@
                                                                 <body name="r_hand_little_3" pos="0.019 0 0">
                                                                     <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
                                                                     <joint name="r_hand_little_3_joint" pos="0 0 0" axis="0 0 1" range="0 1.5708" stiffness="3" frictionloss="1"/>
-                                                                    <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightLittle3" friction="3.5 0.05 0.01"  solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
+                                                                    <geom quat="0 0 1 0" type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_RightLittle3" friction="3.5 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4" priority="1"/>
                                                                 </body>
                                                             </body>
                                                         </body>
@@ -422,7 +422,7 @@
                                                     </body>
                                                     <body name="l_hand_ring_0" pos="0.0606911 0.0054432 0.00865823" quat="0.698657 0.709951 -0.0851337 0.0244894">
                                                         <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
-                                                        <joint name="l_hand_ring_0_joint" pos="0 0 0" axis="0 0 -1" range="-0.349066 0"  ref="-0.349066"/>
+                                                        <joint name="l_hand_ring_0_joint" pos="0 0 0" axis="0 0 -1" range="-0.349066 0" ref="-0.349066"/>
                                                         <geom type="mesh" rgba="0.9 0.9 0.9 1" mesh="col_LeftRing0" friction="1.0 0.05 0.01" solimp="0.95 0.95 0.01" solref="0.01 0.5" condim="4"/>
                                                         <body name="l_hand_ring_1" pos="0.0148 -0.00175 0" quat="0.707107 0.707107 0 0">
                                                             <inertial pos="0 0 0" mass="0.01" diaginertia="0.001 0.001 0.001"/>
@@ -507,7 +507,7 @@
                         </body>
                     </body>
                 </body>
-            </body>    
+            </body>
         </body>
 
         <!-- Here we inlcude a box as an example object -->
@@ -519,7 +519,7 @@
             <camera name="front_cam" fovy="70"/>
         </body>
     </worldbody>
-    
+
     <tendon>
         <fixed name="r_pinky_tendon">
             <joint coef="0.5" joint="r_hand_little_1_joint"/>
@@ -530,28 +530,28 @@
             <joint coef="0.5" joint="r_hand_ring_3_joint"/>
         </fixed>
     </tendon>
-    
+
     <tendon>
         <fixed name="r_middle_distal_tendon">
             <joint coef="1" joint="r_hand_middle_2_joint"/>
             <joint coef="1" joint="r_hand_middle_3_joint"/>
         </fixed>
     </tendon>
-    
+
     <tendon>
         <fixed name="r_index_distal_tendon">
             <joint coef="1" joint="r_hand_index_2_joint"/>
             <joint coef="1" joint="r_hand_index_3_joint"/>
         </fixed>
     </tendon>
-      
+
     <tendon>
         <fixed name="r_thumb_distal_tendon">
             <joint coef="1" joint="r_hand_thumb_2_joint"/>
             <joint coef="1" joint="r_hand_thumb_3_joint"/>
         </fixed>
     </tendon>
-    
+
     <tendon>
         <fixed name="r_hand_finger_tendon">
             <joint coef="1" joint="r_hand_index_0_joint"/>
@@ -571,28 +571,28 @@
             <joint coef="0.5" joint="l_hand_ring_3_joint"/>
         </fixed>
     </tendon>
-    
+
     <tendon>
         <fixed name="l_middle_distal_tendon">
             <joint coef="1" joint="l_hand_middle_2_joint"/>
             <joint coef="1" joint="l_hand_middle_3_joint"/>
         </fixed>
     </tendon>
-    
+
     <tendon>
         <fixed name="l_index_distal_tendon">
             <joint coef="1" joint="l_hand_index_2_joint"/>
             <joint coef="1" joint="l_hand_index_3_joint"/>
         </fixed>
     </tendon>
-    
+
     <tendon>
         <fixed name="l_thumb_distal_tendon">
             <joint coef="1" joint="l_hand_thumb_2_joint"/>
             <joint coef="1" joint="l_hand_thumb_3_joint"/>
         </fixed>
     </tendon>
-    
+
     <tendon>
         <fixed name="l_hand_finger_tendon">
             <joint coef="1" joint="l_hand_index_0_joint"/>
@@ -615,86 +615,86 @@
             <joint coef="1.0" joint="l_eye_tilt_joint"/>
         </fixed>
     </tendon>
-    
+
     <!-- TODO check if we have to define collision exclusion for legs -->
     <contact>
-        <exclude name="exclude_contact_body_01"       body1="neck_1"          body2="chest"/>
-        <exclude name="exclude_contact_body_02"       body1="neck_2"          body2="chest"/>
-        <exclude name="exclude_contact_body_03"       body1="head"            body2="chest"/>
-        <exclude name="exclude_contact_body_04"       body1="neck_1"          body2="head"/>
-        <exclude name="exclude_contact_body_05"       body1="l_shoulder_1"    body2="l_shoulder_3"/>
-        <exclude name="exclude_contact_body_06"       body1="l_shoulder_2"    body2="l_shoulder_3"/>
-        <exclude name="exclude_contact_body_07"       body1="l_forearm"       body2="l_shoulder_3"/>
-        <exclude name="exclude_contact_body_08"       body1="l_hand"          body2="l_forearm"/>
-        <exclude name="exclude_contact_body_09"       body1="r_shoulder_1"    body2="r_shoulder_3"/>
-        <exclude name="exclude_contact_body_10"       body1="r_shoulder_2"    body2="r_shoulder_3"/>
-        <exclude name="exclude_contact_body_11"       body1="r_forearm"       body2="r_shoulder_3"/>
-        <exclude name="exclude_contact_body_12"       body1="r_hand"          body2="r_forearm"/>
-        <exclude name="exclude_contact_body_13"       body1="icub"            body2="torso_1"/>
-        <exclude name="exclude_contact_body_14"       body1="icub"            body2="torso_2"/>
+        <exclude name="exclude_contact_body_01" body1="neck_1" body2="chest"/>
+        <exclude name="exclude_contact_body_02" body1="neck_2" body2="chest"/>
+        <exclude name="exclude_contact_body_03" body1="head" body2="chest"/>
+        <exclude name="exclude_contact_body_04" body1="neck_1" body2="head"/>
+        <exclude name="exclude_contact_body_05" body1="l_shoulder_1" body2="l_shoulder_3"/>
+        <exclude name="exclude_contact_body_06" body1="l_shoulder_2" body2="l_shoulder_3"/>
+        <exclude name="exclude_contact_body_07" body1="l_forearm" body2="l_shoulder_3"/>
+        <exclude name="exclude_contact_body_08" body1="l_hand" body2="l_forearm"/>
+        <exclude name="exclude_contact_body_09" body1="r_shoulder_1" body2="r_shoulder_3"/>
+        <exclude name="exclude_contact_body_10" body1="r_shoulder_2" body2="r_shoulder_3"/>
+        <exclude name="exclude_contact_body_11" body1="r_forearm" body2="r_shoulder_3"/>
+        <exclude name="exclude_contact_body_12" body1="r_hand" body2="r_forearm"/>
+        <exclude name="exclude_contact_body_13" body1="icub" body2="torso_1"/>
+        <exclude name="exclude_contact_body_14" body1="icub" body2="torso_2"/>
     </contact>
-    
+
     <!-- TODO organize actuators similar to appearance above -->
     <actuator>
         <!-- START setting ranges. Set the correct kp. Ctrl ranges updates according to iCubGazeboV3_visuomanip.urdf -->
-        <position name="r_hip_pitch"            kp="470.0"      joint="r_hip_pitch"                     ctrlrange="-0.7853981633974483 2.007128639793479"/>
-        <position name="r_hip_roll"             kp="470.0"      joint="r_hip_roll"                      ctrlrange="-0.17453292519943295 1.9547687622336491"/>
-        <position name="r_hip_yaw"              kp="470.0"      joint="r_hip_yaw"                       ctrlrange="-1.3962634015954636 1.3962634015954636"/>
-        <position name="r_knee"                 kp="470.0"      joint="r_knee"                          ctrlrange="-1.2217304763960306 0.08726646259971647"/>
-        <position name="r_ankle_pitch"          kp="470.0"      joint="r_ankle_pitch"                   ctrlrange="-0.7853981633974483 0.7853981633974483"/>
-        <position name="r_ankle_roll"           kp="470.0"      joint="r_ankle_roll"                    ctrlrange="-0.4363323129985824 0.4363323129985824"/>
-        <position name="l_hip_pitch"            kp="470.0"      joint="l_hip_pitch"                     ctrlrange="-0.7853981633974483 2.007128639793479"/>
-        <position name="l_hip_roll"             kp="470.0"      joint="l_hip_roll"                      ctrlrange="-0.17453292519943295 1.9547687622336491"/>
-        <position name="l_hip_yaw"              kp="470.0"      joint="l_hip_yaw"                       ctrlrange="-1.3962634015954636 1.3962634015954636"/>
-        <position name="l_knee"                 kp="470.0"      joint="l_knee"                          ctrlrange="-1.2217304763960306 0.08726646259971647"/>
-        <position name="l_ankle_pitch"          kp="470.0"      joint="l_ankle_pitch"                   ctrlrange="-0.7853981633974483 0.7853981633974483"/>
-        <position name="l_ankle_roll"           kp="470.0"      joint="l_ankle_roll"                    ctrlrange="-0.4363323129985824 0.4363323129985824"/>
+        <position name="r_hip_pitch" kp="470.0" joint="r_hip_pitch" ctrlrange="-0.7853981633974483 2.007128639793479"/>
+        <position name="r_hip_roll" kp="470.0" joint="r_hip_roll" ctrlrange="-0.17453292519943295 1.9547687622336491"/>
+        <position name="r_hip_yaw" kp="470.0" joint="r_hip_yaw" ctrlrange="-1.3962634015954636 1.3962634015954636"/>
+        <position name="r_knee" kp="470.0" joint="r_knee" ctrlrange="-1.2217304763960306 0.08726646259971647"/>
+        <position name="r_ankle_pitch" kp="470.0" joint="r_ankle_pitch" ctrlrange="-0.7853981633974483 0.7853981633974483"/>
+        <position name="r_ankle_roll" kp="470.0" joint="r_ankle_roll" ctrlrange="-0.4363323129985824 0.4363323129985824"/>
+        <position name="l_hip_pitch" kp="470.0" joint="l_hip_pitch" ctrlrange="-0.7853981633974483 2.007128639793479"/>
+        <position name="l_hip_roll" kp="470.0" joint="l_hip_roll" ctrlrange="-0.17453292519943295 1.9547687622336491"/>
+        <position name="l_hip_yaw" kp="470.0" joint="l_hip_yaw" ctrlrange="-1.3962634015954636 1.3962634015954636"/>
+        <position name="l_knee" kp="470.0" joint="l_knee" ctrlrange="-1.2217304763960306 0.08726646259971647"/>
+        <position name="l_ankle_pitch" kp="470.0" joint="l_ankle_pitch" ctrlrange="-0.7853981633974483 0.7853981633974483"/>
+        <position name="l_ankle_roll" kp="470.0" joint="l_ankle_roll" ctrlrange="-0.4363323129985824 0.4363323129985824"/>
         <!-- END setting ranges -->
-        <position name="torso_pitch"            kp="470.0"      joint="torso_pitch"                     ctrlrange="-0.3141592653589793 0.7853981633974483"/>
-        <position name="torso_roll"             kp="990.0"      joint="torso_roll"                      ctrlrange="-0.4014257279586958 0.4014257279586958"/>
-        <position name="torso_yaw"              kp="975.0"      joint="torso_yaw"                       ctrlrange="-0.7504915783575618 0.7504915783575618"/>
-        <position name="l_shoulder_pitch"       kp="250.0"      joint="l_shoulder_pitch"                ctrlrange="-3.0543261909900767 0.3490658503988659"/>
-        <position name="l_shoulder_roll"        kp="250.0"      joint="l_shoulder_roll"                 ctrlrange="0.20943951023931956 2.8448866807507573"/>
-        <position name="l_shoulder_yaw"         kp="250.0"      joint="l_shoulder_yaw"                  ctrlrange="-0.8726646259971648 1.3962634015954636"/>
-        <position name="l_elbow"                kp="105.0"      joint="l_elbow"                         ctrlrange="-0.05235987755982989 1.3089969389957472"/>
-        <position name="l_wrist_prosup"         kp="195.0"      joint="l_wrist_prosup"                  ctrlrange="-1.53588974175501 1.53588974175501"/>
-        <position name="l_wrist_pitch"          kp="15.0"       joint="l_wrist_pitch"                   ctrlrange="-1.2217304763960306 0.4363323129985824"/>
-        <position name="l_wrist_yaw"            kp="105.0"      joint="l_wrist_yaw"                     ctrlrange="-0.2617993877991494 0.6108652381980153"/>
+        <position name="torso_pitch" kp="470.0" joint="torso_pitch" ctrlrange="-0.3141592653589793 0.7853981633974483"/>
+        <position name="torso_roll" kp="990.0" joint="torso_roll" ctrlrange="-0.4014257279586958 0.4014257279586958"/>
+        <position name="torso_yaw" kp="975.0" joint="torso_yaw" ctrlrange="-0.7504915783575618 0.7504915783575618"/>
+        <position name="l_shoulder_pitch" kp="250.0" joint="l_shoulder_pitch" ctrlrange="-3.0543261909900767 0.3490658503988659"/>
+        <position name="l_shoulder_roll" kp="250.0" joint="l_shoulder_roll" ctrlrange="0.20943951023931956 2.8448866807507573"/>
+        <position name="l_shoulder_yaw" kp="250.0" joint="l_shoulder_yaw" ctrlrange="-0.8726646259971648 1.3962634015954636"/>
+        <position name="l_elbow" kp="105.0" joint="l_elbow" ctrlrange="-0.05235987755982989 1.3089969389957472"/>
+        <position name="l_wrist_prosup" kp="195.0" joint="l_wrist_prosup" ctrlrange="-1.53588974175501 1.53588974175501"/>
+        <position name="l_wrist_pitch" kp="15.0" joint="l_wrist_pitch" ctrlrange="-1.2217304763960306 0.4363323129985824"/>
+        <position name="l_wrist_yaw" kp="105.0" joint="l_wrist_yaw" ctrlrange="-0.2617993877991494 0.6108652381980153"/>
         <!-- TODO check the finger joints! -->
-        <position name="l_hand_finger"          kp="25.0"       tendon="l_hand_finger_tendon"           ctrlrange="0.0 1.046666667"/>
-        <position name="l_thumb_oppose"         kp="25.0"       joint="l_hand_thumb_0_joint"            ctrlrange="0.0 1.5707963267948966"/>
-        <position name="l_thumb_proximal"       kp="20.0"       joint="l_hand_thumb_1_joint"            ctrlrange="0.0 1.5707963267948966"/>
-        <position name="l_thumb_distal"         kp="10.0"       tendon="l_thumb_distal_tendon"          ctrlrange="0.0 2.965555556"/>
-        <position name="l_index_proximal"       kp="20.0"       joint="l_hand_index_1_joint"            ctrlrange="0.0 1.5707963267948966"/>
-        <position name="l_index_distal"         kp="10.0"       tendon="l_index_distal_tendon"          ctrlrange="0.0 2.965555556"/>
-        <position name="l_middle_proximal"      kp="20.0"       joint="l_hand_middle_1_joint"           ctrlrange="0.0 1.5707963267948966"/>
-        <position name="l_middle_distal"        kp="10.0"       tendon="l_middle_distal_tendon"         ctrlrange="0.0 2.965555556"/>
-        <position name="l_pinky"                kp="15.0"       tendon="l_pinky_tendon"                 ctrlrange="0.0 4.36"/>
+        <position name="l_hand_finger" kp="25.0" tendon="l_hand_finger_tendon" ctrlrange="0.0 1.046666667"/>
+        <position name="l_thumb_oppose" kp="25.0" joint="l_hand_thumb_0_joint" ctrlrange="0.0 1.5707963267948966"/>
+        <position name="l_thumb_proximal" kp="20.0" joint="l_hand_thumb_1_joint" ctrlrange="0.0 1.5707963267948966"/>
+        <position name="l_thumb_distal" kp="10.0" tendon="l_thumb_distal_tendon" ctrlrange="0.0 2.965555556"/>
+        <position name="l_index_proximal" kp="20.0" joint="l_hand_index_1_joint" ctrlrange="0.0 1.5707963267948966"/>
+        <position name="l_index_distal" kp="10.0" tendon="l_index_distal_tendon" ctrlrange="0.0 2.965555556"/>
+        <position name="l_middle_proximal" kp="20.0" joint="l_hand_middle_1_joint" ctrlrange="0.0 1.5707963267948966"/>
+        <position name="l_middle_distal" kp="10.0" tendon="l_middle_distal_tendon" ctrlrange="0.0 2.965555556"/>
+        <position name="l_pinky" kp="15.0" tendon="l_pinky_tendon" ctrlrange="0.0 4.36"/>
 
-        <position name="r_shoulder_pitch"       kp="250.0"      joint="r_shoulder_pitch"                ctrlrange="-3.0543261909900767 0.3490658503988659"/>
-        <position name="r_shoulder_roll"        kp="250.0"      joint="r_shoulder_roll"                 ctrlrange="0.20943951023931956 2.8448866807507573"/>
-        <position name="r_shoulder_yaw"         kp="250.0"      joint="r_shoulder_yaw"                  ctrlrange="-0.8726646259971648 1.3962634015954636"/>
-        <position name="r_elbow"                kp="105.0"      joint="r_elbow"                         ctrlrange="-0.05235987755982989 1.3089969389957472"/>
-        <position name="r_wrist_prosup"         kp="195.0"      joint="r_wrist_prosup"                  ctrlrange="-1.53588974175501 1.53588974175501"/>
-        <position name="r_wrist_pitch"          kp="15.0"       joint="r_wrist_pitch"                   ctrlrange="-1.2217304763960306 0.4363323129985824"/>
-        <position name="r_wrist_yaw"            kp="105.0"      joint="r_wrist_yaw"                     ctrlrange="-0.2617993877991494 0.6108652381980153"/>
+        <position name="r_shoulder_pitch" kp="250.0" joint="r_shoulder_pitch" ctrlrange="-3.0543261909900767 0.3490658503988659"/>
+        <position name="r_shoulder_roll" kp="250.0" joint="r_shoulder_roll" ctrlrange="0.20943951023931956 2.8448866807507573"/>
+        <position name="r_shoulder_yaw" kp="250.0" joint="r_shoulder_yaw" ctrlrange="-0.8726646259971648 1.3962634015954636"/>
+        <position name="r_elbow" kp="105.0" joint="r_elbow" ctrlrange="-0.05235987755982989 1.3089969389957472"/>
+        <position name="r_wrist_prosup" kp="195.0" joint="r_wrist_prosup" ctrlrange="-1.53588974175501 1.53588974175501"/>
+        <position name="r_wrist_pitch" kp="15.0" joint="r_wrist_pitch" ctrlrange="-1.2217304763960306 0.4363323129985824"/>
+        <position name="r_wrist_yaw" kp="105.0" joint="r_wrist_yaw" ctrlrange="-0.2617993877991494 0.6108652381980153"/>
         <!-- TODO check the finger joints! -->
-        <position name="r_hand_finger"          kp="25.0"       tendon="r_hand_finger_tendon"           ctrlrange="0.0 1.046666667"/>
-        <position name="r_thumb_oppose"         kp="25.0"       joint="r_hand_thumb_0_joint"            ctrlrange="0.0 1.5707963267948966"/>
-        <position name="r_thumb_proximal"       kp="20.0"       joint="r_hand_thumb_1_joint"            ctrlrange="0.0 1.5707963267948966"/>
-        <position name="r_thumb_distal"         kp="10.0"       tendon="r_thumb_distal_tendon"          ctrlrange="0.0 2.965555556"/>  
-        <position name="r_index_proximal"       kp="20.0"       joint="r_hand_index_1_joint"            ctrlrange="0.0 1.5707963267948966"/>
-        <position name="r_index_distal"         kp="10.0"       tendon="r_index_distal_tendon"          ctrlrange="0.0 2.965555556"/>
-        <position name="r_middle_proximal"      kp="20.0"       joint="r_hand_middle_1_joint"           ctrlrange="0.0 1.5707963267948966"/>
-        <position name="r_middle_distal"        kp="10.0"       tendon="r_middle_distal_tendon"         ctrlrange="0.0 2.965555556"/>
-        <position name="r_pinky"                kp="15.0"       tendon="r_pinky_tendon"                 ctrlrange="0.0 4.36"/>
+        <position name="r_hand_finger" kp="25.0" tendon="r_hand_finger_tendon" ctrlrange="0.0 1.046666667"/>
+        <position name="r_thumb_oppose" kp="25.0" joint="r_hand_thumb_0_joint" ctrlrange="0.0 1.5707963267948966"/>
+        <position name="r_thumb_proximal" kp="20.0" joint="r_hand_thumb_1_joint" ctrlrange="0.0 1.5707963267948966"/>
+        <position name="r_thumb_distal" kp="10.0" tendon="r_thumb_distal_tendon" ctrlrange="0.0 2.965555556"/>
+        <position name="r_index_proximal" kp="20.0" joint="r_hand_index_1_joint" ctrlrange="0.0 1.5707963267948966"/>
+        <position name="r_index_distal" kp="10.0" tendon="r_index_distal_tendon" ctrlrange="0.0 2.965555556"/>
+        <position name="r_middle_proximal" kp="20.0" joint="r_hand_middle_1_joint" ctrlrange="0.0 1.5707963267948966"/>
+        <position name="r_middle_distal" kp="10.0" tendon="r_middle_distal_tendon" ctrlrange="0.0 2.965555556"/>
+        <position name="r_pinky" kp="15.0" tendon="r_pinky_tendon" ctrlrange="0.0 4.36"/>
 
-        <position name="neck_pitch"             kp="195.0"      joint="neck_pitch"                      ctrlrange="-0.5235987755982988 0.3839724354387525"/>
-        <position name="neck_roll"              kp="460.0"      joint="neck_roll"                       ctrlrange="-0.3490658503988659 0.3490658503988659"/>
-        <position name="neck_yaw"               kp="195.0"      joint="neck_yaw"                        ctrlrange="-0.7853981633974483 0.7853981633974483"/>
-        
+        <position name="neck_pitch" kp="195.0" joint="neck_pitch" ctrlrange="-0.5235987755982988 0.3839724354387525"/>
+        <position name="neck_roll" kp="460.0" joint="neck_roll" ctrlrange="-0.3490658503988659 0.3490658503988659"/>
+        <position name="neck_yaw" kp="195.0" joint="neck_yaw" ctrlrange="-0.7853981633974483 0.7853981633974483"/>
+
         <position name="eyes_pan" kp="195.0" tendon="eyes_pan_tendon" ctrlrange="-0.5235987755982988 0.9599310885968813"/>
         <position name="eyes_tilt" kp="195.0" tendon="eyes_tilt_tendon" ctrlrange="-0.5235987755982988 0.5235987755982988"/>
     </actuator>
-    
+
 </mujoco>

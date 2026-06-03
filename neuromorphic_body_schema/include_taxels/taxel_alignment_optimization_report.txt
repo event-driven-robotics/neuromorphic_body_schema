@@ -1,38 +1,42 @@
 Taxel alignment optimization report
 
 Part: r_upper_leg
-  mean distance: 0.000800 -> 0.000716 m (10.49% improvement)
-  mean abs improvement: 0.084 mm
-  median distance: 0.000793 -> 0.000694 m
-  p90 distance: 0.001117 -> 0.001119 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.34735143509923916, -0.4060966400679744, -1.7876533057556747e-05]
-  delta quaternion wxyz (around manual): [0.9999891264362033, 0.003031188872847975, -0.0035438384993435133, 1.0586160673758459e-05]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0002162694480811911, -0.00026190557103964525, 0.0011975502731303008]
-  delta angles deg: [0.34735143509923916, -0.4060966400679744, -1.7876533057556747e-05]
-  delta rotation distance deg: 0.5343846477536387
-  delta offsets m: [0.0002162694480811911, -0.00026190557103964525, 0.0011975502731303008]
+  mean distance: 0.000762 -> 0.000708 m (7.09% improvement)
+  mean abs improvement: 0.054 mm
+  median distance: 0.000753 -> 0.000678 m
+  p90 distance: 0.001090 -> 0.001097 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.19146870273818384, -0.2689776978096354, -0.5602315583331536]
+  delta quaternion wxyz (around manual): [0.9999839176080232, 0.0016593786779428988, -0.0023554085125421565, -0.004884980906068795]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.00013982469801503088, -5.4208269877723474e-05, 0.00043690915169745476]
+  delta angles deg: [0.19146870273818384, -0.2689776978096354, -0.5602315583331536]
+  delta rotation distance deg: 0.6498954994035736
+  delta offsets m: [0.00013982469801503088, -5.4208269877723474e-05, 0.00043690915169745476]
   optimizer method: L-BFGS-B
   solver: L-BFGS-B
-  seed count: 2
+  seed count: 1
   selected seed label: previous:optimized
-  selected seed angles deg: [0.18293214321740633, -0.36294499925060447, -0.09769551905447142]
-  selected seed quaternion wxyz: [0.9999933508071148, 0.0015936745575219908, -0.0031686431342797363, -0.0008474925669069792]
-  selected seed offsets m: [0.0001963362275667101, -0.0002057820196879696, 0.0006549070511723377]
-  angle bounds deg: [25.0, 25.0, 25.0]
-  translation bounds m: [0.03, 0.03, 0.03]
-  polish mode: False
+  selected seed angles deg: [0.09852428936003797, -0.23440148013528392, 0.3163214160629937]
+  selected seed quaternion wxyz: [0.9999937234541191, 0.0008654279842592276, -0.0020431554556546686, 0.002762173520059393]
+  selected seed offsets m: [0.00014165471118013614, -0.0001122897980481938, 0.000498655248778323]
+  angle bounds deg: [5.0, 5.0, 5.0]
+  translation bounds m: [0.01, 0.01, 0.01]
+  polish mode: True
+  polish mean distance: 0.000708 -> 0.000708 m
+  polish rotation space: quaternion_wxyz
+  polish translation window m: [0.001, 0.001, 0.001]
+  polish success: False
 
 Part: r_lower_leg
-  mean distance: 0.000889 -> 0.000708 m (20.32% improvement)
+  mean distance: 0.000891 -> 0.000710 m (20.29% improvement)
   mean abs improvement: 0.181 mm
-  median distance: 0.000873 -> 0.000662 m
-  p90 distance: 0.001301 -> 0.001150 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.20328518707488413, -0.18980385649621181, 0.42818648340506343]
-  delta quaternion wxyz (around manual): [0.9999900625589556, 0.0017801713164837126, -0.0016497074380898028, 0.003739550613204329]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.00046033888789645956, -0.00011683202646792451, 0.00016449508034113432]
-  delta angles deg: [0.20328518707488413, -0.18980385649621181, 0.42818648340506343]
-  delta rotation distance deg: 0.5108639630627996
-  delta offsets m: [0.00046033888789645956, -0.00011683202646792451, 0.00016449508034113432]
+  median distance: 0.000885 -> 0.000672 m
+  p90 distance: 0.001327 -> 0.001182 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.005064757208266927, -0.2564699702432981, -0.00801152630970025]
+  delta quaternion wxyz (around manual): [0.9999974919767998, -4.4354709161931695e-05, -0.0022381177403671504, -7.001250211195284e-05]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0003888861436829117, -2.5352936507266834e-05, 0.0006651220735017369]
+  delta angles deg: [-0.005064757208266927, -0.2564699702432981, -0.00801152630970025]
+  delta rotation distance deg: 0.25664540407766795
+  delta offsets m: [0.0003888861436829117, -2.5352936507266834e-05, 0.0006651220735017369]
   optimizer method: L-BFGS-B
   solver: L-BFGS-B
   seed count: 2
@@ -40,264 +44,256 @@ Part: r_lower_leg
   selected seed angles deg: [0.0, 0.0, 0.0]
   selected seed quaternion wxyz: [1.0, 0.0, 0.0, 0.0]
   selected seed offsets m: [0.0, 0.0, 0.0]
-  angle bounds deg: [25.0, 25.0, 25.0]
-  translation bounds m: [0.03, 0.03, 0.03]
+  angle bounds deg: [5.0, 5.0, 5.0]
+  translation bounds m: [0.01, 0.01, 0.01]
   polish mode: False
 
 Part: l_upper_leg
-  mean distance: 0.000795 -> 0.000723 m (9.05% improvement)
-  mean abs improvement: 0.072 mm
-  median distance: 0.000784 -> 0.000688 m
-  p90 distance: 0.001111 -> 0.001137 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.16110080042676606, -0.432781519110851, -0.19485070455952455]
-  delta quaternion wxyz (around manual): [0.9999904252467633, -0.001412279078852099, -0.003774322542364955, -0.0017056881154311574]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.00014151647488324563, 0.00015212096819177773, 0.0011948230981115532]
-  delta angles deg: [-0.16110080042676606, -0.432781519110851, -0.19485070455952455]
-  delta rotation distance deg: 0.5014547707146458
-  delta offsets m: [0.00014151647488324563, 0.00015212096819177773, 0.0011948230981115532]
+  mean distance: 0.000775 -> 0.000682 m (12.06% improvement)
+  mean abs improvement: 0.093 mm
+  median distance: 0.000763 -> 0.000631 m
+  p90 distance: 0.001099 -> 0.001104 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.08193096769797263, -0.4289892663346833, -0.6772120662340023]
+  delta quaternion wxyz (around manual): [0.9999752585484472, -0.0007370889426123829, -0.003739337158890052, -0.005912389404396726]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.00016229015452470273, 3.7100974422519785e-05, 0.0062383196992125646]
+  delta angles deg: [-0.08193096769797263, -0.4289892663346833, -0.6772120662340023]
+  delta rotation distance deg: 0.806085500134722
+  delta offsets m: [0.00016229015452470273, 3.7100974422519785e-05, 0.0062383196992125646]
   optimizer method: L-BFGS-B
   solver: L-BFGS-B
-  seed count: 2
+  seed count: 1
   selected seed label: previous:optimized
-  selected seed angles deg: [-0.22398250481568752, -0.3879914896221791, -0.18838367208438495]
-  selected seed quaternion wxyz: [0.9999909955483025, -0.0019601671922696404, -0.0033826336851521983, -0.0016505624027423637]
-  selected seed offsets m: [0.00020815772707988398, 0.00023742859258016992, 0.0009087690311173052]
-  angle bounds deg: [25.0, 25.0, 25.0]
-  translation bounds m: [0.03, 0.03, 0.03]
+  selected seed angles deg: [-0.0812033914253312, -0.21980783489903813, -0.5286448721314669]
+  selected seed quaternion wxyz: [0.999987261719885, -0.0007174734870623964, -0.0019148940328478172, -0.0046146300615282285]
+  selected seed offsets m: [0.0001625671691227222, 8.090993418297103e-05, 0.0008542047549810542]
+  angle bounds deg: [5.0, 5.0, 5.0]
+  translation bounds m: [0.01, 0.01, 0.01]
   polish mode: True
-  polish mean distance: 0.000723 -> 0.000723 m
+  polish mean distance: 0.000682 -> 0.000682 m
   polish rotation space: quaternion_wxyz
   polish translation window m: [0.001, 0.001, 0.001]
   polish success: True
 
 Part: l_lower_leg
-  mean distance: 0.000903 -> 0.000712 m (21.15% improvement)
-  mean abs improvement: 0.191 mm
-  median distance: 0.000867 -> 0.000665 m
-  p90 distance: 0.001339 -> 0.001173 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.11879561238318061, -0.11828024300457891, -0.5815871625572183]
-  delta quaternion wxyz (around manual): [0.9999860451801259, -0.0010419118492011458, -0.0010269143301042522, -0.005076348261129431]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0005110214222046921, 4.2458376375543754e-05, -0.00040963797400926964]
-  delta angles deg: [-0.11879561238318061, -0.11828024300457891, -0.5815871625572183]
-  delta rotation distance deg: 0.6053830380422424
-  delta offsets m: [0.0005110214222046921, 4.2458376375543754e-05, -0.00040963797400926964]
+  mean distance: 0.000890 -> 0.000695 m (21.83% improvement)
+  mean abs improvement: 0.194 mm
+  median distance: 0.000866 -> 0.000646 m
+  p90 distance: 0.001352 -> 0.001119 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.17154059938966998, -0.12356276521263374, -0.48737068290611246]
+  delta quaternion wxyz (around manual): [0.9999892468669417, -0.0015015452230063345, -0.0010719106005591399, -0.0042547056413602905]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0005252764540176908, 0.0002432647067951677, -0.00019043269733156094]
+  delta angles deg: [-0.17154059938966998, -0.12356276521263374, -0.48737068290611246]
+  delta rotation distance deg: 0.531417099850001
+  delta offsets m: [0.0005252764540176908, 0.0002432647067951677, -0.00019043269733156094]
   optimizer method: L-BFGS-B
-  solver: L-BFGS-B
-  seed count: 2
-  selected seed label: configured:0
-  selected seed angles deg: [0.0, 0.0, 0.0]
-  selected seed quaternion wxyz: [1.0, 0.0, 0.0, 0.0]
-  selected seed offsets m: [0.0, 0.0, 0.0]
-  angle bounds deg: [25.0, 25.0, 25.0]
-  translation bounds m: [0.03, 0.03, 0.03]
-  polish mode: False
-
-Part: r_upper_arm
-  mean distance: 0.001008 -> 0.000903 m (10.42% improvement)
-  mean abs improvement: 0.105 mm
-  median distance: 0.000806 -> 0.000733 m
-  p90 distance: 0.002029 -> 0.001707 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.7182024828450684, -0.5646856398779132, -0.30286150899326486]
-  delta quaternion wxyz (around manual): [0.9999648069982425, 0.006254336279426254, -0.004944242340704421, -0.002611993558180029]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0010661903186336057, -0.0003340260949105216, 0.0009252703805915206]
-  delta angles deg: [0.7182024828450684, -0.5646856398779132, -0.30286150899326486]
-  delta rotation distance deg: 0.9613843656046274
-  delta offsets m: [0.0010661903186336057, -0.0003340260949105216, 0.0009252703805915206]
-  optimizer method: L-BFGS-B
-  solver: L-BFGS-B
-  seed count: 2
-  selected seed label: previous:optimized
-  selected seed angles deg: [0.7501515154323427, -0.42736845679822094, -0.07863878106742242]
-  selected seed quaternion wxyz: [0.9999713998956865, 0.0065436537784831165, -0.003733896267621145, -0.0006618191226572376]
-  selected seed offsets m: [0.0007147901023992436, -7.64278199241565e-06, 0.0007907915817298038]
-  angle bounds deg: [25.0, 25.0, 25.0]
-  translation bounds m: [0.03, 0.03, 0.03]
-  polish mode: True
-  polish mean distance: 0.000905 -> 0.000903 m
-  polish rotation space: quaternion_wxyz
-  polish translation window m: [0.001, 0.001, 0.001]
-  polish success: True
-
-Part: r_forearm
-  mean distance: 0.001718 -> 0.000780 m (54.59% improvement)
-  mean abs improvement: 0.938 mm
-  median distance: 0.001500 -> 0.000578 m
-  p90 distance: 0.003148 -> 0.001652 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.20134421765176375, -2.6804938760813206, 0.7073318637950095]
-  delta quaternion wxyz (around manual): [0.9997055838581143, 0.0019009189638499395, -0.023378264360481592, 0.00621199368086688]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [-0.011636215977316114, 0.00015885070514401443, 0.003797057797269821]
-  delta angles deg: [0.20134421765176375, -2.6804938760813206, 0.7073318637950095]
-  delta rotation distance deg: 2.78073171655816
-  delta offsets m: [-0.011636215977316114, 0.00015885070514401443, 0.003797057797269821]
-  optimizer method: L-BFGS-B
-  solver: L-BFGS-B
-  seed count: 2
-  selected seed label: previous:optimized
-  selected seed angles deg: [0.15754596701818144, -2.842023594421165, 0.8574415931585997]
-  selected seed quaternion wxyz: [0.9996632769342443, 0.0015599434711179483, -0.024787790248704554, 0.0075143050271882185]
-  selected seed offsets m: [-0.0126106663904177, 0.00030730494654876086, 0.00270879973663261]
-  angle bounds deg: [25.0, 25.0, 25.0]
-  translation bounds m: [0.03, 0.03, 0.03]
-  polish mode: False
-
-Part: l_upper_arm
-  mean distance: 0.001148 -> 0.000907 m (20.96% improvement)
-  mean abs improvement: 0.241 mm
-  median distance: 0.000928 -> 0.000695 m
-  p90 distance: 0.002237 -> 0.001883 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.7352349763770079, 0.6995880623168309, 2.0094990026113297]
-  delta quaternion wxyz (around manual): [0.9998077191580138, 0.006307934403244343, 0.0062164612211911, 0.017495436133452943]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [-0.0009699756605856005, -0.002642771596460159, 0.001299420639687382]
-  delta angles deg: [0.7352349763770079, 0.6995880623168309, 2.0094990026113297]
-  delta rotation distance deg: 2.247204483272414
-  delta offsets m: [-0.0009699756605856005, -0.002642771596460159, 0.001299420639687382]
-  optimizer method: L-BFGS-B
-  solver: L-BFGS-B
-  seed count: 2
-  selected seed label: previous:optimized
-  selected seed angles deg: [0.2096897056337016, 0.8417265827143254, 1.5183104904462652]
-  selected seed quaternion wxyz: [0.9998837519391286, 0.0017323553257941483, 0.007368971225120464, 0.013235551225383219]
-  selected seed offsets m: [-0.0005214128361508355, -0.0022465472692358877, 0.001603438439476756]
-  angle bounds deg: [25.0, 25.0, 25.0]
-  translation bounds m: [0.03, 0.03, 0.03]
-  polish mode: False
-
-Part: l_forearm
-  mean distance: 0.001895 -> 0.000818 m (56.86% improvement)
-  mean abs improvement: 1.078 mm
-  median distance: 0.001706 -> 0.000584 m
-  p90 distance: 0.003409 -> 0.001682 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-1.061112794006388, 2.0803679014685432, 1.298992693378452]
-  delta quaternion wxyz (around manual): [0.999726200899163, -0.009463476557238918, 0.018046744467728183, 0.011501341717097777]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.000933343450616329, -0.002064828435731959, -0.0003122751936273313]
-  delta angles deg: [-1.061112794006388, 2.0803679014685432, 1.298992693378452]
-  delta rotation distance deg: 2.6815972050976447
-  delta offsets m: [0.000933343450616329, -0.002064828435731959, -0.0003122751936273313]
-  optimizer method: L-BFGS-B
-  solver: L-BFGS-B
-  seed count: 2
-  selected seed label: previous:optimized
-  selected seed angles deg: [-0.7835056270054479, 2.0545561308530442, 1.0774937640000075]
-  selected seed quaternion wxyz: [0.9997705504003904, -0.00700449490076176, 0.01786293293644999, 0.009523614345064072]
-  selected seed offsets m: [0.000742929521097125, -0.001958001636954472, -0.0001753427012499732]
-  angle bounds deg: [25.0, 25.0, 25.0]
-  translation bounds m: [0.03, 0.03, 0.03]
-  polish mode: False
-
-Part: torso
-  mean distance: 0.002623 -> 0.001626 m (38.02% improvement)
-  mean abs improvement: 0.998 mm
-  median distance: 0.002285 -> 0.001007 m
-  p90 distance: 0.004722 -> 0.002947 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-4.454569813265812, -0.3594988428279737, 0.29361072089109885]
-  delta quaternion wxyz (around manual): [0.999236637407013, -0.038855314140669485, -0.0032344110188130323, 0.0024383625483468973]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.000620359780381255, 0.0002705296174888213, 0.003483041752527172]
-  delta angles deg: [-4.454569813265812, -0.3594988428279737, 0.29361072089109885]
-  delta rotation distance deg: 4.477758778700885
-  delta offsets m: [0.000620359780381255, 0.0002705296174888213, 0.003483041752527172]
-  optimizer method: L-BFGS-B
-  solver: L-BFGS-B
-  seed count: 2
-  selected seed label: configured:0
-  selected seed angles deg: [0.0, 0.0, 0.0]
-  selected seed quaternion wxyz: [1.0, 0.0, 0.0, 0.0]
-  selected seed offsets m: [0.0, 0.0, 0.0]
-  angle bounds deg: [25.0, 25.0, 25.0]
-  translation bounds m: [0.03, 0.03, 0.03]
-  polish mode: True
-  polish mean distance: 0.001638 -> 0.001626 m
-  polish rotation space: quaternion_wxyz
-  polish translation window m: [0.001, 0.001, 0.001]
-  polish success: True
-
-Part: r_palm
-  mean distance: 0.002479 -> 0.000328 m (86.77% improvement)
-  mean abs improvement: 2.151 mm
-  median distance: 0.002487 -> 0.000234 m
-  p90 distance: 0.003069 -> 0.000664 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-1.2050218120245944, -0.10276919667601203, -0.41708875526940387]
-  delta quaternion wxyz (around manual): [0.9999376493934888, -0.010518795478785647, -0.000858500325848391, -0.003649005931777808]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [-0.002410551297167203, -0.0030900535921886494, -0.00010419980024269886]
-  delta angles deg: [-1.2050218120245944, -0.10276919667601203, -0.41708875526940387]
-  delta rotation distance deg: 1.2796471202814381
-  delta offsets m: [-0.002410551297167203, -0.0030900535921886494, -0.00010419980024269886]
-  optimizer method: L-BFGS-B
-  solver: L-BFGS-B
-  seed count: 2
-  selected seed label: previous:optimized
-  selected seed angles deg: [-0.8850372179151432, 0.010105120854546113, -0.2961026954576944]
-  selected seed quaternion wxyz: [0.9999668341304514, -0.0077230762703363485, 0.00010813782518862469, -0.0025832224557369994]
-  selected seed offsets m: [-0.001642288940705701, -0.0028926892463763077, 7.028180923272631e-05]
-  angle bounds deg: [25.0, 25.0, 25.0]
-  translation bounds m: [0.03, 0.03, 0.03]
-  polish mode: False
-
-Part: l_palm
-  mean distance: 0.002507 -> 0.000355 m (85.82% improvement)
-  mean abs improvement: 2.151 mm
-  median distance: 0.002519 -> 0.000277 m
-  p90 distance: 0.003118 -> 0.000660 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-1.2422012595110252, -0.708442536738593, 0.10247903223856546]
-  delta quaternion wxyz (around manual): [0.9999217957313148, -0.010834298691111443, -0.006191616360227435, 0.0008272122957453166]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.00040611723617452547, -0.002916839057618491, -5.925368620713711e-05]
-  delta angles deg: [-1.2422012595110252, -0.708442536738593, 0.10247903223856546]
-  delta rotation distance deg: 1.433130325213067
-  delta offsets m: [0.00040611723617452547, -0.002916839057618491, -5.925368620713711e-05]
-  optimizer method: L-BFGS-B
-  solver: L-BFGS-B
-  seed count: 2
-  selected seed label: previous:optimized
-  selected seed angles deg: [-0.8945295822928149, -0.4999051072137507, -0.14618432208330887]
-  selected seed quaternion wxyz: [0.9999591589474667, -0.007811648360473351, -0.0043523865116095115, -0.0013097017298597255]
-  selected seed offsets m: [0.00035179455920980417, -0.0025606268087553924, 0.00016572982975190446]
-  angle bounds deg: [25.0, 25.0, 25.0]
-  translation bounds m: [0.03, 0.03, 0.03]
-  polish mode: True
-  polish mean distance: 0.000355 -> 0.000355 m
-  polish rotation space: quaternion_wxyz
-  polish translation window m: [0.001, 0.001, 0.001]
-  polish success: False
-
-Part: l_foot
-  mean distance: 0.000392 -> 0.000392 m (0.00% improvement)
-  mean abs improvement: 0.000 mm
-  median distance: 0.000372 -> 0.000372 m
-  p90 distance: 0.000632 -> 0.000632 m
-  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.0, 0.0, 0.0]
-  delta quaternion wxyz (around manual): [1.0, 0.0, 0.0, 0.0]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0, -0.004438476562500182, 0.0]
-  delta angles deg: [0.0, 0.0, 0.0]
-  delta rotation distance deg: 0.0
-  delta offsets m: [0.0, -0.004438476562500182, 0.0]
-  optimizer method: sole-2d
   solver: L-BFGS-B
   seed count: 1
   selected seed label: configured:0
   selected seed angles deg: [0.0, 0.0, 0.0]
   selected seed quaternion wxyz: [1.0, 0.0, 0.0, 0.0]
-  selected seed offsets m: [0.0, -0.004438476562500182, 0.0]
+  selected seed offsets m: [0.0, 0.0, 0.0]
+  angle bounds deg: [5.0, 5.0, 5.0]
+  translation bounds m: [0.01, 0.01, 0.01]
+  polish mode: False
+
+Part: r_upper_arm
+  mean distance: 0.001388 -> 0.000661 m (52.37% improvement)
+  mean abs improvement: 0.727 mm
+  median distance: 0.001222 -> 0.000596 m
+  p90 distance: 0.002466 -> 0.001099 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.07204352243656384, -0.17748632291807548, -0.26042266975020606]
+  delta quaternion wxyz (around manual): [0.9999960182842925, -0.0006322158770473557, -0.001547426643763308, -0.0022735851485821065]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0025248140471702835, -0.00042211197794433914, -0.0008719501627938022]
+  delta angles deg: [-0.07204352243656384, -0.17748632291807548, -0.26042266975020606]
+  delta rotation distance deg: 0.3233723585313492
+  delta offsets m: [0.0025248140471702835, -0.00042211197794433914, -0.0008719501627938022]
+  optimizer method: L-BFGS-B
+  solver: L-BFGS-B
+  seed count: 1
+  selected seed label: configured:0
+  selected seed angles deg: [0.0, 0.0, 0.0]
+  selected seed quaternion wxyz: [1.0, 0.0, 0.0, 0.0]
+  selected seed offsets m: [0.0, 0.0, 0.0]
+  angle bounds deg: [5.0, 5.0, 5.0]
+  translation bounds m: [0.01, 0.01, 0.01]
+  polish mode: False
+
+Part: r_forearm
+  mean distance: 0.001604 -> 0.000817 m (49.08% improvement)
+  mean abs improvement: 0.787 mm
+  median distance: 0.001421 -> 0.000547 m
+  p90 distance: 0.003101 -> 0.001820 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.16092193939613023, 0.8008154858768302, 0.2596294739684286]
+  delta quaternion wxyz (around manual): [0.9999720061260253, -0.0014201039806415784, 0.006985170099903484, 0.002275448890177909]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [-0.004332188110683048, 0.001453366206974699, -0.005957801502058589]
+  delta angles deg: [-0.16092193939613023, 0.8008154858768302, 0.2596294739684286]
+  delta rotation distance deg: 0.8574328942342966
+  delta offsets m: [-0.004332188110683048, 0.001453366206974699, -0.005957801502058589]
+  optimizer method: L-BFGS-B
+  solver: L-BFGS-B
+  seed count: 2
+  selected seed label: configured:0
+  selected seed angles deg: [0.0, 0.0, 0.0]
+  selected seed quaternion wxyz: [1.0, 0.0, 0.0, 0.0]
+  selected seed offsets m: [0.0, 0.0, 0.0]
+  angle bounds deg: [5.0, 5.0, 5.0]
+  translation bounds m: [0.01, 0.01, 0.01]
+  polish mode: False
+
+Part: l_upper_arm
+  mean distance: 0.000832 -> 0.000644 m (22.54% improvement)
+  mean abs improvement: 0.187 mm
+  median distance: 0.000775 -> 0.000582 m
+  p90 distance: 0.001364 -> 0.001075 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.6122494410850583, -0.19570155631020758, 0.448077928566421]
+  delta quaternion wxyz (around manual): [0.9999765880772911, 0.005349488063484608, -0.001686888335404917, 0.003919270659500253]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [-0.0007181247826189546, -0.000869980356189673, -0.0013513762852207626]
+  delta angles deg: [0.6122494410850583, -0.19570155631020758, 0.448077928566421]
+  delta rotation distance deg: 0.7841280937756787
+  delta offsets m: [-0.0007181247826189546, -0.000869980356189673, -0.0013513762852207626]
+  optimizer method: L-BFGS-B
+  solver: L-BFGS-B
+  seed count: 2
+  selected seed label: configured:0
+  selected seed angles deg: [0.0, 0.0, 0.0]
+  selected seed quaternion wxyz: [1.0, 0.0, 0.0, 0.0]
+  selected seed offsets m: [0.0, 0.0, 0.0]
+  angle bounds deg: [5.0, 5.0, 5.0]
+  translation bounds m: [0.01, 0.01, 0.01]
+  polish mode: False
+
+Part: l_forearm
+  mean distance: 0.001590 -> 0.000816 m (48.67% improvement)
+  mean abs improvement: 0.774 mm
+  median distance: 0.001413 -> 0.000535 m
+  p90 distance: 0.003155 -> 0.001828 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [-0.2662282165825403, -0.31965800127979344, -0.23524551893425313]
+  delta quaternion wxyz (around manual): [0.9999912899290915, -0.0023289900823965535, -0.0027847558324363628, -0.0020593703167328175]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.004911660085888178, 0.001121359377694654, -0.002493721613094921]
+  delta angles deg: [-0.2662282165825403, -0.31965800127979344, -0.23524551893425313]
+  delta rotation distance deg: 0.4782762180650144
+  delta offsets m: [0.004911660085888178, 0.001121359377694654, -0.002493721613094921]
+  optimizer method: L-BFGS-B
+  solver: L-BFGS-B
+  seed count: 1
+  selected seed label: previous:optimized
+  selected seed angles deg: [-0.2979073946406714, -0.24818600786013018, -0.19136931747513375]
+  selected seed quaternion wxyz: [0.9999928714278813, -0.002603336748748597, -0.0021614778966653077, -0.0016756325658616482]
+  selected seed offsets m: [0.004482157165883629, 0.0007568345908586404, -0.002134826805166416]
+  angle bounds deg: [5.0, 5.0, 5.0]
+  translation bounds m: [0.01, 0.01, 0.01]
+  polish mode: True
+  polish mean distance: 0.000816 -> 0.000816 m
+  polish rotation space: quaternion_wxyz
+  polish translation window m: [0.001, 0.001, 0.001]
+  polish success: True
+
+Part: torso
+  mean distance: 0.002114 -> 0.000868 m (58.94% improvement)
+  mean abs improvement: 1.246 mm
+  median distance: 0.001990 -> 0.000796 m
+  p90 distance: 0.003636 -> 0.001328 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.4230987238674794, -0.19637514609682502, 0.10143023803176658]
+  delta quaternion wxyz (around manual): [0.9999913180095927, 0.0036937344990897276, -0.0017104150912788652, 0.0008914657050581786]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [-0.000529896689193297, -0.002064752081621669, 0.006404957131677544]
+  delta angles deg: [0.4230987238674794, -0.19637514609682502, 0.10143023803176658]
+  delta rotation distance deg: 0.4775046343714167
+  delta offsets m: [-0.000529896689193297, -0.002064752081621669, 0.006404957131677544]
+  optimizer method: L-BFGS-B
+  solver: L-BFGS-B
+  seed count: 2
+  selected seed label: configured:0
+  selected seed angles deg: [0.0, 0.0, 0.0]
+  selected seed quaternion wxyz: [1.0, 0.0, 0.0, 0.0]
+  selected seed offsets m: [0.0, 0.0, 0.0]
+  angle bounds deg: [5.0, 5.0, 5.0]
+  translation bounds m: [0.01, 0.01, 0.01]
+  polish mode: False
+
+Part: r_palm
+  mean distance: 0.001234 -> 0.001234 m (0.00% improvement)
+  mean abs improvement: 0.000 mm
+  median distance: 0.001117 -> 0.001117 m
+  p90 distance: 0.002057 -> 0.002057 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.0, 0.0, 0.0]
+  delta quaternion wxyz (around manual): [1.0, 0.0, 0.0, 0.0]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0, -0.0035747998874664302, 0.0]
+  delta angles deg: [0.0, 0.0, 0.0]
+  delta rotation distance deg: 0.0
+  delta offsets m: [0.0, -0.0035747998874664302, 0.0]
+  optimizer method: L-BFGS-B
+  solver: L-BFGS-B
+  seed count: 1
+  selected seed label: configured:0
+  selected seed angles deg: [0.0, 0.0, 0.0]
+  selected seed quaternion wxyz: [1.0, 0.0, 0.0, 0.0]
+  selected seed offsets m: [0.0, -0.0035747998874664302, 0.0]
   angle bounds deg: [0.0, 25.0, 0.0]
   translation bounds m: [0.03, 0.0, 0.03]
   polish mode: False
 
-Part: r_foot
-  mean distance: 0.000382 -> 0.000382 m (0.00% improvement)
+Part: l_palm
+  mean distance: 0.000866 -> 0.000866 m (0.00% improvement)
   mean abs improvement: 0.000 mm
-  median distance: 0.000347 -> 0.000347 m
-  p90 distance: 0.000618 -> 0.000618 m
+  median distance: 0.000852 -> 0.000852 m
+  p90 distance: 0.001338 -> 0.001338 m
   delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.0, 0.0, 0.0]
   delta quaternion wxyz (around manual): [1.0, 0.0, 0.0, 0.0]
-  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0, -0.004438476562500182, 0.0]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0, -0.0016697999123513694, 0.0]
   delta angles deg: [0.0, 0.0, 0.0]
   delta rotation distance deg: 0.0
-  delta offsets m: [0.0, -0.004438476562500182, 0.0]
+  delta offsets m: [0.0, -0.0016697999123513694, 0.0]
+  optimizer method: L-BFGS-B
+  solver: L-BFGS-B
+  seed count: 1
+  selected seed label: configured:0
+  selected seed angles deg: [0.0, 0.0, 0.0]
+  selected seed quaternion wxyz: [1.0, 0.0, 0.0, 0.0]
+  selected seed offsets m: [0.0, -0.0016697999123513694, 0.0]
+  angle bounds deg: [0.0, 25.0, 0.0]
+  translation bounds m: [0.03, 0.0, 0.03]
+  polish mode: False
+
+Part: l_foot
+  mean distance: 0.015968 -> 0.015968 m (0.00% improvement)
+  mean abs improvement: 0.000 mm
+  median distance: 0.015875 -> 0.015875 m
+  p90 distance: 0.026714 -> 0.026714 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.0, 0.0, 0.0]
+  delta quaternion wxyz (around manual): [1.0, 0.0, 0.0, 0.0]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0, 0.0, 0.053562454126081425]
+  delta angles deg: [0.0, 0.0, 0.0]
+  delta rotation distance deg: 0.0
+  delta offsets m: [0.0, 0.0, 0.053562454126081425]
   optimizer method: sole-2d
   solver: L-BFGS-B
   seed count: 2
   selected seed label: configured:0
   selected seed angles deg: [0.0, 0.0, 0.0]
   selected seed quaternion wxyz: [1.0, 0.0, 0.0, 0.0]
-  selected seed offsets m: [0.0, -0.004438476562500182, 0.0]
-  angle bounds deg: [0.0, 25.0, 0.0]
-  translation bounds m: [0.03, 0.0, 0.03]
+  selected seed offsets m: [0.0, 0.0, 0.053562454126081425]
+  angle bounds deg: [0.0, 0.0, 5.0]
+  translation bounds m: [0.01, 0.01, 0.0]
+  polish mode: False
+
+Part: r_foot
+  mean distance: 0.001086 -> 0.001086 m (0.00% improvement)
+  mean abs improvement: 0.000 mm
+  median distance: 0.001066 -> 0.001066 m
+  p90 distance: 0.001201 -> 0.001201 m
+  delta angles deg (around manual): [0.0, 0.0, 0.0] -> [0.0, 0.0, 0.0]
+  delta quaternion wxyz (around manual): [1.0, 0.0, 0.0, 0.0]
+  delta offsets m (around manual): [0.0, 0.0, 0.0] -> [0.0, 0.0, 0.0]
+  delta angles deg: [0.0, 0.0, 0.0]
+  delta rotation distance deg: 0.0
+  delta offsets m: [0.0, 0.0, 0.0]
+  optimizer method: sole-2d
+  solver: baseline-only
+  seed count: 0
+  selected seed label: baseline-only
+  selected seed angles deg: [0.0, 0.0, 0.0]
+  selected seed quaternion wxyz: [1.0, 0.0, 0.0, 0.0]
+  selected seed offsets m: [0.0, 0.0, 0.0]
+  angle bounds deg: [25.0, 25.0, 25.0]
+  translation bounds m: [0.03, 0.03, 0.03]
   polish mode: False

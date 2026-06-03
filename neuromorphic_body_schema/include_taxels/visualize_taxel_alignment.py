@@ -10,11 +10,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path
 from typing import Any
+import xml.etree.ElementTree as ET
 
+import mujoco
 import numpy as np
 import plotly.graph_objects as go
+import trimesh
 from plotly.subplots import make_subplots
 from shapely.geometry import GeometryCollection, MultiPoint, Polygon
 from shapely.ops import unary_union
@@ -23,13 +27,24 @@ from optimize_taxel_alignment import (
     PARTS,
     REPORT_JSON,
     ROOT,
-    apply_part_transform,
+    _load_mj_model_data,
+    apply_manual_steps_with_euler_delta,
     load_mesh,
     load_taxel_points,
+    resolve_mesh_transform_from_model,
 )
 
 OUT_DIR = ROOT / "neuromorphic_body_schema" / "include_taxels" / "visualizations"
 INDEX_HTML = OUT_DIR / "index.html"
+CONTACT_MODEL_XML = (
+    ROOT
+    / "neuromorphic_body_schema"
+    / "models"
+    / "icub_v2_full_body_improved_contact_sensors.xml"
+)
+
+mj_name2id = getattr(mujoco, "mj_name2id")
+mjtObj = getattr(mujoco, "mjtObj")
 
 
 def _polygon_xy_coords(geom: Any) -> tuple[np.ndarray, np.ndarray]:
@@ -97,7 +112,7 @@ def _mesh_trace(mesh, scene_name: str) -> go.Mesh3d:
         j=faces[:, 1],
         k=faces[:, 2],
         color="lightgray",
-        opacity=0.35,
+        opacity=0.6,
         flatshading=True,
         name="mesh",
         hoverinfo="skip",
@@ -117,6 +132,53 @@ def _taxel_trace(points: np.ndarray, color: str, name: str, scene_name: str) -> 
     )
 
 
+def _load_compiled_mesh(part_name: str, mesh_files: tuple[str, ...]) -> Any:
+    """Load MuJoCo compiled mesh geometry in the same local frame used by the simulator."""
+
+    model, _ = _load_mj_model_data()
+    compiled_meshes: list[Any] = []
+
+    for mesh_file in mesh_files:
+        mesh_name = Path(mesh_file).stem
+        mesh_id = int(mj_name2id(model, mjtObj.mjOBJ_MESH, mesh_name))
+        if mesh_id < 0:
+            raise RuntimeError(f"Compiled MuJoCo mesh not found for asset: {mesh_name}")
+
+        vert_start = int(model.mesh_vertadr[mesh_id])
+        vert_count = int(model.mesh_vertnum[mesh_id])
+        face_start = int(model.mesh_faceadr[mesh_id])
+        face_count = int(model.mesh_facenum[mesh_id])
+
+        vertices = np.array(model.mesh_vert[vert_start:vert_start + vert_count], dtype=float)
+        faces = np.array(model.mesh_face[face_start:face_start + face_count], dtype=int)
+
+        resolved = resolve_mesh_transform_from_model(part_name, mesh_file)
+        if resolved is None:
+            raise RuntimeError(
+                f"Could not resolve compiled mesh transform from model for part={part_name}, mesh={mesh_file}"
+            )
+        pos_arr, quat_arr = resolved
+        quat_xyzw = np.array([quat_arr[1], quat_arr[2], quat_arr[3], quat_arr[0]], dtype=float)
+
+        mesh_local = trimesh.Trimesh(vertices=vertices.copy(), faces=faces.copy(), process=False)
+        rot = np.array(
+            [
+                [1.0 - 2.0 * (quat_xyzw[1] ** 2 + quat_xyzw[2] ** 2), 2.0 * (quat_xyzw[0] * quat_xyzw[1] - quat_xyzw[2] * quat_xyzw[3]), 2.0 * (quat_xyzw[0] * quat_xyzw[2] + quat_xyzw[1] * quat_xyzw[3])],
+                [2.0 * (quat_xyzw[0] * quat_xyzw[1] + quat_xyzw[2] * quat_xyzw[3]), 1.0 - 2.0 * (quat_xyzw[0] ** 2 + quat_xyzw[2] ** 2), 2.0 * (quat_xyzw[1] * quat_xyzw[2] - quat_xyzw[0] * quat_xyzw[3])],
+                [2.0 * (quat_xyzw[0] * quat_xyzw[2] - quat_xyzw[1] * quat_xyzw[3]), 2.0 * (quat_xyzw[1] * quat_xyzw[2] + quat_xyzw[0] * quat_xyzw[3]), 1.0 - 2.0 * (quat_xyzw[0] ** 2 + quat_xyzw[1] ** 2)],
+            ],
+            dtype=float,
+        )
+        mesh_local.vertices = (rot @ mesh_local.vertices.T).T + pos_arr
+        compiled_meshes.append(mesh_local)
+
+    if not compiled_meshes:
+        raise RuntimeError(f"No compiled meshes resolved for part={part_name}: {mesh_files}")
+    if len(compiled_meshes) == 1:
+        return compiled_meshes[0]
+    return trimesh.util.concatenate(compiled_meshes)
+
+
 def _read_results() -> dict[str, dict[str, Any]]:
     if not REPORT_JSON.exists():
         raise FileNotFoundError(
@@ -127,37 +189,113 @@ def _read_results() -> dict[str, dict[str, Any]]:
     return {entry["part"]: entry for entry in data}
 
 
-def _write_part_figure(part_cfg, result: dict[str, Any]) -> Path:
-    part = part_cfg.part_name
+def _manual_steps_from_report(result: dict[str, Any]) -> list[dict[str, Any]]:
+    raw_steps = result.get("manual_steps", [])
+    if not isinstance(raw_steps, list):
+        raise ValueError("Report field 'manual_steps' must be a list")
+    steps: list[dict[str, Any]] = []
+    for step in raw_steps:
+        if not isinstance(step, dict):
+            continue
+        offsets = step.get("offsets_m")
+        angles = step.get("angles_deg")
+        if not (isinstance(offsets, list) and isinstance(angles, list) and len(offsets) == 3 and len(angles) == 3):
+            continue
+        steps.append({
+            "offsets_m": [float(offsets[0]), float(offsets[1]), float(offsets[2])],
+            "angles_deg": [float(angles[0]), float(angles[1]), float(angles[2])],
+        })
+    return steps
+
+
+def _read_contact_model_sites(part: str) -> np.ndarray | None:
+    if not CONTACT_MODEL_XML.exists():
+        return None
+    try:
+        tree = ET.parse(CONTACT_MODEL_XML)
+    except Exception:
+        return None
+
+    prefix = f"{part}_taxel_"
+    indexed_positions: list[tuple[int, np.ndarray]] = []
+    for site in tree.iterfind(".//site"):
+        name = site.attrib.get("name", "")
+        if not name.startswith(prefix):
+            continue
+        suffix = name[len(prefix):]
+        if not suffix.isdigit():
+            continue
+        pos_text = site.attrib.get("pos")
+        if pos_text is None:
+            continue
+        values = [float(v) for v in re.split(r"\s+", pos_text.strip()) if v]
+        if len(values) != 3:
+            continue
+        indexed_positions.append((int(suffix), np.array(values, dtype=float)))
+
+    if not indexed_positions:
+        return None
+    indexed_positions.sort(key=lambda item: item[0])
+    return np.vstack([pos for _, pos in indexed_positions])
+
+
+def _write_part_figure(part: str, result: dict[str, Any]) -> Path:
+    position_file = result.get("position_file")
+    if not isinstance(position_file, str):
+        raise ValueError(f"Missing or invalid position_file in report for part: {part}")
+    rebase = bool(result.get("rebase", False))
+    mesh_files_raw = result.get("mesh_files", [])
+    if not isinstance(mesh_files_raw, list) or not mesh_files_raw:
+        raise ValueError(f"Missing or invalid mesh_files in report for part: {part}")
+    mesh_files = tuple(str(m) for m in mesh_files_raw)
+
+    manual_steps = _manual_steps_from_report(result)
+    if not manual_steps:
+        raise ValueError(f"Missing manual_steps in report for part: {part}")
+
     base_points = load_taxel_points(
-        ROOT / "neuromorphic_body_schema" / "include_taxels" / "positions" / part_cfg.position_file,
-        part_cfg.rebase,
+        ROOT / "neuromorphic_body_schema" / "include_taxels" / "positions" / position_file,
+        rebase,
     )
-    mesh = load_mesh(part_cfg.mesh_files, part_cfg.mesh_pos, part_cfg.mesh_quat_wxyz)
+    mesh = _load_compiled_mesh(part, mesh_files)
 
     init_angles = np.array(result["initial"]["delta_angles_deg"], dtype=float)
     init_offsets = np.array(result["initial"]["delta_offsets_m"], dtype=float)
     opt_angles = np.array(result["optimized"]["delta_angles_deg"], dtype=float)
     opt_offsets = np.array(result["optimized"]["delta_offsets_m"], dtype=float)
 
-    before_points = apply_part_transform(
+    before_points = apply_manual_steps_with_euler_delta(
         base_points,
-        part,
+        manual_steps,
         delta_angles_deg=init_angles,
         delta_offsets_m=init_offsets,
     )
-    after_points = apply_part_transform(
+    after_points = apply_manual_steps_with_euler_delta(
         base_points,
-        part,
+        manual_steps,
         delta_angles_deg=opt_angles,
         delta_offsets_m=opt_offsets,
     )
+
+    model_sites = _read_contact_model_sites(part)
+    consistency_note = ""
+    if model_sites is None:
+        consistency_note = " | model check: n/a"
+    elif len(model_sites) != len(after_points):
+        consistency_note = (
+            f" | model check: count mismatch xml={len(model_sites)} vs report={len(after_points)}"
+        )
+    else:
+        distances = np.linalg.norm(model_sites - after_points, axis=1)
+        consistency_note = (
+            f" | model check max={float(np.max(distances)):.6e} m rms={float(np.sqrt(np.mean(distances ** 2))):.6e} m"
+        )
 
     fig = make_subplots(
         rows=1,
         cols=2,
         specs=[[{"type": "scene"}, {"type": "scene"}]],
-        subplot_titles=(f"{part}: Manual Baseline", f"{part}: Optimized"),
+        subplot_titles=(f"{part}: Zero Baseline", f"{part}: Optimized"),
         horizontal_spacing=0.03,
     )
 
@@ -175,6 +313,8 @@ def _write_part_figure(part_cfg, result: dict[str, Any]) -> Path:
         title=(
             f"Taxel Alignment | {part} | mean distance: "
             f"{before_md:.6f} -> {after_md:.6f} m ({improve_pct:.2f}% better)"
+            f" | mesh=compiled"
+            f"{consistency_note}"
         ),
         template="plotly_white",
         height=760,
@@ -203,8 +343,8 @@ def _write_footprint_preview(part_cfg) -> Path:
         ROOT / "neuromorphic_body_schema" / "include_taxels" / "positions" / part_cfg.position_file,
         part_cfg.rebase,
     )
-    baseline_points = apply_part_transform(base_points, part)
-    mesh = load_mesh(part_cfg.mesh_files, part_cfg.mesh_pos, part_cfg.mesh_quat_wxyz)
+    baseline_points = apply_manual_steps_with_euler_delta(base_points, list(part_cfg.manual_steps))
+    mesh = _load_compiled_mesh(part_cfg.part_name, part_cfg.mesh_files)
 
     mesh_footprint = _project_mesh_footprint_xz(mesh)
     taxel_footprint = _project_points_hull_xz(baseline_points)
@@ -215,7 +355,7 @@ def _write_footprint_preview(part_cfg) -> Path:
         rows=1,
         cols=2,
         specs=[[{"type": "scene"}, {"type": "xy"}]],
-        subplot_titles=(f"{part}: Manual Baseline 3D", f"{part}: Detected Sole Footprint (XZ)"),
+        subplot_titles=(f"{part}: Zero Baseline 3D", f"{part}: Detected Sole Footprint (XZ)"),
         horizontal_spacing=0.06,
     )
 
@@ -272,7 +412,7 @@ def _write_footprint_preview(part_cfg) -> Path:
     )
 
     fig.update_layout(
-        title=f"Footprint Preview | {part} | current manual baseline and detected sole footprint",
+        title=f"Footprint Preview | {part} | current zero baseline and detected sole footprint",
         template="plotly_white",
         height=760,
         width=1500,
@@ -335,22 +475,29 @@ def main() -> None:
     result_map: dict[str, dict[str, Any]] = {}
     if not args.preview_footprint:
         result_map = _read_results()
-    for part_cfg in PARTS:
-        part = part_cfg.part_name
-        if selected_parts is not None and part not in selected_parts:
-            continue
-        if args.preview_footprint:
+    if args.preview_footprint:
+        for part_cfg in PARTS:
+            part = part_cfg.part_name
+            if selected_parts is not None and part not in selected_parts:
+                continue
             output = _write_footprint_preview(part_cfg)
             generated.append((part, output))
             print(f"[ok] wrote {output}")
-            continue
-        if part not in result_map:
-            print(f"[warn] Missing optimized result for part: {part}")
-            continue
+    else:
+        ordered_parts = [cfg.part_name for cfg in PARTS]
+        for part in sorted(result_map.keys()):
+            if part not in ordered_parts:
+                ordered_parts.append(part)
 
-        output = _write_part_figure(part_cfg, result_map[part])
-        generated.append((part, output))
-        print(f"[ok] wrote {output}")
+        for part in ordered_parts:
+            if selected_parts is not None and part not in selected_parts:
+                continue
+            if part not in result_map:
+                print(f"[warn] Missing optimized result for part: {part}")
+                continue
+            output = _write_part_figure(part, result_map[part])
+            generated.append((part, output))
+            print(f"[ok] wrote {output}")
 
     _write_index(generated)
     print(f"[ok] index: {INDEX_HTML}")

@@ -30,6 +30,7 @@ in ``docs/SKIN_TAXEL_ALIGNMENT_REPRODUCIBILITY.md``.
 """
 
 import sys
+import argparse
 from pathlib import Path
 # Patch sys.path BEFORE any neuromorphic_body_schema imports
 def find_project_root(start_path: Path, target_dir: str = "neuromorphic_body_schema") -> Path:
@@ -53,9 +54,9 @@ from typing import Sequence, cast
 import re
 import os
 import json
+import xml.etree.ElementTree as ET
 
-from neuromorphic_body_schema.helpers.helpers import (MOJOCO_SKIN_PARTS,
-                                                      POSITIONS_FILES)
+from neuromorphic_body_schema.helpers.helpers import POSITIONS_FILES
 
 # Semantic group constants for taxel site assignment
 GROUP_TORSO = 1
@@ -96,37 +97,244 @@ PART_TO_GROUP = {
     "l_palm": GROUP_LEFT_ARM_HAND,
 }
 
+FINGER_BODY_TO_PART_GROUP = {
+    "r_hand_thumb_3": ("r_hand_thumb", GROUP_RIGHT_ARM_HAND),
+    "r_hand_index_3": ("r_hand_index", GROUP_RIGHT_ARM_HAND),
+    "r_hand_middle_3": ("r_hand_middle", GROUP_RIGHT_ARM_HAND),
+    "r_hand_ring_3": ("r_hand_ring", GROUP_RIGHT_ARM_HAND),
+    "r_hand_little_3": ("r_hand_little", GROUP_RIGHT_ARM_HAND),
+    "l_hand_thumb_3": ("l_hand_thumb", GROUP_LEFT_ARM_HAND),
+    "l_hand_index_3": ("l_hand_index", GROUP_LEFT_ARM_HAND),
+    "l_hand_middle_3": ("l_hand_middle", GROUP_LEFT_ARM_HAND),
+    "l_hand_ring_3": ("l_hand_ring", GROUP_LEFT_ARM_HAND),
+    "l_hand_little_3": ("l_hand_little", GROUP_LEFT_ARM_HAND),
+}
+
+ICUB_HEAD_COLOR = [1, 1, 1, 1]  # white
+ICUB_SKIN_COLOR = [0.57647, 0.1176, 0.7882, 1]  # purple
+ICUB_METAL_PARTS_COLOR = [0.62, 0.64, 0.67, 1]  # plain steel-like metallic gray
+ICUB_BLACK_PARTS_COLOR = [0.08, 0.08, 0.08, 1.0]  # near-black to retain lighting detail
+
+ICUB_MATERIAL_METAL = "icub_mat_metal_steel"
+ICUB_MATERIAL_HEAD = "icub_mat_head_white_plastic"
+ICUB_MATERIAL_SKIN_FABRIC = "icub_mat_skin_fabric"
+ICUB_MATERIAL_SKIN_PLASTIC = "icub_mat_skin_plastic"
+ICUB_MATERIAL_BLACK = "icub_mat_black_plastic"
+ICUB_MATERIAL_COL_INVISIBLE = "icub_mat_collision_invisible"
+
+HEAD_BODY_NAMES = {"head", "eyes_tilt_frame", "l_eye", "r_eye"}
+PALM_BODY_NAMES = {"r_hand", "l_hand"}
+FINGERTIP_BODY_NAMES = set(FINGER_BODY_TO_PART_GROUP.keys())
+# Feet are skin-colored in appearance but are smooth plastic, not fabric.
+SKIN_PLASTIC_BODY_NAMES = {"l_foot", "r_foot"}
+# Taxel sites for feet live in l_ankle_2/r_ankle_2, but the visible foot mesh
+# sits in l_foot/r_foot — remap so the foot body gets skin color, not ankle.
+_SKIN_COLOR_BODY_REMAP = {"l_ankle_2": "l_foot", "r_ankle_2": "r_foot"}
+
 # Always resolve resource paths relative to this script's location
 SCRIPT_DIR = Path(__file__).parent.resolve()
 PROJECT_ROOT = SCRIPT_DIR.parent
 
-MUJOCO_MODEL = str(PROJECT_ROOT / "models/icub_v2_full_body.xml")
+_MODEL_INPUT_PATH = PROJECT_ROOT / "models/icub_v2_full_body_improved.xml"
+MUJOCO_MODEL = str(_MODEL_INPUT_PATH)
 TAXEL_INI_PATH = str(SCRIPT_DIR / "positions")
 MUJOCO_MODEL_OUT = str(
-    PROJECT_ROOT / "models/icub_v2_full_body_contact_sensors.xml")
+    _MODEL_INPUT_PATH.with_name(
+        f"{_MODEL_INPUT_PATH.stem}_contact_sensors{_MODEL_INPUT_PATH.suffix}"
+    )
+)
 OPTIMIZATION_REPORT_JSON = str(
     SCRIPT_DIR / "taxel_alignment_optimization_report.json")
 
+REPORT_REQUIRED_PARTS = {
+    "r_upper_leg",
+    "r_lower_leg",
+    "l_upper_leg",
+    "l_lower_leg",
+    "r_upper_arm",
+    "r_forearm",
+    "l_upper_arm",
+    "l_forearm",
+    "torso",
+    "r_palm",
+    "l_palm",
+    "r_foot",
+    "l_foot",
+}
+REPORT_REQUIRED_ENTRY_KEYS = {
+    "part",
+    "model_body_name",
+    "sensor_group",
+    "position_file",
+    "rebase",
+    "include_to_model",
+    "manual_steps",
+    "optimized",
+}
 
-def load_optimized_deltas(report_path: str) -> dict[str, tuple[np.ndarray, np.ndarray]]:
-    """Load optimized delta transforms from the optimizer JSON report.
 
-    Returns a mapping:
-        part_name -> (delta_angles_deg[3], delta_offsets_m[3])
-    """
+def _parse_report_json(report_path: str) -> list[dict[str, object]]:
+    """Read the optimization report and return raw entry dictionaries."""
+
     if not os.path.exists(report_path):
-        return {}
+        raise FileNotFoundError(
+            f"Optimization report not found at {report_path}. Run optimize_taxel_alignment.py first."
+        )
 
     with open(report_path, "r", encoding="utf-8") as file:
         raw = json.load(file)
 
-    deltas: dict[str, tuple[np.ndarray, np.ndarray]] = {}
     if not isinstance(raw, list):
+        raise ValueError(
+            f"Optimization report at {report_path} must be a JSON list of entries."
+        )
+
+    entries: list[dict[str, object]] = []
+    for idx, entry in enumerate(raw):
+        if not isinstance(entry, dict):
+            raise ValueError(
+                f"Optimization report entry #{idx} in {report_path} is not an object."
+            )
+        entries.append(cast(dict[str, object], entry))
+    return entries
+
+
+def validate_optimization_report(report_path: str) -> list[dict[str, object]]:
+    """Validate optimization report schema and completeness for strict mode."""
+
+    entries = _parse_report_json(report_path)
+
+    seen_parts: set[str] = set()
+    unknown_parts: set[str] = set()
+    missing_required_keys: list[str] = []
+    invalid_entries: list[str] = []
+
+    for idx, entry in enumerate(entries):
+        part = entry.get("part")
+        if not isinstance(part, str):
+            invalid_entries.append(
+                f"entry #{idx} has missing or non-string 'part'"
+            )
+            continue
+
+        if part in seen_parts:
+            invalid_entries.append(f"duplicate part entry: {part}")
+            continue
+        seen_parts.add(part)
+
+        if part not in REPORT_REQUIRED_PARTS:
+            unknown_parts.add(part)
+
+        entry_keys = set(entry.keys())
+        missing_keys = sorted(REPORT_REQUIRED_ENTRY_KEYS - entry_keys)
+        if missing_keys:
+            missing_required_keys.append(
+                f"{part}: missing keys {', '.join(missing_keys)}"
+            )
+            continue
+
+        model_body_name = entry.get("model_body_name")
+        sensor_group = entry.get("sensor_group")
+        position_file = entry.get("position_file")
+        manual_steps = entry.get("manual_steps")
+        optimized = entry.get("optimized")
+
+        if not isinstance(model_body_name, str):
+            invalid_entries.append(f"{part}: model_body_name must be a string")
+        if not isinstance(sensor_group, int):
+            invalid_entries.append(f"{part}: sensor_group must be an int")
+        if not isinstance(position_file, str):
+            invalid_entries.append(f"{part}: position_file must be a string")
+        if not isinstance(entry.get("rebase"), bool):
+            invalid_entries.append(f"{part}: rebase must be a bool")
+        if not isinstance(entry.get("include_to_model"), bool):
+            invalid_entries.append(f"{part}: include_to_model must be a bool")
+        if not isinstance(manual_steps, list):
+            invalid_entries.append(f"{part}: manual_steps must be a list")
+        if not isinstance(optimized, dict):
+            invalid_entries.append(f"{part}: optimized must be an object")
+        else:
+            delta_angles = optimized.get("delta_angles_deg")
+            delta_offsets = optimized.get("delta_offsets_m")
+            if not (
+                isinstance(delta_angles, list)
+                and len(delta_angles) == 3
+                and all(isinstance(value, (int, float)) for value in delta_angles)
+            ):
+                invalid_entries.append(
+                    f"{part}: optimized.delta_angles_deg must be a length-3 numeric list"
+                )
+            if not (
+                isinstance(delta_offsets, list)
+                and len(delta_offsets) == 3
+                and all(isinstance(value, (int, float)) for value in delta_offsets)
+            ):
+                invalid_entries.append(
+                    f"{part}: optimized.delta_offsets_m must be a length-3 numeric list"
+                )
+
+        if isinstance(position_file, str):
+            position_path = SCRIPT_DIR / "positions" / position_file
+            if not position_path.exists():
+                invalid_entries.append(
+                    f"{part}: referenced position file does not exist: {position_path}"
+                )
+
+        if isinstance(manual_steps, list):
+            for step_idx, step in enumerate(manual_steps):
+                if not isinstance(step, dict):
+                    invalid_entries.append(
+                        f"{part}: manual_steps[{step_idx}] must be an object"
+                    )
+                    continue
+                offsets = step.get("offsets_m")
+                angles = step.get("angles_deg")
+                if not (
+                    isinstance(offsets, list)
+                    and len(offsets) == 3
+                    and all(isinstance(value, (int, float)) for value in offsets)
+                ):
+                    invalid_entries.append(
+                        f"{part}: manual_steps[{step_idx}].offsets_m must be a length-3 numeric list"
+                    )
+                if not (
+                    isinstance(angles, list)
+                    and len(angles) == 3
+                    and all(isinstance(value, (int, float)) for value in angles)
+                ):
+                    invalid_entries.append(
+                        f"{part}: manual_steps[{step_idx}].angles_deg must be a length-3 numeric list"
+                    )
+
+    missing_parts = sorted(REPORT_REQUIRED_PARTS - seen_parts)
+
+    problems: list[str] = []
+    if unknown_parts:
+        problems.append(f"unknown parts present: {', '.join(sorted(unknown_parts))}")
+    if missing_parts:
+        problems.append(f"missing required parts: {', '.join(missing_parts)}")
+    problems.extend(missing_required_keys)
+    problems.extend(invalid_entries)
+
+    if problems:
+        raise ValueError(
+            "Strict optimization report validation failed:\n- " + "\n- ".join(problems)
+        )
+
+    return entries
+
+
+def load_optimized_deltas(report_path: str) -> dict[str, tuple[np.ndarray, np.ndarray, np.ndarray | None]]:
+    """Load optimized delta transforms from the optimizer JSON report.
+
+    Returns a mapping:
+        part_name -> (delta_angles_deg[3], delta_offsets_m[3], delta_quaternion_wxyz[4] | None)
+    """
+    deltas: dict[str, tuple[np.ndarray, np.ndarray, np.ndarray | None]] = {}
+    if not os.path.exists(report_path):
         return deltas
 
-    for entry in raw:
-        if not isinstance(entry, dict):
-            continue
+    for entry in _parse_report_json(report_path):
         part = entry.get("part")
         optimized = entry.get("optimized")
         if not isinstance(part, str) or not isinstance(optimized, dict):
@@ -134,6 +342,7 @@ def load_optimized_deltas(report_path: str) -> dict[str, tuple[np.ndarray, np.nd
 
         angle_values = optimized.get("delta_angles_deg")
         offset_values = optimized.get("delta_offsets_m")
+        quat_values = optimized.get("delta_quaternion_wxyz")
         if angle_values is None or offset_values is None:
             continue
 
@@ -142,7 +351,13 @@ def load_optimized_deltas(report_path: str) -> dict[str, tuple[np.ndarray, np.nd
         if angles.shape != (3,) or offsets.shape != (3,):
             continue
 
-        deltas[part] = (angles, offsets)
+        quat: np.ndarray | None = None
+        if quat_values is not None:
+            quat_arr = np.array(quat_values, dtype=float)
+            if quat_arr.shape == (4,):
+                quat = quat_arr
+
+        deltas[part] = (angles, offsets, quat)
 
     return deltas
 
@@ -153,22 +368,14 @@ def load_report_part_metadata(report_path: str) -> dict[str, dict[str, object]]:
     if not os.path.exists(report_path):
         return {}
 
-    with open(report_path, "r", encoding="utf-8") as file:
-        raw = json.load(file)
-
-    if not isinstance(raw, list):
-        return {}
-
     out: dict[str, dict[str, object]] = {}
-    for entry in raw:
-        if not isinstance(entry, dict):
-            continue
+    for entry in _parse_report_json(report_path):
         part = entry.get("part")
         if not isinstance(part, str):
             continue
 
-        model_body_name = entry.get("model_body_name", PART_TO_MODEL_BODY.get(part))
-        sensor_group = entry.get("sensor_group", PART_TO_GROUP.get(part))
+        model_body_name = entry.get("model_body_name")
+        sensor_group = entry.get("sensor_group")
         position_file = entry.get("position_file")
         rebase = bool(entry.get("rebase", False))
         include_to_model = bool(entry.get("include_to_model", entry.get("inlcude_to_model", True)))
@@ -202,13 +409,160 @@ def load_report_part_metadata(report_path: str) -> dict[str, dict[str, object]]:
     return out
 
 
+
+def load_skin_mesh_names(report_path: str) -> set[str]:
+    """Return mesh asset names (without .stl) belonging to skin-covered parts."""
+    names: set[str] = set()
+    if not os.path.exists(report_path):
+        return names
+    for entry in _parse_report_json(report_path):
+        mesh_files = entry.get("mesh_files", [])
+        if not isinstance(mesh_files, list):
+            continue
+        for f in mesh_files:
+            if isinstance(f, str):
+                names.add(f.removesuffix(".stl"))
+    return names
+
+
+def parse_args() -> argparse.Namespace:
+    """Parse script arguments for report validation behavior."""
+
+    parser = argparse.ArgumentParser(
+        description="Insert skin taxels into the MuJoCo model."
+    )
+    parser.add_argument(
+        "--strict-report",
+        action="store_true",
+        help="Require the optimization report to pass strict schema and completeness validation before insertion.",
+    )
+    parser.add_argument(
+        "--report-path",
+        default=OPTIMIZATION_REPORT_JSON,
+        help="Path to the optimization report JSON file.",
+    )
+    parser.add_argument(
+        "--style-mode",
+        choices=["material", "rgba"],
+        default="material",
+        help="Visual styling mode for geoms: material (default) or legacy rgba.",
+    )
+    parser.add_argument(
+        "--taxel-site-size",
+        type=float,
+        default=0.005,
+        help="MuJoCo site sphere radius in meters for inserted taxels (default: 0.005).",
+    )
+    parser.add_argument(
+        "--apply-anchor-body-transform",
+        action="store_true",
+        help="Experimentally apply the anchor body's local pos/quat to inserted taxels in addition to the optimizer transform chain.",
+    )
+    parser.add_argument(
+        "--use-frozen-report-points",
+        action="store_true",
+        help="Experimentally precompute final report taxel coordinates once per part and insert those coordinates verbatim.",
+    )
+    return parser.parse_args()
+
+
+def load_body_local_transforms(model_path: str) -> dict[str, tuple[np.ndarray, np.ndarray]]:
+    """Load body-local pos/quaternion transforms from a MuJoCo XML file."""
+
+    tree = ET.parse(model_path)
+    root = tree.getroot()
+
+    transforms: dict[str, tuple[np.ndarray, np.ndarray]] = {}
+    for body in root.iter("body"):
+        name = body.attrib.get("name")
+        if not name:
+            continue
+        pos = np.array(
+            [float(v) for v in body.attrib.get("pos", "0 0 0").split()],
+            dtype=float,
+        )
+        quat = np.array(
+            [float(v) for v in body.attrib.get("quat", "1 0 0 0").split()],
+            dtype=float,
+        )
+        transforms[name] = (pos, quat)
+    return transforms
+
+
+def load_frozen_report_points(
+    report_path: str,
+    path_to_skin: str,
+) -> dict[str, list[tuple[int, np.ndarray]]]:
+    """Precompute final per-part taxel coordinates from the report once."""
+
+    frozen: dict[str, list[tuple[int, np.ndarray]]] = {}
+    if not os.path.exists(report_path):
+        return frozen
+
+    for entry in _parse_report_json(report_path):
+        part = entry.get("part")
+        position_file = entry.get("position_file")
+        manual_steps_raw = entry.get("manual_steps", [])
+        optimized = entry.get("optimized")
+        include_to_model = bool(entry.get("include_to_model", entry.get("inlcude_to_model", True)))
+        if not include_to_model:
+            continue
+        if not isinstance(part, str) or not isinstance(position_file, str) or not isinstance(optimized, dict):
+            continue
+
+        file_path = os.path.join(path_to_skin, position_file)
+        if not os.path.isfile(file_path):
+            continue
+
+        calibration = read_calibration_data(file_path)
+        taxel2repr = read_taxel2repr_data(file_path)
+        taxels = validate_taxel_data(calibration, taxel2repr if taxel2repr else None)
+        if bool(entry.get("rebase", False)):
+            taxels = rebase_coordinate_system(taxels)
+
+        manual_steps: list[tuple[list[float], list[float]]] = []
+        if isinstance(manual_steps_raw, list):
+            for step in manual_steps_raw:
+                if not isinstance(step, dict):
+                    continue
+                offsets = step.get("offsets_m")
+                angles = step.get("angles_deg")
+                if isinstance(offsets, list) and isinstance(angles, list) and len(offsets) == 3 and len(angles) == 3:
+                    manual_steps.append((
+                        [float(offsets[0]), float(offsets[1]), float(offsets[2])],
+                        [float(angles[0]), float(angles[1]), float(angles[2])],
+                    ))
+
+        delta_offsets = np.array(optimized.get("delta_offsets_m", [0.0, 0.0, 0.0]), dtype=float)
+        quat_values = optimized.get("delta_quaternion_wxyz")
+        angle_values = optimized.get("delta_angles_deg", [0.0, 0.0, 0.0])
+        delta_quat = None
+        if isinstance(quat_values, list) and len(quat_values) == 4:
+            delta_quat = np.array(quat_values, dtype=float)
+        delta_angles = np.array(angle_values, dtype=float)
+
+        part_points: list[tuple[int, np.ndarray]] = []
+        for pos_raw, _, idx in taxels:
+            pos = np.array(pos_raw, dtype=float)
+            for offsets_step, angles_step in manual_steps:
+                pos = rotate_position(pos=pos, offsets=offsets_step, angle_degrees=angles_step)
+            if delta_quat is not None:
+                pos = apply_quaternion_transform(pos=pos, offsets=delta_offsets.tolist(), quat_wxyz=delta_quat.tolist())
+            else:
+                pos = rotate_position(pos=pos, offsets=delta_offsets.tolist(), angle_degrees=delta_angles.tolist())
+            part_points.append((int(idx), np.array(pos, dtype=float)))
+
+        frozen[part] = part_points
+
+    return frozen
+
+
 def rebase_coordinate_system(taxel_pos: list[tuple[np.ndarray, np.ndarray, int]]) -> list[tuple[np.ndarray, np.ndarray, int]]:
     """
     Rebases the coordinate system of the taxels to the center of the taxel array and rotates them using PCA.
 
     This function centers the taxel positions by computing their mean, then applies Principal Component Analysis (PCA)
     to find the axes with the largest variance and rotates the coordinate system accordingly.
-
     Args:
         taxel_pos (list): A list of tuples where each tuple contains:
             - [0]: np.ndarray - 3D position [x, y, z] of the taxel
@@ -301,6 +655,46 @@ def rotate_position(
     pos = np.dot(rotation_matrix, pos)
 
     return np.round(pos, 12)
+
+
+def _normalize_quaternion_wxyz(quat_wxyz: Sequence[float]) -> np.ndarray:
+    """Normalize a quaternion in wxyz convention with stable identity fallback."""
+
+    q = np.array(quat_wxyz, dtype=float)
+    norm = float(np.linalg.norm(q))
+    if norm <= 1e-12:
+        return np.array([1.0, 0.0, 0.0, 0.0], dtype=float)
+    return q / norm
+
+
+def _quat_wxyz_to_xyzw(quat_wxyz: Sequence[float]) -> np.ndarray:
+    """Convert quaternion from wxyz to xyzw convention."""
+
+    q = _normalize_quaternion_wxyz(quat_wxyz)
+    return np.array([q[1], q[2], q[3], q[0]], dtype=float)
+
+
+def apply_quaternion_transform(
+    pos: np.ndarray,
+    offsets: Sequence[float],
+    quat_wxyz: Sequence[float],
+) -> np.ndarray:
+    """Apply translation then quaternion rotation to match optimizer transform convention."""
+
+    qx, qy, qz, qw = _quat_wxyz_to_xyzw(quat_wxyz)
+
+    # Build the equivalent rotation matrix from xyzw components.
+    rot = np.array(
+        [
+            [1.0 - 2.0 * (qy * qy + qz * qz), 2.0 * (qx * qy - qz * qw), 2.0 * (qx * qz + qy * qw)],
+            [2.0 * (qx * qy + qz * qw), 1.0 - 2.0 * (qx * qx + qz * qz), 2.0 * (qy * qz - qx * qw)],
+            [2.0 * (qx * qz - qy * qw), 2.0 * (qy * qz + qx * qw), 1.0 - 2.0 * (qx * qx + qy * qy)],
+        ],
+        dtype=float,
+    )
+
+    shifted = np.array(pos, dtype=float) + np.array(offsets, dtype=float)
+    return np.round(rot @ shifted, 12)
 
 
 def read_calibration_data(file_path: str) -> np.ndarray:
@@ -450,12 +844,143 @@ def read_triangle_data(file_path: str) -> tuple[str, list[tuple[np.ndarray, int]
     return config_type, triangles
 
 
+def _format_rgba(color: Sequence[float]) -> str:
+    """Format RGBA values for MuJoCo XML attributes."""
+    return " ".join(str(value) for value in color)
+
+
+def _set_geom_rgba(line: str, rgba_value: str) -> str:
+    """Set or inject an rgba attribute on a single-line <geom .../> tag."""
+    if "<geom" not in line:
+        return line
+    if 'rgba="' in line:
+        return re.sub(r'rgba="[^"]*"', f'rgba="{rgba_value}"', line, count=1)
+    return line.replace("/>", f' rgba="{rgba_value}"/>', 1)
+
+
+def _set_geom_material(line: str, material_name: str) -> str:
+    """Set or inject a material attribute on a single-line <geom .../> tag."""
+    if "<geom" not in line:
+        return line
+    if 'material="' in line:
+        return re.sub(r'material="[^"]*"', f'material="{material_name}"', line, count=1)
+    return line.replace("/>", f' material="{material_name}"/>', 1)
+
+
+def _remove_geom_attr(line: str, attr_name: str) -> str:
+    """Remove one XML attribute from a single-line <geom .../> tag if present."""
+    if "<geom" not in line:
+        return line
+    return re.sub(rf'\s+{attr_name}="[^"]*"', "", line, count=1)
+
+
+def _set_rgba_alpha(rgba_value: str, alpha: float) -> str:
+    """Return an RGBA string with the same RGB values and a replaced alpha."""
+    parts = rgba_value.split()
+    if len(parts) != 4:
+        return rgba_value
+    parts[3] = str(alpha)
+    return " ".join(parts)
+
+
+def apply_body_part_colors(
+    lines: list[str],
+    skin_body_names: set[str],
+    head_body_names: set[str],
+    palm_body_names: set[str],
+    fingertip_body_names: set[str],
+    skin_plastic_body_names: set[str],
+    style_mode: str,
+) -> list[str]:
+    """Style geoms by enclosing body using either material- or rgba-based assignment."""
+    skin_mesh_names = load_skin_mesh_names(OPTIMIZATION_REPORT_JSON)
+    colored_lines = list(lines)
+    body_stack: list[str] = []
+    head_rgba = _format_rgba(ICUB_HEAD_COLOR)
+    skin_rgba = _format_rgba(ICUB_SKIN_COLOR)
+    metal_rgba = _format_rgba(ICUB_METAL_PARTS_COLOR)
+    black_rgba = _format_rgba(ICUB_BLACK_PARTS_COLOR)
+
+    # Build a name index so we can detect paired *_col_0 <-> *_vis_0 geoms.
+    geom_names: set[str] = set()
+    for line in colored_lines:
+        if "<geom" not in line:
+            continue
+        name_match = re.search(r'\bname="([^"]+)"', line)
+        if name_match:
+            geom_names.add(name_match.group(1))
+
+    for idx, line in enumerate(colored_lines):
+        open_match = re.search(r'<body\s+name="([^"]+)"', line)
+        if open_match:
+            body_stack.append(open_match.group(1))
+
+        if "<geom" in line and body_stack:
+            current_body = body_stack[-1]
+            name_match = re.search(r'\bname="([^"]+)"', line)
+            geom_name = name_match.group(1) if name_match else None
+            mesh_match = re.search(r'\bmesh="([^"]+)"', line)
+            geom_mesh = mesh_match.group(1) if mesh_match else None
+
+            material_name = ICUB_MATERIAL_METAL
+            if current_body in palm_body_names or current_body in fingertip_body_names:
+                rgba_value = black_rgba
+                material_name = ICUB_MATERIAL_BLACK
+            elif current_body in head_body_names:
+                rgba_value = head_rgba
+                material_name = ICUB_MATERIAL_HEAD
+            elif current_body in skin_plastic_body_names:
+                rgba_value = skin_rgba
+                material_name = ICUB_MATERIAL_SKIN_PLASTIC
+            elif current_body in skin_body_names or (geom_mesh is not None and geom_mesh in skin_mesh_names):
+                rgba_value = skin_rgba
+                material_name = ICUB_MATERIAL_SKIN_FABRIC
+            else:
+                rgba_value = metal_rgba
+                material_name = ICUB_MATERIAL_METAL
+
+            # If both visual and collision geoms exist for the same segment,
+            # keep visual geoms opaque and make collision geoms transparent.
+            force_invisible_col = False
+            if geom_name is not None and geom_name.endswith("_col_0"):
+                vis_name = f"{geom_name[:-6]}_vis_0"
+                if vis_name in geom_names:
+                    rgba_value = _set_rgba_alpha(rgba_value, 0.0)
+                    force_invisible_col = True
+            elif geom_name is not None and geom_name.endswith("_vis_0"):
+                col_name = f"{geom_name[:-6]}_col_0"
+                if col_name in geom_names:
+                    rgba_value = _set_rgba_alpha(rgba_value, 1.0)
+            else:
+                rgba_value = _set_rgba_alpha(rgba_value, 1.0)
+
+            if style_mode == "material":
+                if force_invisible_col:
+                    material_name = ICUB_MATERIAL_COL_INVISIBLE
+                styled = _set_geom_material(line, material_name)
+                styled = _remove_geom_attr(styled, "rgba")
+                colored_lines[idx] = styled
+            else:
+                colored_lines[idx] = _set_geom_rgba(line, rgba_value)
+
+        close_count = line.count("</body")
+        for _ in range(close_count):
+            if body_stack:
+                body_stack.pop()
+
+    return colored_lines
+
+
 def include_skin_to_mujoco_model(
     mujoco_model: str,
     path_to_skin: str,
     skin_parts: dict[str, str],
-    optimized_deltas: dict[str, tuple[np.ndarray, np.ndarray]] | None = None,
+    optimized_deltas: dict[str, tuple[np.ndarray, np.ndarray, np.ndarray | None]] | None = None,
     report_part_metadata: dict[str, dict[str, object]] | None = None,
+    style_mode: str = "material",
+    taxel_site_size: float = 0.08,
+    apply_anchor_body_transform: bool = False,
+    frozen_report_points: dict[str, list[tuple[int, np.ndarray]]] | None = None,
 ) -> None:
     """
     Integrates tactile sensor (taxel) data into a MuJoCo robot model XML file.
@@ -485,6 +1010,8 @@ def include_skin_to_mujoco_model(
         report_part_metadata (dict | None): Optional metadata loaded from the
             optimization report keyed by part name. When present, manual_steps,
             rebase flags, body anchors, and sensor groups are read from report.
+        taxel_site_size (float): Radius of each inserted taxel site sphere in
+            meters. This affects only UI appearance, not site center position.
 
     Returns:
         None: The function writes output to files:
@@ -496,12 +1023,31 @@ def include_skin_to_mujoco_model(
         optimized_deltas = {}
     if report_part_metadata is None:
         report_part_metadata = {}
+    if frozen_report_points is None:
+        frozen_report_points = {}
+
+    body_local_transforms = load_body_local_transforms(mujoco_model) if apply_anchor_body_transform else {}
 
     report_by_body: dict[str, dict[str, object]] = {}
     for part_name, metadata in report_part_metadata.items():
         body_name = metadata.get("model_body_name")
         if isinstance(body_name, str):
             report_by_body[body_name] = {"part": part_name, **metadata}
+
+    # Derive skin-colored body names from the report (auto-load if not provided by caller).
+    # Fingertip bodies are always added as they are manually defined, not in the report.
+    if not report_by_body:
+        _auto_metadata = load_report_part_metadata(OPTIMIZATION_REPORT_JSON)
+        _report_body_names: set[str] = set()
+        for _meta in _auto_metadata.values():
+            _body = _meta.get("model_body_name")
+            if isinstance(_body, str):
+                _report_body_names.add(_body)
+    else:
+        _report_body_names = set(report_by_body.keys())
+    skin_body_names = _report_body_names | set(FINGER_BODY_TO_PART_GROUP.keys())
+    # Remap taxel-attachment bodies to their visible mesh bodies for coloring.
+    skin_body_names = {_SKIN_COLOR_BODY_REMAP.get(b, b) for b in skin_body_names}
 
     # ini_files_taxels = os.listdir(path_to_skin)
     # only keep the files listed in skin_parts
@@ -529,10 +1075,24 @@ def include_skin_to_mujoco_model(
         taxels = validate_taxel_data(
             calibration, taxel2repr if taxel2repr else None)
         all_taxels.append(taxels)
+    taxels_by_position_file = {
+        position_file: taxels
+        for position_file, taxels in zip(ini_files_taxels, all_taxels)
+    }
 
     # now we can open the xml robot config file and start adding all the taxels
     with open(mujoco_model, "r") as file:
         lines = file.readlines()
+
+    lines = apply_body_part_colors(
+        lines=lines,
+        skin_body_names=skin_body_names,
+        head_body_names=HEAD_BODY_NAMES,
+        palm_body_names=PALM_BODY_NAMES,
+        fingertip_body_names=FINGERTIP_BODY_NAMES,
+        skin_plastic_body_names=SKIN_PLASTIC_BODY_NAMES,
+        style_mode=style_mode,
+    )
 
     # TODO ensure the right order!
     finger_taxels = [
@@ -556,13 +1116,15 @@ def include_skin_to_mujoco_model(
     line_counter = 0
     parts_to_add = []
     taxel_ids_to_add = []
-    while keep_processing:
+    while keep_processing and line_counter < len(lines):
         print(lines[line_counter])
         if "<body name=" in lines[line_counter]:
             body_name = lines[line_counter].split('name="')[1].split('"')[0]
             add_taxels = False
             current_manual_steps: list[tuple[list[float], list[float]]] = []
             current_rebase = False
+            current_body_transform: tuple[np.ndarray, np.ndarray] | None = None
+            part = body_name
             if body_name in report_by_body:
                 report_cfg = report_by_body[body_name]
                 include_to_model = bool(report_cfg.get("include_to_model", True))
@@ -571,441 +1133,144 @@ def include_skin_to_mujoco_model(
                     continue
                 part = cast(str, report_cfg["part"])
                 position_file = cast(str, report_cfg["position_file"])
-                pos_of_taxels = ini_files_taxels.index(position_file)
-                taxels_to_add = all_taxels[pos_of_taxels]
+                if position_file not in taxels_by_position_file:
+                    raise ValueError(
+                        f"Report references unknown position file for {part}: {position_file}"
+                    )
+                taxels_to_add = taxels_by_position_file[position_file]
                 found_spot_to_add = False
                 add_taxels = True
                 sensor_group = report_cfg.get("sensor_group")
-                group_counter = int(sensor_group) if isinstance(sensor_group, int) else PART_TO_GROUP.get(part, GROUP_TORSO)
+                if not isinstance(sensor_group, int):
+                    raise ValueError(
+                        f"Report metadata for {part} must provide integer sensor_group"
+                    )
+                group_counter = int(sensor_group)
                 current_rebase = bool(report_cfg.get("rebase", False))
                 manual_steps_raw = report_cfg.get("manual_steps", [])
                 if isinstance(manual_steps_raw, list):
                     current_manual_steps = cast(list[tuple[list[float], list[float]]], manual_steps_raw)
+                current_body_transform = body_local_transforms.get(body_name)
+                parts_to_add.append(part)
 
-            if any(part in lines[line_counter] for part in MOJOCO_SKIN_PARTS) or add_taxels:
-                # find the part that is being added
-                part = body_name
-                if part == "r_upper_leg":
-                    # find the corresponding taxels
-                    pos_of_taxels = ini_files_taxels.index(
-                        "right_leg_upper.txt")
-                    taxels_to_add = all_taxels[pos_of_taxels]
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_RIGHT_LEG
-                    parts_to_add.append(part)
+            finger_cfg = FINGER_BODY_TO_PART_GROUP.get(body_name)
+            if not add_taxels and finger_cfg is not None:
+                part, group_counter = finger_cfg
+                add_finger_taxels = True
+                found_spot_to_add = False
+                add_taxels = True
+                parts_to_add.append(part)
 
-                elif part == "r_lower_leg":
-                    # find the corresponding taxels
-                    pos_of_taxels = ini_files_taxels.index(
-                        "right_leg_lower.txt")
-                    taxels_to_add = all_taxels[pos_of_taxels]
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_RIGHT_LEG
-                    parts_to_add.append(part)
-
-                elif part == "l_upper_leg":
-                    # find the corresponding taxels
-                    pos_of_taxels = ini_files_taxels.index(
-                        "left_leg_upper.txt")
-                    taxels_to_add = all_taxels[pos_of_taxels]
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_LEFT_LEG
-                    parts_to_add.append(part)
-
-                elif part == "l_lower_leg":
-                    # find the corresponding taxels
-                    pos_of_taxels = ini_files_taxels.index(
-                        "left_leg_lower.txt")
-                    taxels_to_add = all_taxels[pos_of_taxels]
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_LEFT_LEG
-                    parts_to_add.append(part)
-
-                elif part == "r_ankle_2":
-                    part = "r_foot"
-                    pos_of_taxels = ini_files_taxels.index("right_foot.txt")
-                    taxels_to_add = all_taxels[pos_of_taxels]
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_RIGHT_LEG
-                    parts_to_add.append(part)
-
-                elif part == "l_ankle_2":
-                    part = "l_foot"
-                    pos_of_taxels = ini_files_taxels.index("left_foot.txt")
-                    taxels_to_add = all_taxels[pos_of_taxels]
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_LEFT_LEG
-                    parts_to_add.append(part)
-
-                elif part == "chest":
-                    # find the corresponding taxels
-                    part = "torso"
-                    pos_of_taxels = ini_files_taxels.index("torso.txt")
-                    taxels_to_add = all_taxels[pos_of_taxels]
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_TORSO
-                    parts_to_add.append(part)
-
-                elif part == "r_shoulder_3":
-                    # find the corresponding taxels
-                    part = "r_upper_arm"
-                    pos_of_taxels = ini_files_taxels.index(
-                        "right_arm.txt")
-                    taxels_to_add = all_taxels[pos_of_taxels]
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_RIGHT_ARM_HAND
-                    parts_to_add.append(part)
-
-                elif part == "r_forearm":
-                    # find the corresponding taxels
-                    pos_of_taxels = ini_files_taxels.index(
-                        "right_forearm_V2.txt")
-                    taxels_to_add = all_taxels[pos_of_taxels]
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_RIGHT_ARM_HAND
-                    parts_to_add.append(part)
-
-                elif part == "r_hand":
-                    # find the corresponding taxels
-                    part = "r_palm"
-                    pos_of_taxels = ini_files_taxels.index(
-                        "right_hand_V2_1.txt")
-                    taxels_to_add = all_taxels[pos_of_taxels]
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_RIGHT_ARM_HAND
-                    parts_to_add.append(part)
-
-                elif part == "r_hand_thumb_3":
-                    # find the corresponding taxels
-                    part = "r_hand_thumb"
-                    add_finger_taxels = True
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_RIGHT_ARM_HAND
-                    parts_to_add.append(part)
-
-                elif part == "r_hand_index_3":
-                    # find the corresponding taxels
-                    part = "r_hand_index"
-                    add_finger_taxels = True
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_RIGHT_ARM_HAND
-                    parts_to_add.append(part)
-
-                elif part == "r_hand_middle_3":
-                    # find the corresponding taxels
-                    part = "r_hand_middle"
-                    add_finger_taxels = True
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_RIGHT_ARM_HAND
-                    parts_to_add.append(part)
-
-                elif part == "r_hand_ring_3":
-                    # find the corresponding taxels
-                    part = "r_hand_ring"
-                    add_finger_taxels = True
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_RIGHT_ARM_HAND
-                    parts_to_add.append(part)
-
-                elif part == "r_hand_little_3":
-                    # find the corresponding taxels
-                    part = "r_hand_little"
-                    add_finger_taxels = True
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_RIGHT_ARM_HAND
-                    parts_to_add.append(part)
-
-                elif part == "l_shoulder_3":
-                    # find the corresponding taxels
-                    part = "l_upper_arm"
-                    pos_of_taxels = ini_files_taxels.index("left_arm.txt")
-                    taxels_to_add = all_taxels[pos_of_taxels]
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_LEFT_ARM_HAND
-                    parts_to_add.append(part)
-
-                elif part == "l_forearm":
-                    # find the corresponding taxels
-                    pos_of_taxels = ini_files_taxels.index(
-                        "left_forearm_V2.txt")
-                    taxels_to_add = all_taxels[pos_of_taxels]
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_LEFT_ARM_HAND
-                    parts_to_add.append(part)
-
-                elif part == "l_hand":
-                    # find the corresponding taxels
-                    part = "l_palm"
-                    pos_of_taxels = ini_files_taxels.index(
-                        "left_hand_V2_1.txt")
-                    taxels_to_add = all_taxels[pos_of_taxels]
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_LEFT_ARM_HAND
-                    parts_to_add.append(part)
-
-                elif part == "l_hand_thumb_3":
-                    # find the corresponding taxels
-                    part = "l_hand_thumb"
-                    add_finger_taxels = True
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_LEFT_ARM_HAND
-                    parts_to_add.append(part)
-
-                elif part == "l_hand_index_3":
-                    # find the corresponding taxels
-                    part = "l_hand_index"
-                    add_finger_taxels = True
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_LEFT_ARM_HAND
-                    parts_to_add.append(part)
-
-                elif part == "l_hand_middle_3":
-                    # find the corresponding taxels
-                    part = "l_hand_middle"
-                    add_finger_taxels = True
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_LEFT_ARM_HAND
-                    parts_to_add.append(part)
-
-                elif part == "l_hand_ring_3":
-                    # find the corresponding taxels
-                    part = "l_hand_ring"
-                    add_finger_taxels = True
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_LEFT_ARM_HAND
-                    parts_to_add.append(part)
-
-                elif part == "l_hand_little_3":
-                    # find the corresponding taxels
-                    part = "l_hand_little"
-                    add_finger_taxels = True
-                    found_spot_to_add = False
-                    add_taxels = True
-                    group_counter = GROUP_LEFT_ARM_HAND
-                    parts_to_add.append(part)
-
-                if add_taxels:
-                    add_taxels = False
-                    if add_finger_taxels:
-                        while not found_spot_to_add:
-                            line_counter += 1
-                            if "</body" in lines[line_counter]:
-                                # read the number of identations of the line above adding the taxels:
-                                identation = len(
-                                    lines[line_counter].split("<")[0]) + 8
-                                found_spot_to_add = True
-                                taxel_ids = []
-                        idx = 0
-                        # line_counter -= 1
-                        for finger_pos in finger_taxels:
+            if add_taxels:
+                add_taxels = False
+                if add_finger_taxels:
+                    while not found_spot_to_add:
+                        line_counter += 1
+                        if "</body" in lines[line_counter]:
+                            # read the number of identations of the line above adding the taxels:
+                            identation = len(
+                                lines[line_counter].split("<")[0]) + 8
+                            found_spot_to_add = True
+                            taxel_ids = []
+                    idx = 0
+                    for finger_pos in finger_taxels:
+                        taxel_ids.append(idx)
+                        lines.insert(
+                            line_counter,
+                            f'{" "*identation}<site name="{part}_taxel_{idx}" size="{taxel_site_size}" type="sphere" group="{group_counter}" pos="{finger_pos[0]} {finger_pos[1]} {finger_pos[2]}" rgba="0 1 0 0.5"/>\n',
+                        )
+                        line_counter += 1
+                        idx += 1
+                    add_finger_taxels = False
+                else:
+                    while not found_spot_to_add:
+                        line_counter += 1
+                        if "<body" in lines[line_counter]:
+                            # read the number of identations of the line above adding the taxels:
+                            identation = len(
+                                lines[line_counter].split("<")[0]) + 4
+                            found_spot_to_add = True
+                            taxel_ids = []
+                    if not current_manual_steps:
+                        raise ValueError(
+                            f"Missing report-driven manual_steps for non-finger part: {part}"
+                        )
+                    if part in frozen_report_points:
+                        for idx, pos in frozen_report_points[part]:
                             taxel_ids.append(idx)
-                            # add the number of whitespace to the beginning of the line
                             lines.insert(
                                 line_counter,
-                                f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" type="sphere" group="{group_counter}" pos="{finger_pos[0]} {finger_pos[1]} {finger_pos[2]}" rgba="0 1 0 0.5"/>\n',
+                                f'{" "*identation}<site name="{part}_taxel_{idx}" size="{taxel_site_size}" type="sphere" group="{group_counter}" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.5"/>\n',
                             )
                             line_counter += 1
-                            idx += 1
-                        add_finger_taxels = False
-                    else:
-                        while not found_spot_to_add:
-                            line_counter += 1
-                            if "<body" in lines[line_counter]:
-                                # read the number of identations of the line above adding the taxels:
-                                identation = len(
-                                    lines[line_counter].split("<")[0]) + 4
-                                found_spot_to_add = True
-                                taxel_ids = []
-                        # Rebase from report metadata when available, else legacy heuristic.
-                        if current_rebase or (
-                            not current_manual_steps and (
-                                part == "r_upper_arm"
-                                or part == "r_forearm"
-                                or part == "l_upper_arm"
-                                or part == "l_forearm"
-                                or part == "torso"
+                        line_counter -= 1
+                        taxel_ids_to_add.append(taxel_ids)
+                        continue
+                    # Rebase only when explicitly declared by the report.
+                    if current_rebase:
+                        taxels_to_add = rebase_coordinate_system(taxels_to_add)
+                    for taxel in taxels_to_add:
+                        pos, _, idx = cast(
+                            tuple[np.ndarray, np.ndarray, int], taxel)
+                        pos = np.array(pos, dtype=float)
+                        taxel_ids.append(idx)
+                        for offsets_step, angles_step in current_manual_steps:
+                            pos = rotate_position(
+                                pos=pos,
+                                offsets=offsets_step,
+                                angle_degrees=angles_step,
                             )
-                        ):
-                            taxels_to_add = rebase_coordinate_system(taxels_to_add)
-                        for taxel in taxels_to_add:
-                            # line_counter -= 1  # we want to add the taxels before the next body
-                            pos, _, idx = cast(
-                                tuple[np.ndarray, np.ndarray, int], taxel)
-                            taxel_ids.append(idx)
-                            # Prefer transform chain from optimizer report.
-                            if current_manual_steps:
-                                for offsets_step, angles_step in current_manual_steps:
-                                    pos = rotate_position(
-                                        pos=pos,
-                                        offsets=offsets_step,
-                                        angle_degrees=angles_step,
-                                    )
-                            else:
-                                # Legacy hard-coded transform fallback.
-                                if part == "r_upper_arm":
-                                    pos = rotate_position(
-                                        pos=pos,
-                                        offsets=[0, 0, 0],
-                                        angle_degrees=[0, -32, 0],
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2]
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos,
-                                        offsets=[-0.08, 0.0015, 0.012],
-                                        angle_degrees=[0, 0, 0],
-                                    )
-                                if part == "r_forearm":
-                                    pos = rotate_position(
-                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, 90]
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 78, 0]
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2]
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos,
-                                        offsets=[-0.05, 0, -0.0015],
-                                        angle_degrees=[0, 0, 0],
-                                    )
-                                if part == "l_upper_arm":
-                                    pos = rotate_position(
-                                        pos=pos,
-                                        offsets=[0, 0, 0],
-                                        angle_degrees=[-270, 0, 0],
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos,
-                                        offsets=[0, 0, 0],
-                                        angle_degrees=[0, -148, 0],
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos,
-                                        offsets=[0.08, 0.0015, 0.012],
-                                        angle_degrees=[0, 0, 0],
-                                    )
-                                if part == "l_forearm":
-                                    pos = rotate_position(
-                                        pos=pos,
-                                        offsets=[0, 0, 0],
-                                        angle_degrees=[0, 0, -90],
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos,
-                                        offsets=[0, 0, 0],
-                                        angle_degrees=[0, 102, 0],
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 0, -2]
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos,
-                                        offsets=[0.05, -0.001, 0],
-                                        angle_degrees=[0, 0, 0],
-                                    )
-                                if part == "torso":
-                                    pos = rotate_position(
-                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 90, 0]
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[-4, 0, 0]
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos,
-                                        offsets=[0, 0.06, 0.068],
-                                        angle_degrees=[0, 0, 0],
-                                    )
-                                if part == "r_palm":
-                                    pos = rotate_position(
-                                        pos=pos,
-                                        offsets=[0, 0, 0],
-                                        angle_degrees=[0, 0, 180],
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[90, 0, 0]
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos, offsets=[0, 0, 0], angle_degrees=[0, 15, 0]
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos,
-                                        offsets=[-0.055, -0.005, 0.02],
-                                        angle_degrees=[0, 0, 0],
-                                    )
-                                if part == "l_palm":
-                                    pos = rotate_position(
-                                        pos=pos,
-                                        offsets=[0, 0, 0],
-                                        angle_degrees=[-90, 0, 0],
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos,
-                                        offsets=[0, 0, 0],
-                                        angle_degrees=[0, -15, 0],
-                                    )
-                                    pos = rotate_position(
-                                        pos=pos,
-                                        offsets=[0.055, -0.005, 0.02],
-                                        angle_degrees=[0, 0, 0],
-                                    )
 
-                            # Apply optional optimized per-part refinement as final step.
-                            if part in optimized_deltas:
-                                delta_angles, delta_offsets = optimized_deltas[part]
+                        # Apply optional optimized per-part refinement as final step.
+                        if part in optimized_deltas:
+                            delta_angles, delta_offsets, delta_quat = optimized_deltas[part]
+                            if delta_quat is not None:
+                                pos = apply_quaternion_transform(
+                                    pos=pos,
+                                    offsets=delta_offsets.tolist(),
+                                    quat_wxyz=delta_quat.tolist(),
+                                )
+                            else:
                                 pos = rotate_position(
                                     pos=pos,
                                     offsets=delta_offsets.tolist(),
                                     angle_degrees=delta_angles.tolist(),
                                 )
 
-                            lines.insert(
-                                line_counter,
-                                f'{" "*identation}<site name="{part}_taxel_{idx}" size="0.005" type="sphere" group="{group_counter}" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.5"/>\n',
+                        if current_body_transform is not None:
+                            body_pos, body_quat = current_body_transform
+                            pos = apply_quaternion_transform(
+                                pos=pos,
+                                offsets=body_pos.tolist(),
+                                quat_wxyz=body_quat.tolist(),
                             )
-                            line_counter += 1
-                    line_counter -= 1  # go one line back after we added the last taxel
-                    pass
-                    taxel_ids_to_add.append(taxel_ids)
 
-        elif "<tendon>" in lines[line_counter]:
+                        lines.insert(
+                            line_counter,
+                            f'{" "*identation}<site name="{part}_taxel_{idx}" size="{taxel_site_size}" type="sphere" group="{group_counter}" pos="{pos[0]} {pos[1]} {pos[2]}" rgba="0 1 0 0.5"/>\n',
+                        )
+                        line_counter += 1
+                line_counter -= 1  # go one line back after we added the last taxel
+                pass
+                taxel_ids_to_add.append(taxel_ids)
+
+        elif "<tendon>" in lines[line_counter] or "<contact>" in lines[line_counter]:
             keep_processing = False
 
         line_counter += 1  # we need to keep iterating over the lines
 
+    if line_counter >= len(lines):
+        raise ValueError(
+            "Reached end of model XML before finding <contact> or <tendon> while inserting taxels."
+        )
+
     # now we have to define the sensors as touch sensors
     keep_processing = True
     identation = 4
-    while keep_processing:
+    while keep_processing and line_counter < len(lines):
         # above that we need to add each taxel using:
-        # <sensor>
-        #     <touch name="name_to_display" site="name_of_taxel" />
-        # </sensor>
-        if "<contact>" in lines[line_counter]:
+        # If the model already has a <sensor> section, insert <touch> entries into it.
+        if "</sensor>" in lines[line_counter]:
             for part_to_add, taxel_id_list in zip(parts_to_add, taxel_ids_to_add):
                 lines.insert(line_counter, "\n")
                 line_counter += 1
@@ -1013,21 +1278,42 @@ def include_skin_to_mujoco_model(
                     line_counter, f'{" "*identation}<!--{part_to_add}-->\n')
                 line_counter += 1
                 for id in taxel_id_list:
-                    lines.insert(line_counter, f'{" "*identation}<sensor>\n')
-                    line_counter += 1
                     lines.insert(
                         line_counter,
-                        f'{" "*(identation+4)}<touch name="{part_to_add}_{id}" site="{part_to_add}_taxel_{id}" />\n',
+                        f'{" "*identation}<touch name="{part_to_add}_{id}" site="{part_to_add}_taxel_{id}" />\n',
                     )
                     line_counter += 1
-                    lines.insert(line_counter, f'{" "*identation}</sensor>\n')
-                    line_counter += 1
-                pass
             lines.insert(line_counter, "\n")
             keep_processing = False
-            pass
+
+        # Fallback for older models without a <sensor> section: create one before <contact>.
+        elif "<contact>" in lines[line_counter]:
+            lines.insert(line_counter, f'{" "*identation}<sensor>\n')
+            line_counter += 1
+            sensor_child_indent = identation + 4
+            for part_to_add, taxel_id_list in zip(parts_to_add, taxel_ids_to_add):
+                lines.insert(line_counter, "\n")
+                line_counter += 1
+                lines.insert(
+                    line_counter, f'{" "*sensor_child_indent}<!--{part_to_add}-->\n')
+                line_counter += 1
+                for id in taxel_id_list:
+                    lines.insert(
+                        line_counter,
+                        f'{" "*sensor_child_indent}<touch name="{part_to_add}_{id}" site="{part_to_add}_taxel_{id}" />\n',
+                    )
+                    line_counter += 1
+            lines.insert(line_counter, f'{" "*identation}</sensor>\n')
+            line_counter += 1
+            lines.insert(line_counter, "\n")
+            keep_processing = False
         pass
         line_counter += 1
+
+    if keep_processing:
+        raise ValueError(
+            "Could not find <contact> or </sensor> section in model XML to insert touch sensors."
+        )
     pass
 
     # now we can write the new xml file
@@ -1044,11 +1330,19 @@ def include_skin_to_mujoco_model(
 
 
 if __name__ == "__main__":
-    optimized = load_optimized_deltas(OPTIMIZATION_REPORT_JSON)
-    metadata = load_report_part_metadata(OPTIMIZATION_REPORT_JSON)
+    args = parse_args()
+    report_path = args.report_path
+    if args.strict_report:
+        validated_entries = validate_optimization_report(report_path)
+        print(
+            f"Strict optimization report validation passed for {len(validated_entries)} parts from {report_path}"
+        )
+
+    optimized = load_optimized_deltas(report_path)
+    metadata = load_report_part_metadata(report_path)
     if optimized:
         print(
-            f"Loaded optimized deltas for {len(optimized)} parts from {OPTIMIZATION_REPORT_JSON}"
+            f"Loaded optimized deltas for {len(optimized)} parts from {report_path}"
         )
     else:
         print(
@@ -1057,7 +1351,13 @@ if __name__ == "__main__":
     if metadata:
         print(f"Loaded report metadata for {len(metadata)} parts.")
     else:
-        print("No report metadata found. Falling back to hard-coded body mapping/transform rules.")
+        print(
+            "No report metadata found. Non-finger body taxels cannot be inserted; only manual finger routing remains available."
+        )
+
+    frozen_points = load_frozen_report_points(report_path, TAXEL_INI_PATH) if args.use_frozen_report_points else {}
+    if args.use_frozen_report_points:
+        print(f"Loaded frozen report points for {len(frozen_points)} parts.")
 
     include_skin_to_mujoco_model(
         MUJOCO_MODEL,
@@ -1065,7 +1365,10 @@ if __name__ == "__main__":
         POSITIONS_FILES,
         optimized_deltas=optimized,
         report_part_metadata=metadata,
+        style_mode=args.style_mode,
+        taxel_site_size=float(args.taxel_site_size),
+        apply_anchor_body_transform=bool(args.apply_anchor_body_transform),
+        frozen_report_points=frozen_points,
     )
     print("*******************")
     print("DONE")
-    pass
