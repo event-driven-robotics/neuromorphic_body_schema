@@ -205,7 +205,18 @@ if __name__ == "__main__":
             show_ed_feed=VISUALIZE_ED_SKIN_FEED,
             DEBUG=DEBUG
         )
-        eye_camera_object = ICubEyes(sim_time, model, data, eye=CAM_TO_USE, camera_mode=CAMERA_MODE, show_raw_feed=VISUALIZE_CAMERA_FEED, show_ed_feed=VISUALIZE_ED_CAMERA_FEED, DEBUG=DEBUG)
+        
+        eye_camera_object = ICubEyes(
+            sim_time, 
+            model, 
+            data, 
+            eye=CAM_TO_USE, 
+            camera_mode=CAMERA_MODE,
+            show_raw_feed=VISUALIZE_CAMERA_FEED, 
+            show_ed_feed=VISUALIZE_ED_CAMERA_FEED, 
+            DEBUG=DEBUG
+        )
+        
         # proprioception_object = ICubProprioception(
         #     model,
         #     joint_dict_prop,
@@ -264,7 +275,8 @@ if __name__ == "__main__":
             )  # expects ns; returns dict {"left": events, "right": events}
 
             skin_events = skin_object.update_skin(
-                data.time * 1e9)  # expects ns
+                data.time * 1e9
+            )  # expects ns
 
             # proprioception_events = proprioception_object.update_proprioception(
             #     time=data.time, data=data

@@ -219,13 +219,12 @@ def init_POV(viewer):
         mujoco.viewer.Viewer: The configured viewer instance with the updated camera settings.
     """
 
-    # Rotate startup camera around world Z by +45deg for iso-like view,
-    # while preserving distance/elevation/look-at from current defaults.
-    viewer.cam.azimuth -= 45.0
-    # viewer.cam.azimuth = -4.5
-    # viewer.cam.distance = 2
-    # viewer.cam.elevation = -16
-    # viewer.cam.lookat = np.array([0, -0.25, 1])
+    # Use deterministic camera defaults so startup POV does not depend on
+    # viewer-internal initial values across MuJoCo/Python versions.
+    viewer.cam.azimuth = -4.5
+    viewer.cam.distance = 2
+    viewer.cam.elevation = -16
+    viewer.cam.lookat = np.array([0, -0.25, 1])
 
     # Example: Only show groups 0 and 2, hide others
     viewer.opt.sitegroup[:] = 0  # Hide all groups
