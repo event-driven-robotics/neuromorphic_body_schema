@@ -1305,7 +1305,12 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_files=("col_LeftHandPalm.stl",),
         rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            # rotation
+            ((0.0, 0.0, 0.0), (-90.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, -13.0, 0.0)),
+            # translation
+            ((0.057, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.01), (0.0, 0.0, 0.0)),
         ),
     ),
     PartConfig(

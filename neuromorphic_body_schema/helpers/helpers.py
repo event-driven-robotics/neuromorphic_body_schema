@@ -223,7 +223,7 @@ def init_POV(viewer):
     # viewer-internal initial values across MuJoCo/Python versions.
     viewer.cam.azimuth = -4.5
     viewer.cam.distance = 2
-    viewer.cam.elevation = -16
+    viewer.cam.elevation = -30
     viewer.cam.lookat = np.array([0, -0.25, 1])
 
     # Example: Only show groups 0 and 2, hide others

@@ -1538,54 +1538,6 @@
           0.0
         ],
         "angles_deg": [
-          90.0,
-          0.0,
-          0.0
-        ]
-      },
-      {
-        "offsets_m": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "angles_deg": [
-          0.0,
-          190.0,
-          0.0
-        ]
-      },
-      {
-        "offsets_m": [
-          -0.05,
-          0.0,
-          0.0
-        ],
-        "angles_deg": [
-          0.0,
-          0.0,
-          0.0
-        ]
-      },
-      {
-        "offsets_m": [
-          0.0,
-          -0.005,
-          0.0
-        ],
-        "angles_deg": [
-          0.0,
-          0.0,
-          0.0
-        ]
-      },
-      {
-        "offsets_m": [
-          0.0,
-          0.0,
-          0.013
-        ],
-        "angles_deg": [
           0.0,
           0.0,
           0.0
@@ -1609,9 +1561,9 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.001234051715896779,
-      "median_distance_m": 0.001116618787507013,
-      "p90_distance_m": 0.0020568413658177682,
+      "mean_distance_m": 0.008598698106700498,
+      "median_distance_m": 0.005930139678603959,
+      "p90_distance_m": 0.02059765262881424,
       "inside_fraction": 0.0
     },
     "optimized": {
@@ -1628,12 +1580,12 @@
       ],
       "delta_offsets_m": [
         0.0,
-        -0.0035747998874664302,
+        -0.013411163101184221,
         0.0
       ],
-      "mean_distance_m": 0.001234051715896779,
-      "median_distance_m": 0.001116618787507013,
-      "p90_distance_m": 0.0020568413658177682,
+      "mean_distance_m": 0.008598698106700498,
+      "median_distance_m": 0.005930139678603959,
+      "p90_distance_m": 0.02059765262881424,
       "inside_fraction": 0.0
     },
     "delta": {
@@ -1651,7 +1603,7 @@
       "rotation_distance_deg": 0.0,
       "offsets_m": [
         0.0,
-        -0.0035747998874664302,
+        -0.013411163101184221,
         0.0
       ],
       "mean_distance_m": 0.0,
@@ -1662,9 +1614,9 @@
       "success": true,
       "status": 0,
       "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
-      "nit": 15,
-      "nfev": 84,
-      "objective": 1018992.1622169329,
+      "nit": 5,
+      "nfev": 24,
+      "objective": 1207074.829407516,
       "optimizer_method": "L-BFGS-B",
       "solver": "L-BFGS-B",
       "seed_count": 1,
@@ -1682,25 +1634,25 @@
       ],
       "selected_seed_offsets_m": [
         0.0,
-        -0.0035747998874664302,
+        -0.013411163101184221,
         0.0
       ],
       "angle_bounds_deg": [
         0.0,
-        25.0,
+        5.0,
         0.0
       ],
       "translation_bounds_m": [
-        0.03,
+        0.01,
         0.0,
-        0.03
+        0.01
       ],
       "fine_refinement": null,
       "polish_mode": false,
       "polish_refinement": null,
-      "surface_y_m": -0.008574799887466431,
-      "y_snap_offset_m": -0.0035747998874664302,
-      "footprint_area_m2": 5.022134161312451e-08,
+      "surface_y_m": -0.008574799464820584,
+      "y_snap_offset_m": -0.013411163101184221,
+      "footprint_area_m2": 5.0223478513706265e-08,
       "contact_side": "min_y",
       "contact_side_selection": "override:min_y",
       "body_property": "flat_surface",
@@ -1727,7 +1679,7 @@
           0.0
         ],
         "angles_deg": [
-          90.0,
+          -90.0,
           0.0,
           0.0
         ]
@@ -1740,13 +1692,13 @@
         ],
         "angles_deg": [
           0.0,
-          -15.0,
+          -13.0,
           0.0
         ]
       },
       {
         "offsets_m": [
-          0.05,
+          0.057,
           0.0,
           0.0
         ],
@@ -1761,18 +1713,6 @@
           0.0,
           0.0,
           0.01
-        ],
-        "angles_deg": [
-          0.0,
-          0.0,
-          0.0
-        ]
-      },
-      {
-        "offsets_m": [
-          0.0,
-          -0.007,
-          0.0
         ],
         "angles_deg": [
           0.0,
@@ -1798,9 +1738,9 @@
         0.0,
         0.0
       ],
-      "mean_distance_m": 0.0008663103834059043,
-      "median_distance_m": 0.0008517502968192488,
-      "p90_distance_m": 0.0013380030400866692,
+      "mean_distance_m": 0.0013812186299318368,
+      "median_distance_m": 0.0012696807214484887,
+      "p90_distance_m": 0.002152554501848347,
       "inside_fraction": 1.0
     },
     "optimized": {
@@ -1817,12 +1757,12 @@
       ],
       "delta_offsets_m": [
         0.0,
-        -0.0016697999123513694,
+        -0.008669800022207002,
         0.0
       ],
-      "mean_distance_m": 0.0008663103834059043,
-      "median_distance_m": 0.0008517502968192488,
-      "p90_distance_m": 0.0013380030400866692,
+      "mean_distance_m": 0.0013812186299318368,
+      "median_distance_m": 0.0012696807214484887,
+      "p90_distance_m": 0.002152554501848347,
       "inside_fraction": 1.0
     },
     "delta": {
@@ -1840,7 +1780,7 @@
       "rotation_distance_deg": 0.0,
       "offsets_m": [
         0.0,
-        -0.0016697999123513694,
+        -0.008669800022207002,
         0.0
       ],
       "mean_distance_m": 0.0,
@@ -1851,9 +1791,9 @@
       "success": false,
       "status": 2,
       "message": "ABNORMAL: ",
-      "nit": 7,
-      "nfev": 384,
-      "objective": 5.27085753337413,
+      "nit": 4,
+      "nfev": 292,
+      "objective": 4.304166041497808,
       "optimizer_method": "L-BFGS-B",
       "solver": "L-BFGS-B",
       "seed_count": 1,
@@ -1871,25 +1811,25 @@
       ],
       "selected_seed_offsets_m": [
         0.0,
-        -0.0016697999123513694,
+        -0.008669800022207002,
         0.0
       ],
       "angle_bounds_deg": [
         0.0,
-        25.0,
+        5.0,
         0.0
       ],
       "translation_bounds_m": [
-        0.03,
+        0.01,
         0.0,
-        0.03
+        0.01
       ],
       "fine_refinement": null,
       "polish_mode": false,
       "polish_refinement": null,
-      "surface_y_m": -0.00866979991235137,
-      "y_snap_offset_m": -0.0016697999123513694,
-      "footprint_area_m2": 0.003994768120626196,
+      "surface_y_m": -0.008669800022207002,
+      "y_snap_offset_m": -0.008669800022207002,
+      "footprint_area_m2": 0.003994768188800274,
       "contact_side": "min_y",
       "contact_side_selection": "override:min_y",
       "body_property": "flat_surface",
