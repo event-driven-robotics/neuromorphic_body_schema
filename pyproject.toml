@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "icub_mujoco"
+version = "1.0.0"
+description = "iCub MuJoCo"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+authors = [
+    { name = "Simon F Muller-Cleve" }
+]
+requires-python = ">=3.12"
+
+dependencies = [
+    "mujoco>=3.3.3",
+    "opencv-python>=4.10.0.84",
+    "numpy>=2.0.0",
+    "scipy>=1.15.2",
+    "numpy-stl>=3.2.0",
+    "trimesh>=4.11.3",
+    "plotly>=6.6.0",
+    "matplotlib>=3.10.0",
+    "shapely>=2.1.2"
+]

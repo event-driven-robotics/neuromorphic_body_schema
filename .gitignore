@@ -12,3 +12,4 @@ dist/
 *.egg
 *.whl
 *.html
+neuromorphic_body_schema/meshes_improved/*

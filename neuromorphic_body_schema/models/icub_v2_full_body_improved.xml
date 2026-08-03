@@ -1083,15 +1083,15 @@
   <actuator>
 
     <!-- Torso -->
-    <position name="torso_pitch" kp="470.0" joint="torso_pitch" ctrlrange="-0.3839724354387525 1.4660765716752369" />
-    <position name="torso_roll" kp="990.0" joint="torso_roll" ctrlrange="-0.6806784082777885 0.6806784082777885"/>
-    <position name="torso_yaw" kp="975.0" joint="torso_yaw" ctrlrange="-1.0297442586766545 1.0297442586766545"/>
+    <position name="torso_pitch" kp="25.0" joint="torso_pitch" ctrlrange="-0.3839724354387525 1.4660765716752369" />
+    <position name="torso_roll" kp="25.0" joint="torso_roll" ctrlrange="-0.6806784082777885 0.6806784082777885"/>
+    <position name="torso_yaw" kp="25.0" joint="torso_yaw" ctrlrange="-1.0297442586766545 1.0297442586766545"/>
     <!-- End Torso -->
 
     <!-- Neck -->
-    <position name="neck_pitch" kp="195.0" joint="neck_pitch" ctrlrange="-0.698132 0.383972" />
-    <position name="neck_roll" kp="460.0" joint="neck_roll" ctrlrange="-0.349066 0.349066" />
-    <position name="neck_yaw" kp="195.0" joint="neck_yaw" ctrlrange="-0.872665 0.872665" />
+    <position name="neck_pitch" kp="25.0" joint="neck_pitch" ctrlrange="-0.698132 0.383972" />
+    <position name="neck_roll" kp="25.0" joint="neck_roll" ctrlrange="-0.349066 0.349066" />
+    <position name="neck_yaw" kp="25.0" joint="neck_yaw" ctrlrange="-0.872665 0.872665" />
     <!-- End Neck -->
 
     <!-- Eyes -->
@@ -1134,7 +1134,7 @@
 
     <!-- Hands -->
     <!-- Left -->
-    <position name="l_hand_finger" kp="25.0" tendon="l_hand_finger_tendon" ctrlrange="0 1.046666667"/>
+    <position name="l_hand_finger" kp="25.0" tendon="l_hand_finger_tendon" ctrlrange="0 1.046666667"/>  <!-- Range too small -->
     <position name="l_thumb_oppose" kp="25.0" joint="l_hand_thumb_0_joint" ctrlrange="0 1.5708"/>
     <position name="l_thumb_proximal" kp="20.0" joint="l_hand_thumb_1_joint" ctrlrange="0 1.5708"/>
     <position name="l_thumb_distal" kp="20.0" tendon="l_thumb_distal_tendon" ctrlrange="0 2.965555556"/>
@@ -1144,7 +1144,7 @@
     <position name="l_middle_distal" kp="25.0" tendon="l_middle_distal_tendon" ctrlrange="0 2.965555556"/>
     <position name="l_pinky" kp="15.0" tendon="l_pinky_tendon" ctrlrange="0 4.36"/>
     <!-- Right -->
-    <position name="r_hand_finger" kp="25.0" tendon="r_hand_finger_tendon" ctrlrange="0 1.046666667"/>
+    <position name="r_hand_finger" kp="25.0" tendon="r_hand_finger_tendon" ctrlrange="0 1.046666667"/>  <!-- Range too small -->
     <position name="r_thumb_oppose" kp="25.0" joint="r_hand_thumb_0_joint" ctrlrange="0 1.5708"/>
     <position name="r_thumb_proximal" kp="20.0" joint="r_hand_thumb_1_joint" ctrlrange="0 1.5708"/>
     <position name="r_thumb_distal" kp="20.0" tendon="r_thumb_distal_tendon" ctrlrange="0 2.965555556"/>

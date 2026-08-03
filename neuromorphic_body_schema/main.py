@@ -41,6 +41,7 @@ import re
 import threading
 from collections import defaultdict
 
+from time import perf_counter
 import mujoco
 import numpy as np
 from neuromorphic_body_schema.helpers.ed_cam import ICubEyes
@@ -105,28 +106,29 @@ if __name__ == "__main__":
     # Load the MuJoCo model and create a simulation
     model = MjModel.from_xml_path(MODEL_PATH)
     data = MjData(model)
-    # set model to 0.0 start position
-    data.qpos.fill(0.0)
-    # define a start position for the model
-    joint_init_pos = {
-        "r_shoulder_roll": 0.6,
-        "r_shoulder_pitch": -0.5,
-        "r_shoulder_yaw": 0.0,
-        "r_elbow": 1.1,
-        "l_shoulder_roll": 0.6,
-        "l_shoulder_pitch": -0.5,
-        "l_shoulder_yaw": 0.0,
-        "l_elbow": 1.1,
-    }
-    # let's set the initial joint positions and actuator controls
-    for joint_name, position in joint_init_pos.items():
-        try:
-            joint_id = mj_name2id(model, mjtObj.mjOBJ_JOINT, joint_name)
-            data.joint(joint_id).qpos[0] = position
-            data.actuator(joint_name).ctrl[0] = position
-        except ValueError:
-            logging.warning(f"Joint {joint_name} not found in the model.")
-    print("Model loaded")
+
+    # # set model to 0.0 start position
+    # data.qpos.fill(0.0)
+    # # define a start position for the model
+    # joint_init_pos = {
+    #     "r_shoulder_roll": 0.6,
+    #     "r_shoulder_pitch": -0.5,
+    #     "r_shoulder_yaw": 0.0,
+    #     "r_elbow": 1.1,
+    #     "l_shoulder_roll": 0.6,
+    #     "l_shoulder_pitch": -0.5,
+    #     "l_shoulder_yaw": 0.0,
+    #     "l_elbow": 1.1,
+    # }
+    # # let's set the initial joint positions and actuator controls
+    # for joint_name, position in joint_init_pos.items():
+    #     try:
+    #         joint_id = mj_name2id(model, mjtObj.mjOBJ_JOINT, joint_name)
+    #         data.joint(joint_id).qpos[0] = position
+    #         data.actuator(joint_name).ctrl[0] = position
+    #     except ValueError:
+    #         logging.warning(f"Joint {joint_name} not found in the model.")
+    # print("Model loaded")
 
     # Set the time step duration to 0.001 seconds (1 milliseconds)
     model.opt.timestep = 0.001  # sec
@@ -147,32 +149,32 @@ if __name__ == "__main__":
 
     dynamic_grouped_sensors = DynamicGroupedSensors(data, grouped_sensors)
 
-    joint_dict_prop = {
-        "r_shoulder_roll": {
-            "position_max_freq": 1000,  # Hz
-            "velocity_max_freq": 1000,
-            "load_max_freq": 1000,
-            "limits_max_freq": 1000,
-        },
-        "l_shoulder_roll": {
-            "position_max_freq": 1000,
-            "velocity_max_freq": 1000,
-            "load_max_freq": 1000,
-            "limits_max_freq": 1000,
-        },
-        # 'r_pinky': {
-        #     'position_max_freq': 1000,  # Hz
-        #     'velocity_max_freq': 1000,
-        #     'load_max_freq': 1000,
-        #     'limits_max_freq': 1000,
-        # },
-        # 'l_pinky': {
-        #     'position_max_freq': 1000,
-        #     'velocity_max_freq': 1000,
-        #     'load_max_freq': 1000,
-        #     'limits_max_freq': 1000,
-        # },
-    }
+    # joint_dict_prop = {
+    #     "r_shoulder_roll": {
+    #         "position_max_freq": 1000,  # Hz
+    #         "velocity_max_freq": 1000,
+    #         "load_max_freq": 1000,
+    #         "limits_max_freq": 1000,
+    #     },
+    #     "l_shoulder_roll": {
+    #         "position_max_freq": 1000,
+    #         "velocity_max_freq": 1000,
+    #         "load_max_freq": 1000,
+    #         "limits_max_freq": 1000,
+    #     },
+    #     'r_pinky': {
+    #         'position_max_freq': 1000,  # Hz
+    #         'velocity_max_freq': 1000,
+    #         'load_max_freq': 1000,
+    #         'limits_max_freq': 1000,
+    #     },
+    #     'l_pinky': {
+    #         'position_max_freq': 1000,
+    #         'velocity_max_freq': 1000,
+    #         'load_max_freq': 1000,
+    #         'limits_max_freq': 1000,
+    #     },
+    # }
 
     # # Define parameters for the sine wave
     # frequencies = [1.0, 1.0, 1.0, 1.0, 1.0]
@@ -255,6 +257,7 @@ if __name__ == "__main__":
         # q_arm: dict[str, float] | None = None
 
         # count = 0
+        # last_frame = perf_counter()
         while sim_viewer.is_running():
             # print(sim_time)
             mj_step(model, data)  # Step the simulation
@@ -270,13 +273,13 @@ if __name__ == "__main__":
             #         print(joint, joint_position)
             # update_joint_positions(data, {joint: joint_position})
 
-            eye_cam_events = eye_camera_object.update_camera(
-                data.time * 1e9
-            )  # expects ns; returns dict {"left": events, "right": events}
+            # eye_cam_events = eye_camera_object.update_camera(
+            #     data.time * 1e9
+            # )  # expects ns; returns dict {"left": events, "right": events}
 
-            skin_events = skin_object.update_skin(
-                data.time * 1e9
-            )  # expects ns
+            # skin_events = skin_object.update_skin(
+            #     data.time * 1e9
+            # )  # expects ns
 
             # proprioception_events = proprioception_object.update_proprioception(
             #     time=data.time, data=data
@@ -305,5 +308,6 @@ if __name__ == "__main__":
             #         logging.info("Goal reached")
             #         caculated = False
             #         count += 1
-
+            # print(f"Loop time: {perf_counter() - last_frame:.4f} seconds")
+            # last_frame = perf_counter()
             pass

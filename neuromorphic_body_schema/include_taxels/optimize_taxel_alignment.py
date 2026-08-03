@@ -6,8 +6,8 @@ part, the pipeline:
 
 1. Loads and filters tactile taxel coordinates from the positions file.
 2. Applies the fixed, hand-tuned baseline transform chain for that part.
-3. Evaluates multiple seed hypotheses around zero and any previously saved
-   optimized solution.
+3. Evaluates multiple seed hypotheses around zero, bounded random starts, and
+   any previously saved optimized solution.
 4. Runs a local L-BFGS-B optimization in quaternion-plus-translation space.
 5. Optionally performs a tighter local refinement and final polish pass.
 6. Stores the best result only if it improves the previously saved solution.
@@ -35,6 +35,7 @@ Run:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -76,6 +77,7 @@ JsonDict: TypeAlias = dict[str, Any]
 
 # PartConfig quick guide:
 # - Base seed set: delta_angle_seed_candidates (+ implicit zero translation seed).
+# - Random initialization: random seeds are drawn from symmetric bounded pools.
 # - Previous-result seeding: include_previous_seed plus optional previous_*_jitter_candidates.
 # - Previous-result dense grid: previous_angle_grid_values_deg + previous_offset_grid_values_m.
 # - Local refine pass (optional): local_refine_angle_jitter_candidates with refine windows.
@@ -113,6 +115,17 @@ class PartConfig:
     distance_focus_radius_m: float = 0.06
     distance_focus_min_samples: int = 3000
     inside_penalty_weight: float = 0.0
+
+
+@dataclass(frozen=True)
+class RandomInitConfig:
+    """Runtime configuration for bounded random seed candidates."""
+
+    count: int = 8
+    angle_limit_deg: Vector3 = (5.0, 5.0, 5.0)
+    translation_limit_m: Vector3 = (0.005, 0.005, 0.005)
+    pool_size: int = 11
+    rng_seed: int | None = 12345
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -419,44 +432,44 @@ def apply_quaternion_transform(
     pos_shifted = np.array(pos, dtype=float) + np.array(offsets, dtype=float)
     return np.array(rot.apply(pos_shifted), dtype=float)
 
-def build_bottom_contact_footprint_xz(mesh: trimesh.Trimesh, bottom_slice_height_m: float = 0.002) -> Any:
-    """Return a strict XZ footprint for the sole contact patch of a mesh."""
+def build_sole_contact_footprint_xy(mesh: trimesh.Trimesh, bottom_slice_height_m: float = 0.002) -> Any:
+    """Return a strict XY footprint for the lowest-Z sole contact patch."""
 
     vertices = np.asarray(mesh.vertices, dtype=float)
     faces = np.asarray(mesh.faces, dtype=int)
-    min_y = float(np.min(vertices[:, 1]))
-    slice_limit = min_y + bottom_slice_height_m
+    min_z = float(np.min(vertices[:, 2]))
+    slice_limit = min_z + bottom_slice_height_m
 
-    bottom_face_mask = np.all(vertices[faces][:, :, 1] <= slice_limit, axis=1)
+    bottom_face_mask = np.all(vertices[faces][:, :, 2] <= slice_limit, axis=1)
     bottom_faces = faces[bottom_face_mask]
     if len(bottom_faces) == 0:
-        return MultiPoint(vertices[:, [0, 2]]).convex_hull
+        return MultiPoint(vertices[:, [0, 1]]).convex_hull
 
     projected_triangles: list[Polygon] = []
     for face in bottom_faces:
-        polygon = Polygon(vertices[face][:, [0, 2]])
+        polygon = Polygon(vertices[face][:, [0, 1]])
         if polygon.is_valid and polygon.area > 0.0:
             projected_triangles.append(polygon)
 
     if not projected_triangles:
-        return MultiPoint(vertices[bottom_faces.reshape(-1), :][:, [0, 2]]).convex_hull
+        return MultiPoint(vertices[bottom_faces.reshape(-1), :][:, [0, 1]]).convex_hull
 
     footprint = unary_union(projected_triangles)
     if isinstance(footprint, GeometryCollection) and len(footprint.geoms) == 0:
-        return MultiPoint(vertices[bottom_faces.reshape(-1), :][:, [0, 2]]).convex_hull
+        return MultiPoint(vertices[bottom_faces.reshape(-1), :][:, [0, 1]]).convex_hull
     return footprint
 
 
-def build_point_hull_xz(points: np.ndarray) -> Any:
-    """Return the XZ convex hull of a point cloud."""
+def build_point_hull_xy(points: np.ndarray) -> Any:
+    """Return the XY convex hull of a point cloud."""
 
-    return MultiPoint(np.asarray(points, dtype=float)[:, [0, 2]]).convex_hull
+    return MultiPoint(np.asarray(points, dtype=float)[:, [0, 1]]).convex_hull
 
 
-def sole_surface_y(mesh: trimesh.Trimesh) -> float:
-    """Return the Y level of the lowest sole surface."""
+def sole_surface_z(mesh: trimesh.Trimesh) -> float:
+    """Return the Z level of the lowest sole surface."""
 
-    return float(np.min(np.asarray(mesh.vertices, dtype=float)[:, 1]))
+    return float(np.min(np.asarray(mesh.vertices, dtype=float)[:, 2]))
 
 
 def _foot_boundary_distance_mean(hull: Any, footprint: Any) -> float:
@@ -582,6 +595,7 @@ def optimize_palm_surface_part(
     strategy: StrategyProfile,
     body_property: str,
     polish: bool = False,
+    random_init: RandomInitConfig | None = None,
 ) -> JsonDict:
     """Optimize a palm patch in XZ with exact Y snap and in-plane rotation."""
 
@@ -679,7 +693,8 @@ def optimize_palm_surface_part(
     )
 
     previous_seed = previous_seed_map.get(config.part_name)
-    seed_candidates = build_seed_candidates(config, previous_seed, polish=polish)
+    seed_candidates = build_seed_candidates(
+        config, previous_seed, polish=polish, random_init=random_init)
     seed_results: list[tuple[float, np.ndarray, Any, float, np.ndarray, str]] = []
 
     translation_bounds = _scaled_translation_bounds(config)
@@ -844,6 +859,7 @@ def optimize_palm_surface_part(
             "strategy_name": strategy.name,
             "inside_penalty_weight": inside_penalty_weight,
             "distance_focus_enabled": use_distance_focus,
+            **_random_init_report_fields(random_init),
         },
     }
 
@@ -856,6 +872,7 @@ def optimize_foot_sole_part(
     strategy: StrategyProfile,
     body_property: str,
     polish: bool = False,
+    random_init: RandomInitConfig | None = None,
 ) -> JsonDict:
     """Optimize a flat foot sole in XY with exact Z snap and Z-rotation fitting."""
 
@@ -868,26 +885,8 @@ def optimize_foot_sole_part(
 
     baseline_points = apply_part_transform(points, config.part_name)
 
-    vertices = np.asarray(mesh.vertices, dtype=float)
-    faces = np.asarray(mesh.faces, dtype=int)
-    z_target = float(np.max(vertices[:, 2]))
-    slice_limit = z_target - 0.002
-    sole_face_mask = np.all(vertices[faces][:, :, 2] >= slice_limit, axis=1)
-    sole_faces = faces[sole_face_mask]
-    if len(sole_faces) == 0:
-        footprint = MultiPoint(vertices[:, [0, 1]]).convex_hull
-    else:
-        projected_triangles: list[Polygon] = []
-        for face in sole_faces:
-            polygon = Polygon(vertices[face][:, [0, 1]])
-            if polygon.is_valid and polygon.area > 0.0:
-                projected_triangles.append(polygon)
-        if projected_triangles:
-            footprint = unary_union(projected_triangles)
-            if isinstance(footprint, GeometryCollection) and len(footprint.geoms) == 0:
-                footprint = MultiPoint(vertices[sole_faces.reshape(-1), :][:, [0, 1]]).convex_hull
-        else:
-            footprint = MultiPoint(vertices[sole_faces.reshape(-1), :][:, [0, 1]]).convex_hull
+    z_target = sole_surface_z(mesh)
+    footprint = build_sole_contact_footprint_xy(mesh)
 
     footprint_area = max(float(footprint.area), 1e-12)
     footprint_scale = max(float(np.sqrt(footprint_area)), 1e-6)
@@ -991,7 +990,7 @@ def optimize_foot_sole_part(
 
     previous_seed = previous_seed_map.get(config.part_name)
     seed_candidates = build_seed_candidates(
-        config, previous_seed, polish=polish)
+        config, previous_seed, polish=polish, random_init=random_init)
     seed_results: list[tuple[float, np.ndarray,
                              Any, float, np.ndarray, str]] = []
 
@@ -1171,6 +1170,7 @@ def optimize_foot_sole_part(
             "strategy_name": strategy.name,
             "inside_penalty_weight": inside_penalty_weight,
             "distance_focus_enabled": use_distance_focus,
+            **_random_init_report_fields(random_init),
         },
     }
 
@@ -1283,8 +1283,6 @@ PARTS: tuple[PartConfig, ...] = (
             # translation
             ((0.0, 0.0, -0.2), (0.0, 0.0, 0.0)),
         ),
-        # delta_angle_bounds_deg=(10.0, 10.0, 10.0),
-        # delta_translation_bounds_m=(0.02, 0.02, 0.02),
         distance_focus_to_initial_patch=True,
         distance_focus_radius_m=0.07,
         distance_focus_min_samples=6000,
@@ -1296,7 +1294,13 @@ PARTS: tuple[PartConfig, ...] = (
         mesh_files=("col_RightHandPalm.stl",),
         rebase=False,
         manual_steps=(
-            ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            # rotation
+            ((0.0, 0.0, 0.0), (0.0, 180.0, 0.0)),
+            ((0.0, 0.0, 0.0), (-90.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.0), (0.0, 13.0, 0.0)),
+            # translation
+            ((-0.057, 0.0, 0.0), (0.0, 0.0, 0.0)),
+            ((0.0, 0.0, 0.01), (0.0, 0.0, 0.0)),
         ),
     ),
     PartConfig(
@@ -1321,7 +1325,7 @@ PARTS: tuple[PartConfig, ...] = (
         include_to_model=False,
         optimizer_method=SOLE_2D_OPTIMIZER_METHOD,
         manual_steps=(
-            ((0.0, 0.0, -0.08), (0.0, 0.0, 0.0)),  # TODO still WIP
+            ((0.0, 0.0, -0.08), (0.0, 0.0, 0.0)),
         ),
     ),
     PartConfig(
@@ -1332,7 +1336,7 @@ PARTS: tuple[PartConfig, ...] = (
         include_to_model=False,
         optimizer_method=SOLE_2D_OPTIMIZER_METHOD,
         manual_steps=(
-            ((0.0, 0.0, -0.08), (0.0, 0.0, 0.0)),  # TODO still WIP
+            ((0.0, 0.0, -0.08), (0.0, 0.0, 0.0)),
         ),
     ),
 )
@@ -1840,16 +1844,56 @@ def load_previous_optimized_seeds() -> PreviousSeedMap:
     return seeds
 
 
+def _stable_part_rng_seed(base_seed: int, part_name: str) -> int:
+    """Return a stable per-part RNG seed independent of selected part order."""
+
+    digest = hashlib.sha256(f"{base_seed}:{part_name}".encode("utf-8")).digest()
+    return int.from_bytes(digest[:8], byteorder="little", signed=False) % (2 ** 32)
+
+
+def _symmetric_pool(limit: float, pool_size: int) -> np.ndarray:
+    """Return a finite symmetric pool whose entries can be sampled uniformly."""
+
+    limit = abs(float(limit))
+    if limit <= 0.0:
+        return np.array([0.0], dtype=float)
+    if pool_size < 2:
+        raise ValueError("random init pool size must be at least 2")
+    return np.linspace(-limit, limit, int(pool_size), dtype=float)
+
+
+def _random_init_report_fields(random_init: RandomInitConfig | None) -> dict[str, Any]:
+    """Return report fields describing the random initialization policy."""
+
+    if random_init is None:
+        return {
+            "random_init_requested_count": 0,
+            "random_init_angle_limit_deg": [0.0, 0.0, 0.0],
+            "random_init_translation_limit_m": [0.0, 0.0, 0.0],
+            "random_init_pool_size": 0,
+            "random_init_rng_seed": None,
+        }
+
+    return {
+        "random_init_requested_count": int(random_init.count),
+        "random_init_angle_limit_deg": [float(v) for v in random_init.angle_limit_deg],
+        "random_init_translation_limit_m": [float(v) for v in random_init.translation_limit_m],
+        "random_init_pool_size": int(random_init.pool_size),
+        "random_init_rng_seed": random_init.rng_seed,
+    }
+
+
 def build_seed_candidates(
     config: PartConfig,
     previous_seed: PreviousSeed | None,
     polish: bool = False,
+    random_init: RandomInitConfig | None = None,
 ) -> list[SeedCandidate]:
     """Construct unique seed hypotheses for one optimization run.
 
     Seeds can come from the static part configuration, the previously saved best
-    solution, jittered variations around that solution, and an optional dense
-    grid around the previous optimum.
+    solution, bounded random initialization, jittered variations around that
+    solution, and an optional dense grid around the previous optimum.
     """
 
     candidates: list[SeedCandidate] = []
@@ -1878,6 +1922,38 @@ def build_seed_candidates(
     for idx, angle_seed in enumerate(config.delta_angle_seed_candidates):
         add_candidate(f"configured:{idx}", np.array(
             angle_seed, dtype=float), zero_offsets)
+
+    if random_init is not None and int(random_init.count) > 0:
+        angle_limits = np.asarray(random_init.angle_limit_deg, dtype=float)
+        translation_limits = np.asarray(random_init.translation_limit_m, dtype=float)
+        if angle_limits.shape != (3,) or translation_limits.shape != (3,):
+            raise ValueError("random init angle and translation limits must be 3D")
+
+        angle_pools = [
+            _symmetric_pool(float(limit), int(random_init.pool_size))
+            for limit in angle_limits
+        ]
+        translation_pools = [
+            _symmetric_pool(float(limit), int(random_init.pool_size))
+            for limit in translation_limits
+        ]
+        if random_init.rng_seed is None:
+            rng = np.random.default_rng()
+        else:
+            rng = np.random.default_rng(
+                _stable_part_rng_seed(int(random_init.rng_seed), config.part_name)
+            )
+
+        for idx in range(int(random_init.count)):
+            random_angles = np.array(
+                [float(rng.choice(pool)) for pool in angle_pools],
+                dtype=float,
+            )
+            random_offsets = np.array(
+                [float(rng.choice(pool)) for pool in translation_pools],
+                dtype=float,
+            )
+            add_candidate(f"random:{idx}", random_angles, random_offsets)
 
     if previous_seed is None or not config.include_previous_seed:
         return candidates
@@ -1929,6 +2005,7 @@ def optimize_part(
     config: PartConfig,
     previous_seed_map: PreviousSeedMap,
     polish: bool = False,
+    random_init: RandomInitConfig | None = None,
 ) -> JsonDict:
     """Optimize one body-part taxel cloud against its target mesh.
 
@@ -1942,6 +2019,7 @@ def optimize_part(
         POSITIONS_DIR / config.position_file, config.rebase)
     mesh = load_mesh(config.part_name, config.mesh_files)
     body_property, strategy = resolve_strategy_for_part(config.part_name)
+    effective_random_init = None if polish else random_init
     use_flat_surface_optimizer = bool(
         config.optimizer_method == SOLE_2D_OPTIMIZER_METHOD
         or strategy.use_flat_surface_optimizer
@@ -1956,6 +2034,7 @@ def optimize_part(
                 strategy=strategy,
                 body_property=body_property,
                 polish=polish,
+                random_init=effective_random_init,
             )
         return optimize_foot_sole_part(
             config,
@@ -1965,6 +2044,7 @@ def optimize_part(
             strategy=strategy,
             body_property=body_property,
             polish=polish,
+            random_init=effective_random_init,
         )
 
     baseline_points = apply_part_transform(points, config.part_name)
@@ -2084,7 +2164,7 @@ def optimize_part(
 
     previous_seed = previous_seed_map.get(config.part_name)
     seed_candidates = build_seed_candidates(
-        config, previous_seed, polish=polish)
+        config, previous_seed, polish=polish, random_init=effective_random_init)
 
     seed_results: list[tuple[float, np.ndarray, Any,
                              np.ndarray, np.ndarray, np.ndarray, str]] = []
@@ -2355,6 +2435,7 @@ def optimize_part(
             "tilt_plane_penalty_weight": float(strategy.tilt_plane_penalty_weight),
             "objective_distance_mode": "mean_absolute_nearest_surface_all_taxels",
             "accepted_vs_initial": bool(accepted_vs_initial),
+            **_random_init_report_fields(effective_random_init),
         },
     }
 
@@ -2404,6 +2485,17 @@ def write_reports(results: list[dict[str, Any]]) -> None:
         lines.append(
             f"  solver: {optimizer.get('solver', LOCAL_OPTIMIZER_METHOD)}")
         lines.append(f"  seed count: {optimizer['seed_count']}")
+        if int(optimizer.get("random_init_requested_count", 0)) > 0:
+            lines.append(
+                f"  random init requested count: {optimizer['random_init_requested_count']}")
+            lines.append(
+                f"  random init angle limit deg: {optimizer['random_init_angle_limit_deg']}")
+            lines.append(
+                f"  random init translation limit m: {optimizer['random_init_translation_limit_m']}")
+            lines.append(
+                f"  random init pool size: {optimizer['random_init_pool_size']}")
+            lines.append(
+                f"  random init rng seed: {optimizer['random_init_rng_seed']}")
         lines.append(
             f"  selected seed label: {optimizer['selected_seed_label']}")
         lines.append(
@@ -2589,6 +2681,36 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Ignore previously saved seeds and results for this run (does not delete report files).",
     )
+    parser.add_argument(
+        "--random-init-count",
+        type=int,
+        default=8,
+        help="Number of bounded random initialization seeds to draw for each selected part. Use 0 to disable.",
+    )
+    parser.add_argument(
+        "--random-init-angle-limit-deg",
+        type=float,
+        default=5.0,
+        help="Random initialization angle values are drawn from [-limit, +limit] degrees on each axis.",
+    )
+    parser.add_argument(
+        "--random-init-translation-limit-m",
+        type=float,
+        default=0.005,
+        help="Random initialization offsets are drawn from [-limit, +limit] meters on each axis.",
+    )
+    parser.add_argument(
+        "--random-init-pool-size",
+        type=int,
+        default=11,
+        help="Number of equally likely discrete values in each symmetric random initialization pool.",
+    )
+    parser.add_argument(
+        "--rng-seed",
+        type=int,
+        default=12345,
+        help="Base RNG seed for reproducible random initialization. Use a negative value for non-deterministic draws.",
+    )
     return parser.parse_args()
 
 
@@ -2637,6 +2759,27 @@ def main() -> None:
     """Run the configured optimization workflow and persist improved results."""
 
     args = parse_args()
+    if args.random_init_count < 0:
+        raise ValueError("--random-init-count must be >= 0")
+    if args.random_init_pool_size < 2 and args.random_init_count > 0:
+        raise ValueError("--random-init-pool-size must be at least 2 when random init is enabled")
+
+    rng_seed = None if int(args.rng_seed) < 0 else int(args.rng_seed)
+    random_init = RandomInitConfig(
+        count=int(args.random_init_count),
+        angle_limit_deg=(
+            float(args.random_init_angle_limit_deg),
+            float(args.random_init_angle_limit_deg),
+            float(args.random_init_angle_limit_deg),
+        ),
+        translation_limit_m=(
+            float(args.random_init_translation_limit_m),
+            float(args.random_init_translation_limit_m),
+            float(args.random_init_translation_limit_m),
+        ),
+        pool_size=int(args.random_init_pool_size),
+        rng_seed=rng_seed,
+    )
     validate_body_property_coverage({cfg.part_name for cfg in PARTS})
     selected_parts = set(args.parts) if args.parts else None
     previous_seed_map = {} if args.fresh_start else load_previous_optimized_seeds()
@@ -2650,7 +2793,7 @@ def main() -> None:
             continue
         print(f"\n=== Optimizing {part_cfg.part_name} ===")
         new_result = optimize_part(
-            part_cfg, previous_seed_map, polish=args.polish)
+            part_cfg, previous_seed_map, polish=args.polish, random_init=random_init)
 
         # Only update if new result is better than existing best (including initialized values)
         new_mean = _result_mean_distance(new_result)
