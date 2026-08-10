@@ -37,11 +37,13 @@ from optimize_taxel_alignment import (
 try:
     from neuromorphic_body_schema.include_taxels.fingertip_taxel_projection import (
         FINGERTIP_BODY_TO_PART,
+        FINGERTIP_BODY_TO_PROJECTION_MESH,
         project_legacy_fingertip_taxels,
     )
 except ImportError:
     from fingertip_taxel_projection import (
         FINGERTIP_BODY_TO_PART,
+        FINGERTIP_BODY_TO_PROJECTION_MESH,
         project_legacy_fingertip_taxels,
     )
 
@@ -406,6 +408,7 @@ def _write_footprint_preview(part_cfg) -> Path:
 
 def _write_fingertip_figure(body_name: str, part: str) -> Path:
     projection = project_legacy_fingertip_taxels(body_name)
+    projection_mesh_name = FINGERTIP_BODY_TO_PROJECTION_MESH[body_name]
     mesh = projection.mesh
     before_points = projection.original_points
     after_points = projection.projected_points
@@ -414,7 +417,7 @@ def _write_fingertip_figure(body_name: str, part: str) -> Path:
         rows=1,
         cols=2,
         specs=[[{"type": "scene"}, {"type": "scene"}]],
-        subplot_titles=(f"{part}: Legacy", f"{part}: Collision Surface"),
+        subplot_titles=(f"{part}: Legacy", f"{part}: Symmetric Projection"),
         horizontal_spacing=0.03,
     )
 
@@ -426,7 +429,7 @@ def _write_fingertip_figure(body_name: str, part: str) -> Path:
 
     fig.update_layout(
         title=(
-            f"Fingertip Taxel Projection | {part} | "
+            f"Fingertip Taxel Projection | {part} | {projection_mesh_name} | "
             f"max move={float(np.max(projection.movement_m)):.6f} m "
             f"mean move={float(np.mean(projection.movement_m)):.6f} m"
         ),
