@@ -1,0 +1,3 @@
+# The image only needs the dependency list; the repository is bind-mounted at runtime.
+*
+!requirements.txt

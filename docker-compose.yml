@@ -1,0 +1,45 @@
+# The repository is bind-mounted at /workspace: the container always runs the
+# code, models and meshes of this checkout. See "Running with Docker" in README.md.
+services:
+  # CPU / Mesa software rendering: works on any Linux host with an X server.
+  sim:
+    build:
+      context: .
+      args:
+        USER_UID: ${HOST_UID:-1000}
+        USER_GID: ${HOST_GID:-1000}
+    image: neuromorphic-body-schema:latest
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      # X11 socket for the MuJoCo viewer and OpenCV windows.
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    environment:
+      - DISPLAY=${DISPLAY:-:0}
+      - QT_X11_NO_MITSHM=1
+      - QT_QPA_PLATFORM=xcb
+    ipc: host
+    stdin_open: true
+    tty: true
+
+  # NVIDIA GPU rendering (requires nvidia-container-toolkit). Same image and
+  # mounts as `sim`; the profile keeps it out of `build`/`up` on hosts without
+  # a GPU, and `docker compose run sim-gpu` activates it automatically.
+  # The __NV_PRIME_* / __GLX_* variables route GLX to the NVIDIA GPU on
+  # hybrid-graphics laptops and are harmless on desktop GPUs.
+  sim-gpu:
+    extends:
+      service: sim
+    profiles: [gpu]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - __NV_PRIME_RENDER_OFFLOAD=1
+      - __GLX_VENDOR_LIBRARY_NAME=nvidia

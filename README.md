@@ -235,3 +235,47 @@ One can add objects to the simualtion as shown in the example with a box. The ob
 
 
 
+## Running with Docker
+
+The Docker setup (`Dockerfile`, `docker-compose.yml`) provides the system libraries and Python packages needed to run the simulation. The image contains no project files: the repository is bind-mounted into the container at `/workspace`, so changes made on the host are used immediately. Rebuild the image only after changing `requirements.txt`.
+
+Requirements:
+- Linux with Docker Engine and Docker Compose v2
+- An X server for the viewer windows (X11, or Wayland with XWayland)
+- Optional, for GPU rendering: an NVIDIA driver and the NVIDIA Container Toolkit
+- The mesh files in `neuromorphic_body_schema/meshes_improved/`. They are not tracked by git, so they must already be in your checkout; the container uses exactly what is in your checkout.
+
+Run all commands from the repository root. Build the image:
+```
+docker compose build
+```
+
+Allow the container to open windows on your display (once per login session):
+```
+xhost +si:localuser:$USER
+```
+
+Start the simulation:
+```
+# with an NVIDIA GPU
+docker compose run --rm sim-gpu python neuromorphic_body_schema/main.py
+
+# without a GPU (software rendering, slower)
+docker compose run --rm sim python neuromorphic_body_schema/main.py
+```
+
+Open a shell inside the container (the working directory `/workspace` is this repository):
+```
+docker compose run --rm sim-gpu
+```
+
+Run the tests with headless rendering:
+```
+docker compose run --rm -e MUJOCO_GL=egl sim-gpu pytest
+docker compose run --rm -e MUJOCO_GL=osmesa sim pytest    # without a GPU
+```
+
+The container runs as UID/GID 1000 so that files it writes into the repository belong to you. If your user has a different UID, build with:
+```
+HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose build
+```
