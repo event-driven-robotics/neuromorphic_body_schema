@@ -553,10 +553,11 @@ class ICubProprioception:
         for i, esim_single, joint_name in zip(
             range(len(self.esim)), self.esim, list(self.joint_dict.keys())
         ):
-            joint_pos = data.joint(joint_name).qpos  # example for single joint
-            joint_vel = data.joint(joint_name).qvel
+            # [0]: the encoders expect scalars, qpos/qvel/qacc are 1-element arrays
+            joint_pos = data.joint(joint_name).qpos[0]  # example for single joint
+            joint_vel = data.joint(joint_name).qvel[0]
             # TODO access load here, not acceleration!
-            joint_load = data.joint(joint_name).qacc
+            joint_load = data.joint(joint_name).qacc[0]
             events = esim_single.proprioceptionCallback(
                 x=joint_pos, v=joint_vel, load=joint_load, time_stamp=time
             )

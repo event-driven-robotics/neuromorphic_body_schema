@@ -60,6 +60,7 @@ from neuromorphic_body_schema.helpers.robot_controller import (
     update_joint_positions,
 )
 from mujoco import viewer
+from src.sim_link import CommandServer
 
 # from helpers.ik_solver_fede import qpos_from_site_pose
 
@@ -94,6 +95,11 @@ VISUALIZE_ED_SKIN_FEED = False
 
 PROPRIOCEPTION_MODE = "event_driven"  # "event_driven" or "frame_based"
 VISUALIZE_PROPRIOCEPTION_FEED = False
+
+# accept joint targets from separate scripts, e.g. src/control/sample_pose_movement.py
+ENABLE_COMMAND_SERVER = True
+# hold the floating base in place; the robot tips over when the arms move otherwise
+FIXED_BASE = True
 
 
 if __name__ == "__main__":
@@ -219,6 +225,12 @@ if __name__ == "__main__":
             DEBUG=DEBUG
         )
         
+        command_server = (
+            CommandServer(model, data, fixed_base=FIXED_BASE)
+            if ENABLE_COMMAND_SERVER
+            else None
+        )
+
         # proprioception_object = ICubProprioception(
         #     model,
         #     joint_dict_prop,
@@ -260,6 +272,8 @@ if __name__ == "__main__":
         # last_frame = perf_counter()
         while sim_viewer.is_running():
             # print(sim_time)
+            if command_server is not None:
+                command_server.update()  # apply targets received from scripts
             mj_step(model, data)  # Step the simulation
             sim_viewer.sync()
             # sim_time_ns = data.time*1E9  # ns

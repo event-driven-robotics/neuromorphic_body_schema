@@ -19,6 +19,9 @@ services:
       - QT_X11_NO_MITSHM=1
       - QT_QPA_PLATFORM=xcb
     ipc: host
+    # Host networking so a movement script in a second container (or on the host)
+    # reaches the simulation's command server on localhost:6006.
+    network_mode: host
     stdin_open: true
     tty: true
 

@@ -162,6 +162,8 @@ Pre-set values are indicative and can be modified according to the desired needs
 
 
 ## Movement control
+While `main.py` is running, separate scripts can move the robot (by pose or by velocity) and read its sensors (proprioception and vision), see [src/README.md](src/README.md).
+
 MuJoCo simulator's control of movement requires the distinction of two different objects: model and data. Model contains the general (usually immutable) information regarding the object to simulate, like its physics, its meshes etc.. Data contains the variables which strictly relate to the simulation at hand, like current positions, velocities etc.. 
 Both are needed to advance the simulation through the command mujoco.mj_step(model, data).
 However, data can be modified to move the robot.
@@ -255,13 +257,13 @@ Allow the container to open windows on your display (once per login session):
 xhost +si:localuser:$USER
 ```
 
+### With GPU
+
+Requires an NVIDIA driver and the NVIDIA Container Toolkit.
+
 Start the simulation:
 ```
-# with an NVIDIA GPU
 docker compose run --rm sim-gpu python neuromorphic_body_schema/main.py
-
-# without a GPU (software rendering, slower)
-docker compose run --rm sim python neuromorphic_body_schema/main.py
 ```
 
 Open a shell inside the container (the working directory `/workspace` is this repository):
@@ -272,8 +274,28 @@ docker compose run --rm sim-gpu
 Run the tests with headless rendering:
 ```
 docker compose run --rm -e MUJOCO_GL=egl sim-gpu pytest
-docker compose run --rm -e MUJOCO_GL=osmesa sim pytest    # without a GPU
 ```
+
+### Without GPU
+
+Uses software rendering, which is slower.
+
+Start the simulation:
+```
+docker compose run --rm sim python neuromorphic_body_schema/main.py
+```
+
+Open a shell inside the container (the working directory `/workspace` is this repository):
+```
+docker compose run --rm sim
+```
+
+Run the tests with headless rendering:
+```
+docker compose run --rm -e MUJOCO_GL=osmesa sim pytest
+```
+
+### Different user ID
 
 The container runs as UID/GID 1000 so that files it writes into the repository belong to you. If your user has a different UID, build with:
 ```
